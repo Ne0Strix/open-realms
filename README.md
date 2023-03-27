@@ -6,6 +6,8 @@ To auto-format all java-files please copy the `pre-commit` file to `.git/hooks/`
 
 Also, try running `./gradlew spotlessApply` to see whether the plugin works as expected.
 
+A problem that might occur when sharing a git repo across Windows and Linux operating systems is the different newline-characters. If you're on Windows execute `git config --global core.autocrlf true` to auto-convert between the two types of line-return. For more details check out the "Formatting and Whitespace" section in the [Git Configuration Manual](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#Formatting-and-Whitespace).
+
 ### Git
 
 **Only branch from develop!**
@@ -23,7 +25,7 @@ Please refer to the [official documentation](https://docs.github.com/en/issues/t
 
 The branching scheme we use is called _git flow_, you can find more info [here](https://datasift.github.io/gitflow/IntroducingGitFlow.html).
 
-![](https://camo.githubusercontent.com/8789c3f5dd8727bbb8814c5fddb79f0f75e07ddbea4b08b6fdfbd550ea5ad91a/68747470733a2f2f65787465726e616c2d636f6e74656e742e6475636b6475636b676f2e636f6d2f69752f3f753d6874747073253341253246253246692e737461636b2e696d6775722e636f6d2532466e37504b6a2e706e6726663d31266e6f66623d31)
+![git-flow diagram](https://camo.githubusercontent.com/8789c3f5dd8727bbb8814c5fddb79f0f75e07ddbea4b08b6fdfbd550ea5ad91a/68747470733a2f2f65787465726e616c2d636f6e74656e742e6475636b6475636b676f2e636f6d2f69752f3f753d6874747073253341253246253246692e737461636b2e696d6775722e636f6d2532466e37504b6a2e706e6726663d31266e6f66623d31)
 
 ## About Issues, Milestones, Tasks, …
 
