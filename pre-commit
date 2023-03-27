@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+files=()
+containsJava=0
+
+# iterate over all files in the staging area
+for entry in $(git status --porcelain | sed -r 's/[ \t]+/-/g'); do
+  if [[ $entry == M* ]]; then
+    files+=(${entry:2}) # strips the prefix
+  fi
+
+  if [[ $entry == *.java ]]; then
+    containsJava=1
+  fi
+done
+
+# Format any javafiles with spotlessApply
+if [ "$containsJava" == "1" ]; then
+  echo "Formatting files using ./gradlew -PdisableSpotlessCheck spotlessApply"
+  ./gradlew -PdisableSpotlessCheck spotlessApply
+else
+  echo "Nothing to format"
+fi
+
+# Add back files to staging area
+for files in $files; do
+  echo "re-adding $files after formatting"
+  git add "$files"
+done
