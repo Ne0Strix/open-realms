@@ -5,6 +5,7 @@ plugins {
 
     ////////// 2. move sonarqube plugin into app/build.gradle //////////
     id 'org.sonarqube' version '3.3'
+	id 'com.diffplug.spotless' version '6.17.0'
 }
 
 android {
