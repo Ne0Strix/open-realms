@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 # Description
-<Detailed Description>
+< Detailed Description >
 
 # Tasks:
 - [ ] < List Tasks to be done >
