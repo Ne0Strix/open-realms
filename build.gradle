@@ -1,32 +1,4 @@
 plugins {
     id 'com.android.application' version '7.4.2' apply false
     id 'com.android.library' version '7.4.2' apply false
-    id 'com.diffplug.spotless' version '6.17.0'
 }
-
-spotless {
-    java {
-        target 'src/*/java/**/*.java'
-        // Use the default importOrder configuration
-        //importOrder()
-        // optional: you can specify import groups directly
-        // note: you can use an empty string for all the imports you didn't specify explicitly, '|' to join group without blank line, and '\\#` prefix for static imports
-        importOrder('java|javax', 'com.acme', '', '\\#com.acme', '\\#')
-        // optional: instead of specifying import groups directly you can specify a config file
-        // export config file: https://github.com/diffplug/spotless/blob/main/ECLIPSE_SCREENSHOTS.md#creating-spotlessimportorder
-        //importOrderFile('eclipse-import-order.txt') // import order file as exported from eclipse
-
-        removeUnusedImports()
-
-        // Cleanthat will refactor your code, but it may break your style: apply it before your formatter
-        cleanthat()          // has its own section below
-
-        // Choose one of these formatters.
-        googleJavaFormat('1.8').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
-
-        formatAnnotations()  // fixes formatting of type annotations, see below
-
-        licenseHeader '/* (C) $YEAR */' // or licenseHeaderFile
-    }
-}
-
