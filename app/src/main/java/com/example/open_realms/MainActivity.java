@@ -1,8 +1,8 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package com.example.open_realms;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,3 +1,4 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package com.example.open_realms;
 
 /**
@@ -5,6 +6,4 @@ package com.example.open_realms;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
-
-}
+public class ExampleUnitTest {}
