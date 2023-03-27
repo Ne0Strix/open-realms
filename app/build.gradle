@@ -52,7 +52,7 @@ spotless {
 		target 'src/*/java/**/*.java'
 		removeUnusedImports()
 		cleanthat()
-		googleJavaFormat('1.8').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
+		googleJavaFormat('1.16.0').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
 		formatAnnotations()
 		licenseHeader '/* Licensed under GNU GPL v3.0(C) $YEAR */'
 	}
