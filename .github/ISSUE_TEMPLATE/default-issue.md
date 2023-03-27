@@ -7,10 +7,13 @@ assignees: ''
 
 ---
 
-# Description
+# User Story
+As a < who >, I want < what >[, because < why >].
+
+## Description
 < Detailed Description >
 
-# Tasks:
+## Tasks:
 - [ ] < List Tasks to be done >
 - [ ] < To be filled during Sprintplanning >
 - [ ] < … >
