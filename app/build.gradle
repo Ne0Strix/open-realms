@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-	namespace 'com.example.open_realms'
+	namespace 'at.vunfer.openrealms'
 	compileSdk 33
 
 	defaultConfig {
-		applicationId "com.example.open_realms"
+		applicationId "at.vunfer.openrealms"
 		minSdk 29
 		targetSdk 33
 		versionCode 1
