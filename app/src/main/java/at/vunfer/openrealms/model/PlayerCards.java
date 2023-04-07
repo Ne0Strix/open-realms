@@ -1,4 +1,79 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-public class PlayerCards {}
+import java.util.List;
+
+public class PlayerCards {
+    private List<Card> handCards;
+    private List<Card> deckCards;
+    private List<Card> discardedCards;
+    private PlayArea playArea;
+    private Market market;
+
+    public PlayerCards(List<Card> handCards, List<Card> deckCards, List<Card> discardedCards, PlayArea playArea, Market market) {
+        this.handCards = handCards;
+        this.deckCards = deckCards;
+        this.discardedCards = discardedCards;
+        this.playArea = playArea;
+        this.market = market;
+    }
+
+    public List<Card> getHandCards() {
+        return handCards;
+    }
+
+    public void setHandCards(List<Card> handCards) {
+        this.handCards = handCards;
+    }
+
+    public List<Card> getDeckCards() {
+        return deckCards;
+    }
+
+    public void setDeckCards(List<Card> deckCards) {
+        this.deckCards = deckCards;
+    }
+
+    public List<Card> getDiscardedCards() {
+        return discardedCards;
+    }
+
+    public void setDiscardedCards(List<Card> discardedCards) {
+        this.discardedCards = discardedCards;
+    }
+
+    public PlayArea getPlayArea() {
+        return playArea;
+    }
+
+    public void setPlayArea(PlayArea playArea) {
+        this.playArea = playArea;
+    }
+
+    public Market getMarket() {
+        return market;
+    }
+
+    public void setMarket(Market market) {
+        this.market = market;
+    }
+
+    public Card draw() {
+        return null;
+    }
+
+    public Card discard() {
+        return null;
+    }
+
+    public Card playCard(Card card) {
+        if (handCards.contains(card)) {
+            return card;
+        }
+        return null;
+    }
+
+    public Card buyCard(Card card) {
+        return null;
+    }
+}

@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.model;
 
 public abstract class Effect {
+
     protected int value;
 
     public Effect(int value) {

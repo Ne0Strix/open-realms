@@ -20,6 +20,7 @@ public class PlayArea {
             List<Card> playedCards,
             List<Card> playedChampions,
             PlayerCards playerCards) {
+
         this.health = health;
         this.turnDamage = turnDamage;
         this.turnHealing = turnHealing;
@@ -103,7 +104,8 @@ public class PlayArea {
         return null;
     }
 
-    public Card useCardExpendEffect(Guard guard) {
+    public Card useCardExpendEffect() {
+
         return null;
     }
 
