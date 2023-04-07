@@ -1,5 +1,5 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package com.example.open_realms;
+package at.vunfer.openrealms;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
