@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayArea {
@@ -14,19 +15,14 @@ public class PlayArea {
 
     public PlayArea(
             int health,
-            int turnDamage,
-            int turnHealing,
-            int turnCoins,
-            List<Card> playedCards,
-            List<Card> playedChampions,
             PlayerCards playerCards) {
 
         this.health = health;
-        this.turnDamage = turnDamage;
-        this.turnHealing = turnHealing;
-        this.turnCoins = turnCoins;
-        this.playedCards = playedCards;
-        this.playedChampions = playedChampions;
+        this.turnDamage = 0;
+        this.turnHealing = 0;
+        this.turnCoins = 0;
+        this.playedCards = new ArrayList<Card>();
+        this.playedChampions = new ArrayList<Card>();
         this.playerCards = playerCards;
     }
 
@@ -88,13 +84,16 @@ public class PlayArea {
 
     public Card playCard(Card card) {
         if (playerCards.playCard(card) != null) {
-
+            playedCards.add(card);
+            useCardEffect(card);
             return card;
         }
         return null;
     }
 
-    public void useCardEffect(Card card) {}
+    public void useCardEffect(Card card) {
+        card.getAbility().resolveAbility(this);
+    }
 
     public Card useCardAllyEffect(Card card) {
         return null;
@@ -115,5 +114,19 @@ public class PlayArea {
 
     public Card championIsAttacked(Champion champion) {
         return null;
+    }
+
+    public void resetTurnPool() {
+        this.turnDamage = 0;
+        this.turnHealing = 0;
+        this.turnCoins = 0;
+    }
+
+    public void heal(int value) {
+        health += value;
+    }
+
+    public void takeDamage(int value) {
+        health -= value;
     }
 }

@@ -1,5 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package at.vunfer.openrealms.view;
+package at.vunfer.openrealms.model;
+
+import androidx.annotation.NonNull;
 
 import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.model.PlayerCards;
@@ -37,5 +39,11 @@ public class Player {
 
     public void setPlayArea(PlayArea playArea) {
         this.playArea = playArea;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getPlayerName();
     }
 }

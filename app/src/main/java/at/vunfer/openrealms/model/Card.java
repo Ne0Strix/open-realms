@@ -4,23 +4,19 @@ package at.vunfer.openrealms.model;
 public class Card {
     private String name;
     private int cost;
-    private int attack;
-    private int health;
+    private Effect ability;
 
-    public Card(String name) throws IllegalArgumentException {
+    public Card(String name, int cost, Effect ability) throws IllegalArgumentException {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name must not be null or empty");
         } else if (cost < 0) {
             throw new IllegalArgumentException("Cost must not be negative");
-        } else if (attack < 0) {
-            throw new IllegalArgumentException("Attack must not be negative");
-        } else if (health < 0) {
-            throw new IllegalArgumentException("Health must not be negative");
+        } else if (ability == null) {
+            throw new IllegalArgumentException("Ability must not be null");
         }
         this.name = name;
         this.cost = cost;
-        this.attack = attack;
-        this.health = health;
+        this.ability = ability;
     }
 
     public String getName() {
@@ -31,26 +27,12 @@ public class Card {
         return cost;
     }
 
-    public int getAttack() {
-        return attack;
-    }
-
-    public int getHealth() {
-        return health;
+    public Effect getAbility() {
+        return ability;
     }
 
     @Override
     public String toString() {
-        return "Card{"
-                + "name='"
-                + name
-                + '\''
-                + ", cost="
-                + cost
-                + ", attack="
-                + attack
-                + ", health="
-                + health
-                + '}';
+        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + '}';
     }
 }

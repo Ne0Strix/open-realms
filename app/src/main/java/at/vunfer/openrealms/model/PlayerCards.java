@@ -7,14 +7,16 @@ public class PlayerCards {
     private List<Card> handCards;
     private List<Card> deckCards;
     private List<Card> discardedCards;
-    private PlayArea playArea;
     private Market market;
 
-    public PlayerCards(List<Card> handCards, List<Card> deckCards, List<Card> discardedCards, PlayArea playArea, Market market) {
+    public PlayerCards(
+            List<Card> handCards,
+            List<Card> deckCards,
+            List<Card> discardedCards,
+            Market market) {
         this.handCards = handCards;
         this.deckCards = deckCards;
         this.discardedCards = discardedCards;
-        this.playArea = playArea;
         this.market = market;
     }
 
@@ -40,14 +42,6 @@ public class PlayerCards {
 
     public void setDiscardedCards(List<Card> discardedCards) {
         this.discardedCards = discardedCards;
-    }
-
-    public PlayArea getPlayArea() {
-        return playArea;
-    }
-
-    public void setPlayArea(PlayArea playArea) {
-        this.playArea = playArea;
     }
 
     public Market getMarket() {

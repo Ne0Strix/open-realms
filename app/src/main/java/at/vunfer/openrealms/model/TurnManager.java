@@ -3,15 +3,13 @@ package at.vunfer.openrealms.model;
 
 import java.util.List;
 
-import at.vunfer.openrealms.view.Player;
-
 public class TurnManager {
     private List<Player> players;
-    private int turnPlayer;
+    private Player currentPlayer;
 
-    public TurnManager(List<Player> players, int turnPlayer) {
+    public TurnManager(List<Player> players, Player currentPlayer) {
         this.players = players;
-        this.turnPlayer = turnPlayer;
+        this.currentPlayer = currentPlayer;
     }
 
     public List<Player> getPlayers() {
@@ -22,23 +20,34 @@ public class TurnManager {
         this.players = players;
     }
 
-    public int getTurnPlayer() {
-        return turnPlayer;
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
-    public void setTurnPlayer(int turnPlayer) {
-        this.turnPlayer = turnPlayer;
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Player getOpponent(Player currentPlayer) {
+        return players.get(((players.indexOf(currentPlayer))+1)%2); //get opponent of current player (only for the 2 player version)
+    }
+
+    public void nextPlayer() {
+        currentPlayer = players.get(((players.indexOf(currentPlayer)) + 1) % 2);
     }
 
     public void endTurn() {
-
+        dealDamage(getOpponent(currentPlayer), currentPlayer.getPlayArea().getTurnDamage()); //deal damage to player next in line, since in this version there will only be 2 players
+        healPlayer(currentPlayer.getPlayArea().getTurnHealing());
+        currentPlayer.getPlayArea().resetTurnPool();
+        nextPlayer();
     }
 
-    public void dealDamage() {
-
+    public void dealDamage(Player opponent, int value) {
+        opponent.getPlayArea().takeDamage(value);
     }
 
-    public void healPlayer() {
-
+    public void healPlayer(int value) {
+        currentPlayer.getPlayArea().heal(value);
     }
 }
