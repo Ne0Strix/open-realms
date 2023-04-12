@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<deck>
+    <card amount="7">
+        <name>Gold</name>
+        <cost>0</cost>
+        <ability>
+            <amount>1</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+  <!--  <card amount="1">
+        <name>Shortsword</name>
+        <cost>0</cost>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Dagger</name>
+        <cost>0</cost>
+        <ability>
+            <amount>1</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Hypothetical card with 3 effects</name>
+        <cost>10</cost>
+        <ability>
+            <amount>23</amount>
+            <type>coin</type>
+        </ability>
+        <ability>
+            <amount>12</amount>
+            <type>attack</type>
+        </ability>
+        <ability>
+            <amount>69</amount>
+            <type>heal</type>
+        </ability>
+    </card>
+    -->
+</deck>

@@ -2,7 +2,11 @@
 package at.vunfer.openrealms;
 
 import android.os.Bundle;
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.DeckGenerator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -10,5 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        List<Card> deck = DeckGenerator.generatePlayerStarterDeck(getApplicationContext());
+        Log.i("DeckGenerator", deck.toString());
     }
 }
