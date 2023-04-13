@@ -4,23 +4,22 @@ package at.vunfer.openrealms.model;
 import java.util.List;
 
 public class Card {
-    private final String name;
-    private final int cost;
-    private final List<Effect> abilities;
+    private static final String TAG = "Card";
+    private String name;
+    private int cost;
+    private List<Effect> effects;
 
-    public Card(String name, int cost, List<Effect> abilities) throws IllegalArgumentException {
+    public Card(String name, int cost, List<Effect> effects) throws IllegalArgumentException {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name must not be null or empty");
         } else if (cost < 0) {
             throw new IllegalArgumentException("Cost must not be negative");
-        } else if (abilities == null) {
-            throw new IllegalArgumentException("Ability must not be null");
-        } else if (abilities.size() == 0) {
+        } else if (effects == null || effects.isEmpty()) {
             throw new IllegalArgumentException("Ability must not be empty");
         }
         this.name = name;
         this.cost = cost;
-        this.abilities = abilities;
+        this.effects = effects;
     }
 
     public String getName() {
@@ -31,20 +30,18 @@ public class Card {
         return cost;
     }
 
-    public List<Effect> getAbilities() {
-        return abilities;
+    public List<Effect> getEffects() {
+        return effects;
+    }
+
+    public void applyEffects(PlayArea visitor) {
+        for (Effect effect : effects) {
+            effect.applyEffect(visitor);
+        }
     }
 
     @Override
     public String toString() {
-        return "Card{"
-                + "name='"
-                + name
-                + '\''
-                + ", cost="
-                + cost
-                + ", Abilities="
-                + abilities.toString()
-                + '}';
+        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + ", effects=" + effects + '}';
     }
 }
