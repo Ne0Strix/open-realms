@@ -4,70 +4,57 @@ package at.vunfer.openrealms.model;
 import java.util.List;
 
 public class PlayerCards {
-    private List<Card> handCards;
-    private List<Card> deckCards;
-    private List<Card> discardedCards;
-    private Market market;
+    private static final String TAG = "PlayerCards";
+    private Deck<Card> handCards;
+    private Deck<Card> deckCards;
+    private Deck<Card> discardedCards;
 
-    public PlayerCards(
-            List<Card> handCards,
-            List<Card> deckCards,
-            List<Card> discardedCards,
-            Market market) {
-        this.handCards = handCards;
-        this.deckCards = deckCards;
-        this.discardedCards = discardedCards;
-        this.market = market;
+    private static final int HANDSIZE = 5;
+
+    public PlayerCards() {
+        List<Effect> effects = List.of(new DamageEffect(3), new CoinEffect(4));
+
+        this.handCards = new Deck<Card>();
+        this.deckCards = new Deck<Card>();
+        this.discardedCards = new Deck<Card>();
+        this.deckCards.add(new Card("Dagger", 0, List.of(new DamageEffect(1))));
+        this.deckCards.add(new Card("Shortsword", 0, List.of(new HealingEffect(2))));
+        this.deckCards.add(new Card("Ruby ", 0, List.of(new CoinEffect(2))));
+        for (int i = 0; i < 7; i++){
+            this.deckCards.add(new Card("Coin", 0, List.of(new CoinEffect(1))));
+        }
+        while (handCards.size() < HANDSIZE) {
+            handCards.add(deckCards.drawRandom());
+        }
     }
 
-    public List<Card> getHandCards() {
+    public Deck<Card> getHandCards() {
         return handCards;
     }
 
-    public void setHandCards(List<Card> handCards) {
-        this.handCards = handCards;
+    public void discard(Card card) throws IllegalArgumentException {
+        discardedCards.add(handCards.draw(card));
     }
 
-    public List<Card> getDeckCards() {
-        return deckCards;
+    public void addBoughtCard(Card card){
+        discardedCards.add(card);
     }
 
-    public void setDeckCards(List<Card> deckCards) {
-        this.deckCards = deckCards;
+    public Card popFromHand(Card card) {
+        return handCards.draw(card);
     }
 
-    public List<Card> getDiscardedCards() {
-        return discardedCards;
-    }
+    public void restockHand() {
+        if (deckCards.size() < HANDSIZE) {
+            handCards.addAll(deckCards);
+            deckCards.clear();
 
-    public void setDiscardedCards(List<Card> discardedCards) {
-        this.discardedCards = discardedCards;
-    }
-
-    public Market getMarket() {
-        return market;
-    }
-
-    public void setMarket(Market market) {
-        this.market = market;
-    }
-
-    public Card draw() {
-        return null;
-    }
-
-    public Card discard() {
-        return null;
-    }
-
-    public Card playCard(Card card) {
-        if (handCards.contains(card)) {
-            return card;
+            deckCards.addAll(discardedCards);
+            discardedCards.clear();
         }
-        return null;
-    }
 
-    public Card buyCard(Card card) {
-        return null;
+        while (handCards.size() < HANDSIZE) {
+            handCards.add(deckCards.drawRandom());
+        }
     }
 }

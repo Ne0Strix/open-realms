@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlayArea {
@@ -9,90 +8,54 @@ public class PlayArea {
     private int turnDamage;
     private int turnHealing;
     private int turnCoins;
-    private List<Card> playedCards;
-    private List<Card> playedChampions;
+
+    private Market market;
+    private Deck<Card> playedCards;
+    private Deck<Card> playedChampions;
     private PlayerCards playerCards;
 
-    public PlayArea(
-            int health,
-            PlayerCards playerCards) {
+    public PlayArea(int health, PlayerCards playerCards) {
 
         this.health = health;
         this.turnDamage = 0;
         this.turnHealing = 0;
         this.turnCoins = 0;
-        this.playedCards = new ArrayList<Card>();
-        this.playedChampions = new ArrayList<Card>();
+        this.playedCards = new Deck<Card>();
+        this.playedChampions = new Deck<Card>();
         this.playerCards = playerCards;
+        this.market = Market.getInstance();
     }
 
     public int getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
     public int getTurnDamage() {
         return turnDamage;
-    }
-
-    public void setTurnDamage(int turnDamage) {
-        this.turnDamage = turnDamage;
     }
 
     public int getTurnHealing() {
         return turnHealing;
     }
 
-    public void setTurnHealing(int turnHealing) {
-        this.turnHealing = turnHealing;
+    public PlayerCards getPlayerCards() {
+        return playerCards;
     }
 
     public int getTurnCoins() {
         return turnCoins;
     }
 
-    public void setTurnCoins(int turnCoins) {
-        this.turnCoins = turnCoins;
-    }
-
     public List<Card> getPlayedCards() {
         return playedCards;
-    }
-
-    public void setPlayedCards(List<Card> playedCards) {
-        this.playedCards = playedCards;
     }
 
     public List<Card> getPlayedChampions() {
         return playedChampions;
     }
 
-    public void setPlayedChampions(List<Card> playedChampions) {
-        this.playedChampions = playedChampions;
-    }
-
-    public PlayerCards getPlayerCards() {
-        return playerCards;
-    }
-
-    public void setPlayerCards(PlayerCards playerCards) {
-        this.playerCards = playerCards;
-    }
-
-    public Card playCard(Card card) {
-        if (playerCards.playCard(card) != null) {
-            playedCards.add(card);
-            useCardEffect(card);
-            return card;
-        }
-        return null;
-    }
-
-    public void useCardEffect(Card card) {
-        card.getAbility().resolveAbility(this);
+    public void playCard(Card card) {
+        playedCards.add(playerCards.popFromHand(card));
     }
 
     public Card useCardAllyEffect(Card card) {
@@ -128,5 +91,26 @@ public class PlayArea {
 
     public void takeDamage(int value) {
         health -= value;
+    }
+
+    public void visitDamage(int damage) {
+        turnDamage += damage;
+    }
+
+    public void visitCoin(int coin) {
+        turnCoins += coin;
+    }
+
+    public void visitHealing(int healing) {
+        turnHealing += healing;
+    }
+
+    public void buyCard(Card card) throws IllegalArgumentException {
+        if (this.turnCoins < card.getCost()) {
+            throw new IllegalArgumentException("Not enough coins this turn");
+        }
+        turnCoins -= card.getCost();
+        market.purchase(card);
+        playerCards.addBoughtCard(card);
     }
 }
