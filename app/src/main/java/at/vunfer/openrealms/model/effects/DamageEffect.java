@@ -4,17 +4,21 @@ package at.vunfer.openrealms.model.effects;
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
 
-public class DamageEffect extends Effect {
+public class DamageEffect implements Effect {
 
-    public DamageEffect(int value) {
-        super(value);
+    private final int damage;
+
+    public DamageEffect(int damage) {
+        this.damage = damage;
     }
 
     @Override
-    public void resolveAbility(PlayArea area) {}
+    public void applyEffect(PlayArea visitor) {
+        visitor.visitDamage(damage);
+    }
 
     @Override
     public String toString() {
-        return "DamageEffect{" + "value=" + value + '}';
+        return "DamageEffect{" + "damage=" + damage + '}';
     }
 }

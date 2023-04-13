@@ -3,35 +3,32 @@ package at.vunfer.openrealms.model;
 
 import android.content.Context;
 import android.util.Log;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 public class DeckGenerator {
 
     private static final String LogTag = "DeckGenerator";
 
-    public static List<Card> generatePlayerStarterDeck(Context context) {
+    public static Deck<Card> generatePlayerStarterDeck(Context context) {
         XmlPullParser xmlParser = context.getResources().getXml(R.xml.player_starter_deck);
         return generateDeckFromXml(xmlParser);
     }
 
-    public static List<Card> generateMarketDeck(Context context) {
+    public static Deck<Card> generateMarketDeck(Context context) {
         XmlPullParser xmlParser = context.getResources().getXml(R.xml.market_deck);
         return generateDeckFromXml(xmlParser);
     }
 
-    public static List<Card> generateDeckFromXml(XmlPullParser xmlParser) {
-        List<Card> deck = new ArrayList<>();
+    public static Deck<Card> generateDeckFromXml(XmlPullParser xmlParser) {
+        Deck<Card> deck = new Deck<>();
         try {
             int event = 0;
             while (event != XmlPullParser.END_DOCUMENT) {

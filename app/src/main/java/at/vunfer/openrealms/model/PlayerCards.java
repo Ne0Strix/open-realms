@@ -3,11 +3,15 @@ package at.vunfer.openrealms.model;
 
 import java.util.List;
 
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
+
 public class PlayerCards {
     private static final String TAG = "PlayerCards";
-    private Deck<Card> handCards;
-    private Deck<Card> deckCards;
-    private Deck<Card> discardedCards;
+    private final Deck<Card> handCards;
+    private final Deck<Card> deckCards;
+    private final Deck<Card> discardedCards;
 
     private static final int HANDSIZE = 5;
 

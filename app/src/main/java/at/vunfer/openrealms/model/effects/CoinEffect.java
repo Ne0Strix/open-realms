@@ -4,17 +4,21 @@ package at.vunfer.openrealms.model.effects;
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
 
-public class CoinEffect extends Effect {
+public class CoinEffect implements Effect {
 
-    public CoinEffect(int value) {
-        super(value);
+    private final int coin;
+
+    public CoinEffect(int coin) {
+        this.coin = coin;
     }
 
     @Override
-    public void resolveAbility(PlayArea area) {}
+    public void applyEffect(PlayArea visitor) {
+        visitor.visitCoin(coin);
+    }
 
     @Override
     public String toString() {
-        return "CoinEffect{" + "value=" + value + '}';
+        return "CoinEffect{" + "coin=" + coin + '}';
     }
 }

@@ -4,17 +4,20 @@ package at.vunfer.openrealms.model.effects;
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
 
-public class HealingEffect extends Effect {
+public class HealingEffect implements Effect {
+    private final int healing;
 
-    public HealingEffect(int value) {
-        super(value);
+    public HealingEffect(int healing) {
+        this.healing = healing;
     }
 
     @Override
-    public void resolveAbility(PlayArea area) {}
+    public void applyEffect(PlayArea visitor) {
+        visitor.visitHealing(healing);
+    }
 
     @Override
     public String toString() {
-        return "HealingEffect{" + "value=" + value + '}';
+        return "HealingEffect{" + "healing=" + healing + '}';
     }
 }
