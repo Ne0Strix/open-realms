@@ -8,7 +8,7 @@
             <type>coin</type>
         </ability>
     </card>
-  <!--  <card amount="1">
+    <card amount="1">
         <name>Shortsword</name>
         <cost>0</cost>
         <ability>
@@ -40,5 +40,4 @@
             <type>heal</type>
         </ability>
     </card>
-    -->
 </deck>

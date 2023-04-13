@@ -68,7 +68,7 @@ public class DeckGenerator {
                         break;
                 }
             }
-            if (event == XmlPullParser.END_TAG && name.equals("Card")) break;
+            if (event == XmlPullParser.END_TAG && name.equals("card")) break;
         }
         return new Card(cardName, cardCost, cardEffects);
     }
