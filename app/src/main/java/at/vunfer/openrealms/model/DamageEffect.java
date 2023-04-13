@@ -1,14 +1,16 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-public class DamageEffect extends Effect {
+public class DamageEffect implements Effect {
 
-    public DamageEffect(int value) {
-        super(value);
+    private int damage;
+
+    public DamageEffect(int damage) {
+        this.damage = damage;
     }
 
     @Override
-    public void resolveAbility(PlayArea area) {
-        area.setTurnDamage(area.getTurnDamage() + value);
+    public void applyEffect(PlayArea visitor) {
+        visitor.visitDamage(damage);
     }
 }
