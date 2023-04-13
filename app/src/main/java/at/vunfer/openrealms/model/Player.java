@@ -3,17 +3,12 @@ package at.vunfer.openrealms.model;
 
 import androidx.annotation.NonNull;
 
-import at.vunfer.openrealms.model.PlayArea;
-import at.vunfer.openrealms.model.PlayerCards;
-
 public class Player {
     private String playerName;
-    private PlayerCards playerCards;
     private PlayArea playArea;
 
-    public Player(String playerName, PlayerCards playerCards, PlayArea playArea) {
+    public Player(String playerName, PlayArea playArea) {
         this.playerName = playerName;
-        this.playerCards = playerCards;
         this.playArea = playArea;
     }
 
@@ -25,14 +20,6 @@ public class Player {
         this.playerName = playerName;
     }
 
-    public PlayerCards getPlayerCards() {
-        return playerCards;
-    }
-
-    public void setPlayerCards(PlayerCards playerCards) {
-        this.playerCards = playerCards;
-    }
-
     public PlayArea getPlayArea() {
         return playArea;
     }
@@ -41,8 +28,7 @@ public class Player {
         this.playArea = playArea;
     }
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public String toString() {
         return getPlayerName();
     }
