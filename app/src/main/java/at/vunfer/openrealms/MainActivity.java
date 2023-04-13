@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        List<Card> deck = DeckGenerator.generatePlayerStarterDeck(getApplicationContext());
+        List<Card> deck = DeckGenerator.generateMarketDeck(getApplicationContext());
         Log.i("DeckGenerator", deck.toString());
     }
 }
