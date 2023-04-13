@@ -11,13 +11,10 @@ public class HealingEffect extends Effect {
     }
 
     @Override
-    public void resolveAbility(PlayArea area) {
-    }
+    public void resolveAbility(PlayArea area) {}
 
     @Override
     public String toString() {
-        return "HealingEffect{" +
-                "value=" + value +
-                '}';
+        return "HealingEffect{" + "value=" + value + '}';
     }
 }

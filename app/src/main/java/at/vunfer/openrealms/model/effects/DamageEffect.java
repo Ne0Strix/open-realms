@@ -11,13 +11,10 @@ public class DamageEffect extends Effect {
     }
 
     @Override
-    public void resolveAbility(PlayArea area) {
-    }
+    public void resolveAbility(PlayArea area) {}
 
     @Override
     public String toString() {
-        return "DamageEffect{" +
-                "value=" + value +
-                '}';
+        return "DamageEffect{" + "value=" + value + '}';
     }
 }

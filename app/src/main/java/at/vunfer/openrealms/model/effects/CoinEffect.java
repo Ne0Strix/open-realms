@@ -1,3 +1,4 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
@@ -10,13 +11,10 @@ public class CoinEffect extends Effect {
     }
 
     @Override
-    public void resolveAbility(PlayArea area) {
-    }
+    public void resolveAbility(PlayArea area) {}
 
     @Override
     public String toString() {
-        return "CoinEffect{" +
-                "value=" + value +
-                '}';
+        return "CoinEffect{" + "value=" + value + '}';
     }
 }
