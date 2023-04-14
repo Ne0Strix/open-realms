@@ -1,11 +1,11 @@
-package at.vunfer.openrealms.Client_Server.app.src.main.java.com.example.myapplication;
-
-import androidx.appcompat.app.AppCompatActivity;
+package at.vunfer.openrealms;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class GameActivity extends AppCompatActivity {
