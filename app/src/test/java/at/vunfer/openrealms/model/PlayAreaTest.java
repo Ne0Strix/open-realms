@@ -44,13 +44,13 @@ public class PlayAreaTest {
     }
 
     @Test
-    void testBuyCard(     ) {
+    void testBuyCard() {
+
         Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
-        player1.getPlayArea().visitCoin(10); player1.getPlayArea().buyCard(toBuy);
+
+        player1.getPlayArea().visitCoin(10);
+        player1.getPlayArea().buyCard(toBuy);
+
         assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
-
-
-
-
     }
 }
