@@ -33,15 +33,13 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Android Emulator Runner
+      - name: Build and analyze on Android Emulator Runner
         uses: ReactiveCircus/android-emulator-runner@v2.28.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           api-level: 33
           target: google_apis
           arch: x86_64
-          script: ./gradlew createDebugCoverageReport
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonarqube --info
+          script: ./gradlew build sonarqube --info
