@@ -51,7 +51,7 @@ android {
 }
 def reportPath
 ////////// 3. add jacocoTestReport task like so //////////
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest','createDebugCoverageReport']) {
+task jacocoTestReport(type: JacocoReport) {
 
 	reports {
 		xml.required = true
