@@ -3,10 +3,7 @@ package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Iterator;
 import java.util.List;
-
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,12 +12,12 @@ class PlayerCardsTest {
     PlayerCards cards;
 
     @BeforeEach
-    void handSetup(){
+    void handSetup() {
         cards = new PlayerCards();
     }
 
     @AfterEach
-    void tearDown(){
+    void tearDown() {
         cards = null;
     }
 
@@ -32,14 +29,14 @@ class PlayerCardsTest {
     }
 
     @Test
-    void testHandToDiscardPile(){
+    void testHandToDiscardPile() {
         Card toDiscard = cards.getHandCards().get(0);
         cards.discard(toDiscard);
         assertTrue(cards.getDiscardedCards().contains(toDiscard));
     }
 
     @Test
-    void testRemoveFromHand(){
+    void testRemoveFromHand() {
         Card toPop = cards.getHandCards().get(1);
         Card returned = cards.popFromHand(toPop);
         assertFalse(cards.getHandCards().contains(toPop));
@@ -47,12 +44,12 @@ class PlayerCardsTest {
     }
 
     @Test
-    void testInitialSetup(){
+    void testInitialSetup() {
         assertEquals(cards.getHandsize(), cards.getHandCards().size());
     }
 
     @Test
-    void testPopUntilEmptyHand(){
+    void testPopUntilEmptyHand() {
         for (int i = cards.getHandCards().size() - 1; i >= 0; i--) {
             cards.popFromHand(cards.getHandCards().get(i));
         }
@@ -60,8 +57,8 @@ class PlayerCardsTest {
     }
 
     @Test
-    void testRestockEmptyHand(){
-        for (int i = cards.getHandsize()-1; i >= 0; i--) {
+    void testRestockEmptyHand() {
+        for (int i = cards.getHandsize() - 1; i >= 0; i--) {
             cards.popFromHand(cards.getHandCards().get(i));
         }
 
@@ -70,7 +67,7 @@ class PlayerCardsTest {
     }
 
     @Test
-    void testRestockPartialHand(){
+    void testRestockPartialHand() {
         // remove three cards
         for (int i = 0; i <= 2; i++) {
             cards.popFromHand(cards.getHandCards().get(i));
@@ -88,7 +85,7 @@ class PlayerCardsTest {
     }
 
     @Test
-    void testRestockFullHand(){
+    void testRestockFullHand() {
         Deck<Card> oldHand = new Deck<Card>();
         oldHand.addAll(cards.getHandCards());
 
