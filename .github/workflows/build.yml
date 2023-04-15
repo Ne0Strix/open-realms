@@ -37,7 +37,7 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2.28.0
         with:
           api-level: 33
-          target: google_apis or playstore
+          target: google_apis
           script: ./gradlew createDebugCoverageReport
       - name: Build and analyze
         env:
