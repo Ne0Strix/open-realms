@@ -42,6 +42,7 @@ android {
 	testOptions {
 		unitTests.all {
 			useJUnitPlatform()
+			finalizedBy jacocoTestReport
 		}
 	}
 	testVariants.all { variant ->
@@ -79,7 +80,7 @@ sonarqube {
 		property "sonar.java.coveragePlugin", "jacoco"
 
 		////////// 5. property same as xml.destination of jacocoTestReport //////////
-		property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+		property "sonar.coverage.jacoco.xmlReportPaths", JacocoReport.executionData.from//"${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
 		//property "sonar.jacoco.itReportPath", instrumentationFileName
 	}
 }
