@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Card {
     private static final String TAG = "Card";
@@ -51,5 +52,10 @@ public class Card {
         if (!(o instanceof Card)) return false;
         Card card = (Card) o;
         return cost == card.cost && name.equals(card.name) && effects.equals(effects);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, cost, effects);
     }
 }

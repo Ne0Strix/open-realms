@@ -15,7 +15,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class DeckGenerator {
 
-    private static final String LogTag = "DeckGenerator";
+    private DeckGenerator() {}
+
+    private static final String LOGGING_TAG = "DeckGenerator";
 
     public static Deck<Card> generatePlayerStarterDeck(Context context) {
         XmlPullParser xmlParser = context.getResources().getXml(R.xml.player_starter_deck);
@@ -34,17 +36,17 @@ public class DeckGenerator {
             while (event != XmlPullParser.END_DOCUMENT) {
                 event = xmlParser.next();
                 String name = xmlParser.getName();
-                Log.v(LogTag, "Tag: " + name);
+                Log.v(LOGGING_TAG, "Tag: " + name);
                 if (event == XmlPullParser.START_TAG && name.equals("card")) {
                     int amount = Integer.parseInt(xmlParser.getAttributeValue(0));
-                    Log.v(LogTag, "Adding Card " + amount + " Times");
+                    Log.v(LOGGING_TAG, "Adding Card " + amount + " Times");
                     Card c = parseCard(xmlParser);
-                    Log.v(LogTag, "Finished Card: " + c);
+                    Log.v(LOGGING_TAG, "Finished Card: " + c);
                     for (int i = 0; i < amount; i++) deck.add(c);
                 }
             }
         } catch (IOException | XmlPullParserException e) {
-            Log.e(LogTag, e.getLocalizedMessage());
+            Log.e(LOGGING_TAG, e.getLocalizedMessage());
         }
         return deck;
     }
@@ -54,7 +56,7 @@ public class DeckGenerator {
         String cardName = null;
         int cardCost = -1;
         List<Effect> cardEffects = new ArrayList<>();
-        Log.v(LogTag, "Starting with Card");
+        Log.v(LOGGING_TAG, "Starting with Card");
         int event = 0;
         String name;
         while (event != XmlPullParser.END_DOCUMENT) {
@@ -64,16 +66,18 @@ public class DeckGenerator {
                 switch (name) {
                     case "name":
                         cardName = xmlParser.nextText();
-                        Log.v(LogTag, "Added name: " + cardName);
+                        Log.v(LOGGING_TAG, "Added name: " + cardName);
                         break;
                     case "cost":
                         cardCost = Integer.parseInt(xmlParser.nextText());
-                        Log.v(LogTag, "Added cost: " + cardCost);
+                        Log.v(LOGGING_TAG, "Added cost: " + cardCost);
                         break;
                     case "ability":
                         addCardAbility(cardEffects, xmlParser);
-                        Log.v(LogTag, "Added ability: " + cardCost);
+                        Log.v(LOGGING_TAG, "Added ability: " + cardCost);
                         break;
+                    default:
+                        throw new IllegalArgumentException("Unrecognized XML tag.");
                 }
             }
             if (event == XmlPullParser.END_TAG && name.equals("card")) break;
@@ -83,7 +87,7 @@ public class DeckGenerator {
 
     private static void addCardAbility(List<Effect> cardEffects, XmlPullParser xmlParser)
             throws XmlPullParserException, IOException {
-        Log.v(LogTag, "Start working on ability.");
+        Log.v(LOGGING_TAG, "Start working on ability.");
         int event = 0;
         String name;
 
@@ -105,10 +109,10 @@ public class DeckGenerator {
                             effect = new HealingEffect(amount);
                             break;
                         default:
-                            throw new RuntimeException("Ability type not recognized");
+                            throw new IllegalArgumentException("Ability type not recognized");
                     }
                     cardEffects.add(effect);
-                    Log.v(LogTag, "Added ability " + effect);
+                    Log.v(LOGGING_TAG, "Added ability " + effect);
                 } else if (name.equals("amount")) {
                     amount = Integer.parseInt(xmlParser.nextText());
                 }
