@@ -42,8 +42,10 @@ android {
 	testOptions {
 		unitTests.all {
 			useJUnitPlatform()
-			finalizedBy jacocoTestReport
 		}
+	}
+	testVariants.all { variant ->
+		variant.connectedInstrumentTest.finalizedBy jacocoTestReport
 	}
 }
 def instrumentationFileName;
