@@ -24,7 +24,7 @@ else
 fi
 
 # Add back files to staging area
-for files in $files; do
-  echo "re-adding $files after formatting"
+for file in $files; do
+  echo "re-adding $file after formatting"
   git add "$file"
 done
