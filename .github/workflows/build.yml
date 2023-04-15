@@ -35,6 +35,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Android Emulator Runner
         uses: ReactiveCircus/android-emulator-runner@v2.28.0
+        with:
           api-level: 33
           script: ./gradlew createDebugCoverageReport
       - name: Build and analyze
