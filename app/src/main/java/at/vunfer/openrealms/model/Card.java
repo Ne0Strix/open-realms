@@ -44,4 +44,12 @@ public class Card {
     public String toString() {
         return "Card{" + "name='" + name + '\'' + ", cost=" + cost + ", effects=" + effects + '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Card)) return false;
+        Card card = (Card) o;
+        return cost == card.cost && name.equals(card.name) && effects.equals(effects);
+    }
 }
