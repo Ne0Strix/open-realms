@@ -83,5 +83,4 @@ class CardTest {
         assertEquals("Card{name='Card 2', cost=1}", card2.toString());
         assertEquals("Card{name='Card 3', cost=1}", card3.toString());
     }
-
 }
