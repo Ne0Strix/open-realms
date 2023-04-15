@@ -49,10 +49,10 @@ def instrumentationFileName;
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest','createDebugCoverageReport']) {
 
 	reports {
-		xml.enabled true
+		xml.required = true
 
 		//////////  5. xml.destination must be same as sonaqube property  //////////
-		xml.destination file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+		xml.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
 	}
 
 	def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
