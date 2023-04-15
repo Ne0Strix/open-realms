@@ -6,6 +6,8 @@ plugins {
 	////////// 2. move sonarqube plugin into app/build.gradle //////////
 	id 'org.sonarqube' version '3.3'
 	id 'com.diffplug.spotless' version '6.17.0'
+
+	id 'jacoco-report-aggregation'
 }
 
 android {
@@ -61,9 +63,9 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest','creat
 
 	sourceDirectories.from = files([mainSrc])
 	classDirectories.from = files([debugTree])
-	executionData.from = files("${buildDir}/jacoco/testDebugUnitTest.exec")
-	//def files = fileTree("${buildDir}/outputs/code-coverage/connected/flavors/DEV/").filter { it.isFile() }.files.name
-	//instrumentationFileName = "${buildDir}/outputs/code-coverage/connected/flavors/DEV/" + files[0];
+	//executionData.from = files("${buildDir}/jacoco/testDebugUnitTest.exec")
+	def files = fileTree("${buildDir}/outputs/code-coverage/connected/flavors/DEV/").filter { it.isFile() }.files.name
+	executionData.from = "${buildDir}/outputs/code-coverage/connected/flavors/DEV/" + files[0];
 }
 
 ////////// 2. move also sonarqube properties //////////
