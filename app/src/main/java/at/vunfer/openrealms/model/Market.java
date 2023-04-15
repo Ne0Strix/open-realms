@@ -1,8 +1,8 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Market {
     private static Market INSTANCE;
@@ -11,7 +11,42 @@ public class Market {
     Deck<Card> marketDeck;
     Deck<Card> forPurchase;
 
-    private Market() {}
+    private Market() {
+        marketDeck = new Deck<Card>();
+        forPurchase = new Deck<Card>();
+        marketDeck.add(
+                new Card(
+                        "Testcard1",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard2",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard3",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard4",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard5",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard6",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+
+        restock();
+    }
 
     public static Market getInstance() {
         if (INSTANCE == null) {
@@ -31,7 +66,7 @@ public class Market {
                 forPurchase.add(marketDeck.drawRandom());
                 restocked++;
             } catch (Exception e) {
-                Log.v(TAG, "You have no more cards to draw for the market.");
+                System.out.println("You have no more cards to draw for the market.");
             }
         }
         return restocked;

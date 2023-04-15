@@ -54,6 +54,10 @@ public class PlayArea {
         return playedChampions;
     }
 
+    public Market getMarket() {
+        return market;
+    }
+
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
     }
@@ -67,7 +71,6 @@ public class PlayArea {
     }
 
     public Card useCardExpendEffect() {
-
         return null;
     }
 
