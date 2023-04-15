@@ -33,6 +33,10 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: Android Emulator Runner
+        uses: ReactiveCircus/android-emulator-runner@v2.28.0
+          api-level: 33
+          script: ./gradlew createDebugCoverageReport
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
