@@ -1,9 +1,6 @@
 plugins {
 	id 'com.android.application'
-	////////// 1. simple jacoco plugin //////////
 	id 'jacoco'
-
-	////////// 2. move sonarqube plugin into app/build.gradle //////////
 	id 'org.sonarqube' version '3.3'
 	id 'com.diffplug.spotless' version '6.17.0'
 }
@@ -33,7 +30,6 @@ android {
 		targetCompatibility JavaVersion.VERSION_1_9
 	}
 
-	////////// 4. add testOptions //////////
 	testOptions {
 		unitTests.all {
 			useJUnitPlatform()
@@ -42,14 +38,15 @@ android {
 	}
 }
 
-////////// 3. add jacocoTestReport task like so //////////
+jacoco {
+	toolVersion = '0.8.9'
+}
+
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
 
 	reports {
-		xml.enabled true
-
-		//////////  5. xml.destination must be same as sonaqube property  //////////
-		xml.destination file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+		xml.required = true
+		xml.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
 	}
 
 	def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
@@ -61,15 +58,12 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
 	executionData.from = files("${buildDir}/jacoco/testDebugUnitTest.exec")
 }
 
-////////// 2. move also sonarqube properties //////////
 sonarqube {
 	properties {
 		property "sonar.projectKey", "Ne0Strix_open-realms"
 		property "sonar.organization", "ne0strix"
 		property "sonar.host.url", "https://sonarcloud.io"
 		property "sonar.java.coveragePlugin", "jacoco"
-
-		////////// 5. property same as xml.destination of jacocoTestReport //////////
 		property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
 	}
 }
@@ -90,12 +84,9 @@ dependencies {
 
 spotless {
 	format 'misc', {
-		// define the files to apply `misc` to
 		target '*.gradle', '*.md', '.gitignore', '**.gradle'
-
-		// define the steps to apply to those files
 		trimTrailingWhitespace()
-		indentWithTabs() // or spaces. Takes an integer argument if you don't like 4
+		indentWithTabs()
 		endWithNewline()
 	}
 	java {
