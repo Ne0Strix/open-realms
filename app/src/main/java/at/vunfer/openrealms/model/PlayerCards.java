@@ -12,8 +12,6 @@ public class PlayerCards {
     private static final int HANDSIZE = 5;
 
     public PlayerCards() {
-        List<Effect> effects = List.of(new DamageEffect(3), new CoinEffect(4));
-
         this.handCards = new Deck<Card>();
         this.deckCards = new Deck<Card>();
         this.discardedCards = new Deck<Card>();
@@ -32,6 +30,14 @@ public class PlayerCards {
         return handCards;
     }
 
+    public Deck<Card> getDiscardedCards() {
+        return discardedCards;
+    }
+
+    public int getHandsize() {
+        return HANDSIZE;
+    }
+
     public void discard(Card card) throws IllegalArgumentException {
         discardedCards.add(handCards.draw(card));
     }
@@ -45,6 +51,10 @@ public class PlayerCards {
     }
 
     public void restockHand() {
+        for (int i = this.handCards.size() - 1; i >= 0; i--) {
+            discardedCards.add(this.popFromHand(this.getHandCards().get(i)));
+        }
+
         if (deckCards.size() < HANDSIZE) {
             handCards.addAll(deckCards);
             deckCards.clear();
