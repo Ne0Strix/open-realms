@@ -93,30 +93,13 @@ public class DeckGenerator {
         String name;
 
         int amount = -1;
-        Effect effect;
         while (event != XmlPullParser.END_DOCUMENT) {
             event = xmlParser.next();
             name = xmlParser.getName();
             if (event == XmlPullParser.START_TAG) {
                 switch (name) {
                     case "type":
-                        if (amount == -1)
-                            throw new IllegalArgumentException(
-                                    "Ability Ordering Error: The \"amount\"-tag must come before"
-                                            + " the \"type\"-tag.");
-                        switch (xmlParser.nextText()) {
-                            case "coin":
-                                effect = new CoinEffect(amount);
-                                break;
-                            case "attack":
-                                effect = new DamageEffect(amount);
-                                break;
-                            case "heal":
-                                effect = new HealingEffect(amount);
-                                break;
-                            default:
-                                throw new IllegalArgumentException("Ability type not recognized");
-                        }
+                        Effect effect = parseEffect(xmlParser.nextText(), amount);
                         cardEffects.add(effect);
                         Log.v(LOGGING_TAG, "Added ability " + effect);
                         break;
@@ -128,6 +111,23 @@ public class DeckGenerator {
                 }
             }
             if (event == XmlPullParser.END_TAG) break;
+        }
+    }
+
+    private static Effect parseEffect(String nextText, int amount) {
+        if (amount == -1)
+            throw new IllegalArgumentException(
+                    "Ability Ordering Error: The \"amount\"-tag must come before"
+                            + " the \"type\"-tag.");
+        switch (nextText) {
+            case "coin":
+                return new CoinEffect(amount);
+            case "attack":
+                return new DamageEffect(amount);
+            case "heal":
+                return new HealingEffect(amount);
+            default:
+                throw new IllegalArgumentException("Ability type not recognized");
         }
     }
 }
