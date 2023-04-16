@@ -97,7 +97,7 @@ public class DeckGenerator {
         while (event != XmlPullParser.END_DOCUMENT) {
             event = xmlParser.next();
             name = xmlParser.getName();
-            if (event == XmlPullParser.START_TAG) { // TODO: make it order independent (somehow)
+            if (event == XmlPullParser.START_TAG) {
                 if (name.equals("type")) {
                     switch (xmlParser.nextText()) {
                         case "coin":
