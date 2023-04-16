@@ -78,10 +78,10 @@ public class DeckGenerator {
                         Log.v(LOGGING_TAG, "Added ability: " + cardCost);
                         break;
                     default:
-                        throw new IllegalArgumentException("Unrecognized XML tag.");
+                        throw new IllegalArgumentException("Unrecognized Card-XML tag.");
                 }
             }
-            if (event == XmlPullParser.END_TAG && name.equals("card")) break;
+            if (event == XmlPullParser.END_TAG) break;
         }
         return new Card(cardName, cardCost, cardEffects);
     }
@@ -98,27 +98,36 @@ public class DeckGenerator {
             event = xmlParser.next();
             name = xmlParser.getName();
             if (event == XmlPullParser.START_TAG) {
-                if (name.equals("type")) {
-                    switch (xmlParser.nextText()) {
-                        case "coin":
-                            effect = new CoinEffect(amount);
-                            break;
-                        case "attack":
-                            effect = new DamageEffect(amount);
-                            break;
-                        case "heal":
-                            effect = new HealingEffect(amount);
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Ability type not recognized");
-                    }
-                    cardEffects.add(effect);
-                    Log.v(LOGGING_TAG, "Added ability " + effect);
-                } else if (name.equals("amount")) {
-                    amount = Integer.parseInt(xmlParser.nextText());
+                switch (name) {
+                    case "type":
+                        if (amount == -1)
+                            throw new IllegalArgumentException(
+                                    "Ability Ordering Error: The \"amount\"-tag must come before"
+                                            + " the \"type\"-tag.");
+                        switch (xmlParser.nextText()) {
+                            case "coin":
+                                effect = new CoinEffect(amount);
+                                break;
+                            case "attack":
+                                effect = new DamageEffect(amount);
+                                break;
+                            case "heal":
+                                effect = new HealingEffect(amount);
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Ability type not recognized");
+                        }
+                        cardEffects.add(effect);
+                        Log.v(LOGGING_TAG, "Added ability " + effect);
+                        break;
+                    case "amount":
+                        amount = Integer.parseInt(xmlParser.nextText());
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unrecognized Ability-XML tag.");
                 }
             }
-            if (event == XmlPullParser.END_TAG && name.equals("ability")) break;
+            if (event == XmlPullParser.END_TAG) break;
         }
     }
 }
