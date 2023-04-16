@@ -9,6 +9,9 @@ public class CoinEffect implements Effect {
     private final int coin;
 
     public CoinEffect(int coin) {
+        if (coin < 0) {
+            throw new IllegalArgumentException("Coin must not be negative");
+        }
         this.coin = coin;
     }
 

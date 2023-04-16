@@ -9,6 +9,9 @@ public class DamageEffect implements Effect {
     private final int damage;
 
     public DamageEffect(int damage) {
+        if (damage < 0) {
+            throw new IllegalArgumentException("Damage must not be negative");
+        }
         this.damage = damage;
     }
 

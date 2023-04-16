@@ -8,6 +8,9 @@ public class HealingEffect implements Effect {
     private final int healing;
 
     public HealingEffect(int healing) {
+        if (healing < 0) {
+            throw new IllegalArgumentException("Healing must not be negative");
+        }
         this.healing = healing;
     }
 
