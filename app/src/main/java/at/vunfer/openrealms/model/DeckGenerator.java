@@ -46,7 +46,8 @@ public class DeckGenerator {
                 }
             }
         } catch (IOException | XmlPullParserException e) {
-            Log.e(LOGGING_TAG, e.getLocalizedMessage());
+            throw new IllegalArgumentException(
+                    "Unspecified XmlPullParserException: " + e.getLocalizedMessage());
         }
         return deck;
     }
@@ -91,7 +92,7 @@ public class DeckGenerator {
         int event = 0;
         String name;
 
-        int amount = 0;
+        int amount = -1;
         Effect effect;
         while (event != XmlPullParser.END_DOCUMENT) {
             event = xmlParser.next();
