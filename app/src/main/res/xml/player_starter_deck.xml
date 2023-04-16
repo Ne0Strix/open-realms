@@ -24,20 +24,4 @@
             <type>attack</type>
         </ability>
     </card>
-    <card amount="3">
-        <name>Hypothetical card with 3 effects</name>
-        <cost>10</cost>
-        <ability>
-            <amount>23</amount>
-            <type>coin</type>
-        </ability>
-        <ability>
-            <amount>12</amount>
-            <type>attack</type>
-        </ability>
-        <ability>
-            <amount>69</amount>
-            <type>heal</type>
-        </ability>
-    </card>
 </deck>
