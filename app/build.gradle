@@ -77,7 +77,7 @@ sonarqube {
 		property "sonar.java.coveragePlugin", "jacoco"
 
 		////////// 5. property same as xml.destination of jacocoTestReport //////////
-		property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/coverage/androidTest/debug/connected/report.xml"
+		property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
 	}
 }
 
