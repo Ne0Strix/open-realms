@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class HealingEffectTest {
 
     @Test
-    public void testInvalidConstructor() {
+    void testInvalidConstructor() {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new HealingEffect(-1),

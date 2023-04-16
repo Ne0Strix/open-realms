@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class CoinEffectTest {
 
     @Test
-    public void testInvalidConstructor() {
+    void testInvalidConstructor() {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> new CoinEffect(-1),
