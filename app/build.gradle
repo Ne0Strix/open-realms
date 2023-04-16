@@ -46,7 +46,6 @@ android {
 		}
 	}
 }
-def reportPath
 ////////// 3. add jacocoTestReport task like so //////////
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest','createDebugCoverageReport']) {
 
@@ -65,8 +64,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest','creat
 	classDirectories.from = files([debugTree])
 	//executionData.from = files("${buildDir}/jacoco/testDebugUnitTest.exec")
 	def files = fileTree("${buildDir}/outputs/code-coverage/connected/flavors/DEV/").filter { it.isFile() }.files.name
-	reportPath = "${buildDir}/outputs/code-coverage/connected/flavors/DEV/" + files[0]
-	executionData.from = reportPath
+	executionData.from = "${buildDir}/outputs/code-coverage/connected/flavors/DEV/" + files[0]
 }
 
 ////////// 2. move also sonarqube properties //////////
@@ -78,8 +76,9 @@ sonarqube {
 		property "sonar.java.coveragePlugin", "jacoco"
 
 		////////// 5. property same as xml.destination of jacocoTestReport //////////
-		property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/coverage/androidTest/debug/connected/report.xml"
-		//property "sonar.jacoco.itReportPath", instrumentationFileName
+		//property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/coverage/androidTest/debug/connected/report.xml"
+		property 'sonar.jacoco.reportPath', fileTree(dir: project.projectDir, includes: ['**/*.exec'])
+		property 'sonar.jacoco.itReportPath', fileTree(dir: project.projectDir, includes: ['**/*.ec'])
 	}
 }
 
