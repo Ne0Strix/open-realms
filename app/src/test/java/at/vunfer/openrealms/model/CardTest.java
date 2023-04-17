@@ -53,7 +53,7 @@ class CardTest {
     void testEqualsDifferentType() {
         Card card = new Card("Name", 1, List.of(new DamageEffect(1)));
 
-        assertNotEquals(card, "Card");
+        assertNotEquals("Card", card);
     }
 
     @Test
