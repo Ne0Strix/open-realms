@@ -51,7 +51,7 @@ class DamageEffectTest {
     void testEqualsDifferentType() {
         DamageEffect effect1 = new DamageEffect(1);
 
-        assertNotEquals("DamageEffect", effect1);
+        assertNotEquals(effect1, "DamageEffect");
     }
 
     @Test
