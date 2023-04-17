@@ -3,6 +3,7 @@ package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
+import java.util.Objects;
 
 public class DamageEffect implements Effect {
 
@@ -23,5 +24,18 @@ public class DamageEffect implements Effect {
     @Override
     public String toString() {
         return "DamageEffect{" + "damage=" + damage + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DamageEffect)) return false;
+        DamageEffect that = (DamageEffect) o;
+        return damage == that.damage;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(damage);
     }
 }

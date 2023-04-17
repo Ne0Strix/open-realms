@@ -51,7 +51,7 @@ public class Card {
         if (this == o) return true;
         if (!(o instanceof Card)) return false;
         Card card = (Card) o;
-        return cost == card.cost && name.equals(card.name) && effects.equals(effects);
+        return cost == card.cost && name.equals(card.name) && effects.equals(card.effects);
     }
 
     @Override

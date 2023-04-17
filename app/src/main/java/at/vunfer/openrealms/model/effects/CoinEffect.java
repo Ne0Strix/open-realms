@@ -3,6 +3,7 @@ package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
+import java.util.Objects;
 
 public class CoinEffect implements Effect {
 
@@ -23,5 +24,18 @@ public class CoinEffect implements Effect {
     @Override
     public String toString() {
         return "CoinEffect{" + "coin=" + coin + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CoinEffect)) return false;
+        CoinEffect that = (CoinEffect) o;
+        return coin == that.coin;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(coin);
     }
 }
