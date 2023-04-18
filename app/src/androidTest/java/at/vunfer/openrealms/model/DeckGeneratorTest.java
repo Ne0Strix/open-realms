@@ -207,4 +207,12 @@ public class DeckGeneratorTest {
                 IllegalArgumentException.class,
                 () -> DeckGenerator.generateDeckFromString(xmlToParse));
     }
+
+    @Test
+    public void testNullString() {
+        assertThrows(
+                IllegalArgumentException.class, () -> DeckGenerator.generateDeckFromString(null));
+        assertThrows(
+                IllegalArgumentException.class, () -> DeckGenerator.generateDeckFromString(""));
+    }
 }

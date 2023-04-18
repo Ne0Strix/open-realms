@@ -33,10 +33,12 @@ public class DeckGenerator {
 
     public static Deck<Card> generateDeckFromString(String xml) {
         try {
+            if (xml == null || xml.isEmpty())
+                throw new IllegalArgumentException("Input String must not be null or empty.");
             XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
             parser.setInput(new ByteArrayInputStream(xml.getBytes()), null);
             return generateDeckFromXml(parser);
-        } catch (XmlPullParserException e) {
+        } catch (XmlPullParserException | IllegalArgumentException e) {
             throw new IllegalArgumentException(
                     "Unspecified XmlPullParserException: " + e.getLocalizedMessage());
         }
