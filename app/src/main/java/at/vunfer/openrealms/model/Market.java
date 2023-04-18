@@ -12,8 +12,8 @@ public class Market {
     Deck<Card> forPurchase;
 
     private Market() {
-        marketDeck = new Deck<Card>();
-        forPurchase = new Deck<Card>();
+        marketDeck = new Deck<>();
+        forPurchase = new Deck<>();
         marketDeck.add(
                 new Card(
                         "Testcard1",
@@ -62,11 +62,13 @@ public class Market {
     public int restock() {
         int restocked = 0;
         while (forPurchase.size() < TOTAL_PURCHASABLE) {
-            try {
-                forPurchase.add(marketDeck.drawRandom());
+            Card card = marketDeck.drawRandom();
+            if (card != null) {
+                forPurchase.add(card);
                 restocked++;
-            } catch (Exception e) {
+            } else {
                 System.out.println("You have no more cards to draw for the market.");
+                break;
             }
         }
         return restocked;
