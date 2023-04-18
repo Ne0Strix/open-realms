@@ -7,11 +7,13 @@ import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 public class DeckGenerator {
 
@@ -27,6 +29,17 @@ public class DeckGenerator {
     public static Deck<Card> generateMarketDeck(Context context) {
         XmlPullParser xmlParser = context.getResources().getXml(R.xml.market_deck);
         return generateDeckFromXml(xmlParser);
+    }
+
+    public static Deck<Card> generateDeckFromString(String xml) {
+        try {
+            XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+            parser.setInput(new ByteArrayInputStream(xml.getBytes()), null);
+            return generateDeckFromXml(parser);
+        } catch (XmlPullParserException e) {
+            throw new IllegalArgumentException(
+                    "Unspecified XmlPullParserException: " + e.getLocalizedMessage());
+        }
     }
 
     public static Deck<Card> generateDeckFromXml(XmlPullParser xmlParser) {

@@ -9,13 +9,9 @@ import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 public class DeckGeneratorTest {
 
@@ -68,7 +64,6 @@ public class DeckGeneratorTest {
                         + "   </ability>"
                         + "</card>"
                         + "</deck>";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
 
         Deck<Card> expectedDeck = new Deck<>();
         expectedDeck.add(new Card("testName", 5, new ArrayList<>(List.of(new CoinEffect(5)))));
@@ -80,7 +75,7 @@ public class DeckGeneratorTest {
                         16,
                         new ArrayList<>(List.of(new DamageEffect(2), new HealingEffect(5)))));
 
-        Deck<Card> deck = DeckGenerator.generateDeckFromXml(xml);
+        Deck<Card> deck = DeckGenerator.generateDeckFromString(xmlToParse);
 
         assertEquals(expectedDeck, deck);
     }
@@ -88,12 +83,11 @@ public class DeckGeneratorTest {
     @Test
     public void testInvalidXmlStructure() {
         String xmlToParse = "This is not an Xml";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
 
         assertThrows(
                 "Unspecified XmlPullParserException: ",
                 IllegalArgumentException.class,
-                () -> DeckGenerator.generateDeckFromXml(xml));
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
     }
 
     @Test
@@ -109,12 +103,11 @@ public class DeckGeneratorTest {
                         + "        </cardAbility>"
                         + "    </card>"
                         + "</deck>";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
 
         assertThrows(
                 "Unrecognized Card-XML tag.",
                 IllegalArgumentException.class,
-                () -> DeckGenerator.generateDeckFromXml(xml));
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
     }
 
     @Test
@@ -128,11 +121,10 @@ public class DeckGeneratorTest {
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>"
                         + "        </ability>";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
         Deck<Card> expectedDeck = new Deck<>();
         expectedDeck.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
 
-        Deck<Card> resultDeck = DeckGenerator.generateDeckFromXml(xml);
+        Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
         assertEquals(expectedDeck, resultDeck);
     }
@@ -147,11 +139,10 @@ public class DeckGeneratorTest {
                         + "        <ability>"
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
         Deck<Card> expectedDeck = new Deck<>();
         expectedDeck.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
 
-        Deck<Card> resultDeck = DeckGenerator.generateDeckFromXml(xml);
+        Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
         assertEquals(expectedDeck, resultDeck);
     }
@@ -170,12 +161,11 @@ public class DeckGeneratorTest {
                         + "        </ability>"
                         + "    </card>"
                         + "</deck>";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
 
         assertThrows(
                 "Unrecognized Ability-XML tag.",
                 IllegalArgumentException.class,
-                () -> DeckGenerator.generateDeckFromXml(xml));
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
     }
 
     @Test
@@ -191,12 +181,11 @@ public class DeckGeneratorTest {
                         + "        </ability>"
                         + "    </card>"
                         + "</deck>";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
 
         assertThrows(
                 "Ability type not recognized",
                 IllegalArgumentException.class,
-                () -> DeckGenerator.generateDeckFromXml(xml));
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
     }
 
     @Test
@@ -212,23 +201,10 @@ public class DeckGeneratorTest {
                         + "        </ability>"
                         + "    </card>"
                         + "</deck>";
-        XmlPullParser xml = getXmlFromString(xmlToParse);
 
         assertThrows(
                 "Ability Ordering Error: The \"amount\"-tag must come before the \"type\"-tag.",
                 IllegalArgumentException.class,
-                () -> DeckGenerator.generateDeckFromXml(xml));
-    }
-
-    public XmlPullParser getXmlFromString(String xml) {
-        XmlPullParser parser = null;
-        try {
-            parser = XmlPullParserFactory.newInstance().newPullParser();
-            parser.setInput(new ByteArrayInputStream(xml.getBytes()), null);
-            return parser;
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        }
-        return parser;
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
     }
 }
