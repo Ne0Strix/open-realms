@@ -52,8 +52,8 @@ class CardTest {
     @Test
     void testEqualsDifferentType() {
         Card card = new Card("Name", 1, List.of(new DamageEffect(1)));
-
-        assertNotEquals(card, "Card");
+        Deck<Card> deck = new Deck<>();
+        assertNotEquals(card, deck);
     }
 
     @Test

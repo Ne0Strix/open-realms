@@ -48,8 +48,8 @@ class CoinEffectTest {
     @Test
     void testEqualsDifferentType() {
         CoinEffect effect1 = new CoinEffect(1);
-
-        assertNotEquals(effect1, "CoinEffect");
+        DamageEffect effect2 = new DamageEffect(1);
+        assertNotEquals(effect1, effect2);
     }
 
     @Test

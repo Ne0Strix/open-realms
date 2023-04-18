@@ -50,8 +50,8 @@ class HealingEffectTest {
     @Test
     void testEqualsDifferentType() {
         HealingEffect effect1 = new HealingEffect(1);
-
-        assertNotEquals(effect1, "HealingEffect");
+        CoinEffect effect2 = new CoinEffect(1);
+        assertNotEquals(effect1, effect2);
     }
 
     @Test
