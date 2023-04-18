@@ -34,7 +34,11 @@ public class PlayerCards {
         return discardedCards;
     }
 
-    public int getHandsize() {
+    public Deck<Card> getDeckCards() {
+        return deckCards;
+    }
+
+    public int getHandSize() {
         return HANDSIZE;
     }
 

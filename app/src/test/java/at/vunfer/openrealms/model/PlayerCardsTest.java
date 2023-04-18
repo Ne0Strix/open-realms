@@ -45,7 +45,7 @@ class PlayerCardsTest {
 
     @Test
     void testInitialSetup() {
-        assertEquals(cards.getHandsize(), cards.getHandCards().size());
+        assertEquals(cards.getHandSize(), cards.getHandCards().size());
     }
 
     @Test
@@ -58,12 +58,12 @@ class PlayerCardsTest {
 
     @Test
     void testRestockEmptyHand() {
-        for (int i = cards.getHandsize() - 1; i >= 0; i--) {
+        for (int i = cards.getHandSize() - 1; i >= 0; i--) {
             cards.popFromHand(cards.getHandCards().get(i));
         }
 
         cards.restockHand();
-        assertEquals(cards.getHandsize(), cards.getHandCards().size());
+        assertEquals(cards.getHandSize(), cards.getHandCards().size());
     }
 
     @Test
@@ -80,7 +80,7 @@ class PlayerCardsTest {
         cards.restockHand();
 
         // check whether remaining cards were dropped as well
-        assertEquals(cards.getHandsize(), cards.getHandCards().size());
+        assertEquals(cards.getHandSize(), cards.getHandCards().size());
         assertFalse(cards.getHandCards().containsAll(oldHand));
     }
 
@@ -91,7 +91,28 @@ class PlayerCardsTest {
 
         cards.restockHand();
 
-        assertEquals(cards.getHandsize(), cards.getHandCards().size());
+        assertEquals(cards.getHandSize(), cards.getHandCards().size());
         assertFalse(cards.getHandCards().containsAll(oldHand));
+    }
+
+    @Test
+    void testRestockHandWhenDeckCardsTooSmall() {
+        // remove all cards from the hand
+        for (int i = 0; i < cards.getHandCards().size(); i++) {
+            cards.popFromHand(cards.getHandCards().get(i));
+        }
+
+        // remove all but 4 cards from the deck
+        cards.getDeckCards().subList(0, cards.getDeckCards().size() - 4).clear();
+
+        // add 2 cards to the discard pile
+        cards.getDiscardedCards().add(new Card("card1", 1, List.of(new CoinEffect(1))));
+        cards.getDiscardedCards().add(new Card("card2", 1, List.of(new CoinEffect(1))));
+
+        // restock the hand
+        cards.restockHand();
+
+        // check that the hand has been refilled with 5 cards
+        assertEquals(5, cards.getHandCards().size());
     }
 }
