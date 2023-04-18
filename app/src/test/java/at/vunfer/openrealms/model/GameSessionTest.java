@@ -1,15 +1,15 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class GameSessionTest {
 
@@ -42,6 +42,7 @@ public class GameSessionTest {
         gameSession = new GameSession(players, player1);
         assertEquals(players, gameSession.getPlayers());
     }
+
     @Test
     public void testPlayersAfterNewSession() {
         assertEquals(2, gameSession.getPlayers().size());
