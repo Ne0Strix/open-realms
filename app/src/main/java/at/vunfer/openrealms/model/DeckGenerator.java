@@ -89,7 +89,7 @@ public class DeckGenerator {
                         Log.v(LOGGING_TAG, "Added cost: " + cardCost);
                         break;
                     case "ability":
-                        addCardAbility(cardEffects, xmlParser);
+                        cardEffects = getCardAbility(xmlParser);
                         Log.v(LOGGING_TAG, "Added ability: " + cardCost);
                         break;
                     default:
@@ -101,8 +101,9 @@ public class DeckGenerator {
         return new Card(cardName, cardCost, cardEffects);
     }
 
-    private static void addCardAbility(List<Effect> cardEffects, XmlPullParser xmlParser)
+    private static List<Effect> getCardAbility(XmlPullParser xmlParser)
             throws XmlPullParserException, IOException {
+        List<Effect> cardEffects = new ArrayList<>();
         Log.v(LOGGING_TAG, "Start working on ability.");
         int event = 0;
         String name;
@@ -127,6 +128,7 @@ public class DeckGenerator {
             }
             if (event == XmlPullParser.END_TAG) break;
         }
+        return cardEffects;
     }
 
     private static Effect parseEffect(String nextText, int amount) {
