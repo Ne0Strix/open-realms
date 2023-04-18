@@ -19,16 +19,8 @@ public class GameSession {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
     public Player getCurrentPlayer() {
         return currentPlayer;
-    }
-
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
     }
 
     public Player getOpponent(Player currentPlayer) {
