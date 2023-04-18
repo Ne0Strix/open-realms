@@ -10,10 +10,9 @@ class PlayerFactoryTest {
     @Test
     void testCreatePlayer() {
         PlayerFactory playerFactory = new PlayerFactory();
-        Player player =playerFactory.createPlayer("John");
+        Player player = playerFactory.createPlayer("John");
         assertEquals("John", player.getPlayerName());
         assertEquals(70, player.getPlayArea().getHealth());
         assertEquals(5, player.getPlayArea().getPlayerCards().getHandCards().size());
     }
-
 }
