@@ -2,7 +2,6 @@
 package at.vunfer.openrealms.model;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Card {
     private static final String TAG = "Card";
@@ -43,19 +42,11 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + ", effects=" + effects + '}';
+        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + "}";
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Card)) return false;
-        Card card = (Card) o;
-        return cost == card.cost && name.equals(card.name) && effects.equals(card.effects);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, cost, effects);
+    public boolean isIdentical(Card c) {
+        if (this == c) return true;
+        return cost == c.cost && name.equals(c.name) && effects.equals(c.effects);
     }
 }

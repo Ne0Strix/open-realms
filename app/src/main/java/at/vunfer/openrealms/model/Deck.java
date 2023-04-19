@@ -20,10 +20,10 @@ public class Deck<T> extends ArrayList<T> {
     }
 
     public T draw(T item) throws IllegalArgumentException {
-        if (!super.contains(item)) {
+        if (!this.contains(item)) {
             throw new IllegalArgumentException("Item not in deck.");
         }
-        super.remove(item);
+        this.remove(item);
         return item;
     }
 }

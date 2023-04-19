@@ -23,8 +23,9 @@ public class DeckGeneratorTest {
         Deck<Card> manuallyGeneratedDeck =
                 DeckGenerator.generateDeckFromXml(
                         targetContext.getResources().getXml(R.xml.player_starter_deck));
-
-        assertEquals(manuallyGeneratedDeck, generatedDeck);
+        for (int i = 0; i < manuallyGeneratedDeck.size(); i++) {
+            assertTrue(manuallyGeneratedDeck.get(i).isIdentical(generatedDeck.get(i)));
+        }
     }
 
     @Test
@@ -36,7 +37,9 @@ public class DeckGeneratorTest {
                 DeckGenerator.generateDeckFromXml(
                         targetContext.getResources().getXml(R.xml.market_deck));
 
-        assertEquals(manuallyGeneratedDeck, generatedDeck);
+        for (int i = 0; i < manuallyGeneratedDeck.size(); i++) {
+            assertTrue(manuallyGeneratedDeck.get(i).isIdentical(generatedDeck.get(i)));
+        }
     }
 
     @Test
@@ -77,7 +80,9 @@ public class DeckGeneratorTest {
 
         Deck<Card> deck = DeckGenerator.generateDeckFromString(xmlToParse);
 
-        assertEquals(expectedDeck, deck);
+        for (int i = 0; i < expectedDeck.size(); i++) {
+            assertTrue(expectedDeck.get(i).isIdentical(deck.get(i)));
+        }
     }
 
     @Test
@@ -126,7 +131,9 @@ public class DeckGeneratorTest {
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
-        assertEquals(expectedDeck, resultDeck);
+        for (int i = 0; i < expectedDeck.size(); i++) {
+            assertTrue(expectedDeck.get(i).isIdentical(resultDeck.get(i)));
+        }
     }
 
     @Test
@@ -144,7 +151,9 @@ public class DeckGeneratorTest {
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
-        assertEquals(expectedDeck, resultDeck);
+        for (int i = 0; i < expectedDeck.size(); i++) {
+            assertTrue(expectedDeck.get(i).isIdentical(resultDeck.get(i)));
+        }
     }
 
     @Test
