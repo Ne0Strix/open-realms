@@ -39,7 +39,8 @@ public class DeckGeneratorTest {
 
         for (int i = 0; i < manuallyGeneratedDeck.size(); i++) {
             assertTrue(manuallyGeneratedDeck.get(i).isIdentical(generatedDeck.get(i)));
-        }    }
+        }
+    }
 
     @Test
     public void testGenerateDeckFromXml() {
