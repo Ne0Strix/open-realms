@@ -1,8 +1,11 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Market {
     private static Market INSTANCE;
@@ -11,7 +14,42 @@ public class Market {
     Deck<Card> marketDeck;
     Deck<Card> forPurchase;
 
-    private Market() {}
+    private Market() {
+        marketDeck = new Deck<>();
+        forPurchase = new Deck<>();
+        marketDeck.add(
+                new Card(
+                        "Testcard1",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard2",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard3",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard4",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard5",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        marketDeck.add(
+                new Card(
+                        "Testcard6",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+
+        restock();
+    }
 
     public static Market getInstance() {
         if (INSTANCE == null) {
@@ -27,11 +65,13 @@ public class Market {
     public int restock() {
         int restocked = 0;
         while (forPurchase.size() < TOTAL_PURCHASABLE) {
-            try {
-                forPurchase.add(marketDeck.drawRandom());
+            Card card = marketDeck.drawRandom();
+            if (card != null) {
+                forPurchase.add(card);
                 restocked++;
-            } catch (Exception e) {
-                Log.v(TAG, "You have no more cards to draw for the market.");
+            } else {
+                System.out.println("You have no more cards to draw for the market.");
+                break;
             }
         }
         return restocked;

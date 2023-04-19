@@ -1,0 +1,121 @@
+plugins {
+	id 'com.android.application'
+	id 'jacoco'
+	id 'org.sonarqube' version '3.3'
+	id 'com.diffplug.spotless' version '6.17.0'
+}
+
+android {
+	namespace 'at.vunfer.openrealms'
+	compileSdk 33
+
+	defaultConfig {
+		applicationId "at.vunfer.openrealms"
+		minSdk 29
+		targetSdk 33
+		versionCode 1
+		versionName "1.0"
+
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+		debug {
+			testCoverageEnabled = true
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_9
+		targetCompatibility JavaVersion.VERSION_1_9
+	}
+
+	testOptions {
+		unitTests.all {
+			useJUnitPlatform()
+			finalizedBy unitTest
+		}
+	}
+}
+jacoco {
+	toolVersion = '0.8.9'
+}
+
+gradle.projectsEvaluated {
+	connectedDebugAndroidTest.finalizedBy(androidTest)
+}
+
+task jacocoTestReport(type: JacocoReport) {
+	mustRunAfter "testDebugUnitTest"
+	mustRunAfter "createDebugCoverageReport"
+	dependsOn ':app:mergeReleaseAssets', ':app:compressReleaseAssets', ':app:extractProguardFiles', ':app:dexBuilderRelease', ':app:mergeDexRelease', ':app:lintReportDebug', ':app:mergeReleaseJniLibFolders', ':app:packageRelease', ':app:mergeReleaseJavaResource', ':app:lintAnalyzeDebug', ':app:lintVitalAnalyzeRelease', ':app:spotlessJava', ':app:spotlessMisc'
+	reports {
+		xml.required = true
+		html.required = true
+		xml.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+		html.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport")
+
+		def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+		def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilter)
+		def mainSrc = "${project.projectDir}/src/main/java"
+
+		sourceDirectories.from = files([mainSrc])
+		classDirectories.from = files([debugTree])
+		executionData.from = fileTree(dir: project.projectDir, includes: ['**/*.exec', '**/*.ec'])
+	}
+	task unitTest(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+		finalizedBy jacocoTestReport
+	}
+	task androidTest(type: JacocoReport, dependsOn: 'connectedDebugAndroidTest') {
+		finalizedBy jacocoTestReport
+	}
+	task testAll(type: JacocoReport, dependsOn: ['connectedDebugAndroidTest', 'testDebugUnitTest']) {
+		finalizedBy jacocoTestReport
+	}
+
+	project.tasks["sonarqube"].dependsOn "testAll"
+
+	sonarqube {
+		properties {
+			property "sonar.projectKey", "Ne0Strix_open-realms"
+			property "sonar.organization", "ne0strix"
+			property "sonar.host.url", "https://sonarcloud.io"
+			property "sonar.java.coveragePlugin", "jacoco"
+			property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+		}
+	}
+
+	dependencies {
+
+		implementation 'androidx.appcompat:appcompat:1.6.1'
+		implementation 'com.google.android.material:material:1.8.0'
+		implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+		testImplementation 'org.testng:testng:6.9.6'
+		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+
+		androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+		androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+	}
+
+	spotless {
+		format 'misc', {
+			target '*.gradle', '*.md', '.gitignore', '**.gradle'
+			trimTrailingWhitespace()
+			indentWithTabs()
+			endWithNewline()
+		}
+		java {
+			target 'src/*/java/**/*.java'
+			removeUnusedImports()
+			cleanthat()
+			googleJavaFormat('1.16.0').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
+			formatAnnotations()
+			licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
+		}
+	}
+}

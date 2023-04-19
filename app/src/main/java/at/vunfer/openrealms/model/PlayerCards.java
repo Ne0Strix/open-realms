@@ -1,19 +1,20 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.List;
 
 public class PlayerCards {
     private static final String TAG = "PlayerCards";
-    private Deck<Card> handCards;
-    private Deck<Card> deckCards;
-    private Deck<Card> discardedCards;
+    private final Deck<Card> handCards;
+    private final Deck<Card> deckCards;
+    private final Deck<Card> discardedCards;
 
     private static final int HANDSIZE = 5;
 
     public PlayerCards() {
-        List<Effect> effects = List.of(new DamageEffect(3), new CoinEffect(4));
-
         this.handCards = new Deck<Card>();
         this.deckCards = new Deck<Card>();
         this.discardedCards = new Deck<Card>();
@@ -32,6 +33,18 @@ public class PlayerCards {
         return handCards;
     }
 
+    public Deck<Card> getDiscardedCards() {
+        return discardedCards;
+    }
+
+    public Deck<Card> getDeckCards() {
+        return deckCards;
+    }
+
+    public int getHandSize() {
+        return HANDSIZE;
+    }
+
     public void discard(Card card) throws IllegalArgumentException {
         discardedCards.add(handCards.draw(card));
     }
@@ -45,6 +58,10 @@ public class PlayerCards {
     }
 
     public void restockHand() {
+        for (int i = this.handCards.size() - 1; i >= 0; i--) {
+            discardedCards.add(this.popFromHand(this.getHandCards().get(i)));
+        }
+
         if (deckCards.size() < HANDSIZE) {
             handCards.addAll(deckCards);
             deckCards.clear();
