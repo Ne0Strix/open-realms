@@ -5,5 +5,4 @@ public interface Effect {
     void applyEffect(PlayArea visitor);
 
     String getDescription();
-
 }

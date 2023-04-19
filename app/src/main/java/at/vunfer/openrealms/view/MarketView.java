@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,7 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Log.i("MARKET CLICKED", card.toString());
                             selectedCard = card;
                             ((MainActivity) context).showCardDetails(v);
                         }

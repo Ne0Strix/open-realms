@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class HandView extends LinearLayout {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Log.i("CARD WAS CLICKED",card.toString());
+                                    Log.i("CARD WAS CLICKED", card.toString());
                                     if (onCardSelectedListener != null) {
                                         onCardSelectedListener.onCardSelected(card);
                                     }

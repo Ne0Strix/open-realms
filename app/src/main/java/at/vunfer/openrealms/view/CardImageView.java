@@ -39,6 +39,11 @@ public class CardImageView extends androidx.appcompat.widget.AppCompatImageView 
         super(context, attrs, defStyleAttr);
     }
 
+    public CardImageView(Context context, Card card) {
+        super(context);
+        setCard(card);
+    }
+
     /**
      * Sets the card for this CardImageView.
      *

@@ -4,7 +4,6 @@ package at.vunfer.openrealms.model;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,9 +123,7 @@ public class Market {
         cards.remove(card);
     }
 
-    /**
-     * Clear the market of all cards.
-     */
+    /** Clear the market of all cards. */
     public void clear() {
         cards.clear();
     }

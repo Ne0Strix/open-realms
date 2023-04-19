@@ -3,9 +3,8 @@ package at.vunfer.openrealms.model;
 
 import android.content.Context;
 import android.widget.ImageView;
-
 import at.vunfer.openrealms.R;
-
+import at.vunfer.openrealms.view.CardImageView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +31,7 @@ public class Card {
         this.description = "";
     }
 
-    public Card(String name, int cost, List<Effect> effects)
-            throws IllegalArgumentException {
+    public Card(String name, int cost, List<Effect> effects) throws IllegalArgumentException {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name must not be null or empty");
         } else if (cost < 0) {
@@ -51,7 +49,7 @@ public class Card {
 
     public Card(String name, int cost, List<Effect> effects, Context context) {
         this(name, cost, effects);
-        this.cardImage = new ImageView(context);
+        this.cardImage = new CardImageView(context, this);
     }
 
     public String getName() {
