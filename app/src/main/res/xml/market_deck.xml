@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<deck>
+    <card amount="1">
+        <name>Close Ranks</name>
+        <cost>3</cost>
+        <ability>
+            <amount>5</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Command</name>
+        <cost>5</cost>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+        <ability>
+            <amount>4</amount>
+            <type>heal</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Domination</name>
+        <cost>7</cost>
+        <ability>
+            <amount>6</amount>
+            <type>attack</type>
+        </ability>
+        <ability>
+            <amount>6</amount>
+            <type>heal</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Rally the Troops</name>
+        <cost>4</cost>
+        <ability>
+            <amount>5</amount>
+            <type>attack</type>
+        </ability>
+        <ability>
+            <amount>5</amount>
+            <type>heal</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Recruit</name>
+        <cost>2</cost>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+        <ability>
+            <amount>5</amount>
+            <type>heal</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Taxation</name>
+        <cost>1</cost>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Bribe</name>
+        <cost>3</cost>
+        <ability>
+            <amount>3</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Death Threat</name>
+        <cost>3</cost>
+        <ability>
+            <amount>1</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Deception</name>
+        <cost>5</cost>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Fire Bomb</name>
+        <cost>8</cost>
+        <ability>
+            <amount>8</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Hit Job</name>
+        <cost>4</cost>
+        <ability>
+            <amount>7</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="2">
+        <name>Intimidation</name>
+        <cost>2</cost>
+        <ability>
+            <amount>5</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Profit</name>
+        <cost>1</cost>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Smash and Grab</name>
+        <cost>6</cost>
+        <ability>
+            <amount>6</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Dark Energy</name>
+        <cost>4</cost>
+        <ability>
+            <amount>7</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Dark Reward</name>
+        <cost>5</cost>
+        <ability>
+            <amount>3</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Death Touch</name>
+        <cost>5</cost>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Influence</name>
+        <cost>2</cost>
+        <ability>
+            <amount>3</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Life Drain</name>
+        <cost>6</cost>
+        <ability>
+            <amount>8</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="2">
+        <name>The Rot</name>
+        <cost>3</cost>
+        <ability>
+            <amount>4</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="2">
+        <name>Even Curse</name>
+        <cost>3</cost>
+        <ability>
+            <amount>6</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Even Gift</name>
+        <cost>3</cost>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Nature's Bounty</name>
+        <cost>4</cost>
+        <ability>
+            <amount>4</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Rampage</name>
+        <cost>6</cost>
+        <ability>
+            <amount>6</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="3">
+        <name>Spark</name>
+        <cost>1</cost>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+    <card amount="1">
+        <name>Wolf Form</name>
+        <cost>5</cost>
+        <ability>
+            <amount>8</amount>
+            <type>attack</type>
+        </ability>
+    </card>
+</deck>
