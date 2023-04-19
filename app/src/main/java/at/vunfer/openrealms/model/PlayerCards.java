@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.content.Context;
 import java.util.List;
 
 public class PlayerCards {
@@ -8,20 +9,21 @@ public class PlayerCards {
     private Deck<Card> handCards;
     private Deck<Card> deckCards;
     private Deck<Card> discardedCards;
+    private Context context;
 
     private static final int HANDSIZE = 5;
 
-    public PlayerCards() {
+    public PlayerCards(Context context) {
         List<Effect> effects = List.of(new DamageEffect(3), new CoinEffect(4));
 
         this.handCards = new Deck<Card>();
         this.deckCards = new Deck<Card>();
         this.discardedCards = new Deck<Card>();
-        this.deckCards.add(new Card("Dagger", 0, List.of(new DamageEffect(1)), ""));
-        this.deckCards.add(new Card("Shortsword", 0, List.of(new HealingEffect(2)), ""));
-        this.deckCards.add(new Card("Ruby ", 0, List.of(new CoinEffect(2)), ""));
+        this.deckCards.add(new Card("Dagger", 0, List.of(new DamageEffect(1)), "", context));
+        this.deckCards.add(new Card("Heal", 0, List.of(new HealingEffect(2)), "", context));
+        this.deckCards.add(new Card("Ruby ", 0, List.of(new CoinEffect(2)), "", context));
         for (int i = 0; i < 7; i++) {
-            this.deckCards.add(new Card("Coin", 0, List.of(new CoinEffect(1)), ""));
+            this.deckCards.add(new Card("Coin", 0, List.of(new CoinEffect(1)), "", context));
         }
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private HandView handView;
     private TurnValuesView turnValuesView;
     private GameSession gameSession;
+    private TurnValuesPresenter turnValuesPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         // Initialize game session
         List<Player> players =
                 List.of(
-                        PlayerFactory.createPlayer("Player 1"),
-                        PlayerFactory.createPlayer("Player 2"));
+                        PlayerFactory.createPlayer("Player 1", this),
+                        PlayerFactory.createPlayer("Player 2", this));
         gameSession = new GameSession(players, players.get(0));
 
         // Initialize views
@@ -61,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize TurnValuesView
         turnValuesView = new TurnValuesView(this);
-        TurnValuesPresenter turnValuesPresenter =
-                new TurnValuesPresenter(turnValuesView, gameSession);
+        turnValuesPresenter = new TurnValuesPresenter(turnValuesView, gameSession);
         handView.setOnCardSelectedListener(new OnCardSelectedListener(turnValuesPresenter));
 
         // Add views to layout
@@ -127,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
         LOGGER.log(Level.INFO, "Market displayed");
     }
 
-    public void nextClicked(View view) {}
-
-    public TurnValuesView getTurnValuesView() {
-        return turnValuesView;
+    public void nextClicked(View view) {
+        gameSession.endTurn();
+        turnValuesPresenter.updateTurnValuesView();
+        handView.resetHand();
     }
 }

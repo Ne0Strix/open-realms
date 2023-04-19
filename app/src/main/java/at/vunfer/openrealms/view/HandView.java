@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.GameSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,9 @@ public class HandView extends LinearLayout {
     }
 
     public void createFirstHand() {
-        for (int iterator = 0; iterator < MAX_HANDS; iterator++) {
-            Card card = new Card(handView.getContext());
+        Deck<Card> deck =
+                gameSession.getCurrentPlayer().getPlayArea().getPlayerCards().getHandCards();
+        for (Card card : deck) {
             card.getCardImage().setLongClickable(true);
             card.getCardImage()
                     .setOnClickListener(
@@ -61,6 +63,39 @@ public class HandView extends LinearLayout {
                                     } else {
                                         System.out.println("game session null");
                                         ;
+                                    }
+                                }
+                            });
+            this.cards.add(card);
+        }
+        this.setCards();
+    }
+
+    public void resetHand() {
+
+        // Invalidate and request layout to force a redraw of the layout
+        handView.invalidate();
+        handView.requestLayout();
+        // Remove all old card views from handView
+        handView.removeAllViews();
+
+        // Clear the cards list
+        this.cards.clear();
+
+        Deck<Card> deck =
+                gameSession.getCurrentPlayer().getPlayArea().getPlayerCards().getHandCards();
+        for (Card card : deck) {
+            card.getCardImage().setLongClickable(true);
+            card.getCardImage()
+                    .setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (onCardSelectedListener != null && gameSession != null) {
+                                        onCardSelectedListener.onCardSelected(
+                                                card, gameSession.getCurrentPlayer().getPlayArea());
+                                    } else {
+                                        System.out.println("game session null");
                                     }
                                 }
                             });

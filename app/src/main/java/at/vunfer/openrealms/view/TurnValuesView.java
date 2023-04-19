@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
 import at.vunfer.openrealms.R;
 
 public class TurnValuesView {
@@ -49,5 +48,4 @@ public class TurnValuesView {
     public void setTurnValues(String turnCoin) {
         turnValues.setText(turnCoin);
     }
-
 }

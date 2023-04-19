@@ -1,11 +1,13 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.content.Context;
 import java.util.List;
 
 public class GameSession {
     private List<Player> players;
     private Player currentPlayer;
+    private Context context;
 
     public GameSession(List<Player> players, Player currentPlayer) throws IllegalArgumentException {
         if (!players.contains(currentPlayer)) {

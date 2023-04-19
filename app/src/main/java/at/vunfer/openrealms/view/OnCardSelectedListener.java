@@ -1,12 +1,12 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.view;
 
-import android.content.Context;
-
+import android.util.Log;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.presenter.TurnValuesPresenter;
 
-public class OnCardSelectedListener implements OnCardSelectedListenerInterface{
+public class OnCardSelectedListener implements OnCardSelectedListenerInterface {
 
     TurnValuesPresenter turnValuesPresenter;
 
@@ -16,7 +16,10 @@ public class OnCardSelectedListener implements OnCardSelectedListenerInterface{
 
     @Override
     public void onCardSelected(Card card, PlayArea playArea) {
-        playArea.playCard(card);
-        turnValuesPresenter.updateTurnValuesView();
+        if (!playArea.getPlayedCards().contains(card)) {
+            Log.v("UI", card.toString() + " ," + card.getId());
+            playArea.playCard(card);
+            turnValuesPresenter.updateTurnValuesView();
+        }
     }
 }

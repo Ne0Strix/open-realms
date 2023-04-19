@@ -23,9 +23,12 @@ public class TurnValuesPresenter {
         turnValuesView.setOpponentName("Opponent: " + nextPlayer.getPlayerName());
         turnValuesView.setCurrentPlayerHealth("Health: " + currentPlayer.getPlayArea().getHealth());
         turnValuesView.setOpponentHealth("Health: " + nextPlayer.getPlayArea().getHealth());
-        turnValuesView.setTurnValues("TurnCoin: " + gameSession.getCurrentPlayer().getPlayArea().getTurnCoins()
-                                    + "\nTurnDamage: " + gameSession.getCurrentPlayer().getPlayArea().getTurnDamage()
-                                    + "\nTurnHealing: " + gameSession.getCurrentPlayer().getPlayArea().getTurnHealing()  );
+        turnValuesView.setTurnValues(
+                "TurnCoin: "
+                        + gameSession.getCurrentPlayer().getPlayArea().getTurnCoins()
+                        + "\nTurnDamage: "
+                        + gameSession.getCurrentPlayer().getPlayArea().getTurnDamage()
+                        + "\nTurnHealing: "
+                        + gameSession.getCurrentPlayer().getPlayArea().getTurnHealing());
     }
-
 }

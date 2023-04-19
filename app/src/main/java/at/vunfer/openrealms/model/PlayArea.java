@@ -57,6 +57,7 @@ public class PlayArea {
 
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
+        card.applyEffects(this);
     }
 
     public Card useCardAllyEffect(Card card) {

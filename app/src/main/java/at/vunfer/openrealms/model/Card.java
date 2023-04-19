@@ -16,6 +16,8 @@ public class Card {
     private final int imageResource;
     private final String description;
     private ImageView cardImage;
+    private static int count = 0;
+    public int id;
 
     public Card(Context context) {
         this.name = "Empty Card";
@@ -42,6 +44,7 @@ public class Card {
         this.cardImage = new ImageView(context);
         this.imageResource = R.drawable.emptycards;
         this.description = description;
+        id = count++;
     }
 
     public String getName() {
@@ -81,5 +84,9 @@ public class Card {
 
     public void setCardImage(ImageView cardImage) {
         this.cardImage = cardImage;
+    }
+
+    public int getId() {
+        return id;
     }
 }
