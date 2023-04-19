@@ -13,6 +13,9 @@ public class GameSession {
         }
         this.players = players;
         this.currentPlayer = currentPlayer;
+        for (Player player : players) {
+            player.getPlayArea().setGameSessionForPlayer(this);
+        }
     }
 
     public List<Player> getPlayers() {

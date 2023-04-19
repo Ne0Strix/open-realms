@@ -8,6 +8,7 @@ public class PlayArea {
     private int turnDamage;
     private int turnHealing;
     private int turnCoins;
+    private GameSession gameSession;
 
     private Market market;
     private Deck<Card> playedCards;
@@ -112,5 +113,9 @@ public class PlayArea {
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
+    }
+
+    public void setGameSessionForPlayer(GameSession gameSession) {
+        this.gameSession = gameSession;
     }
 }

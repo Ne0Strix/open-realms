@@ -21,12 +21,13 @@ public class Card {
         this.name = "Empty Card";
         this.cost = 0;
         this.effects = new ArrayList<>();
+        effects.add(new DamageEffect(5));
         this.imageResource = R.drawable.emptycards;
         this.cardImage = new ImageView(context);
         this.description = "";
     }
 
-    public Card(String name, int cost, List<Effect> effects, String description)
+    public Card(String name, int cost, List<Effect> effects, String description, Context context)
             throws IllegalArgumentException {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name must not be null or empty");
@@ -38,7 +39,7 @@ public class Card {
         this.name = name;
         this.cost = cost;
         this.effects = effects;
-
+        this.cardImage = new ImageView(context);
         this.imageResource = R.drawable.emptycards;
         this.description = description;
     }

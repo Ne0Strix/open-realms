@@ -6,12 +6,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Market;
+import at.vunfer.openrealms.model.Player;
+import at.vunfer.openrealms.model.PlayerFactory;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
 import java.util.List;
@@ -27,17 +31,26 @@ public class MainActivity extends AppCompatActivity {
     private MarketPresenter marketPresenter;
     private Market market;
     private HandView handView;
+    private TurnValuesView turnValuesView;
+    private GameSession gameSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize game session
+        List<Player> players =
+                List.of(
+                        PlayerFactory.createPlayer("Player 1"),
+                        PlayerFactory.createPlayer("Player 2"));
+        gameSession = new GameSession(players, players.get(0));
+
         // Initialize views
         marketView = new MarketView(this);
         marketView.displayMarket(null);
         playAreaView = new PlayAreaView(this);
-        handView = new HandView(this);
+        handView = new HandView(this, gameSession);
         handView.createFirstHand();
 
         // Initialize presenter
@@ -46,11 +59,31 @@ public class MainActivity extends AppCompatActivity {
         // Initialize market
         market = new Market();
 
+        // Initialize TurnValuesView
+        turnValuesView = new TurnValuesView(this);
+        TurnValuesPresenter turnValuesPresenter =
+                new TurnValuesPresenter(turnValuesView, gameSession);
+        handView.setOnCardSelectedListener(new OnCardSelectedListener(turnValuesPresenter));
+
         // Add views to layout
         ConstraintLayout layout = findViewById(R.id.play_area);
         layout.addView(marketView.getMarketView());
         layout.addView(playAreaView);
         layout.addView(handView.getHandView());
+
+        FrameLayout turnValuesContainer = new FrameLayout(this);
+        turnValuesContainer.setId(View.generateViewId());
+        turnValuesContainer.addView(turnValuesView.getTurnValuesView());
+        layout.addView(turnValuesContainer);
+
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) turnValuesContainer.getLayoutParams();
+        layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams.topToTop = layout.getId();
+        layoutParams.startToStart = layout.getId();
+        layoutParams.endToEnd = layout.getId();
+        turnValuesContainer.setLayoutParams(layoutParams);
 
         LOGGER.log(Level.INFO, "Views initialized");
     }
@@ -92,5 +125,11 @@ public class MainActivity extends AppCompatActivity {
     public void displayMarket(List<Card> market) {
         marketView.showMarket(market);
         LOGGER.log(Level.INFO, "Market displayed");
+    }
+
+    public void nextClicked(View view) {}
+
+    public TurnValuesView getTurnValuesView() {
+        return turnValuesView;
     }
 }

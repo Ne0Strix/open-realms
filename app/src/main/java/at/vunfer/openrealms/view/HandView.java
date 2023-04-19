@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.GameSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +21,10 @@ public class HandView extends LinearLayout {
     private Context context;
     private List<Card> cards = new ArrayList<>();
     private LinearLayout handView;
-    private OnCardSelectedListener onCardSelectedListener;
+    private OnCardSelectedListenerInterface onCardSelectedListener;
+    private GameSession gameSession;
 
-    public interface OnCardSelectedListener {
-        void onCardSelected(Card card);
-
-        void onCardDropped(Card card);
-    }
-
-    public HandView(Context context) {
+    public HandView(Context context, GameSession gameSession) {
         super(context);
         this.context = context;
 
@@ -47,6 +43,7 @@ public class HandView extends LinearLayout {
         this.handView.setOrientation(LinearLayout.HORIZONTAL);
         this.handView.setMinimumHeight(1450);
         this.handView.setLayoutParams(params);
+        this.gameSession = gameSession;
     }
 
     public void createFirstHand() {
@@ -58,8 +55,12 @@ public class HandView extends LinearLayout {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (onCardSelectedListener != null) {
-                                        onCardSelectedListener.onCardSelected(card);
+                                    if (onCardSelectedListener != null && gameSession != null) {
+                                        onCardSelectedListener.onCardSelected(
+                                                card, gameSession.getCurrentPlayer().getPlayArea());
+                                    } else {
+                                        System.out.println("game session null");
+                                        ;
                                     }
                                 }
                             });
@@ -71,7 +72,7 @@ public class HandView extends LinearLayout {
     /**
      * Sets the list of cards to be displayed in the view.
      *
-     * @param cards the list of cards to be displayed
+     * @param //cards the list of cards to be displayed
      */
     private void setCards() {
         if (cards == null) {
@@ -164,5 +165,9 @@ public class HandView extends LinearLayout {
 
     public View getView() {
         return handView;
+    }
+
+    public void setOnCardSelectedListener(OnCardSelectedListenerInterface onCardSelectedListener) {
+        this.onCardSelectedListener = onCardSelectedListener;
     }
 }
