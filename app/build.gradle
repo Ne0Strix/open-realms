@@ -27,6 +27,9 @@ android {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
+		debug {
+			testCoverageEnabled = true
+		}
 	}
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_9
@@ -37,19 +40,23 @@ android {
 	testOptions {
 		unitTests.all {
 			useJUnitPlatform()
-			finalizedBy jacocoTestReport
+			finalizedBy unitTestOnlyJacocoTestReport
 		}
 	}
 }
-
+gradle.projectsEvaluated {
+	connectedDebugAndroidTest.finalizedBy(instrumentationTestOnlyJacocoTestReport)
+}
 ////////// 3. add jacocoTestReport task like so //////////
-task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
-
+task jacocoTestReport(type: JacocoReport) {
+	mustRunAfter "testDebugUnitTest"
+	mustRunAfter "createDebugCoverageReport"
 	reports {
-		xml.enabled true
-
+		xml.required = true
+		html.required = true
 		//////////  5. xml.destination must be same as sonaqube property  //////////
-		xml.destination file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+		xml.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+		html.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport")
 	}
 
 	def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
@@ -58,10 +65,19 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
 
 	sourceDirectories.from = files([mainSrc])
 	classDirectories.from = files([debugTree])
-	executionData.from = files("${buildDir}/jacoco/testDebugUnitTest.exec")
+	executionData.from = fileTree(dir: project.projectDir, includes: ['**/*.exec','**/*.ec'])
 }
-
+task unitTestOnlyJacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest'){
+	finalizedBy jacocoTestReport
+}
+task instrumentationTestOnlyJacocoTestReport(type: JacocoReport, dependsOn: 'connectedDebugAndroidTest'){
+	finalizedBy jacocoTestReport
+}
+task completeJacocoTestReport(type: JacocoReport, dependsOn: ['connectedDebugAndroidTest','testDebugUnitTest']){
+	finalizedBy jacocoTestReport
+}
 ////////// 2. move also sonarqube properties //////////
+project.tasks["sonarqube"].dependsOn "completeJacocoTestReport"
 sonarqube {
 	properties {
 		property "sonar.projectKey", "Ne0Strix_open-realms"

@@ -1,13 +1,16 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.List;
 
 public class PlayerCards {
     private static final String TAG = "PlayerCards";
-    private Deck<Card> handCards;
-    private Deck<Card> deckCards;
-    private Deck<Card> discardedCards;
+    private final Deck<Card> handCards;
+    private final Deck<Card> deckCards;
+    private final Deck<Card> discardedCards;
 
     private static final int HANDSIZE = 5;
 
