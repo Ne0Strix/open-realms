@@ -68,6 +68,11 @@ public class HandView extends LinearLayout {
         this.setCards();
     }
 
+    /**
+     * Sets the list of cards to be displayed in the view.
+     *
+     * @param cards the list of cards to be displayed
+     */
     private void setCards() {
         if (cards == null) {
             throw new IllegalArgumentException(ERROR_MSG + "Cards list is null");

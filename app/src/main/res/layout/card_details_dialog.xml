@@ -5,18 +5,6 @@
     android:layout_height="match_parent"
     tools:ignore="MissingDefaultResource">
 
-    <Button
-        android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go back" />
-
-    <Button
-        android:id="@+id/drop_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Drop to play area" />
-
     <ImageView
         android:id="@+id/card_details_image_view"
         android:layout_width="match_parent"

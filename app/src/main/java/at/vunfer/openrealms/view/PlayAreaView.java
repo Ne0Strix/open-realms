@@ -25,14 +25,14 @@ public class PlayAreaView extends FrameLayout {
      * Constructor for PlayAreaView.
      *
      * @param context The context of the application.
+     *     <p>public PlayAreaView(@NonNull Context context) { this(context, null); }
+     *     <p>/** Constructor for PlayAreaView.
      */
     public PlayAreaView(@NonNull Context context) {
         this(context, null);
     }
 
     /**
-     * Constructor for PlayAreaView.
-     *
      * @param context The context of the application.
      * @param attrs The attributes of the view.
      */
