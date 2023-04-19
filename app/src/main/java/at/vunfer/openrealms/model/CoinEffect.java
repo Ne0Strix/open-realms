@@ -13,9 +13,4 @@ public class CoinEffect implements Effect {
     public void applyEffect(PlayArea visitor) {
         visitor.visitCoin(coin);
     }
-
-    @Override
-    public String getDescription() {
-        return "Gain " + coin + " coins.";
-    }
 }
