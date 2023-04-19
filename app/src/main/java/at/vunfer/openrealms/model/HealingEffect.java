@@ -12,4 +12,9 @@ public class HealingEffect implements Effect {
     public void applyEffect(PlayArea visitor) {
         visitor.visitHealing(healing);
     }
+
+    @Override
+    public String getDescription() {
+        return "Heals the player for " + healing + " points.";
+    }
 }
