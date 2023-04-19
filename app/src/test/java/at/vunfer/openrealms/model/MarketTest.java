@@ -3,6 +3,7 @@ package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import at.vunfer.openrealms.model.effects.CoinEffect;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
