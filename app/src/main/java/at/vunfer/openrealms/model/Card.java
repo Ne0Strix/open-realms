@@ -2,7 +2,6 @@
 package at.vunfer.openrealms.model;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Card {
     private static final String TAG = "Card";
