@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Deck;
+import at.vunfer.openrealms.model.DeckGenerator;
 import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
@@ -37,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
         marketView.displayMarket(null);
         playAreaView = new PlayAreaView(this);
         handView = new HandView(this);
-        handView.createFirstHand();
+
+        Deck<Card> playerStarterCards =
+                DeckGenerator.generatePlayerStarterDeck(getApplicationContext());
+        handView.createFirstHand(playerStarterCards);
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(this);

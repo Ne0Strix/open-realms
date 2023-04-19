@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Deck;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,15 +52,15 @@ public class HandView extends LinearLayout {
         this.handView.setLayoutParams(params);
     }
 
-    public void createFirstHand() {
-        for (int iterator = 0; iterator < MAX_HANDS; iterator++) {
-            Card card = new Card(handView.getContext());
+    public void createFirstHand(Deck<Card> cards) {
+        for (Card card : cards) {
             card.getCardImage().setLongClickable(true);
             card.getCardImage()
                     .setOnClickListener(
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    Log.i("CARD WAS CLICKED",card.toString());
                                     if (onCardSelectedListener != null) {
                                         onCardSelectedListener.onCardSelected(card);
                                     }
