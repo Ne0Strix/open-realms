@@ -9,6 +9,14 @@
         </ability>
     </card>
     <card amount="1">
+        <name>Ruby</name>
+        <cost>0</cost>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+    </card>
+    <card amount="1">
         <name>Shortsword</name>
         <cost>0</cost>
         <ability>
