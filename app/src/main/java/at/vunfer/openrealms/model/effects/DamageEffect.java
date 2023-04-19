@@ -20,10 +20,12 @@ public class DamageEffect implements Effect {
     public void applyEffect(PlayArea visitor) {
         visitor.visitDamage(damage);
     }
+
     @Override
     public String getDescription() {
         return "Deals " + damage + " damage.";
     }
+
     @Override
     public String toString() {
         return "DamageEffect{" + "damage=" + damage + '}';
