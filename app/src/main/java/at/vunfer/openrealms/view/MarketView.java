@@ -12,12 +12,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.presenter.MarketPresenter;
 import java.util.List;
 import java.util.logging.Logger;
 
 /** View class for the Market. */
-public class MarketView implements MarketPresenter.View {
+public class MarketView implements at.vunfer.openrealms.presenter.MarketPresenter.View {
     private static final Logger LOGGER = Logger.getLogger(MarketView.class.getName());
     private static final String ERROR_MESSAGE = "Error displaying market";
     private static final String TAG = "MarketView";
