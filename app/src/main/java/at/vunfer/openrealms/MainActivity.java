@@ -4,7 +4,6 @@ package at.vunfer.openrealms;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,10 +14,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button start = findViewById(R.id.button);
-        start.setOnClickListener(view -> {
-
-            Intent game = new Intent(getApplicationContext(), GameActivity.class);
-            startActivity(game);
-        });
+        start.setOnClickListener(
+                view -> {
+                    Intent game = new Intent(getApplicationContext(), GameActivity.class);
+                    startActivity(game);
+                });
     }
 }

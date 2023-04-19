@@ -1,16 +1,12 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Random;
 
 public class ClientThread extends Thread {
     private int port;
@@ -43,15 +39,17 @@ public class ClientThread extends Thread {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
 
-            Log.i("MyInfo", "Client was started with the hostname " + hostname + " on the port " + port);
+            Log.i(
+                    "MyInfo",
+                    "Client was started with the hostname " + hostname + " on the port " + port);
 
-            //the first or the second player
+            // the first or the second player
             type = in.readLine().charAt(0);
 
-            //receive the notification that you should enter your username and send it
-            //textView.setText(in.readLine());
+            // receive the notification that you should enter your username and send it
+            // textView.setText(in.readLine());
 
-            //TODO: will be changed!
+            // TODO: will be changed!
             String msg = in.readLine();
             writer.println("Julia");
 
@@ -64,11 +62,9 @@ public class ClientThread extends Thread {
             }
 
             Log.i("Info", "Game is over!");
-            //TODO: notificate the user that the game is over
-        }
-        catch (IOException ex) {
+            // TODO: notificate the user that the game is over
+        } catch (IOException ex) {
             System.out.println("IO Exception");
         }
     }
-
 }

@@ -1,15 +1,13 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-
 public class GameActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +23,10 @@ public class GameActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.exampleView);
 
         Button btn = findViewById(R.id.exampleBtn);
-        btn.setOnClickListener(view -> {
-            clientThread.sendStringToServer();
-            textView.setText(clientThread.getFromServer());
-        });
-
+        btn.setOnClickListener(
+                view -> {
+                    clientThread.sendStringToServer();
+                    textView.setText(clientThread.getFromServer());
+                });
     }
-
 }
