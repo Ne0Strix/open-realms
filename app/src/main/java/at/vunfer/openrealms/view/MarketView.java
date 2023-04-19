@@ -30,7 +30,7 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
                     layout(getLeft(), getTop(), getRight(), getBottom());*/
                 }
             };
-    private Card selectedCard;
+    public Card selectedCard;
 
     private Context context;
     private LinearLayout marketView;
