@@ -50,9 +50,4 @@ public class Card {
         if (this == c) return true;
         return cost == c.cost && name.equals(c.name) && effects.equals(c.effects);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, cost, effects);
-    }
 }
