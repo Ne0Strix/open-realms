@@ -6,21 +6,4 @@ public interface Effect {
 
     String getDescription();
 
-    class DamageEffect implements Effect {
-        private final int damageAmount;
-        private final String description;
-
-        public DamageEffect(int damageAmount, String description) {
-            this.damageAmount = damageAmount;
-            this.description = description;
-        }
-
-        public void applyEffect(PlayArea playArea) {
-            // implementation details
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
 }

@@ -3,31 +3,41 @@ package at.vunfer.openrealms.model;
 
 import android.content.Context;
 import android.util.Log;
+
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 public class DeckGenerator {
 
-    private DeckGenerator() {}
+    public static Context context;
+
+    private DeckGenerator() {
+    }
 
     private static final String LOGGING_TAG = "DeckGenerator";
 
     public static Deck<Card> generatePlayerStarterDeck(Context context) {
         XmlPullParser xmlParser = context.getResources().getXml(R.xml.player_starter_deck);
+        if (DeckGenerator.context == null)
+            DeckGenerator.context = context;
         return generateDeckFromXml(xmlParser);
     }
 
     public static Deck<Card> generateMarketDeck(Context context) {
         XmlPullParser xmlParser = context.getResources().getXml(R.xml.market_deck);
+        if (DeckGenerator.context == null)
+            DeckGenerator.context = context;
         return generateDeckFromXml(xmlParser);
     }
 
@@ -57,7 +67,8 @@ public class DeckGenerator {
                     Log.v(LOGGING_TAG, "Adding Card " + amount + " Times");
                     Card c = parseCard(xmlParser);
                     Log.v(LOGGING_TAG, "Finished Card: " + c);
-                    for (int i = 0; i < amount; i++) deck.add(c);
+                    deck.add(c);
+                    for (int i = 1; i < amount; i++) deck.add(new Card(c));
                 }
             }
         } catch (IOException | XmlPullParserException e) {
@@ -99,7 +110,11 @@ public class DeckGenerator {
             }
             if (event == XmlPullParser.END_TAG) break;
         }
-        return new Card(cardName, cardCost, cardEffects);
+        if (DeckGenerator.context == null)
+            return new Card(cardName, cardCost, cardEffects);
+        else
+            return new Card(cardName, cardCost, cardEffects, context);
+
     }
 
     private static Effect getCardAbility(XmlPullParser xmlParser)

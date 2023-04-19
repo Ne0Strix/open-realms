@@ -18,11 +18,11 @@ public class PlayerCards {
         this.handCards = new Deck<Card>();
         this.deckCards = new Deck<Card>();
         this.discardedCards = new Deck<Card>();
-        this.deckCards.add(new Card("Dagger", 0, List.of(new DamageEffect(1)), ""));
-        this.deckCards.add(new Card("Shortsword", 0, List.of(new HealingEffect(2)), ""));
-        this.deckCards.add(new Card("Ruby ", 0, List.of(new CoinEffect(2)), ""));
+        this.deckCards.add(new Card("Dagger", 0, List.of(new DamageEffect(1))));
+        this.deckCards.add(new Card("Shortsword", 0, List.of(new HealingEffect(2))));
+        this.deckCards.add(new Card("Ruby ", 0, List.of(new CoinEffect(2))));
         for (int i = 0; i < 7; i++) {
-            this.deckCards.add(new Card("Coin", 0, List.of(new CoinEffect(1)), ""));
+            this.deckCards.add(new Card("Coin", 0, List.of(new CoinEffect(1))));
         }
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
