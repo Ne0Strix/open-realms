@@ -51,6 +51,7 @@ gradle.projectsEvaluated {
 task jacocoTestReport(type: JacocoReport) {
 	mustRunAfter "testDebugUnitTest"
 	mustRunAfter "createDebugCoverageReport"
+	dependsOn ':app:mergeReleaseAssets', ':app:compressReleaseAssets', ':app:extractProguardFiles', ':app:dexBuilderRelease', ':app:mergeDexRelease'
 	reports {
 		xml.required = true
 		html.required = true
