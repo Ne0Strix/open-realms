@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,8 @@ public class ChampionTest {
                 IllegalArgumentException.class, () -> new Champion("Test Champion", -3, effects));
         assertThrows(IllegalArgumentException.class, () -> new Champion("Test Champion", 3, null));
         assertThrows(
-                IllegalArgumentException.class, () -> new Champion("Test Champion", 3, List.of()));
+                IllegalArgumentException.class,
+                () -> new Champion("Test Champion", 3, new ArrayList<>()));
     }
 
     @Test
