@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import java.util.List;
 
 public class Card {
@@ -20,6 +21,7 @@ public class Card {
         this.name = name;
         this.cost = cost;
         this.effects = effects;
+        Log.v(TAG, "Created Card: " + this);
     }
 
     public String getName() {

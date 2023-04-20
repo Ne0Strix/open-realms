@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
@@ -73,5 +74,6 @@ public class PlayerCards {
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
         }
+        Log.v(TAG, "PlayerHand was restocked.");
     }
 }
