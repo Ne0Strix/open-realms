@@ -1,14 +1,12 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.List;
 
 public class PlayerCards {
-    private static final String TAG = "PlayerCards";
     private final Deck<Card> handCards;
     private final Deck<Card> deckCards;
     private final Deck<Card> discardedCards;
@@ -74,6 +72,5 @@ public class PlayerCards {
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
         }
-        Log.v(TAG, "PlayerHand was restocked.");
     }
 }
