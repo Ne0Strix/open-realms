@@ -86,4 +86,41 @@ class CardTest {
         assertEquals("Card{name='Card 2', cost=1}", card2.toString());
         assertEquals("Card{name='Card 3', cost=1}", card3.toString());
     }
+
+    @Test
+    void testIsIdenticalDifferentName() {
+        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Different Name", 1, List.of(new DamageEffect(1)));
+
+        assertFalse(cardA.isIdentical(cardB));
+    }
+
+    @Test
+    void testIsIdenticalDifferentCost() {
+        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Name", 2, List.of(new DamageEffect(1)));
+
+        assertFalse(cardA.isIdentical(cardB));
+    }
+
+    @Test
+    void testIsIdenticalDifferentEffect() {
+        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Name", 1, List.of(new HealingEffect(2)));
+
+        assertFalse(cardA.isIdentical(cardB));
+    }
+
+    @Test
+    void testIsIdenticalEqualObject() {
+        assertTrue(card1.isIdentical(card1));
+    }
+
+    @Test
+    void testIsIdenticalIdenticalObject() {
+        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Name", 1, List.of(new DamageEffect(1)));
+
+        assertTrue(cardA.isIdentical(cardB));
+    }
 }

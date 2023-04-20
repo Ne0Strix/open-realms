@@ -7,7 +7,6 @@ import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.List;
 
 public class PlayerCards {
-    private static final String TAG = "PlayerCards";
     private final Deck<Card> handCards;
     private final Deck<Card> deckCards;
     private final Deck<Card> discardedCards;
@@ -15,9 +14,9 @@ public class PlayerCards {
     private static final int HANDSIZE = 5;
 
     public PlayerCards() {
-        this.handCards = new Deck<Card>();
-        this.deckCards = new Deck<Card>();
-        this.discardedCards = new Deck<Card>();
+        this.handCards = new Deck<>();
+        this.deckCards = new Deck<>();
+        this.discardedCards = new Deck<>();
         this.deckCards.add(new Card("Dagger", 0, List.of(new DamageEffect(1))));
         this.deckCards.add(new Card("Shortsword", 0, List.of(new HealingEffect(2))));
         this.deckCards.add(new Card("Ruby ", 0, List.of(new CoinEffect(2))));
