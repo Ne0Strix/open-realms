@@ -3,6 +3,7 @@ package at.vunfer.openrealms.presenter;
 
 import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.view.MarketView;
 import java.util.List;
@@ -15,11 +16,11 @@ public class MarketPresenter {
     private MarketView marketView;
 
     public MarketPresenter(MainActivity mainActivity) {
-        this.market = new Market();
+        this.market = Market.getInstance();
         this.marketView = marketView;
     }
 
-    public void onMarketChanged(List<Card> cards) {
+    public void onMarketChanged(Deck<Card> cards) {
         market.setCards(cards);
         marketView.showMarket(cards);
     }

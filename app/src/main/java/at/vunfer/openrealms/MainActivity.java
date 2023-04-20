@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         marketPresenter = new MarketPresenter(this);
 
         // Initialize market
-        market = new Market();
+        market = Market.getInstance();
 
         // Add views to layout
         ConstraintLayout layout = findViewById(R.id.play_area);

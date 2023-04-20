@@ -5,15 +5,18 @@ files=()
 containsJava=0
 
 # iterate over all files in the staging area
-for entry in $(git status --porcelain | sed -r 's/[ \t]+/-/g'); do
-  if [[ $entry == M* ]]; then
-    files+=(${entry:2}) # strips the prefix
-  fi
+while IFS= read -r entry; do
+  status_code="${entry%% *}"
+  file="${entry#* }"
 
-  if [[ $entry == *.java ]]; then
-    containsJava=1
+  if [[ $status_code == M* ]]; then
+    files+=("$file")
+
+    if [[ $file == *.java ]]; then
+      containsJava=1
+    fi
   fi
-done
+done < <(git status --porcelain)
 
 # Format any javafiles with spotlessApply
 if [ "$containsJava" == "1" ]; then
@@ -24,7 +27,8 @@ else
 fi
 
 # Add back files to staging area
-for files in $files; do
-  echo "re-adding $files after formatting"
-  git add "$files"
+for file in "${files[@]}"; do
+  trimmed_file="$(echo -e "${file}" | sed -e 's/^[[:space:]]*//')"
+  echo "re-adding $trimmed_file after formatting"
+  git add "$trimmed_file"
 done

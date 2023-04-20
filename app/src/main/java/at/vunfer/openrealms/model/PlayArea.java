@@ -54,30 +54,34 @@ public class PlayArea {
         return playedChampions;
     }
 
+    public Market getMarket() {
+        return market;
+    }
+
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
     }
 
-    public Card useCardAllyEffect(Card card) {
-        return null;
-    }
-
-    public Card useCardSacrificeEffect(Card card) {
-        return null;
-    }
-
-    public Card useCardExpendEffect() {
-
-        return null;
-    }
-
-    public Card attackChampion(Champion champion, PlayArea playArea) {
-        return null;
-    }
-
-    public Card championIsAttacked(Champion champion) {
-        return null;
-    }
+    // commented out by since it is not used in first sprint
+    //    public Card useCardAllyEffect(Card card) {
+    //        return null;
+    //    }
+    //
+    //    public Card useCardSacrificeEffect(Card card) {
+    //        return null;
+    //    }
+    //
+    //    public Card useCardExpendEffect() {
+    //        return null;
+    //    }
+    //
+    //    public Card attackChampion(Champion champion, PlayArea playArea) {
+    //        return null;
+    //    }
+    //
+    //    public Card championIsAttacked(Champion champion) {
+    //        return null;
+    //    }
 
     public void resetTurnPool() {
         this.turnDamage = 0;
