@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Market {
-    private static Market INSTANCE;
+    private static Market marketInstance;
     private static final int TOTAL_PURCHASABLE = 5;
     private static final String TAG = "Market";
     Deck<Card> marketDeck;
@@ -53,10 +53,10 @@ public class Market {
     }
 
     public static Market getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Market();
+        if (marketInstance == null) {
+            marketInstance = new Market();
         }
-        return INSTANCE;
+        return marketInstance;
     }
 
     public ArrayList<Card> getForPurchase() {
