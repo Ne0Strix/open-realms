@@ -45,7 +45,7 @@ public class GameSessionTest {
 
     @Test
     void testPlayersAfterNewSession() {
-        assertEquals(2, gameSession.getPlayers().size());
+        assertEquals(gameSession.getPlayers().size(), 2);
         assertEquals(player1, gameSession.getCurrentPlayer());
     }
 
