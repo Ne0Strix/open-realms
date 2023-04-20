@@ -119,12 +119,9 @@ class PlayAreaTest {
 
     @Test
     void testBuyCardTooPoor() {
-        Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    player1.getPlayArea().buyCard(toBuy);
-                });
+        PlayArea playArea1 = player1.getPlayArea();
+        Card toBuy = playArea1.getMarket().getForPurchase().get(0);
+        assertThrows(IllegalArgumentException.class, () -> playArea1.buyCard(toBuy));
     }
 
     @Test

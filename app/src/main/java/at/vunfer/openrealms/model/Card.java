@@ -4,7 +4,6 @@ package at.vunfer.openrealms.model;
 import java.util.List;
 
 public class Card {
-    private static final String TAG = "Card";
     private final String name;
     private final int cost;
     private final List<Effect> effects;

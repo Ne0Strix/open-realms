@@ -7,13 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class ChampionTest {
 
     @Test
-    public void testConstructorValid() {
+    void testConstructorValid() {
         // Test valid construction
         List<Effect> effects =
                 List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1));
@@ -24,7 +25,7 @@ public class ChampionTest {
     }
 
     @Test
-    public void testConstructorInvalid() {
+    void testConstructorInvalid() {
         // Test invalid construction
         List<Effect> effects =
                 List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1));
@@ -33,11 +34,12 @@ public class ChampionTest {
                 IllegalArgumentException.class, () -> new Champion("Test Champion", -3, effects));
         assertThrows(IllegalArgumentException.class, () -> new Champion("Test Champion", 3, null));
         assertThrows(
-                IllegalArgumentException.class, () -> new Champion("Test Champion", 3, List.of()));
+                IllegalArgumentException.class,
+                () -> new Champion("Test Champion", 3, new ArrayList<>()));
     }
 
     @Test
-    public void testApplyEffects() {
+    void testApplyEffects() {
         // Set up play area and champion with effects
         PlayArea playArea = new PlayArea(20, new PlayerCards());
         Champion champion =
@@ -53,7 +55,7 @@ public class ChampionTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         Champion champion =
                 new Champion(
                         "Test Champion",

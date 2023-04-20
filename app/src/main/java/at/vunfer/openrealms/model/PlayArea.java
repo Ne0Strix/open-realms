@@ -20,8 +20,8 @@ public class PlayArea {
         this.turnDamage = 0;
         this.turnHealing = 0;
         this.turnCoins = 0;
-        this.playedCards = new Deck<Card>();
-        this.playedChampions = new Deck<Card>();
+        this.playedCards = new Deck<>();
+        this.playedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
     }
