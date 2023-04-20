@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,30 +48,30 @@ public class HandView extends LinearLayout {
         this.gameSession = gameSession;
     }
 
-    public void createFirstHand() {
-        Deck<Card> deck =
-                gameSession.getCurrentPlayer().getPlayArea().getPlayerCards().getHandCards();
-        for (Card card : deck) {
-            card.getCardImage().setLongClickable(true);
-            card.getCardImage()
-                    .setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (onCardSelectedListener != null && gameSession != null) {
-                                        onCardSelectedListener.onCardSelected(
-                                                card, gameSession.getCurrentPlayer().getPlayArea());
-                                    } else {
-                                        System.out.println("game session null");
-                                        ;
+    /*  public void createFirstHand() {
+            Deck<Card> deck =
+                    gameSession.getCurrentPlayer().getPlayArea().getPlayerCards().getHandCards();
+            for (Card card : deck) {
+                card.getCardImage().setLongClickable(true);
+                card.getCardImage()
+                        .setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (onCardSelectedListener != null && gameSession != null) {
+                                            onCardSelectedListener.onCardSelected(
+                                                    card, gameSession.getCurrentPlayer().getPlayArea(),handView);
+                                        } else {
+                                            System.out.println("game session null");
+                                            ;
+                                        }
                                     }
-                                }
-                            });
-            this.cards.add(card);
+                                });
+                this.cards.add(card);
+            }
+            this.setCards();
         }
-        this.setCards();
-    }
-
+    */
     public void resetHand() {
 
         // Invalidate and request layout to force a redraw of the layout
@@ -84,8 +85,11 @@ public class HandView extends LinearLayout {
 
         Deck<Card> deck =
                 gameSession.getCurrentPlayer().getPlayArea().getPlayerCards().getHandCards();
+        Log.v("RESET HAND", "Gotten Cards from session: " + deck.toString());
+
         for (Card card : deck) {
             card.getCardImage().setLongClickable(true);
+            HandView handView = this;
             card.getCardImage()
                     .setOnClickListener(
                             new View.OnClickListener() {
@@ -93,7 +97,9 @@ public class HandView extends LinearLayout {
                                 public void onClick(View v) {
                                     if (onCardSelectedListener != null && gameSession != null) {
                                         onCardSelectedListener.onCardSelected(
-                                                card, gameSession.getCurrentPlayer().getPlayArea());
+                                                card,
+                                                gameSession.getCurrentPlayer().getPlayArea(),
+                                                handView);
                                     } else {
                                         System.out.println("game session null");
                                     }
@@ -152,7 +158,7 @@ public class HandView extends LinearLayout {
             }
             card.getCardImage().setLayoutParams(new ViewGroup.LayoutParams(180, 250));
             // Position the cards along an arc
-            positionCards();
+            // positionCards();
 
             addCard(card);
         }
@@ -171,7 +177,7 @@ public class HandView extends LinearLayout {
         // Calculate the center point of the arc
         float centerX = handView.getWidth() / 2.0f;
         float centerY = handView.getHeight();
-
+        Log.v("TEST", "CenterOfHandView: " + centerX);
         // Position the cards along the arc
         for (int i = 0; i < numCards; i++) {
             Card card = cards.get(i);
@@ -187,6 +193,9 @@ public class HandView extends LinearLayout {
             card.getCardImage().setX(x);
             card.getCardImage().setY(y);
             card.getCardImage().setRotation(angle);
+            Log.v(
+                    "POSITOIN CARDS",
+                    "Looking at CardNr. " + i + " x=" + x + " y=" + y + " angle=" + angle);
         }
     }
 

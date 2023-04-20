@@ -15,11 +15,12 @@ public class OnCardSelectedListener implements OnCardSelectedListenerInterface {
     }
 
     @Override
-    public void onCardSelected(Card card, PlayArea playArea) {
+    public void onCardSelected(Card card, PlayArea playArea, HandView handView) {
         if (!playArea.getPlayedCards().contains(card)) {
             Log.v("UI", card.toString() + " ," + card.getId());
             playArea.playCard(card);
             turnValuesPresenter.updateTurnValuesView();
+            ((HandView) handView).resetHand();
         }
     }
 }

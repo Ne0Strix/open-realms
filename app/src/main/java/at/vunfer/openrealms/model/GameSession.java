@@ -55,6 +55,9 @@ public class GameSession {
         // version there will only be 2 players
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
         currentPlayer.getPlayArea().resetTurnPool();
+        currentPlayer.getPlayArea().resetPlayedCards();
+        currentPlayer.getPlayArea().getPlayerCards().discardAll();
+        currentPlayer.getPlayArea().getPlayerCards().restockHand();
         nextPlayer();
     }
 

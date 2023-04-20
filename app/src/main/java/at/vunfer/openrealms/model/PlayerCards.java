@@ -38,6 +38,14 @@ public class PlayerCards {
         discardedCards.add(handCards.draw(card));
     }
 
+    public void discardAll() throws IllegalArgumentException {
+        while (!handCards.isEmpty()) discardedCards.add(handCards.draw(handCards.get(0)));
+    }
+
+    public void sendToDiscard(Deck<Card> cards) throws IllegalArgumentException {
+        while (!cards.isEmpty()) discardedCards.add(cards.draw(cards.get(0)));
+    }
+
     public void addBoughtCard(Card card) {
         discardedCards.add(card);
     }

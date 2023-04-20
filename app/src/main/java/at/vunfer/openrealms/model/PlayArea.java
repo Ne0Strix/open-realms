@@ -51,6 +51,10 @@ public class PlayArea {
         return playedCards;
     }
 
+    public void resetPlayedCards() {
+        playerCards.sendToDiscard(playedCards);
+    }
+
     public List<Card> getPlayedChampions() {
         return playedChampions;
     }

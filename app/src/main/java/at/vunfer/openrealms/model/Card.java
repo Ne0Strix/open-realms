@@ -67,7 +67,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + '}';
+        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + ", id: " + id + '}';
     }
 
     public String getDescription() {

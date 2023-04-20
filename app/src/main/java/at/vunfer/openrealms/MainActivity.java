@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         marketView.displayMarket(null);
         playAreaView = new PlayAreaView(this);
         handView = new HandView(this, gameSession);
-        handView.createFirstHand();
+        handView.resetHand();
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(this);
