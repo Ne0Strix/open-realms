@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
@@ -10,7 +11,7 @@ import java.util.List;
 public class Market {
     private static Market INSTANCE;
     private static final int TOTAL_PURCHASABLE = 5;
-    private static final String TAG = "PlayerCards";
+    private static final String TAG = "Market";
     Deck<Card> marketDeck;
     Deck<Card> forPurchase;
 
@@ -70,7 +71,7 @@ public class Market {
                 forPurchase.add(card);
                 restocked++;
             } else {
-                System.out.println("You have no more cards to draw for the market.");
+                Log.i(TAG, "You have no more cards to draw for the market.");
                 break;
             }
         }
