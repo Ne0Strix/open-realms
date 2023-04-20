@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public class ChampionTest {
 
     @Test
-    public void testConstructorValid() {
+    void testConstructorValid() {
         // Test valid construction
         List<Effect> effects =
                 List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1));
@@ -25,7 +25,7 @@ public class ChampionTest {
     }
 
     @Test
-    public void testConstructorInvalid() {
+    void testConstructorInvalid() {
         // Test invalid construction
         List<Effect> effects =
                 List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1));
@@ -39,7 +39,7 @@ public class ChampionTest {
     }
 
     @Test
-    public void testApplyEffects() {
+    void testApplyEffects() {
         // Set up play area and champion with effects
         PlayArea playArea = new PlayArea(20, new PlayerCards());
         Champion champion =
@@ -55,7 +55,7 @@ public class ChampionTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         Champion champion =
                 new Champion(
                         "Test Champion",
