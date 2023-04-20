@@ -37,4 +37,9 @@ public class HealingEffect implements Effect {
     public int hashCode() {
         return Objects.hash(healing);
     }
+
+    @Override
+    public String getDescription() {
+        return "Heals the player for " + healing + " points.";
+    }
 }

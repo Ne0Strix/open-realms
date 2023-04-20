@@ -85,4 +85,43 @@ public class Market {
         forPurchase.remove(card);
         return card;
     }
+    /**
+     * Get the list of cards in the market.
+     *
+     * @return The list of cards in the market.
+     */
+    public List<Card> getCards() {
+        return forPurchase;
+    }
+
+    /**
+     * Set the list of cards in the market.
+     *
+     * @param cards The list of cards to set in the market.
+     */
+    public void setCards(Deck<Card> cards) {
+        this.forPurchase = cards;
+    }
+
+    /**
+     * Add a card to the market.
+     *
+     * @param card The card to add to the market.
+     */
+    public void addCard(Card card) {
+        forPurchase.add(card);
+    }
+    /**
+     * Remove a card from the market.
+     *
+     * @param card The card to remove from the market.
+     */
+    public void removeCard(Card card) {
+        forPurchase.remove(card);
+    }
+
+    /** Clear the market of all cards. */
+    public void clear() {
+        forPurchase.clear();
+    }
 }
