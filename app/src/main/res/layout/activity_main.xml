@@ -7,10 +7,16 @@
     android:layout_height="match_parent"
     android:background="@drawable/playarea"
     tools:context=".MainActivity">
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <include
             layout="@layout/market_view"
@@ -22,5 +28,204 @@
             android:layout_width="match_parent"
             android:layout_height="201dp" />
 
+
     </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/opponentStats"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/opponentName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="Player 2"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                />
+
+            <LinearLayout
+                android:id="@+id/opponentHealth"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <ImageView
+                    android:id="@+id/redPlus"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/plus_red_32"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="25dp" />
+
+                <TextView
+                    android:id="@+id/opponentHealthText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="4dp"
+                    android:text="80"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/myStats"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/playerName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="Player 1"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                />
+
+            <LinearLayout
+                android:id="@+id/playerHealth"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <ImageView
+                    android:id="@+id/greenPlus"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/plus_green_32"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="25dp" />
+
+                <TextView
+                    android:id="@+id/playerHealthText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="4dp"
+                    android:text="80"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
+                    />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/turnValues"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp">
+
+            <RelativeLayout
+                android:id="@+id/turnDamage"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/turnDamageIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/circle_outline_red_48"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginStart="1dp" />
+
+                <TextView
+                    android:id="@+id/turnDamageText"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:text="15"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"
+                    android:gravity="center"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/turnHealing"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/turnHealingIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/circle_outline_green_48"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginStart="1dp" />
+
+                <TextView
+                    android:id="@+id/turnHealingText"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:text="15"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/healingGreen"
+                    android:gravity="center"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/turnCoin"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/turnCoinIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/circle_outline_gold_48"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginStart="1dp" />
+
+                <TextView
+                    android:id="@+id/turnCoinText"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:text="15"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/CoinGold"
+                    android:gravity="center"
+                    />
+
+
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
