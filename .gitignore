@@ -20,6 +20,8 @@ out/
 # Gradle files
 .gradle/
 build/
+.idea/**/gradle.xml
+.idea/**/libraries
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -44,6 +46,15 @@ captures/
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
+.idea/artifacts
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/modules.xml
+.idea/*.iml
+.idea/modules
+*.iml
+*.ipr
+
 # Android Studio 3 in .gitignore file.
 .idea/caches
 .idea/modules.xml
