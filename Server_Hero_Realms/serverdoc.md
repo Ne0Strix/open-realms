@@ -1,48 +1,67 @@
 # Game Start
+
 ```mermaid
 sequenceDiagram
     actor U as User
     participant C as Client
     participant S as Server
+    participant GS as GameSession
+    participant PA as PlayArea
 
     U ->> C: initiates Game
     C ->> S:requests card-decks
     S -->> C: card-decks
 
+    alt play card
+    U ->> C: touch handcard
+    C ->> S: msg(cardID, handDeck)
+    activate S
+    S ->> GS: getCurrentPlayer()
+    GS -->> S: return(currentPlayer)
+    note over S: verify current Player
+    S ->> PA: playCard(CardID)
+    PA -->> S: return(Card)
+    note over S: verify card played
+    S ->> C: remove(CardID, handDeck)
+    S ->> C: add(CardID, playArea)
+    C -->> S: confirm()
+    deactivate S
 
-```
+    else buy card
+    U ->> C: touch market card
+    C ->> S: msg(cardID, marketDeck.forPurchase)
+    activate S
+    S ->> GS: getCurrentPlayer()
+    GS -->> S: return(currentPlayer)
+    note over S: verify current Player
+    S ->> PA: buyCard(CardID)
+    PA -->> S: return(Card)
+    note over S: catch exception not enough money
+    S ->> C: remove(CardID, marketDeck.forPurchase)
+    S ->> C: add(CardID, discardedDeck)
+    C -->> S: confirm()
+    deactivate S
+    else activate special-ability
+    note over U, PA: tbd
 
-# Game Session
-## buy card
-```mermaid
-sequenceDiagram
-    actor User
-    participant Client
-    participant Server
-    activate Client
-    Client ->> Server: clicks(CardID, target deck = marketDeck)
-    deactivate Client
-    activate Server
-    note right of Server: check constraints
-    Server -->> Client: remove(CardID, target deck = marketDeck)
-    Server -->> Client: add(CardID, target deck = discardDeck)
-    Server -->> Client: updateStats(newValues)
+    else expend ability
+    note over U, PA: tbd
 
+    else attack guard
+    note over U, PA: tbd
 
-    deactivate Server
+    else end turn
+    U ->> C: touch "Finish" button
+    C ->> S: msg(endTurn)
+    activate S
+    S ->> GS: getCurrentPlayer()
+    GS -->> S: return(currentPlayer)
+    note over S: verify current Player
+    S ->> GS: endTurn()
+    GS -->> S: return(nextPlayer)
+    S ->> C: statUpdate(playerstats)
+    deactivate S
 
-```
+    end
 
-## play card
-```mermaid
-sequenceDiagram
-    actor User
-    participant Client
-    participant Server
-
-    Client ->> Server: clicks(CardID, target deck = handDeck)
-    activate Server
-    Server -->> Client: remove(CardID, target deck = handDeck)
-    Server -->> Client: add(CardID, target deck = playArea)
-    deactivate Server
 ```
