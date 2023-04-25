@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Market;
+import at.vunfer.openrealms.model.Player;
+import at.vunfer.openrealms.model.PlayerFactory;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
 import java.util.List;
@@ -27,20 +30,33 @@ public class MainActivity extends AppCompatActivity {
     private MarketPresenter marketPresenter;
     private Market market;
     private HandView handView;
+    private OverlayView overlayView;
+    private OverlayPresenter overlayPresenter;
+    private GameSession gameSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize game session
+        List<Player> players =
+                List.of(
+                        PlayerFactory.createPlayer("Player 1"),
+                        PlayerFactory.createPlayer("Player 2"));
+        gameSession = new GameSession(players, players.get(0));
+
         // Initialize views
         marketView = new MarketView(this);
         marketView.displayMarket(null);
         playAreaView = new PlayAreaView(this);
         handView = new HandView(this);
         handView.createFirstHand();
+        overlayView = new OverlayView(this);
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(this);
+        overlayPresenter = new OverlayPresenter(overlayView, gameSession);
 
         // Initialize market
         market = Market.getInstance();
@@ -50,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(marketView.getMarketView());
         layout.addView(playAreaView);
         layout.addView(handView.getHandView());
+        layout.addView(overlayView.getOverlayView());
 
-        LOGGER.log(Level.INFO, "Views initialized");
+        overlayView.setOpponentHealth(100);
     }
 
     /** Method to update the market view */
