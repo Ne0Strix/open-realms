@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import at.vunfer.openrealms.network.client.SenderThread;
+
 public class ClientThread extends Thread {
     private int port;
     private String hostname;
@@ -28,8 +30,8 @@ public class ClientThread extends Thread {
     }
 
     public void sendStringToServer() {
-        SenderThread sender = new SenderThread(writer);
-        sender.start();
+        //SenderThread sender = new SenderThread(writer);
+        //sender.start();
     }
 
     @Override

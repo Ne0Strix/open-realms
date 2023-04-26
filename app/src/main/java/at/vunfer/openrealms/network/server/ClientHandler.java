@@ -1,6 +1,8 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server;
 
+import android.util.Log;
+
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.client.MessageHandler;
 import java.io.IOException;
@@ -15,9 +17,17 @@ public class ClientHandler {
     private ObjectInputStream inputStream;
     private MessageHandler messageHandler;
 
-    public ClientHandler() {
+    public ClientHandler(Socket clientSocket) {
         // TODO make connection to client
-
+        try {
+            socket = clientSocket;
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
+        }
+        catch (IOException ex) {
+            Log.e("Error", "IO Exception!");
+        }
+        messageHandler = new MessageHandler();
         new Thread(this::listenForMessages).start();
     }
 

@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import at.vunfer.openrealms.network.client.ClientConnector;
+import at.vunfer.openrealms.network.server.ServerThread;
+
 public class GameActivity extends AppCompatActivity {
 
     @Override
@@ -14,19 +17,20 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+
+
         Log.d("Debug", "Starting game activity...");
 
         // this hostname is used for the Emulator!
-        ClientThread clientThread = new ClientThread(8040, "10.0.2.2");
-        clientThread.start();
+       // ClientConnector clientThread = new ClientConnector(8040, "10.0.2.2");
+        //clientThread.start();
 
         TextView textView = findViewById(R.id.exampleView);
 
         Button btn = findViewById(R.id.exampleBtn);
         btn.setOnClickListener(
                 view -> {
-                    clientThread.sendStringToServer();
-                    textView.setText(clientThread.getFromServer());
+                    //clientThread.sendStringToServer();
                 });
     }
 }

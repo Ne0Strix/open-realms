@@ -3,6 +3,7 @@ package at.vunfer.openrealms;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Market;
+import at.vunfer.openrealms.network.client.ClientConnector;
+import at.vunfer.openrealms.network.server.ServerThread;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
 import java.util.List;
@@ -32,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //set connection to server
+        ServerThread serverThread = new ServerThread(8040);
+        serverThread.start();
+
+        ClientConnector clientThread = new ClientConnector(8040, "10.0.2.2");
+        clientThread.start();
+
+
         // Initialize views
         marketView = new MarketView(this);
         marketView.displayMarket(null);
