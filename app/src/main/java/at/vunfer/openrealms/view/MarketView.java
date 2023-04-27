@@ -2,15 +2,11 @@
 package at.vunfer.openrealms.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import java.util.List;
@@ -69,27 +65,27 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
             View marketCardView =
                     LayoutInflater.from(this.context).inflate(R.layout.card_view, null);
 
-            ImageView cardImage = marketCardView.findViewById(R.id.card_image);
-            TextView cardName = marketCardView.findViewById(R.id.card_description);
+            // ImageView cardImage = marketCardView.findViewById(R.id.card_image);
+            TextView cardName = marketCardView.findViewById(R.id.card_name);
             TextView cardCost = marketCardView.findViewById(R.id.card_cost);
 
             // Set the image resource directly on the ImageView
-            cardImage.setImageResource(card.getImageResource());
+            //    cardImage.setImageResource(card.getImageResource());
 
             cardName.setText(card.getName());
             cardCost.setText(String.valueOf(card.getCost()));
 
             // Add an OnClickListener to the card image view
-            cardImage.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.i("MARKET CLICKED", card.toString());
-                            selectedCard = card;
-                            ((MainActivity) context).showCardDetails(v);
-                        }
-                    });
-
+            /*    cardImage.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Log.i("MARKET CLICKED", card.toString());
+                                        selectedCard = card;
+                                        ((MainActivity) context).showCardDetails(v);
+                                    }
+                                });
+            */
             this.marketView.addView(marketCardView);
         }
     }
@@ -111,12 +107,14 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
     @Override
     public void displayMarket(List<Card> market) {
         for (int i = 0; i < 5; i++) {
-            Card card = new Card(this.context);
+            /*     Card card = new Card(this.context);
 
-            card.getCardImage().setImageResource(R.drawable.emptycards);
+            //card.getCardImage().setImageResource(R.drawable.emptycards);
             card.getCardImage().setLayoutParams(new ViewGroup.LayoutParams(250, 250));
 
             this.marketView.addView(card.getCardImage());
+            */
+
         }
     }
 

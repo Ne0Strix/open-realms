@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.Deck;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +18,14 @@ public class HandView extends LinearLayout {
     private static final int MAX_HANDS = 10;
 
     private Context context;
-    private List<Card> cards = new ArrayList<>();
+    private List<CardView> cards = new ArrayList<>();
     private LinearLayout handView;
     private OnCardSelectedListener onCardSelectedListener;
 
     public interface OnCardSelectedListener {
-        void onCardSelected(Card card);
+        void onCardSelected(CardView card);
 
-        void onCardDropped(Card card);
+        void onCardDropped(CardView card);
     }
 
     public HandView(Context context) {
@@ -51,20 +49,19 @@ public class HandView extends LinearLayout {
         this.handView.setLayoutParams(params);
     }
 
-    public void createFirstHand(Deck<Card> cards) {
-        for (Card card : cards) {
-            card.getCardImage().setLongClickable(true);
-            card.getCardImage()
-                    .setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.i("CARD WAS CLICKED", card.toString());
-                                    if (onCardSelectedListener != null) {
-                                        onCardSelectedListener.onCardSelected(card);
-                                    }
-                                }
-                            });
+    public void createFirstHand(List<CardView> cards) {
+        for (CardView card : cards) {
+            card.setLongClickable(true);
+            card.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.i("CARD WAS CLICKED", card.toString());
+                            if (onCardSelectedListener != null) {
+                                onCardSelectedListener.onCardSelected(card);
+                            }
+                        }
+                    });
             this.cards.add(card);
         }
         this.setCards();
@@ -82,8 +79,8 @@ public class HandView extends LinearLayout {
         int numCards = cards.size();
 
         for (int i = 0; i < numCards; i++) {
-            Card card = cards.get(i);
-            card.getCardImage().setImageResource(R.drawable.emptycards);
+            CardView card = cards.get(i);
+            // card.getCardImage().setImageResource(R.drawable.emptycards);
 
             LinearLayout.LayoutParams params =
                     new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
@@ -116,7 +113,6 @@ public class HandView extends LinearLayout {
                     params.rightMargin = 8;
                 }
             }
-            card.getCardImage().setLayoutParams(new ViewGroup.LayoutParams(180, 250));
             // Position the cards along an arc
             positionCards();
 
@@ -140,7 +136,7 @@ public class HandView extends LinearLayout {
 
         // Position the cards along the arc
         for (int i = 0; i < numCards; i++) {
-            Card card = cards.get(i);
+            CardView card = cards.get(i);
 
             // Calculate the angle of the current card
             float angle = -30.0f + (i * cardAngle);
@@ -150,14 +146,14 @@ public class HandView extends LinearLayout {
             float y = centerY - (float) Math.cos(Math.toRadians(angle)) * radius;
 
             // Set the position and rotation of the card
-            card.getCardImage().setX(x);
-            card.getCardImage().setY(y);
-            card.getCardImage().setRotation(angle);
+            card.setX(x);
+            card.setY(y);
+            card.setRotation(angle);
         }
     }
 
-    private void addCard(Card card) {
-        this.handView.addView(card.getCardImage());
+    private void addCard(CardView card) {
+        this.handView.addView(card);
     }
 
     public LinearLayout getHandView() {

@@ -1,65 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="8dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="350dp"
+    android:layout_height="500dp">
 
-    <LinearLayout
+
+    <ImageView
+        android:id="@+id/card_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:contentDescription="@string/card_image"
+        android:scaleType="fitCenter"
+        android:src="@drawable/emptycards" />
+
+    <TextView
+        android:id="@+id/card_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="7dp"
+        android:layout_toStartOf="@+id/card_name"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/card_name"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="49dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="TEST"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="212dp"
+        android:layout_height="202dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="203dp"
+        android:contentDescription="@string/card_image"
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="310dp"
+        android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/card_image"
+        <RelativeLayout
+            android:id="@+id/oneAbility"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:src="@drawable/emptycards"
-            android:clickable="true"
-            android:scaleType="fitCenter" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/card_title"
+            <ImageView
+                android:id="@+id/oneAbility1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/gallery_thumb" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/twoAbility"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/card_image"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/card_description"
+            <ImageView
+                android:id="@+id/twoAbility1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/twoAbility2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/gallery_thumb" />
+
+            <ImageView
+                android:id="@+id/twoAbility2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/twoAbility1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/gallery_thumb" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/threeAbility"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/card_title"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:maxLines="4"
-            android:text="@string/card_description"
-            android:textAlignment="center"
-            android:textSize="12sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="-36dp">
 
-        <TextView
-            android:id="@+id/card_cost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:padding="4dp"
-            android:text="@string/cost"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/threeAbility1"
+                android:layout_width="64dp"
+                android:layout_height="65dp"
+                android:layout_marginEnd="34dp"
+                android:layout_toStartOf="@+id/threeAbility2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/threeAbility2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_dialog_info" />
+
+            <ImageView
+                android:id="@+id/threeAbility2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="35dp"
+                android:layout_toStartOf="@+id/threeAbility3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/threeAbility3"
+                app:layout_constraintStart_toEndOf="@id/threeAbility1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/gallery_thumb"
+                tools:layout_editor_absoluteX="70dp"
+                tools:layout_editor_absoluteY="2dp" />
+
+            <ImageView
+                android:id="@+id/threeAbility3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/threeAbility2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/gallery_thumb"
+                tools:layout_editor_absoluteX="70dp"
+                tools:layout_editor_absoluteY="2dp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
