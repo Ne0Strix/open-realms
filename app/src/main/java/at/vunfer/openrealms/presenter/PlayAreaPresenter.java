@@ -58,4 +58,13 @@ public class PlayAreaPresenter {
         setText(text);
         view.invalidate(); // Forces a redraw of the view
     }
+
+    /**
+     * Gets the list of cards on the play area.
+     *
+     * @return The list of cards on the play area.
+     */
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
 }

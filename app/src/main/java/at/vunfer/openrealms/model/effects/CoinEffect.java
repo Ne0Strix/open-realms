@@ -43,9 +43,4 @@ public class CoinEffect implements Effect {
     public int hashCode() {
         return Objects.hash(coin);
     }
-
-    @Override
-    public String getDescription() {
-        return "Gain " + coin + " coins.";
-    }
 }

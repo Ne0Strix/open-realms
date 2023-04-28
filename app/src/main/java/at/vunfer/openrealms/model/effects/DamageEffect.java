@@ -44,8 +44,4 @@ public class DamageEffect implements Effect {
         return Objects.hash(damage);
     }
 
-    @Override
-    public String getDescription() {
-        return "Deals " + damage + " damage.";
-    }
 }

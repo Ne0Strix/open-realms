@@ -96,10 +96,18 @@ task jacocoTestReport(type: JacocoReport) {
 
 		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
 		testImplementation 'org.testng:testng:6.9.6'
+
+		testImplementation 'junit:junit:4.13.2'
+		testImplementation 'org.robolectric:robolectric:4.6.1'
+		testImplementation 'org.mockito:mockito-core:3.9.0'
+
 		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 
 		androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 		androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+		androidTestImplementation 'androidx.test:core:1.5.0'
+
 	}
 
 	spotless {
@@ -118,4 +126,8 @@ task jacocoTestReport(type: JacocoReport) {
 			licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
 		}
 	}
+}
+
+dependencies {
+	implementation 'androidx.test:core:1.5.0'
 }
