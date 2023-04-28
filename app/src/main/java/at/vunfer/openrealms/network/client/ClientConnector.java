@@ -2,12 +2,10 @@
 package at.vunfer.openrealms.network.client;
 
 import android.util.Log;
-
 import at.vunfer.openrealms.network.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientConnector extends Thread {
@@ -22,8 +20,6 @@ public class ClientConnector extends Thread {
         // TODO make connection to server
         this.port = port;
         this.hostname = hostname;
-
-
     }
 
     public void run() {
@@ -31,8 +27,7 @@ public class ClientConnector extends Thread {
             socket = new Socket(hostname, port);
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Log.e("Error", "IO Exception!");
         }
 

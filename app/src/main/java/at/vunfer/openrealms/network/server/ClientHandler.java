@@ -2,7 +2,6 @@
 package at.vunfer.openrealms.network.server;
 
 import android.util.Log;
-
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.client.MessageHandler;
 import java.io.IOException;
@@ -23,8 +22,7 @@ public class ClientHandler {
             socket = clientSocket;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Log.e("Error", "IO Exception!");
         }
         messageHandler = new MessageHandler();

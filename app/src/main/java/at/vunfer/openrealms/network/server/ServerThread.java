@@ -2,7 +2,6 @@
 package at.vunfer.openrealms.network.server;
 
 import android.util.Log;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,8 +22,7 @@ public class ServerThread extends Thread {
 
                 Socket clientSocket = serverSocket.accept();
                 ClientHandler player1 = new ClientHandler(clientSocket);
-                //player1.start();
-
+                // player1.start();
 
                 /*
                 Socket clientSocket2 = serverSocket.accept();
@@ -38,13 +36,9 @@ public class ServerThread extends Thread {
 
             }
 
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.out.println("IO Exception on Server!");
             ex.printStackTrace();
         }
     }
-
 }
-
-

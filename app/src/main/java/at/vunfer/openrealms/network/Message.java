@@ -18,7 +18,7 @@ public class Message implements Serializable {
         return type;
     }
 
-    public void setData(DataKey key, String value) throws IllegalArgumentException {
+    public void setData(DataKey key, Object value) throws IllegalArgumentException {
         if (validateData(key, value)) {
             data.put(key, value);
         } else {
