@@ -51,7 +51,11 @@ gradle.projectsEvaluated {
 task jacocoTestReport(type: JacocoReport) {
 	mustRunAfter "testDebugUnitTest"
 	mustRunAfter "createDebugCoverageReport"
-	dependsOn ':app:mergeReleaseAssets', ':app:compressReleaseAssets', ':app:extractProguardFiles', ':app:dexBuilderRelease', ':app:mergeDexRelease', ':app:lintReportDebug', ':app:mergeReleaseJniLibFolders', ':app:packageRelease', ':app:mergeReleaseJavaResource', ':app:lintAnalyzeDebug', ':app:lintVitalAnalyzeRelease', ':app:spotlessJava', ':app:spotlessMisc'
+	dependsOn ':app:mergeReleaseAssets', ':app:compressReleaseAssets', ':app:extractProguardFiles', ':app:dexBuilderRelease', ':app:mergeDexRelease',
+			':app:lintReportDebug', ':app:mergeReleaseJniLibFolders', ':app:packageRelease', ':app:mergeReleaseJavaResource', ':app:lintAnalyzeDebug',
+			':app:lintVitalAnalyzeRelease', ':app:spotlessJava', ':app:spotlessMisc', ':app:mergeDebugAssets', ':app:compressDebugAssets', ':app:dexBuilderDebug',
+			':app:mergeExtDexDebug', ':app:mergeLibDexDebug', ':app:mergeProjectDexDebug', ':app:checkDebugDuplicateClasses', ':app:desugarDebugFileDependencies',
+			':app:mergeDebugJavaResource', ':app:mergeDebugJniLibFolders', ':app:packageDebug', ':app:validateSigningDebug'
 	reports {
 		xml.required = true
 		html.required = true
@@ -75,47 +79,50 @@ task jacocoTestReport(type: JacocoReport) {
 	task testAll(type: JacocoReport, dependsOn: ['connectedDebugAndroidTest', 'testDebugUnitTest']) {
 		finalizedBy jacocoTestReport
 	}
+}
 
-	project.tasks["sonarqube"].dependsOn "testAll"
+project.tasks["sonarqube"].dependsOn "testAll"
 
-	sonarqube {
-		properties {
-			property "sonar.projectKey", "Ne0Strix_open-realms"
-			property "sonar.organization", "ne0strix"
-			property "sonar.host.url", "https://sonarcloud.io"
-			property "sonar.java.coveragePlugin", "jacoco"
-			property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-		}
+sonarqube {
+	properties {
+		property "sonar.projectKey", "Ne0Strix_open-realms"
+		property "sonar.organization", "ne0strix"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.java.coveragePlugin", "jacoco"
+		property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
 	}
+}
 
-	dependencies {
+dependencies {
 
-		implementation 'androidx.appcompat:appcompat:1.6.1'
-		implementation 'com.google.android.material:material:1.8.0'
-		implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+	implementation 'androidx.appcompat:appcompat:1.6.1'
+	implementation 'com.google.android.material:material:1.8.0'
+	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-		testImplementation 'org.testng:testng:6.9.6'
-		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+	testImplementation 'org.testng:testng:6.9.6'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 
-		androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-		androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+	testImplementation 'org.mockito:mockito-core:3.12.4'
+
+	androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+	androidTestImplementation 'androidx.test:core:1.5.0'
+	androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+spotless {
+	format 'misc', {
+		target '*.gradle', '*.md', '.gitignore', '**.gradle'
+		trimTrailingWhitespace()
+		indentWithTabs()
+		endWithNewline()
 	}
-
-	spotless {
-		format 'misc', {
-			target '*.gradle', '*.md', '.gitignore', '**.gradle'
-			trimTrailingWhitespace()
-			indentWithTabs()
-			endWithNewline()
-		}
-		java {
-			target 'src/*/java/**/*.java'
-			removeUnusedImports()
-			cleanthat()
-			googleJavaFormat('1.16.0').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
-			formatAnnotations()
-			licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
-		}
+	java {
+		target 'src/*/java/**/*.java'
+		removeUnusedImports()
+		cleanthat()
+		googleJavaFormat('1.16.0').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
+		formatAnnotations()
+		licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
 	}
 }
