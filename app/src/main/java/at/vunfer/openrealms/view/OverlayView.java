@@ -40,13 +40,14 @@ public class OverlayView implements OverlayViewInterface {
         turnCoin = overlayView.findViewById(R.id.turnCoin);
     }
 
-    public String getOpponentHealth() {
-        return opponentHealth.getText().toString();
-    }
-
     @Override
     public void setPlayerName(String playerName) {
         this.playerName.setText(playerName);
+    }
+
+    @Override
+    public String getPlayerName() {
+        return playerName.getText().toString();
     }
 
     @Override
@@ -55,8 +56,18 @@ public class OverlayView implements OverlayViewInterface {
     }
 
     @Override
+    public String getPlayerHealth() {
+        return playerHealth.getText().toString();
+    }
+
+    @Override
     public void setOpponentName(String opponentName) {
         this.opponentName.setText(opponentName);
+    }
+
+    @Override
+    public String getOpponentName() {
+        return opponentName.getText().toString();
     }
 
     @Override
@@ -65,8 +76,18 @@ public class OverlayView implements OverlayViewInterface {
     }
 
     @Override
+    public String getOpponentHealth() {
+        return this.opponentHealth.getText().toString();
+    }
+
+    @Override
     public void setTurnDamage(int turnDamage) {
         this.turnDamage.setText(String.valueOf(turnDamage));
+    }
+
+    @Override
+    public String getTurnDamage() {
+        return turnDamage.getText().toString();
     }
 
     @Override
@@ -75,8 +96,18 @@ public class OverlayView implements OverlayViewInterface {
     }
 
     @Override
+    public String getTurnHealing() {
+        return turnHealing.getText().toString();
+    }
+
+    @Override
     public void setTurnCoin(int turnCoin) {
         this.turnCoin.setText(String.valueOf(turnCoin));
+    }
+
+    @Override
+    public String getTurnCoin() {
+        return turnCoin.getText().toString();
     }
 
     @Override
