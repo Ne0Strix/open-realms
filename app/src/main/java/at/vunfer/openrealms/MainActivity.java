@@ -27,12 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MarketView marketView;
     private PlayAreaView playAreaView;
-    private MarketPresenter marketPresenter;
     private Market market;
-    private HandView handView;
-    private OverlayView overlayView;
-    private OverlayPresenter overlayPresenter;
-    private GameSession gameSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +39,18 @@ public class MainActivity extends AppCompatActivity {
                 List.of(
                         PlayerFactory.createPlayer("Player 1"),
                         PlayerFactory.createPlayer("Player 2"));
-        gameSession = new GameSession(players, players.get(0));
+        GameSession gameSession = new GameSession(players, players.get(0));
 
         // Initialize views
         marketView = new MarketView(this);
         marketView.displayMarket(null);
         playAreaView = new PlayAreaView(this);
-        handView = new HandView(this);
+        HandView handView = new HandView(this);
         handView.createFirstHand();
-        overlayView = new OverlayView(this);
+        OverlayView overlayView = new OverlayView(this);
 
         // Initialize presenter
-        marketPresenter = new MarketPresenter(this);
-        overlayPresenter = new OverlayPresenter(overlayView, gameSession);
+        MarketPresenter marketPresenter = new MarketPresenter(this);
 
         // Initialize market
         market = Market.getInstance();

@@ -2,16 +2,14 @@
 package at.vunfer.openrealms.presenter;
 
 import at.vunfer.openrealms.model.GameSession;
-import at.vunfer.openrealms.presenter.presenterInterfaces.OverlayPresenterInterface;
-import at.vunfer.openrealms.view.viewInterfaces.OverlayViewInterface;
+import at.vunfer.openrealms.presenter.presenter_interfaces.OverlayPresenterInterface;
+import at.vunfer.openrealms.view.view_interfaces.OverlayViewInterface;
 
 public class OverlayPresenter implements OverlayPresenterInterface {
     private OverlayViewInterface overlayView;
-    private GameSession gameSession;
 
     public OverlayPresenter(OverlayViewInterface overlayView, GameSession gameSession) {
         this.overlayView = overlayView;
-        this.gameSession = gameSession;
     }
 
     @Override

@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.view.viewInterfaces.OverlayViewInterface;
+import at.vunfer.openrealms.view.view_interfaces.OverlayViewInterface;
 
 public class OverlayView implements OverlayViewInterface {
-    private ConstraintLayout overlayView;
+    private ConstraintLayout overlayViewLayout;
     private TextView playerName;
     private TextView playerHealth;
     private TextView opponentName;
@@ -21,23 +21,23 @@ public class OverlayView implements OverlayViewInterface {
 
     @SuppressLint("InflateParams")
     public OverlayView(Context context) {
-        overlayView =
+        overlayViewLayout =
                 (ConstraintLayout)
                         LayoutInflater.from(context).inflate(R.layout.overlay_view, null);
 
         ConstraintLayout.LayoutParams layoutParams =
                 new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.MATCH_PARENT);
-        overlayView.setLayoutParams(layoutParams);
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT);
+        overlayViewLayout.setLayoutParams(layoutParams);
 
-        playerName = overlayView.findViewById(R.id.playerName);
-        playerHealth = overlayView.findViewById(R.id.playerHealth);
-        opponentName = overlayView.findViewById(R.id.opponentName);
-        opponentHealth = overlayView.findViewById(R.id.opponentHealth);
-        turnDamage = overlayView.findViewById(R.id.turnDamage);
-        turnHealing = overlayView.findViewById(R.id.turnHealing);
-        turnCoin = overlayView.findViewById(R.id.turnCoin);
+        playerName = overlayViewLayout.findViewById(R.id.playerName);
+        playerHealth = overlayViewLayout.findViewById(R.id.playerHealth);
+        opponentName = overlayViewLayout.findViewById(R.id.opponentName);
+        opponentHealth = overlayViewLayout.findViewById(R.id.opponentHealth);
+        turnDamage = overlayViewLayout.findViewById(R.id.turnDamage);
+        turnHealing = overlayViewLayout.findViewById(R.id.turnHealing);
+        turnCoin = overlayViewLayout.findViewById(R.id.turnCoin);
     }
 
     @Override
@@ -112,6 +112,6 @@ public class OverlayView implements OverlayViewInterface {
 
     @Override
     public ConstraintLayout getOverlayView() {
-        return overlayView;
+        return overlayViewLayout;
     }
 }

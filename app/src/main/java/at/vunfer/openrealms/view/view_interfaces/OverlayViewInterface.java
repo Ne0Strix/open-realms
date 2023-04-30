@@ -1,5 +1,5 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package at.vunfer.openrealms.view.viewInterfaces;
+package at.vunfer.openrealms.view.view_interfaces;
 
 import android.view.View;
 
