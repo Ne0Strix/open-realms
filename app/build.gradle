@@ -63,25 +63,23 @@ task jacocoTestReport(type: JacocoReport) {
 		xml.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
 		html.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport")
 	}
-		def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-		def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilter)
-		def mainSrc = "${project.projectDir}/src/main/java"
+	def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+	def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilter)
+	def mainSrc = "${project.projectDir}/src/main/java"
 
-		sourceDirectories.from = files([mainSrc])
-		classDirectories.from = files([debugTree])
-		executionData.from = fileTree(dir: project.projectDir, includes: ['**/*.exec', '**/*.ec'])
-	}
-	task unitTest(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
-		finalizedBy jacocoTestReport
-	}
-	task androidTest(type: JacocoReport, dependsOn: 'connectedDebugAndroidTest') {
-		finalizedBy jacocoTestReport
-	}
-	task testAll(type: JacocoReport, dependsOn: ['connectedDebugAndroidTest', 'testDebugUnitTest']) {
-		finalizedBy jacocoTestReport
-	}
-
-//project.tasks["sonarqube"].dependsOn "testAll"
+	sourceDirectories.from = files([mainSrc])
+	classDirectories.from = files([debugTree])
+	executionData.from = fileTree(dir: project.projectDir, includes: ['**/*.exec', '**/*.ec'])
+}
+task unitTest(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+	finalizedBy jacocoTestReport
+}
+task androidTest(type: JacocoReport, dependsOn: 'connectedDebugAndroidTest') {
+	finalizedBy jacocoTestReport
+}
+task testAll(type: JacocoReport, dependsOn: ['connectedDebugAndroidTest', 'testDebugUnitTest']) {
+	finalizedBy jacocoTestReport
+}
 
 sonarqube {
 	properties {
