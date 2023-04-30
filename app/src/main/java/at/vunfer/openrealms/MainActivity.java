@@ -10,10 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.Deck;
-import at.vunfer.openrealms.model.DeckGenerator;
-import at.vunfer.openrealms.model.Market;
+import at.vunfer.openrealms.model.*;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
 import java.util.List;
@@ -26,9 +23,11 @@ public class MainActivity extends AppCompatActivity {
 
     private MarketView marketView;
     private PlayAreaView playAreaView;
+    private PlayAreaPresenter playAreaPresenter;
     private MarketPresenter marketPresenter;
     private Market market;
     private HandView handView;
+    private HandPresenter handPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(this);
+        handPresenter = new HandPresenter(handView);
 
         // Initialize market
         market = Market.getInstance();
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Method to update the play area view */
     public void updatePlayAreaView() {
-        playAreaView.updateView(market.toString());
+        playAreaPresenter.updateView(market.toString());
     }
 
     public void showCardDialog(Context context, Card card) {
