@@ -61,7 +61,7 @@ task jacocoTestReport(type: JacocoReport) {
 		html.required = true
 		xml.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
 		html.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport")
-
+	}
 		def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
 		def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilter)
 		def mainSrc = "${project.projectDir}/src/main/java"
@@ -79,7 +79,6 @@ task jacocoTestReport(type: JacocoReport) {
 	task testAll(type: JacocoReport, dependsOn: ['connectedDebugAndroidTest', 'testDebugUnitTest']) {
 		finalizedBy jacocoTestReport
 	}
-}
 
 //project.tasks["sonarqube"].dependsOn "testAll"
 
