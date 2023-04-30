@@ -6,7 +6,7 @@
     app:layout_constraintDimensionRatio="H, 1:1">
 
     <ImageView
-        android:id="@+id/effectIcon"
+        android:id="@+id/effect_view_icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -15,10 +15,10 @@
         app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/coin" />
+        app:srcCompat="@drawable/effect_icon_coin" />
 
     <TextView
-        android:id="@+id/effectAmount"
+        android:id="@+id/effect_view_amount"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeMaxTextSize="50sp"

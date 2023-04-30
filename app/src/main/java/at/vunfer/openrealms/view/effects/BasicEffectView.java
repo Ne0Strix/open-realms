@@ -52,17 +52,17 @@ public class BasicEffectView extends ConstraintLayout {
         inflate(getContext(), R.layout.effect_view, this);
         if (effect != null) {
             // if-else was used, since java does not support Swtich-case with class attributes
-            ImageView effectIcon = findViewById(R.id.effectIcon);
-            TextView txtAmount = findViewById(R.id.effectAmount);
+            ImageView effectIcon = findViewById(R.id.effect_view_icon);
+            TextView txtAmount = findViewById(R.id.effect_view_amount);
 
             if (effect instanceof DamageEffect) {
-                effectIcon.setImageResource(R.drawable.attack);
+                effectIcon.setImageResource(R.drawable.effect_icon_attack);
                 txtAmount.setText(((DamageEffect) effect).getDamage() + "");
             } else if (effect instanceof HealingEffect) {
-                effectIcon.setImageResource(R.drawable.heal);
+                effectIcon.setImageResource(R.drawable.effect_icon_heal);
                 txtAmount.setText(((HealingEffect) effect).getHealing() + "");
             } else if (effect instanceof CoinEffect) {
-                effectIcon.setImageResource(R.drawable.coin);
+                effectIcon.setImageResource(R.drawable.effect_icon_coin);
                 txtAmount.setText(((CoinEffect) effect).getCoin() + "");
             }
         }

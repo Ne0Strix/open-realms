@@ -3,6 +3,8 @@ package at.vunfer.openrealms.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -39,16 +41,29 @@ public class CardView extends ConstraintLayout {
         inflate(getContext(), R.layout.card_view, this);
 
         if (card != null) setCardDetail();
+        findViewById(R.id.card_view_background)
+                .setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Log.i(
+                                        "CardView",
+                                        "WAS CLICKED: "
+                                                + card
+                                                + " WHILE IN: "
+                                                + getParent().toString().split(" ")[5]);
+                            }
+                        });
     }
 
     public void setCardDetail() {
-        TextView name = findViewById(R.id.card_name);
+        TextView name = findViewById(R.id.card_view_name);
         name.setText(card.getName());
 
-        TextView cost = findViewById(R.id.card_cost);
+        TextView cost = findViewById(R.id.card_view_cost);
         cost.setText(card.getCost() + "");
 
-        LinearLayout effectArea = findViewById(R.id.effectArea);
+        LinearLayout effectArea = findViewById(R.id.card_view_effectArea);
 
         // Default effects
         LinearLayout defaultEffects = new LinearLayout(getContext());

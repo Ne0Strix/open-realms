@@ -66,8 +66,8 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
                     LayoutInflater.from(this.context).inflate(R.layout.card_view, null);
 
             // ImageView cardImage = marketCardView.findViewById(R.id.card_image);
-            TextView cardName = marketCardView.findViewById(R.id.card_name);
-            TextView cardCost = marketCardView.findViewById(R.id.card_cost);
+            TextView cardName = marketCardView.findViewById(R.id.card_view_name);
+            TextView cardCost = marketCardView.findViewById(R.id.card_view_cost);
 
             // Set the image resource directly on the ImageView
             //    cardImage.setImageResource(card.getImageResource());

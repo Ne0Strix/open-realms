@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_width="90dp"
-    android:layout_height="125dp"
+    android:layout_width="77dp"
+    android:layout_height="106dp"
     android:contextClickable="true">
 
     <ImageView
-        android:id="@+id/card_image"
+        android:id="@+id/card_view_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:clickable="true"
         android:contentDescription="@string/card_image"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/emptycards"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +51,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/card_cost"
+                    android:id="@+id/card_view_cost"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="2"
@@ -64,28 +64,28 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/card_name"
+                    android:id="@+id/card_view_name"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="10"
                     android:autoSizeMinTextSize="1sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="center_horizontal|center_vertical"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:text="TEST"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/imageSynergy"
+                    android:id="@+id/card_view_synergy_icon"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    app:srcCompat="@drawable/coin" />
+                    app:srcCompat="@drawable/effect_icon_coin" />
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/card_view_image"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="25"
@@ -94,7 +94,7 @@
                 app:srcCompat="@drawable/playarea" />
 
             <LinearLayout
-                android:id="@+id/effectArea"
+                android:id="@+id/card_view_effectArea"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="25"
@@ -110,7 +110,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="10" />
+            android:layout_weight="8" />
 
     </LinearLayout>
 
