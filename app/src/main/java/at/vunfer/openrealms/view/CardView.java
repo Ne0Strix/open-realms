@@ -1,10 +1,14 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
+import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -21,6 +25,9 @@ import java.util.List;
 /** This class is used to represent a CardImageView. */
 public class CardView extends ConstraintLayout {
     private Card card;
+    private boolean isBeingHeld = false;
+
+    private final long CLICK_TIME = 250l;
 
     public CardView(Context context) {
         super(context);
@@ -41,19 +48,53 @@ public class CardView extends ConstraintLayout {
         inflate(getContext(), R.layout.card_view, this);
 
         if (card != null) setCardDetail();
-        findViewById(R.id.card_view_background)
-                .setOnClickListener(
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+
+        setUpListeners();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void setUpListeners() {
+        ImageView cardBackground = findViewById(R.id.card_view_background);
+        cardBackground.setOnTouchListener(
+                (view, motionEvent) -> {
+                    //   Log.i("CardView", motionEvent.toString() + " " + card);
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_UP:
+                            if (motionEvent.getEventTime() - motionEvent.getDownTime()
+                                    <= CLICK_TIME) {
                                 Log.i(
                                         "CardView",
-                                        "WAS CLICKED: "
+                                        "Sending to server: "
                                                 + card
-                                                + " WHILE IN: "
-                                                + getParent().toString().split(" ")[5]);
+                                                + " "
+                                                + getParent().toString());
+                            } else {
+                                resetFullscreen();
                             }
-                        });
+                            isBeingHeld = false;
+                            break;
+                        case MotionEvent.ACTION_DOWN:
+                            isBeingHeld = true;
+                            final Handler handler = new Handler(Looper.getMainLooper());
+                            handler.postDelayed(
+                                    () -> {
+                                        if (isBeingHeld) {
+                                            setFullscreen();
+                                        }
+                                    },
+                                    CLICK_TIME);
+                            break;
+                    }
+                    return false;
+                });
+    }
+
+    public void setFullscreen() {
+        Log.v("CardView", "SETTING FULLSCREEN");
+    }
+
+    public void resetFullscreen() {
+        Log.v("CardView", "RESETTING FULLSCREEN");
     }
 
     public void setCardDetail() {
