@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Market;
-import at.vunfer.openrealms.model.Player;
-import at.vunfer.openrealms.model.PlayerFactory;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
 import java.util.List;
@@ -32,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Initialize game session
-        List<Player> players =
-                List.of(
-                        PlayerFactory.createPlayer("Player 1"),
-                        PlayerFactory.createPlayer("Player 2"));
 
         // Initialize views
         marketView = new MarketView(this);
