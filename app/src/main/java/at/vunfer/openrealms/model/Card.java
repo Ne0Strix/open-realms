@@ -84,4 +84,20 @@ public class Card {
     public void setCardImage(ImageView cardImage) {
         this.cardImage = cardImage;
     }
+
+    public void setPosition(int position) {
+        this.cardImage.setTag(position);    }
+
+    public void setX(float x) {
+        this.cardImage.setX(x);
+    }
+
+    public void setY(float y) {
+        this.cardImage.setY(y);
+    }
+
+    public void setRotation(float angle) {
+        this.cardImage.setRotation(angle);
+    }
+
 }
