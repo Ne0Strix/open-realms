@@ -3,7 +3,6 @@ package at.vunfer.openrealms.presenter;
 
 import static org.mockito.Mockito.verify;
 
-import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.view.view_interfaces.OverlayViewInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,13 +11,11 @@ import org.mockito.Mockito;
 class OverlayPresenterTest {
     private OverlayPresenter overlayPresenter;
     private OverlayViewInterface overlayViewInterface;
-    private GameSession gameSession;
 
     @BeforeEach
     void setUp() {
         overlayViewInterface = Mockito.mock(OverlayViewInterface.class);
-        gameSession = Mockito.mock(GameSession.class);
-        overlayPresenter = new OverlayPresenter(overlayViewInterface, gameSession);
+        overlayPresenter = new OverlayPresenter(overlayViewInterface);
     }
 
     @Test

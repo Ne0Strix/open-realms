@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.model.PlayerFactory;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 List.of(
                         PlayerFactory.createPlayer("Player 1"),
                         PlayerFactory.createPlayer("Player 2"));
-        GameSession gameSession = new GameSession(players, players.get(0));
 
         // Initialize views
         marketView = new MarketView(this);
@@ -48,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
         HandView handView = new HandView(this);
         handView.createFirstHand();
         OverlayView overlayView = new OverlayView(this);
-
-        // Initialize presenter
-        MarketPresenter marketPresenter = new MarketPresenter(this);
 
         // Initialize market
         market = Market.getInstance();

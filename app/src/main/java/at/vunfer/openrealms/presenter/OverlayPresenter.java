@@ -1,14 +1,13 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter;
 
-import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.presenter.presenter_interfaces.OverlayPresenterInterface;
 import at.vunfer.openrealms.view.view_interfaces.OverlayViewInterface;
 
 public class OverlayPresenter implements OverlayPresenterInterface {
     private OverlayViewInterface overlayView;
 
-    public OverlayPresenter(OverlayViewInterface overlayView, GameSession gameSession) {
+    public OverlayPresenter(OverlayViewInterface overlayView) {
         this.overlayView = overlayView;
     }
 
