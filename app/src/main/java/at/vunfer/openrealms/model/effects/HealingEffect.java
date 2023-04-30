@@ -15,6 +15,10 @@ public class HealingEffect implements Effect {
         this.healing = healing;
     }
 
+    public int getHealing() {
+        return healing;
+    }
+
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitHealing(healing);

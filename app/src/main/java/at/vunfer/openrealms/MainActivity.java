@@ -4,7 +4,6 @@ package at.vunfer.openrealms;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +12,11 @@ import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.DeckGenerator;
 import at.vunfer.openrealms.model.Market;
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,13 +44,30 @@ public class MainActivity extends AppCompatActivity {
 
         Deck<Card> playerStarterCards =
                 DeckGenerator.generatePlayerStarterDeck(getApplicationContext());
-        // TODO: Convert Cards to CardViews
-        List<CardView> cardViews = new ArrayList<>();
-        cardViews.add(new CardView(this, playerStarterCards.get(0)));
-        cardViews.add(new CardView(this, playerStarterCards.get(1)));
-        cardViews.add(new CardView(this, playerStarterCards.get(2)));
-        cardViews.add(new CardView(this, playerStarterCards.get(3)));
-        cardViews.add(new CardView(this, playerStarterCards.get(4)));
+
+        List<CardView> cardViews = CardView.getViewFromCards(this, playerStarterCards);
+        cardViews.remove(0);
+        cardViews.remove(0);
+        cardViews.remove(0);
+        cardViews.remove(0);
+        cardViews.remove(0);
+        cardViews.remove(0);
+        // Card with the longest name in the Original game
+        cardViews.add(
+                new CardView(
+                        this,
+                        new Card(
+                                "Varrick, the Necromancer",
+                                7,
+                                List.of(
+                                        new DamageEffect(2),
+                                        new HealingEffect(4),
+                                        new CoinEffect(12)))));
+        // Card to test 2 Abilities
+        cardViews.add(
+                new CardView(
+                        this,
+                        new Card("Name", 10, List.of(new HealingEffect(4), new CoinEffect(12)))));
         handView.createFirstHand(cardViews);
 
         // Initialize presenter
@@ -63,14 +81,7 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(marketView.getMarketView());
         layout.addView(playAreaView);
         layout.addView(handView.getHandView());
-        CardView civ = new CardView(this);
-        civ.setVisibility(View.VISIBLE);
-        layout.addView(civ);
-        civ.setX(0);
-        civ.setY(0);
 
-        Log.v("MAIN", civ.toString());
-        Log.v("MAIN", civ.getX() + " " + civ.getY());
         LOGGER.log(Level.INFO, "Views initialized");
     }
 

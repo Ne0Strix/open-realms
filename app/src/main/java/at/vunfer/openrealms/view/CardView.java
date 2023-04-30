@@ -3,83 +3,39 @@ package at.vunfer.openrealms.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Effect;
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.view.effects.BasicEffectView;
+import java.util.ArrayList;
+import java.util.List;
 
 /** This class is used to represent a CardImageView. */
-public class CardView extends RelativeLayout {
+public class CardView extends ConstraintLayout {
     private Card card;
-    private final int DESIRED_WIDTH = 90; // dp
-    private final int DESIRED_HEIGHT = 125; // dp
 
-    private void scaleCard() {
-        int originalWidth = 350; // dp
-        int originalHeight = 500; // dp
-
-        float pixelScale = getContext().getResources().getDisplayMetrics().density;
-
-        int scaledWidth = (int) (originalWidth * pixelScale);
-        int scaledHeight = (int) (originalHeight * pixelScale);
-
-        setLayoutParams(new LayoutParams(scaledWidth, scaledHeight));
-
-        float scaledTargetWidth = DESIRED_WIDTH * pixelScale;
-        float scaledTargetHeight = DESIRED_HEIGHT * pixelScale;
-
-        setScaleX(scaledTargetWidth / scaledWidth);
-        setScaleY(scaledTargetHeight / scaledHeight);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        int originalWidth = getMeasuredWidth();
-        int originalHeight = getMeasuredHeight();
-
-        int newWidth = (int) (originalWidth * getScaleX());
-        int newHeight = (int) (originalHeight * getScaleY());
-
-        setMeasuredDimension(newWidth, newHeight);
-    }
-
-    /**
-     * Constructs a new CardImageView with the given context.
-     *
-     * @param context The context to use.
-     */
     public CardView(Context context) {
         super(context);
         init();
     }
 
-    /**
-     * Constructs a new CardImageView with the given context and attributes.
-     *
-     * @param context The context to use.
-     * @param attrs The attributes to use.
-     */
     public CardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    /**
-     * Constructs a new CardImageView with the given context, attributes, and style.
-     *
-     * @param context The context to use.
-     * @param attrs The attributes to use.
-     * @param defStyleAttr The style to use.
-     */
     public CardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     public void init() {
-        scaleCard();
         inflate(getContext(), R.layout.card_view, this);
 
         if (card != null) setCardDetail();
@@ -89,14 +45,48 @@ public class CardView extends RelativeLayout {
         TextView name = findViewById(R.id.card_name);
         name.setText(card.getName());
 
-        //   TextView cost = findViewById(R.id.card_cost);
-        //  cost.setText(card.getCost());
+        TextView cost = findViewById(R.id.card_cost);
+        cost.setText(card.getCost() + "");
+
+        LinearLayout effectArea = findViewById(R.id.effectArea);
+
+        // Default effects
+        LinearLayout defaultEffects = new LinearLayout(getContext());
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f);
+        defaultEffects.setOrientation(LinearLayout.HORIZONTAL);
+        defaultEffects.setLayoutParams(params);
+        for (Effect e : card.getEffects()) {
+            if (e instanceof DamageEffect
+                    || e instanceof HealingEffect
+                    || e instanceof CoinEffect) {
+                BasicEffectView effectView = new BasicEffectView(getContext(), e);
+                effectView.setLayoutParams(params);
+                defaultEffects.addView(effectView);
+            }
+        }
+        effectArea.addView(defaultEffects);
+
+        // sacrifice effects
+
+        // synergy effects
+
+        // expand effects
     }
 
     public CardView(Context context, Card card) {
         super(context);
         setCard(card);
         init();
+    }
+
+    public static List<CardView> getViewFromCards(Context context, List<Card> cards) {
+        List<CardView> views = new ArrayList<>();
+        for (Card c : cards) {
+            views.add(new CardView(context, c));
+        }
+        return views;
     }
 
     /**

@@ -16,6 +16,10 @@ public class DamageEffect implements Effect {
         this.damage = damage;
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitDamage(damage);

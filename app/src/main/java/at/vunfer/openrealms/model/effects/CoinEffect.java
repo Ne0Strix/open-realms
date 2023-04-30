@@ -16,6 +16,10 @@ public class CoinEffect implements Effect {
         this.coin = coin;
     }
 
+    public int getCoin() {
+        return coin;
+    }
+
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitCoin(coin);
