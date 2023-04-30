@@ -21,6 +21,7 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
     private static final Logger LOGGER = Logger.getLogger(MarketView.class.getName());
     private static final String ERROR_MESSAGE = "Error displaying market";
     private static final String TAG = "MarketView";
+
     private final Runnable measureAndLayout =
             new Runnable() {
                 @Override
@@ -31,11 +32,15 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
                     layout(getLeft(), getTop(), getRight(), getBottom());*/
                 }
             };
-    public Card selectedCard;
 
+    public Card selectedCard;
     private Context context;
     private LinearLayout marketView;
 
+    /**
+     * Constructor for the MarketView class.
+     * @param context The context of the application
+     */
     public MarketView(Context context) {
         this.context = context;
         // Creating MarketView layout parameters

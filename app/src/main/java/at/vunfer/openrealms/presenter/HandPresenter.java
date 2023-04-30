@@ -9,6 +9,10 @@ import java.util.List;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.view.HandView;
 
+/**
+ * Presenter class for managing the HandView.
+ */
+
 public class HandPresenter {
     private static final String ERROR_MSG = "Error in HandView: ";
     private static final int MAX_HANDS = 5;
@@ -17,20 +21,34 @@ public class HandPresenter {
     private HandPresenter.OnCardSelectedListener onCardSelectedListener;
     private final HandView handView;
 
+    /**
+     * Constructor for HandPresenter.
+     * @param handView The HandView to be managed.
+     */
     public HandPresenter(HandView handView) {
         this.handView = handView;
     }
 
+    /**
+     * Interface for handling card selection and dropping events.
+     */
     public interface OnCardSelectedListener {
         void onCardSelected(Card card);
 
         void onCardDropped(Card card);
     }
 
+    /**
+     * Sets the OnCardSelectedListener for the HandPresenter.
+     * @param listener The OnCardSelectedListener to be set.
+     */
     public void setOnCardSelectedListener(HandPresenter.OnCardSelectedListener listener) {
         this.onCardSelectedListener = listener;
     }
 
+    /**
+     * Creates the first hand of cards.
+     */
     public void createFirstHand() {
         for (int iterator = 0; iterator < MAX_HANDS; iterator++) {
             Card card = new Card(handView.getContext());
@@ -56,6 +74,9 @@ public class HandPresenter {
         this.setCards();
     }
 
+    /**
+     * Sets the position of the cards in the HandView.
+     */
     private void setCards() {
         if (cards == null) {
             throw new IllegalArgumentException(ERROR_MSG + "Cards list is null");
@@ -91,6 +112,9 @@ public class HandPresenter {
         }
     }
 
+    /**
+     * Positions the cards in an arc shape.
+     */
     private void positionCards() {
         int numCards = cards.size();
 

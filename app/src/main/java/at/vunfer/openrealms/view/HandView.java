@@ -40,6 +40,12 @@ public class HandView extends LinearLayout {
         this.handView.setMinimumHeight(1450);
         this.handView.setLayoutParams(params);
     }
+
+    /**
+     * Sets the cards in the HandView.
+     * @param cards The cards to set.
+     * @return True if cards were set, false otherwise.
+     */
     private boolean setCards(Deck<Card> cards) {
         if (cards == null) {
             return false;
@@ -94,6 +100,11 @@ public class HandView extends LinearLayout {
     public View getView() {
         return handView;
     }
+
+    /**
+     * Creates the first hand of cards for the player.
+     * @param playerStarterCards The cards to add to the hand.
+     */
     public void createFirstHand(Deck<Card> playerStarterCards) {
     }
     private void addCard(Card card) {

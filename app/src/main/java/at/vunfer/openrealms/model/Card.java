@@ -53,6 +53,11 @@ public class Card {
         return effects;
     }
 
+
+    /**
+     * Applies the effects of the card to the play area.
+     * @param visitor The play area to apply the effects to.
+     */
     public void applyEffects(PlayArea visitor) {
         for (Effect effect : effects) {
             effect.applyEffect(visitor);
@@ -64,6 +69,11 @@ public class Card {
         return "Card{" + "name='" + name + '\'' + ", cost=" + cost + "}";
     }
 
+    /**
+     * Checks whether the given card is identical to this card.
+     * @param c The card to compare to.
+     * @return true if the cards are identical, false otherwise.
+     */
     public boolean isIdentical(Card c) {
         if (this == c) return true;
         return cost == c.cost && name.equals(c.name) && effects.equals(c.effects);
@@ -85,9 +95,17 @@ public class Card {
         this.cardImage = cardImage;
     }
 
+    /**
+     * Sets the position of the card in the game.
+     * @param position The position of the card.
+     */
     public void setPosition(int position) {
         this.cardImage.setTag(position);    }
 
+    /**
+     * Sets the X coordinate of the card.
+     * @param x The X coordinate of the card.
+     */
     public void setX(float x) {
         this.cardImage.setX(x);
     }

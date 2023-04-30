@@ -9,21 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.model.Card;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** View class for the play area. */
 public class PlayAreaView extends FrameLayout {
-    private TextView textView;
+    private final TextView textView;
 
     /**
      * Constructor for PlayAreaView.
      *
      * @param context The context of the application.
-     *     <p>public PlayAreaView(@NonNull Context context) { this(context, null); }
-     *     <p>/** Constructor for PlayAreaView.
      */
     public PlayAreaView(@NonNull Context context) {
         this(context, null);
@@ -49,6 +43,12 @@ public class PlayAreaView extends FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.play_area_view, this);
         textView = findViewById(R.id.text_play_area_view);
     }
+
+    /**
+     * Sets the text of the view.
+     *
+     * @param text The text to be set.
+     */
     public void setText(String text) {
         textView.setText(text);
     }
