@@ -2,53 +2,47 @@
 package at.vunfer.openrealms.network.client;
 
 import android.util.Log;
+import at.vunfer.openrealms.UIUpdateListener;
+import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ClientConnector extends Thread {
-    private int port;
-    private String hostname;
+    private final String TAG = "ClientConnector";
+    private final UIUpdateListener uiUpdater;
     private Socket socket;
-    private ObjectOutputStream outputStream;
-    private ObjectInputStream inputStream;
-    private MessageHandler messageHandler;
+    private InetSocketAddress targetServer;
+    private Communication comm;
 
-    public ClientConnector(int port, String hostname) {
-        // TODO make connection to server
-        this.port = port;
-        this.hostname = hostname;
+    public ClientConnector(UIUpdateListener uiUpdater) {
+        this.socket = new Socket();
+        this.uiUpdater = uiUpdater;
     }
 
+    @Override
     public void run() {
         try {
-            socket = new Socket(hostname, port);
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            inputStream = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException ex) {
-            Log.e("Error", "IO Exception!");
-        }
+            socket.connect(targetServer);
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+            Log.i("Info", "Client was connected to " + targetServer.toString());
 
-        // starting the thread that is waiting for the messages from server
-        new Thread(this::listenForMessages).start();
-    }
-
-    private void listenForMessages() {
-        while (true) {
-            try {
-                Message msg = (Message) inputStream.readObject();
-                messageHandler.handleMessage(msg);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                break;
-            }
+            comm = new Communication(inputStream, outputStream, new MessageHandler(uiUpdater));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void sendStringToServer() {
-        SenderThread sender = new SenderThread(outputStream);
-        sender.start();
+    public void setConnectionTarget(String ipAddr, int port) {
+        targetServer = new InetSocketAddress(ipAddr, port);
+    }
+
+    public void sendMessage(Message msg) throws IOException {
+        comm.sendMessage(msg);
+        Log.i(TAG, "Sent message: " + msg.getType());
     }
 }

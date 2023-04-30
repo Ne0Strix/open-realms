@@ -2,8 +2,8 @@
 package at.vunfer.openrealms.network.server;
 
 import android.util.Log;
+import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.client.MessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,10 +11,12 @@ import java.net.Socket;
 
 public class ClientHandler {
 
+    private final String TAG = "ClientHandler";
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
-    private MessageHandler messageHandler;
+
+    private Communication comm;
 
     public ClientHandler(Socket clientSocket) {
         // TODO make connection to client
@@ -22,22 +24,15 @@ public class ClientHandler {
             socket = clientSocket;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
+            comm = new Communication(inputStream, outputStream, new MessageHandler());
+            Log.i(TAG, "Handler successfully attached.");
         } catch (IOException ex) {
             Log.e("Error", "IO Exception!");
         }
-        messageHandler = new MessageHandler();
-        new Thread(this::listenForMessages).start();
     }
 
-    private void listenForMessages() {
-        while (true) {
-            try {
-                Message msg = (Message) inputStream.readObject();
-                messageHandler.handleMessage(msg);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                break;
-            }
-        }
+    public void sendMessage(Message msg) throws IOException {
+        comm.sendMessage(msg);
+        Log.i(TAG, "Sent message: " + msg.getType());
     }
 }

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import java.util.List;
@@ -84,7 +83,7 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
                         @Override
                         public void onClick(View v) {
                             selectedCard = card;
-                            ((MainActivity) context).showCardDetails(v);
+                            //   ((MainActivity) context).showCardDetails(v);
                         }
                     });
 

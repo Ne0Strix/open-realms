@@ -4,10 +4,13 @@ package at.vunfer.openrealms.network.server;
 import android.util.Log;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerThread extends Thread {
     private int port;
+
+    private ServerSocket serverSocket;
+    private ArrayList<ClientHandler> connections = new ArrayList<>();
 
     public ServerThread(int port) {
         this.port = port;
@@ -15,30 +18,21 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try {
+            serverSocket = new ServerSocket(this.port); // Create an unbound server socket
             Log.i("Info", "The server was started! Port number: " + port);
-
-            while (true) {
-
-                Socket clientSocket = serverSocket.accept();
-                ClientHandler player1 = new ClientHandler(clientSocket);
-                // player1.start();
-
-                /*
-                Socket clientSocket2 = serverSocket.accept();
-                ClientHandler player2 = new ClientHandler();
-
-                //TODO: start the game just when there are 2 players
-
-                player2.start();
-
-                 */
-
-            }
-
+            connections.add(new ClientHandler(serverSocket.accept()));
         } catch (IOException ex) {
             System.out.println("IO Exception on Server!");
             ex.printStackTrace();
         }
+    }
+
+    public void stopClient() throws IOException {
+        serverSocket.close();
+    }
+
+    public ClientHandler getHandler() {
+        return connections.get(0);
     }
 }
