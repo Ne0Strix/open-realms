@@ -2,6 +2,7 @@ plugins {
 	id 'com.android.application'
 	id 'jacoco'
 	id 'com.diffplug.spotless' version '6.17.0'
+	id 'org.sonarqube' version '3.3'
 }
 
 android {
@@ -82,7 +83,15 @@ task jacocoTestReport(type: JacocoReport) {
 
 //project.tasks["sonarqube"].dependsOn "testAll"
 
-
+sonarqube {
+	properties {
+		property "sonar.projectKey", "Ne0Strix_open-realms"
+		property "sonar.organization", "ne0strix"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.java.coveragePlugin", "jacoco"
+		property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+	}
+}
 
 dependencies {
 
