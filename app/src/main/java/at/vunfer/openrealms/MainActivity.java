@@ -24,23 +24,20 @@ public class MainActivity extends AppCompatActivity {
 
     private MarketView marketView;
     private PlayAreaView playAreaView;
-    private MarketPresenter marketPresenter;
     private Market market;
-    private HandView handView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Initialize views
         marketView = new MarketView(this);
         marketView.displayMarket(null);
         playAreaView = new PlayAreaView(this);
-        handView = new HandView(this);
+        HandView handView = new HandView(this);
         handView.createFirstHand();
-
-        // Initialize presenter
-        marketPresenter = new MarketPresenter(this);
+        OverlayView overlayView = new OverlayView(this);
 
         // Initialize market
         market = Market.getInstance();
@@ -50,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(marketView.getMarketView());
         layout.addView(playAreaView);
         layout.addView(handView.getHandView());
+        layout.addView(overlayView.getOverlayView());
 
-        LOGGER.log(Level.INFO, "Views initialized");
+        overlayView.setOpponentHealth(100);
     }
 
     /** Method to update the market view */

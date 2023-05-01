@@ -15,7 +15,7 @@ import java.util.List;
 
 public class HandView extends LinearLayout {
     private static final String ERROR_MSG = "Error in HandView: ";
-    private static final int MAX_HANDS = 10;
+    private static final int MAX_HANDS = 5;
 
     private Context context;
     private List<Card> cards = new ArrayList<>();
