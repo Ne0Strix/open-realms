@@ -27,7 +27,8 @@ public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isBeingHeld = false;
 
-    private final long CLICK_TIME = 250l;
+    private final long CLICK_TIME = 250L;
+    private final String LOG_TAG = "CardView";
 
     public CardView(Context context) {
         super(context);
@@ -57,17 +58,12 @@ public class CardView extends ConstraintLayout {
         ImageView cardBackground = findViewById(R.id.card_view_background);
         cardBackground.setOnTouchListener(
                 (view, motionEvent) -> {
-                    //   Log.i("CardView", motionEvent.toString() + " " + card);
+                    // Log.i(LOG_TAG, motionEvent.toString() + " " + card);
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_UP:
                             if (motionEvent.getEventTime() - motionEvent.getDownTime()
                                     <= CLICK_TIME) {
-                                Log.i(
-                                        "CardView",
-                                        "Sending to server: "
-                                                + card
-                                                + " "
-                                                + getParent().toString());
+                                Log.i(LOG_TAG, "Sending: " + card + " " + getParent().toString());
                             } else {
                                 resetFullscreen();
                             }
@@ -90,11 +86,16 @@ public class CardView extends ConstraintLayout {
     }
 
     public void setFullscreen() {
-        Log.v("CardView", "SETTING FULLSCREEN");
+        CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
+        fullScreenCard.setCard(card);
+        fullScreenCard.setCardDetail();
+        fullScreenCard.getParent().bringChildToFront(fullScreenCard);
+        fullScreenCard.setVisibility(VISIBLE);
     }
 
     public void resetFullscreen() {
-        Log.v("CardView", "RESETTING FULLSCREEN");
+        CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
+        fullScreenCard.setVisibility(INVISIBLE);
     }
 
     public void setCardDetail() {
@@ -105,6 +106,7 @@ public class CardView extends ConstraintLayout {
         cost.setText(card.getCost() + "");
 
         LinearLayout effectArea = findViewById(R.id.card_view_effectArea);
+        effectArea.removeAllViews();
 
         // Default effects
         LinearLayout defaultEffects = new LinearLayout(getContext());
