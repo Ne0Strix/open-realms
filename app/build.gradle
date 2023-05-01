@@ -135,4 +135,3 @@ task jacocoTestReport(type: JacocoReport) {
 			licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
 		}
 	}
-}
