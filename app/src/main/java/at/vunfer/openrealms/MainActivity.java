@@ -2,6 +2,7 @@
 package at.vunfer.openrealms;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import at.vunfer.openrealms.network.Message;
@@ -24,13 +25,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         server.start();
     }
 
-    public void connectServer() throws IOException, InterruptedException {
+    public void connectServer(View view) throws IOException, InterruptedException {
         connection = new ClientConnector(this);
         connection.setConnectionTarget("192.168.42.57", connectionPort);
         connection.start();
     }
 
-    public void sendMessage() throws IOException {
+    public void sendMessage(View view) throws IOException {
         Message msg = new Message(MessageType.TOUCHED);
         connection.sendMessage(msg);
     }
