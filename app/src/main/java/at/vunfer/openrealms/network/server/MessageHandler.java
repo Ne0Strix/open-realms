@@ -6,7 +6,7 @@ import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
 
 public class MessageHandler implements IHandleMessage {
-    private final String TAG = "ServerMessageHandler";
+    private static final String TAG = "ServerMessageHandler";
 
     public void handleMessage(Message message) {
         switch (message.getType()) {

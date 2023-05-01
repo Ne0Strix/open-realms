@@ -10,9 +10,10 @@ import java.util.concurrent.Executors;
 
 public class Communication {
 
-    private final String TAG = "Communication";
+    private static final String TAG = "Communication";
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
+    private volatile Boolean isRunning = true;
     ExecutorService executor = Executors.newFixedThreadPool(2);
     IHandleMessage messageHandler;
 
@@ -37,7 +38,7 @@ public class Communication {
     }
 
     private void listenForMessages() {
-        while (true) {
+        while (isRunning) {
             try {
                 Message msg = (Message) input.readObject();
                 Log.i(TAG, "Received: " + msg.getType());
@@ -50,5 +51,12 @@ public class Communication {
                 break;
             }
         }
+    }
+
+    public void closeCommunication() throws IOException {
+        isRunning = false;
+        executor.shutdown();
+        input.close();
+        output.close();
     }
 }

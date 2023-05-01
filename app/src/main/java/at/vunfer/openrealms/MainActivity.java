@@ -2,8 +2,6 @@
 package at.vunfer.openrealms;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import at.vunfer.openrealms.network.Message;
@@ -14,11 +12,10 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements UIUpdateListener {
 
-    private int connectionPort = 1234;
+    private final int connectionPort = 1234;
 
     private ServerThread server = new ServerThread(connectionPort);
     private ClientConnector connection;
-    private final int port = 1111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,20 +24,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         server.start();
     }
 
-    public void connectServer(View view) throws IOException, InterruptedException {
-        EditText input = (EditText) findViewById(R.id.get_ip);
-        String readIpAddr = input.getText().toString();
-
-        TextView hostip = findViewById(R.id.hostip);
-
+    public void connectServer() throws IOException, InterruptedException {
         connection = new ClientConnector(this);
         connection.setConnectionTarget("192.168.42.57", connectionPort);
         connection.start();
     }
 
-    public void sendMessage(View view) throws IOException {
-        EditText input = (EditText) findViewById(R.id.get_text);
-        String text = input.getText().toString();
+    public void sendMessage() throws IOException {
         Message msg = new Message(MessageType.TOUCHED);
         connection.sendMessage(msg);
     }

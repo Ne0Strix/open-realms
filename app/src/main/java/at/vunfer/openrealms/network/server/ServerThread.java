@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 
 public class ServerThread extends Thread {
+    private static final String TAG = "ServerThread";
     private int port;
 
     private ServerSocket serverSocket;
@@ -23,7 +24,7 @@ public class ServerThread extends Thread {
             Log.i("Info", "The server was started! Port number: " + port);
             connections.add(new ClientHandler(serverSocket.accept()));
         } catch (IOException ex) {
-            System.out.println("IO Exception on Server!");
+            Log.e(TAG, "IO Exception on Server!");
             ex.printStackTrace();
         }
     }

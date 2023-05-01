@@ -19,13 +19,12 @@ public class ClientHandler {
     private Communication comm;
 
     public ClientHandler(Socket clientSocket) {
-        // TODO make connection to client
         try {
             socket = clientSocket;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
             comm = new Communication(inputStream, outputStream, new MessageHandler());
-            Log.i(TAG, "Handler successfully attached.");
+            Log.i(TAG, "ClientHandler successfully attached to a new client.");
         } catch (IOException ex) {
             Log.e("Error", "IO Exception!");
         }

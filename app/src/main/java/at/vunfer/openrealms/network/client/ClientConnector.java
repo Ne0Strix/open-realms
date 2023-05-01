@@ -12,7 +12,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ClientConnector extends Thread {
-    private final String TAG = "ClientConnector";
+    private static final String TAG = "ClientConnector";
     private final UIUpdateListener uiUpdater;
     private Socket socket;
     private InetSocketAddress targetServer;
@@ -33,7 +33,7 @@ public class ClientConnector extends Thread {
 
             comm = new Communication(inputStream, outputStream, new MessageHandler(uiUpdater));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to create client connection.", e);
         }
     }
 
