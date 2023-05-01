@@ -62,7 +62,7 @@ public class DeckGenerator {
                     Card c = parseCard(xmlParser);
                     Log.v(LOGGING_TAG, "Finished Card: " + c);
                     deck.add(c);
-                    for (int i = 1; i < amount; i++) deck.add(new Card(c));
+                    for (int i = 1; i < amount; i++) deck.add(new Card());
                 }
             }
         } catch (IOException | XmlPullParserException e) {
@@ -105,7 +105,7 @@ public class DeckGenerator {
             if (event == XmlPullParser.END_TAG) break;
         }
         if (DeckGenerator.context == null) return new Card(cardName, cardCost, cardEffects);
-        else return new Card(cardName, cardCost, cardEffects, context);
+        else return null;
     }
 
     private static Effect getCardAbility(XmlPullParser xmlParser)

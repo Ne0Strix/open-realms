@@ -110,5 +110,4 @@ public class HandView extends LinearLayout {
     private void addCard(Card card) {
         this.handView.addView(card.getCardImage());
     }
-
 }

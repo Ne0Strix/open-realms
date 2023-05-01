@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Initialize views
         marketView = new MarketView(this);
         marketView.displayMarket(null);
@@ -46,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
         // Initialize presenter
         marketPresenter = new MarketPresenter(this);
         handPresenter = new HandPresenter(handView);
+        HandView handView = new HandView(this);
+
+        Deck<Card> deck = new Deck<Card>();
+        handView.createFirstHand(deck);
+
+        OverlayView overlayView = new OverlayView(this);
 
         // Initialize market
         market = Market.getInstance();
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Method to update the play area view */
-    public void updatePlayAreaView() {
+    public void updatePlayAreaPresenter() {
         playAreaPresenter.updateView(market.toString());
     }
 
