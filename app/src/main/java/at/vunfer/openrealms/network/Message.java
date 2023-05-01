@@ -26,8 +26,8 @@ public class Message implements Serializable {
         }
     }
 
-    public void getData(String key) {
-        data.get(key);
+    public Object getData(DataKey key) {
+        return data.get(key);
     }
 
     private boolean validateData(DataKey key, Object value) {
