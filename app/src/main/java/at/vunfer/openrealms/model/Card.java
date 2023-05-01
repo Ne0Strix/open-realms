@@ -62,7 +62,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + "}";
+        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + ", effects=" + effects + '}';
     }
 
     public boolean isIdentical(Card c) {

@@ -59,6 +59,9 @@ public class ChampionTest {
                         "Test Champion",
                         3,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1)));
-        assertEquals("Card{name='Test Champion', cost=3}", champion.toString());
+        assertEquals(
+                "Card{name='Test Champion', cost=3, effects=[DamageEffect{damage=1},"
+                        + " HealingEffect{healing=1}, CoinEffect{coin=1}]}",
+                champion.toString());
     }
 }
