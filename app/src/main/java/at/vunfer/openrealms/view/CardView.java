@@ -26,8 +26,8 @@ import java.util.List;
 public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isBeingHeld = false;
-
-    private final long CLICK_TIME = 250L;
+    // The time in mils a click has to be held to be considered holding vs clicking
+    private final long HOLD_TIME = 250L;
     private final String LOG_TAG = "CardView";
 
     public CardView(Context context) {
@@ -47,12 +47,17 @@ public class CardView extends ConstraintLayout {
 
     public void init() {
         inflate(getContext(), R.layout.card_view, this);
-
-        if (card != null) setCardDetail();
-
         setUpListeners();
     }
 
+    /**
+     * Sets up the OnTouchListener to check if a card was clicked. If the card was clicked and
+     * released within HOLD_TIME, a click is registered. If the card was clicked and released after
+     * HOLD_TIME, a hold is registered.
+     *
+     * <p>On click a message is sent to the server containing the Card and the Position of the Card.
+     * On hold a FullScreenPreview is shown to see more detail in the card.
+     */
     @SuppressLint("ClickableViewAccessibility")
     public void setUpListeners() {
         ImageView cardBackground = findViewById(R.id.card_view_background);
@@ -62,8 +67,9 @@ public class CardView extends ConstraintLayout {
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_UP:
                             if (motionEvent.getEventTime() - motionEvent.getDownTime()
-                                    <= CLICK_TIME) {
-                                Log.i(LOG_TAG, "Sending: " + card + " " + getParent().toString());
+                                    <= HOLD_TIME) {
+                                String position = getParent().toString().split("id/")[1];
+                                Log.i(LOG_TAG, "Sending: " + card + " " + position);
                             } else {
                                 resetFullscreen();
                             }
@@ -78,27 +84,31 @@ public class CardView extends ConstraintLayout {
                                             setFullscreen();
                                         }
                                     },
-                                    CLICK_TIME);
+                                    HOLD_TIME);
                             break;
                     }
                     return false;
                 });
     }
 
-    public void setFullscreen() {
+    /** Enables the FullscreenPreview */
+    private void setFullscreen() {
+        // Get the view for the Fullscreen_Card Object from RootView
         CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
         fullScreenCard.setCard(card);
-        fullScreenCard.setCardDetail();
-        fullScreenCard.getParent().bringChildToFront(fullScreenCard);
         fullScreenCard.setVisibility(VISIBLE);
+        // Make sure that the the Fullscreen_Card Object is drawn in front of everything
+        fullScreenCard.getParent().bringChildToFront(fullScreenCard);
     }
 
-    public void resetFullscreen() {
+    /** Disables the FullscreenPreview */
+    private void resetFullscreen() {
         CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
         fullScreenCard.setVisibility(INVISIBLE);
     }
 
-    public void setCardDetail() {
+    /** Applies the details of the current card to the View. */
+    private void applyCardDetail() {
         TextView name = findViewById(R.id.card_view_name);
         name.setText(card.getName());
 
@@ -135,8 +145,8 @@ public class CardView extends ConstraintLayout {
 
     public CardView(Context context, Card card) {
         super(context);
-        setCard(card);
         init();
+        setCard(card);
     }
 
     public static List<CardView> getViewFromCards(Context context, List<Card> cards) {
@@ -148,12 +158,13 @@ public class CardView extends ConstraintLayout {
     }
 
     /**
-     * Sets the card for this CardImageView.
+     * Sets the card for this CardImageView and applies it's details to the View.
      *
      * @param card The card to set.
      */
     public void setCard(Card card) {
         this.card = card;
+        applyCardDetail();
     }
 
     /**

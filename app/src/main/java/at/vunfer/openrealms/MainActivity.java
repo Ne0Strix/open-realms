@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
-import at.vunfer.openrealms.model.DeckGenerator;
 import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
@@ -42,32 +41,22 @@ public class MainActivity extends AppCompatActivity {
         playAreaView = new PlayAreaView(this);
         handView = new HandView(this);
 
-        Deck<Card> playerStarterCards =
-                DeckGenerator.generatePlayerStarterDeck(getApplicationContext());
-
+        // Add Cards to test functionality
+        Deck<Card> playerStarterCards = new Deck<>();
+        playerStarterCards.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
+        playerStarterCards.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
+        playerStarterCards.add(new Card("Shortsword", 0, List.of(new DamageEffect(1))));
+        // Card with the longest name in the Original game and 3 Effects
+        playerStarterCards.add(
+                new Card(
+                        "Varrick, the Necromancer",
+                        7,
+                        List.of(new DamageEffect(2), new HealingEffect(4), new CoinEffect(12))));
+        // Card with 2 Effects
+        playerStarterCards.add(
+                new Card("Example", 10, List.of(new HealingEffect(4), new CoinEffect(12))));
         List<CardView> cardViews = CardView.getViewFromCards(this, playerStarterCards);
-        cardViews.remove(0);
-        cardViews.remove(0);
-        cardViews.remove(0);
-        cardViews.remove(0);
-        cardViews.remove(0);
-        cardViews.remove(0);
-        // Card with the longest name in the Original game
-        cardViews.add(
-                new CardView(
-                        this,
-                        new Card(
-                                "Varrick, the Necromancer",
-                                7,
-                                List.of(
-                                        new DamageEffect(2),
-                                        new HealingEffect(4),
-                                        new CoinEffect(12)))));
-        // Card to test 2 Abilities
-        cardViews.add(
-                new CardView(
-                        this,
-                        new Card("Name", 10, List.of(new HealingEffect(4), new CoinEffect(12)))));
+
         handView.createFirstHand(cardViews);
 
         // Initialize presenter
