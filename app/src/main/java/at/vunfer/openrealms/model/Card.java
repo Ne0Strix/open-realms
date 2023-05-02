@@ -53,9 +53,9 @@ public class Card {
         return effects;
     }
 
-
     /**
      * Applies the effects of the card to the play area.
+     *
      * @param visitor The play area to apply the effects to.
      */
     public void applyEffects(PlayArea visitor) {
@@ -71,6 +71,7 @@ public class Card {
 
     /**
      * Checks whether the given card is identical to this card.
+     *
      * @param c The card to compare to.
      * @return true if the cards are identical, false otherwise.
      */
@@ -97,13 +98,16 @@ public class Card {
 
     /**
      * Sets the position of the card in the game.
+     *
      * @param position The position of the card.
      */
     public void setPosition(int position) {
-        this.cardImage.setTag(position);    }
+        this.cardImage.setTag(position);
+    }
 
     /**
      * Sets the X coordinate of the card.
+     *
      * @param x The X coordinate of the card.
      */
     public void setX(float x) {
@@ -117,5 +121,4 @@ public class Card {
     public void setRotation(float angle) {
         this.cardImage.setRotation(angle);
     }
-
 }

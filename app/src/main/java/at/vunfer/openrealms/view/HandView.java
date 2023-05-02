@@ -7,15 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 
 public class HandView extends LinearLayout {
-    //private static final String ERROR_MSG = "Error in HandView: ";
+    // private static final String ERROR_MSG = "Error in HandView: ";
 
     private Context context;
     private LinearLayout handView;
@@ -43,6 +41,7 @@ public class HandView extends LinearLayout {
 
     /**
      * Sets the cards in the HandView.
+     *
      * @param cards The cards to set.
      * @return True if cards were set, false otherwise.
      */
@@ -93,6 +92,7 @@ public class HandView extends LinearLayout {
         }
         return true;
     }
+
     public LinearLayout getHandView() {
         return handView;
     }
@@ -103,10 +103,11 @@ public class HandView extends LinearLayout {
 
     /**
      * Creates the first hand of cards for the player.
+     *
      * @param playerStarterCards The cards to add to the hand.
      */
-    public void createFirstHand(Deck<Card> playerStarterCards) {
-    }
+    public void createFirstHand(Deck<Card> playerStarterCards) {}
+
     private void addCard(Card card) {
         this.handView.addView(card.getCardImage());
     }

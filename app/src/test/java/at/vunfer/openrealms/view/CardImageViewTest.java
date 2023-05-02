@@ -1,15 +1,13 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.view;
 
 import static org.junit.Assert.*;
 
 import android.content.Context;
-
 import androidx.test.platform.app.InstrumentationRegistry;
-
+import at.vunfer.openrealms.model.Card;
 import org.junit.Before;
 import org.junit.Test;
-
-import at.vunfer.openrealms.model.Card;
 
 public class CardImageViewTest {
     private Context context;

@@ -1,10 +1,10 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter;
 
+import at.vunfer.openrealms.view.HandView;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import at.vunfer.openrealms.view.HandView;
 
 public class HandPresenterTest {
     private HandView handView;
@@ -23,6 +23,7 @@ public class HandPresenterTest {
         // verify that the correct number of cards were created
         assert handPresenter.getCards().size() == 5;
     }
+
     @Test
     public void getCards() {
         handPresenter.createFirstHand();

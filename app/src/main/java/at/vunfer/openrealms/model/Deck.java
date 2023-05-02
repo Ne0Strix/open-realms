@@ -6,6 +6,7 @@ import java.util.Random;
 
 /**
  * Deck class represents a generic deck of cards.
+ *
  * @param <T> Type parameter for the items in the deck.
  */
 public class Deck<T> extends ArrayList<T> {
@@ -13,6 +14,7 @@ public class Deck<T> extends ArrayList<T> {
 
     /**
      * Draws a random item from the deck.
+     *
      * @return The drawn item.
      * @throws IllegalStateException If the deck is empty.
      */
@@ -30,6 +32,7 @@ public class Deck<T> extends ArrayList<T> {
 
     /**
      * Draws a specific item from the deck.
+     *
      * @param item The item to draw.
      * @return The drawn item.
      * @throws IllegalArgumentException If the item is not in the deck.

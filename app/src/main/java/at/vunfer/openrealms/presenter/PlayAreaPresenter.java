@@ -1,17 +1,13 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter;
 
+import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.view.PlayAreaView;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.view.PlayAreaView;
-
-/**
- * Presenter class for the PlayAreaView. Handles logic for adding cards and updating the view.
- */
-
+/** Presenter class for the PlayAreaView. Handles logic for adding cards and updating the view. */
 public class PlayAreaPresenter {
     private static final Logger LOGGER = Logger.getLogger(PlayAreaPresenter.class.getName());
     private static final String TAG = "PlayAreaPresenter";
@@ -21,6 +17,7 @@ public class PlayAreaPresenter {
 
     /**
      * Constructor for the PlayAreaPresenter.
+     *
      * @param view The PlayAreaView to associate with this presenter.
      */
     public PlayAreaPresenter(PlayAreaView view) {

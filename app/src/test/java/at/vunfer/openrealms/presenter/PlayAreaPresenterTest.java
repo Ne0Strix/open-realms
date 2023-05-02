@@ -1,3 +1,4 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter;
 
 import static org.junit.Assert.*;
@@ -5,11 +6,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.view.PlayAreaView;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PlayAreaPresenterTest {
     private PlayAreaView view;
@@ -21,7 +21,6 @@ public class PlayAreaPresenterTest {
         view = mock(PlayAreaView.class);
         presenter = new PlayAreaPresenter(view);
         card = mock(Card.class);
-
     }
 
     @Test

@@ -2,7 +2,6 @@
 package at.vunfer.openrealms.presenter;
 
 import android.content.Context;
-
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.Market;
@@ -10,9 +9,7 @@ import at.vunfer.openrealms.view.MarketView;
 import java.util.List;
 import java.util.logging.Logger;
 
-/**
- * Presenter for the MarketView.
- */
+/** Presenter for the MarketView. */
 public class MarketPresenter {
     private static final Logger LOGGER = Logger.getLogger(MarketPresenter.class.getName());
     private View view;
@@ -56,9 +53,7 @@ public class MarketPresenter {
         this.view = view;
     }
 
-    /**
-     * Detaches the view from the presenter.
-     */
+    /** Detaches the view from the presenter. */
     public void detachView() {
         this.view = null;
     }
@@ -90,9 +85,7 @@ public class MarketPresenter {
         return market.getCards();
     }
 
-    /**
-     * Interface for the MarketPresenter view.
-     */
+    /** Interface for the MarketPresenter view. */
     public interface View {
         /**
          * Displays the market to the user.

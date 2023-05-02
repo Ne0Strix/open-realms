@@ -57,7 +57,7 @@ task jacocoTestReport(type: JacocoReport) {
 		html.required = true
 		xml.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
 		html.outputLocation = file("${project.projectDir}/build/reports/jacoco/jacocoTestReport")
-
+	}
 		def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
 		def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilter)
 		def mainSrc = "${project.projectDir}/src/main/java"
@@ -100,7 +100,7 @@ task jacocoTestReport(type: JacocoReport) {
 		testImplementation 'junit:junit:4.13.2'
 		testImplementation 'org.robolectric:robolectric:4.6.1'
 		testImplementation 'org.mockito:mockito-core:3.12.4'
-		
+
 		testImplementation 'androidx.test:runner:1.5.2'
 		testImplementation 'androidx.test:rules:1.5.0'
 		testImplementation 'androidx.test.ext:junit:1.1.5'
@@ -124,7 +124,7 @@ task jacocoTestReport(type: JacocoReport) {
 		androidTestImplementation 'androidx.test:core:1.5.0'
 
 	}
-}
+
 
 	spotless {
 		format 'misc', {
@@ -142,4 +142,3 @@ task jacocoTestReport(type: JacocoReport) {
 			licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
 		}
 	}
-

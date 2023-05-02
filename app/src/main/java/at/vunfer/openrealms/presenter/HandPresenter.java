@@ -1,20 +1,15 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter;
 
-import android.content.Context;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.view.HandView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HandPresenter {
     private static final String ERROR_MSG = "Error in HandView: ";
@@ -31,6 +26,7 @@ public class HandPresenter {
     public List<Card> getCards() {
         return this.cards;
     }
+
     public interface OnCardSelectedListener {
         void onCardSelected(Card card);
 
@@ -56,9 +52,7 @@ public class HandPresenter {
         this.setCards();
     }
 
-    /**
-     * Sets the list of cards to be displayed in the view.
-     */
+    /** Sets the list of cards to be displayed in the view. */
     private void setCards() {
         if (cards == null) {
             throw new IllegalArgumentException(ERROR_MSG + "Cards list is null");

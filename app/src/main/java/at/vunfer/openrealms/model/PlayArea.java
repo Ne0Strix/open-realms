@@ -4,8 +4,8 @@ package at.vunfer.openrealms.model;
 import java.util.List;
 
 /**
- * Represents the play area in the game.
- * Stores the current state of the game and provides methods for manipulating it.
+ * Represents the play area in the game. Stores the current state of the game and provides methods
+ * for manipulating it.
  */
 public class PlayArea {
     private int health;
@@ -19,8 +19,10 @@ public class PlayArea {
     private PlayerCards playerCards;
 
     /**
-     * Constructs a new PlayArea object with the specified health and player cards.
-     * Initializes the turn damage, healing, and coins to 0, and initializes the played cards and played champions decks.
+     * Constructs a new PlayArea object with the specified health and player cards. Initializes the
+     * turn damage, healing, and coins to 0, and initializes the played cards and played champions
+     * decks.
+     *
      * @param health The health of the player.
      * @param playerCards The player's cards.
      */
@@ -38,6 +40,7 @@ public class PlayArea {
 
     /**
      * Returns the health of the player.
+     *
      * @return The health of the player.
      */
     public int getHealth() {
@@ -46,6 +49,7 @@ public class PlayArea {
 
     /**
      * Returns the total turn damage.
+     *
      * @return The total turn damage.
      */
     public int getTurnDamage() {
@@ -54,6 +58,7 @@ public class PlayArea {
 
     /**
      * Returns the total turn healing.
+     *
      * @return The total turn healing.
      */
     public int getTurnHealing() {
@@ -62,6 +67,7 @@ public class PlayArea {
 
     /**
      * Returns the player's cards.
+     *
      * @return The player's cards.
      */
     public PlayerCards getPlayerCards() {
@@ -70,6 +76,7 @@ public class PlayArea {
 
     /**
      * Returns the total turn coins.
+     *
      * @return The total turn coins.
      */
     public int getTurnCoins() {
@@ -78,6 +85,7 @@ public class PlayArea {
 
     /**
      * Returns the list of played cards.
+     *
      * @return The list of played cards.
      */
     public List<Card> getPlayedCards() {
@@ -86,6 +94,7 @@ public class PlayArea {
 
     /**
      * Returns the list of played champions.
+     *
      * @return The list of played champions.
      */
     public List<Card> getPlayedChampions() {
@@ -94,6 +103,7 @@ public class PlayArea {
 
     /**
      * Returns the game market.
+     *
      * @return The game market.
      */
     public Market getMarket() {
@@ -101,8 +111,9 @@ public class PlayArea {
     }
 
     /**
-     * Plays the specified card from the player's hand.
-     * Adds the card to the played cards deck and removes it from the player's hand.
+     * Plays the specified card from the player's hand. Adds the card to the played cards deck and
+     * removes it from the player's hand.
+     *
      * @param card The card to play.
      */
     public void playCard(Card card) {
@@ -131,9 +142,7 @@ public class PlayArea {
     //        return null;
     //    }
 
-    /**
-     * Resets the turn damage, healing, and coins to 0.
-     */
+    /** Resets the turn damage, healing, and coins to 0. */
     public void resetTurnPool() {
         this.turnDamage = 0;
         this.turnHealing = 0;
@@ -142,6 +151,7 @@ public class PlayArea {
 
     /**
      * Increases the player's health by the specified value.
+     *
      * @param value The value to increase the player's health by.
      */
     public void heal(int value) {
@@ -150,6 +160,7 @@ public class PlayArea {
 
     /**
      * Decreases the player's health by the specified value.
+     *
      * @param value The value to decrease the player's health by.
      */
     public void takeDamage(int value) {
@@ -158,6 +169,7 @@ public class PlayArea {
 
     /**
      * Adds the specified damage to the total turn damage.
+     *
      * @param damage The damage to add.
      */
     public void visitDamage(int damage) {

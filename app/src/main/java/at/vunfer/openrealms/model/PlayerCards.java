@@ -11,14 +11,12 @@ public class PlayerCards {
     private final Deck<Card> deckCards;
     private final Deck<Card> discardedCards;
 
-    /**
-     * The maximum size of the hand.
-     */
+    /** The maximum size of the hand. */
     private static final int HANDSIZE = 5;
 
     /**
-     * Constructor for a new player's cards object.
-     * Initializes the hand, deck and discarded decks with the necessary cards.
+     * Constructor for a new player's cards object. Initializes the hand, deck and discarded decks
+     * with the necessary cards.
      */
     public PlayerCards() {
         this.handCards = new Deck<>();
@@ -100,9 +98,7 @@ public class PlayerCards {
         return handCards.draw(card);
     }
 
-/**
- *Restocks the player's hand
- */
+    /** Restocks the player's hand */
     public void restockHand() {
         for (int i = this.handCards.size() - 1; i >= 0; i--) {
             discardedCards.add(this.popFromHand(this.getHandCards().get(i)));

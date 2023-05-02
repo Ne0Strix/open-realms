@@ -43,5 +43,4 @@ public class DamageEffect implements Effect {
     public int hashCode() {
         return Objects.hash(damage);
     }
-
 }

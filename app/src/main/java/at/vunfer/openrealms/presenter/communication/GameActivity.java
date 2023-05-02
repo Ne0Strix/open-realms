@@ -6,9 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-
 import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.presenter.communication.ClientThread;
 
 public class GameActivity extends AppCompatActivity {
 

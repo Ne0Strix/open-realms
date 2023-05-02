@@ -1,16 +1,14 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.view;
 
 import static org.junit.Assert.*;
 
 import android.content.Context;
-
 import androidx.test.platform.app.InstrumentationRegistry;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
+import org.junit.Before;
+import org.junit.Test;
 
 public class HandViewTest {
     private HandView handView;
@@ -52,5 +50,4 @@ public class HandViewTest {
         // Verify that the correct number of cards were added to the HandView
         assertEquals(playerStarterCards.size(), handView.getHandView().getChildCount());
     }
-
 }
