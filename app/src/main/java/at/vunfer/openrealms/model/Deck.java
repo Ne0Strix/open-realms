@@ -4,11 +4,6 @@ package at.vunfer.openrealms.model;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Deck class represents a generic deck of cards.
- *
- * @param <T> Type parameter for the items in the deck.
- */
 public class Deck<T> extends ArrayList<T> {
     private static final Random rand = new Random();
 
