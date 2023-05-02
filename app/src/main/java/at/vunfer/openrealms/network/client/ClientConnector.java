@@ -5,6 +5,7 @@ import android.util.Log;
 import at.vunfer.openrealms.UIUpdateListener;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.presenter.MessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

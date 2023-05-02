@@ -30,6 +30,10 @@ public class ClientHandler {
         }
     }
 
+    public void disconnectClient() throws IOException {
+        socket.close();
+    }
+
     public void sendMessage(Message msg) throws IOException {
         comm.sendMessage(msg);
         Log.i(TAG, "Sent message: " + msg.getType());
