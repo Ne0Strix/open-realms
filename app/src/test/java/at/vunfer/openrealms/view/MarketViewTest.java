@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,9 +50,11 @@ public class MarketViewTest {
 
         View marketCardView = marketLayout.getChildAt(0);
         ImageView cardImage = marketCardView.findViewById(R.id.card_image);
-        assertEquals(
-                R.drawable.emptycards,
-                cardImage.getDrawable().getConstantState().newDrawable().getConstantState());
+        Drawable.ConstantState expectedDrawableState =
+                context.getResources().getDrawable(R.drawable.emptycards, context.getTheme()).getConstantState();
+        Drawable.ConstantState actualDrawableState =
+                cardImage.getDrawable().getConstantState().newDrawable().getConstantState();
+        assertEquals(expectedDrawableState, actualDrawableState);
 
         assertEquals(
                 "Card1",
