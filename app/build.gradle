@@ -101,6 +101,10 @@ task jacocoTestReport(type: JacocoReport) {
 		testImplementation 'org.robolectric:robolectric:4.6.1'
 		testImplementation 'org.mockito:mockito-core:3.12.4'
 
+		testImplementation 'androidx.test:runner:1.5.2'
+		testImplementation 'androidx.test:rules:1.5.0'
+		testImplementation 'androidx.test.ext:junit:1.1.5'
+
 		androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 		androidTestImplementation 'androidx.test:core:1.5.0'
 		androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -134,3 +138,4 @@ task jacocoTestReport(type: JacocoReport) {
 			licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
 		}
 	}
+
