@@ -9,14 +9,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
-import at.vunfer.openrealms.MainActivity;
-import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.model.Card;
+
 import java.util.List;
 import java.util.logging.Logger;
 
-/** View class for the Market. */
+import at.vunfer.openrealms.MainActivity;
+import at.vunfer.openrealms.R;
+import at.vunfer.openrealms.model.Card;
+
+/**
+ * View class for the Market.
+ */
 public class MarketView implements at.vunfer.openrealms.presenter.MarketPresenter.View {
     private static final Logger LOGGER = Logger.getLogger(MarketView.class.getName());
     private static final String ERROR_MESSAGE = "Error displaying market";
@@ -34,8 +39,8 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
             };
 
     public Card selectedCard;
-    private Context context;
-    private LinearLayout marketView;
+    private final Context context;
+    private final LinearLayout marketView;
 
     /**
      * Constructor for the MarketView class.
