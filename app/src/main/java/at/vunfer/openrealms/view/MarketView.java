@@ -39,6 +39,7 @@ public class MarketView implements at.vunfer.openrealms.presenter.MarketPresente
 
     /**
      * Constructor for the MarketView class.
+     *
      * @param context The context of the application
      */
     public MarketView(Context context) {

@@ -9,6 +9,7 @@ public class Player {
 
     /**
      * Constructor for Player class.
+     *
      * @param playerName the name of the player
      * @param playArea the play area of the player
      */
@@ -35,6 +36,7 @@ public class Player {
 
     /**
      * Returns the player name
+     *
      * @return the player name
      */
     @NonNull @Override

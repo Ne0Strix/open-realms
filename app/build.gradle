@@ -100,7 +100,7 @@ task jacocoTestReport(type: JacocoReport) {
 		testImplementation 'junit:junit:4.13.2'
 		testImplementation 'org.robolectric:robolectric:4.6.1'
 		testImplementation 'org.mockito:mockito-core:3.12.4'
-		
+
 		testImplementation 'androidx.test:runner:1.5.2'
 		testImplementation 'androidx.test:rules:1.5.0'
 		testImplementation 'androidx.test.ext:junit:1.1.5'
@@ -126,20 +126,19 @@ task jacocoTestReport(type: JacocoReport) {
 	}
 }
 
-	spotless {
-		format 'misc', {
-			target '*.gradle', '*.md', '.gitignore', '**.gradle'
-			trimTrailingWhitespace()
-			indentWithTabs()
-			endWithNewline()
-		}
-		java {
-			target 'src/*/java/**/*.java'
-			removeUnusedImports()
-			cleanthat()
-			googleJavaFormat('1.16.0').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
-			formatAnnotations()
-			licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
-		}
+spotless {
+	format 'misc', {
+		target '*.gradle', '*.md', '.gitignore', '**.gradle'
+		trimTrailingWhitespace()
+		indentWithTabs()
+		endWithNewline()
 	}
-
+	java {
+		target 'src/*/java/**/*.java'
+		removeUnusedImports()
+		cleanthat()
+		googleJavaFormat('1.16.0').aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
+		formatAnnotations()
+		licenseHeader '/* Licensed under GNU GPL v3.0 (C) $YEAR */'
+	}
+}

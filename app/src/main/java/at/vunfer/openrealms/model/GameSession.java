@@ -9,6 +9,7 @@ public class GameSession {
 
     /**
      * Constructs a GameSession with a list of players and the current player.
+     *
      * @param players the list of players in the game session
      * @param currentPlayer the current player in the game session
      * @throws IllegalArgumentException if the current player is not part of the player list
@@ -31,6 +32,7 @@ public class GameSession {
 
     /**
      * Returns the opponent of the current player.
+     *
      * @param currentPlayer the current player
      * @return the opponent of the current player
      */
@@ -40,16 +42,14 @@ public class GameSession {
                         % 2); // get opponent of current player (only for the 2 player version)
     }
 
-    /**
-     * Sets the next player as the current player.
-     */
+    /** Sets the next player as the current player. */
     public void nextPlayer() {
         currentPlayer = players.get(((players.indexOf(currentPlayer)) + 1) % 2);
     }
 
     /**
-     * Ends the turn of the current player and switches to the next player.
-     * Deals damage to the opponent and heals the current player.
+     * Ends the turn of the current player and switches to the next player. Deals damage to the
+     * opponent and heals the current player.
      */
     public void endTurn() {
         dealDamage(
@@ -65,6 +65,7 @@ public class GameSession {
 
     /**
      * Deals damage to the opponent of the current player.
+     *
      * @param opponent the opponent player
      * @param value the amount of damage to deal
      */
@@ -74,6 +75,7 @@ public class GameSession {
 
     /**
      * Heals the current player.
+     *
      * @param value the amount of healing to apply
      */
     public void healPlayer(int value) {

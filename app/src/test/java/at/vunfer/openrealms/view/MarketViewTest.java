@@ -1,3 +1,4 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.view;
 
 import static org.junit.Assert.*;
@@ -8,7 +9,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import at.vunfer.openrealms.R;
+import at.vunfer.openrealms.model.Card;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,18 +20,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.model.Card;
-
 @RunWith(MockitoJUnitRunner.class)
 public class MarketViewTest {
-    @Mock
-    Context context;
-    @Mock
-    Card card;
+    @Mock Context context;
+    @Mock Card card;
 
     private MarketView marketView;
 
@@ -53,10 +49,18 @@ public class MarketViewTest {
 
         View marketCardView = marketLayout.getChildAt(0);
         ImageView cardImage = marketCardView.findViewById(R.id.card_image);
-        assertEquals(R.drawable.emptycards, cardImage.getDrawable().getConstantState().newDrawable().getConstantState());
+        assertEquals(
+                R.drawable.emptycards,
+                cardImage.getDrawable().getConstantState().newDrawable().getConstantState());
 
-        assertEquals("Card1", ((TextView) marketCardView.findViewById(R.id.card_description)).getText().toString());
-        assertEquals("10", ((TextView) marketCardView.findViewById(R.id.card_cost)).getText().toString());
+        assertEquals(
+                "Card1",
+                ((TextView) marketCardView.findViewById(R.id.card_description))
+                        .getText()
+                        .toString());
+        assertEquals(
+                "10",
+                ((TextView) marketCardView.findViewById(R.id.card_cost)).getText().toString());
     }
 
     @Test
