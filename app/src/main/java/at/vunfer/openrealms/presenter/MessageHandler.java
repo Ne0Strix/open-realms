@@ -1,5 +1,5 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package at.vunfer.openrealms.network.client;
+package at.vunfer.openrealms.presenter;
 
 import android.util.Log;
 import at.vunfer.openrealms.UIUpdateListener;
