@@ -105,11 +105,6 @@ public class Card {
         this.cardImage.setTag(position);
     }
 
-    /**
-     * Sets the X coordinate of the card.
-     *
-     * @param x The X coordinate of the card.
-     */
     public void setX(float x) {
         this.cardImage.setX(x);
     }
