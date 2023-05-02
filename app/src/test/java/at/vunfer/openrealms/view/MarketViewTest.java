@@ -51,7 +51,9 @@ public class MarketViewTest {
         View marketCardView = marketLayout.getChildAt(0);
         ImageView cardImage = marketCardView.findViewById(R.id.card_image);
         Drawable.ConstantState expectedDrawableState =
-                context.getResources().getDrawable(R.drawable.emptycards, context.getTheme()).getConstantState();
+                context.getResources()
+                        .getDrawable(R.drawable.emptycards, context.getTheme())
+                        .getConstantState();
         Drawable.ConstantState actualDrawableState =
                 cardImage.getDrawable().getConstantState().newDrawable().getConstantState();
         assertEquals(expectedDrawableState, actualDrawableState);
