@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -39,9 +40,9 @@ public class MarketViewTest {
         List<Card> market = new ArrayList<>();
         market.add(card);
 
-        when(card.getImageResource()).thenReturn(R.drawable.emptycards);
-        when(card.getName()).thenReturn("Card1");
-        when(card.getCost()).thenReturn(10);
+        Mockito.when(card.getImageResource()).thenReturn(R.drawable.emptycards);
+        Mockito.when(card.getName()).thenReturn("Card1");
+        Mockito.when(card.getCost()).thenReturn(10);
 
         marketView.showMarket(market);
 
