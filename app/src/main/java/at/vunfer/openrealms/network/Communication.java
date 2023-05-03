@@ -43,9 +43,6 @@ public class Communication {
                 Message msg = (Message) input.readObject();
                 Log.i(TAG, "Received: " + msg.getType());
                 messageHandler.handleMessage(msg);
-                if (msg.getType() == MessageType.TOUCHED) {
-                    sendMessage(new Message(MessageType.ADD_CARD));
-                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 break;

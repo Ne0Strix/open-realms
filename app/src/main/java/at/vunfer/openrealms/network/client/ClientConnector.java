@@ -46,4 +46,12 @@ public class ClientConnector extends Thread {
         comm.sendMessage(msg);
         Log.i(TAG, "Sent message: " + msg.getType());
     }
+
+    public InetSocketAddress getConnectionTarget() {
+        return targetServer;
+    }
+
+    public Communication getCommunication() {
+        return comm;
+    }
 }
