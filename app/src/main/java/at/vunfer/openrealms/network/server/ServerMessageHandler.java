@@ -6,7 +6,7 @@ import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
 
-public class MessageHandler implements IHandleMessage {
+public class ServerMessageHandler implements IHandleMessage {
 
     private static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;

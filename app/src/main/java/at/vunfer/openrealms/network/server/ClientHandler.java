@@ -23,7 +23,7 @@ public class ClientHandler {
             socket = clientSocket;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
-            comm = new Communication(inputStream, outputStream, new MessageHandler());
+            comm = new Communication(inputStream, outputStream, new ServerMessageHandler());
             Log.i(TAG, "ClientHandler successfully attached to a new client.");
         } catch (IOException ex) {
             Log.e("Error", "IO Exception!");
