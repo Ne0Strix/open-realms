@@ -80,10 +80,12 @@ public class Card {
     }
 
     public void setCardImage(ImageView cardImage) {
+
         this.cardImage = cardImage;
     }
 
     public void setPosition(int position) {
+
         this.cardImage.setTag(position);
     }
 
