@@ -15,8 +15,8 @@ public class HandPresenter {
     private static final String ERROR_MSG = "Error in HandView: ";
     private static final int MAX_HANDS = 5;
 
-    private List<Card> cards = new ArrayList<>();
-    private LinearLayout handView;
+    private final List<Card> cards = new ArrayList<>();
+    private final LinearLayout handView;
     private HandPresenter.OnCardSelectedListener onCardSelectedListener;
 
     public HandPresenter(HandView handView) {
@@ -37,16 +37,13 @@ public class HandPresenter {
         for (int iterator = 0; iterator < MAX_HANDS; iterator++) {
             Card card = new Card(handView.getContext());
             card.getCardImage().setLongClickable(true);
-            card.getCardImage()
-                    .setOnClickListener(
-                            new android.view.View.OnClickListener() {
-                                @Override
-                                public void onClick(android.view.View v) {
-                                    if (onCardSelectedListener != null) {
-                                        onCardSelectedListener.onCardSelected(card);
-                                    }
-                                }
-                            });
+            card.getCardImage().setOnClickListener(
+                    v -> {
+                        if (onCardSelectedListener != null) {
+                            onCardSelectedListener.onCardSelected(card);
+                        }
+                    }
+            );
             this.cards.add(card);
         }
         this.setCards();
@@ -54,9 +51,6 @@ public class HandPresenter {
 
     /** Sets the list of cards to be displayed in the view. */
     private void setCards() {
-        if (cards == null) {
-            throw new IllegalArgumentException(ERROR_MSG + "Cards list is null");
-        }
         int numCards = cards.size();
 
         for (int i = 0; i < numCards; i++) {

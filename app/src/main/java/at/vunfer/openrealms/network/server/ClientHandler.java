@@ -22,28 +22,13 @@ public class ClientHandler {
     }
 
     private void listenForMessages() {
-        try {
-            while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
                 Message msg = (Message) inputStream.readObject();
                 messageHandler.handleMessage(msg);
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) inputStream.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                if (outputStream != null) outputStream.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                if (socket != null) socket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                break;
             }
         }
     }
