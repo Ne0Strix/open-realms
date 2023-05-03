@@ -27,9 +27,9 @@ public class ClientHandler {
                 Message msg = (Message) inputStream.readObject();
                 messageHandler.handleMessage(msg);
             }
-        }catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 if (inputStream != null) inputStream.close();
             } catch (IOException ex) {
