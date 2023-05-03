@@ -37,13 +37,13 @@ public class HandPresenter {
         for (int iterator = 0; iterator < MAX_HANDS; iterator++) {
             Card card = new Card(handView.getContext());
             card.getCardImage().setLongClickable(true);
-            card.getCardImage().setOnClickListener(
-                    v -> {
-                        if (onCardSelectedListener != null) {
-                            onCardSelectedListener.onCardSelected(card);
-                        }
-                    }
-            );
+            card.getCardImage()
+                    .setOnClickListener(
+                            v -> {
+                                if (onCardSelectedListener != null) {
+                                    onCardSelectedListener.onCardSelected(card);
+                                }
+                            });
             this.cards.add(card);
         }
         this.setCards();
