@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Card {
+    private static int idCounter = 0;
+    private int id;
     private final String name;
     private final int cost;
     private final List<Effect> effects;
@@ -36,7 +38,7 @@ public class Card {
         this.name = name;
         this.cost = cost;
         this.effects = effects;
-
+        this.id = idCounter++;
         this.imageResource = R.drawable.emptycards;
         this.description = this.toString();
     }
@@ -83,5 +85,9 @@ public class Card {
 
     public void setCardImage(ImageView cardImage) {
         this.cardImage = cardImage;
+    }
+
+    public int getId() {
+        return id;
     }
 }
