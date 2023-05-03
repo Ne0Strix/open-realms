@@ -7,6 +7,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
+import at.vunfer.openrealms.model.GameSession;
+import at.vunfer.openrealms.model.Player;
+import at.vunfer.openrealms.model.PlayerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -14,12 +17,15 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class ServerThread extends Thread {
     private static final String TAG = "ServerThread";
     private final Context context;
     private int port;
     private String ipAddr = "empty";
+    private static ServerThread instance;
+    private GameSession gameSession;
 
     private ServerSocket serverSocket;
     private ArrayList<ClientHandler> connections = new ArrayList<>();
@@ -27,6 +33,7 @@ public class ServerThread extends Thread {
     public ServerThread(Context context, int port) {
         this.context = context;
         this.port = port;
+        instance = this;
     }
 
     @Override
@@ -43,6 +50,10 @@ public class ServerThread extends Thread {
             Log.e(TAG, "IO Exception on Server!");
             ex.printStackTrace();
         }
+        Player player1 = PlayerFactory.createPlayer("Player 1");
+        Player player2 = PlayerFactory.createPlayer("Player 2");
+        List<Player> players = List.of(player1, player2);
+        gameSession = new GameSession(players, player1);
     }
 
     public void stopServer() throws IOException {
@@ -106,5 +117,16 @@ public class ServerThread extends Thread {
         }
 
         return null;
+    }
+
+    public static ServerThread getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("ServerThread not initialized!");
+        }
+        return instance;
+    }
+
+    public GameSession getGameSession() {
+        return gameSession;
     }
 }
