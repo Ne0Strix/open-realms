@@ -11,7 +11,6 @@ public class Card {
     private final String name;
     private final int cost;
     private final List<Effect> effects;
-
     private final int imageResource;
     private final String description;
     private ImageView cardImage;
@@ -36,7 +35,6 @@ public class Card {
         this.name = name;
         this.cost = cost;
         this.effects = effects;
-
         this.imageResource = R.drawable.emptycards;
         this.description = this.toString();
     }
@@ -84,7 +82,7 @@ public class Card {
     public void setCardImage(ImageView cardImage) {
         this.cardImage = cardImage;
     }
-    
+
     public void setPosition(int position) {
         this.cardImage.setTag(position);
     }

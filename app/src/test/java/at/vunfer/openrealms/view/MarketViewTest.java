@@ -51,19 +51,14 @@ public class MarketViewTest {
         View marketCardView = marketLayout.getChildAt(0);
         ImageView cardImage = marketCardView.findViewById(R.id.card_image);
         Drawable.ConstantState expectedDrawableState =
-                context.getResources().getDrawable(R.drawable.emptycards, context.getTheme()).getConstantState();
-        Drawable.ConstantState actualDrawableState =
-                cardImage.getDrawable().getConstantState().newDrawable().getConstantState();
+                context.getResources()
+                        .getDrawable(R.drawable.emptycards, context.getTheme())
+                        .getConstantState();
+        Drawable.ConstantState actualDrawableState = cardImage.getDrawable().getConstantState().newDrawable().getConstantState();
         assertEquals(expectedDrawableState, actualDrawableState);
 
-        assertEquals(
-                "Card1",
-                ((TextView) marketCardView.findViewById(R.id.card_description))
-                        .getText()
-                        .toString());
-        assertEquals(
-                "10",
-                ((TextView) marketCardView.findViewById(R.id.card_cost)).getText().toString());
+        assertEquals("Card1", ((TextView) marketCardView.findViewById(R.id.card_description)).getText().toString());
+        assertEquals("10", ((TextView) marketCardView.findViewById(R.id.card_cost)).getText().toString());
     }
 
     @Test
