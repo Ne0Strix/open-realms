@@ -2,7 +2,6 @@
 package at.vunfer.openrealms.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
+import at.vunfer.openrealms.model.Card;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +18,14 @@ public class HandView extends LinearLayout {
     private static final int MAX_HANDS = 10;
 
     private Context context;
-    private List<CardView> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
     private LinearLayout handView;
     private OnCardSelectedListener onCardSelectedListener;
 
     public interface OnCardSelectedListener {
-        void onCardSelected(CardView card);
+        void onCardSelected(Card card);
 
-        void onCardDropped(CardView card);
+        void onCardDropped(Card card);
     }
 
     public HandView(Context context) {
@@ -68,13 +68,14 @@ public class HandView extends LinearLayout {
     }
 
     /**
-     * Sets the list of cards to be displayed in the view.
+     * Sets the cards in the HandView.
      *
-     * @param cards the list of cards to be displayed
+     * @param cards The cards to set.
+     * @return True if cards were set, false otherwise.
      */
-    private void setCards() {
+    private boolean setCards(Deck<Card> cards) {
         if (cards == null) {
-            throw new IllegalArgumentException(ERROR_MSG + "Cards list is null");
+            return false;
         }
         int numCards = cards.size();
 
@@ -116,6 +117,8 @@ public class HandView extends LinearLayout {
             // Position the cards along an arc
             positionCards();
 
+            card.getCardImage().setLayoutParams(new ViewGroup.LayoutParams(180, 250));
+            card.getCardImage().setLayoutParams(params);
             addCard(card);
         }
     }
@@ -154,6 +157,7 @@ public class HandView extends LinearLayout {
 
     private void addCard(CardView card) {
         this.handView.addView(card);
+        return true;
     }
 
     public LinearLayout getHandView() {
@@ -162,5 +166,16 @@ public class HandView extends LinearLayout {
 
     public View getView() {
         return handView;
+    }
+
+    /**
+     * Creates the first hand of cards for the player.
+     *
+     * @param playerStarterCards The cards to add to the hand.
+     */
+    public void createFirstHand(Deck<Card> playerStarterCards) {}
+
+    private void addCard(Card card) {
+        this.handView.addView(card.getCardImage());
     }
 }

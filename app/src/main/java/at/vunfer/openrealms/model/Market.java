@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
@@ -8,17 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Market {
-    private static Market INSTANCE;
+    private static Market marketInstance;
     private static final int TOTAL_PURCHASABLE = 5;
-    private static final String TAG = "PlayerCards";
+    private static final String TAG = "Market";
     Deck<Card> marketDeck;
     Deck<Card> forPurchase;
 
-    private List<Card> cards;
-
-    public Market() {
+    private Market() {
         marketDeck = new Deck<>();
         forPurchase = new Deck<>();
+
+        // Add some test cards to the market deck
         marketDeck.add(
                 new Card(
                         "Testcard1",
@@ -53,17 +54,32 @@ public class Market {
         restock();
     }
 
+    /**
+     * Get an instance of the market.
+     *
+     * @return The market instance.
+     */
     public static Market getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Market();
+        if (marketInstance == null) {
+            marketInstance = new Market();
         }
-        return INSTANCE;
+        return marketInstance;
     }
 
+    /**
+     * Get the list of cards available for purchase.
+     *
+     * @return The list of cards for purchase.
+     */
     public ArrayList<Card> getForPurchase() {
         return forPurchase;
     }
 
+    /**
+     * Restock the market with cards from the market deck.
+     *
+     * @return The number of cards restocked.
+     */
     public int restock() {
         int restocked = 0;
         while (forPurchase.size() < TOTAL_PURCHASABLE) {
@@ -72,13 +88,20 @@ public class Market {
                 forPurchase.add(card);
                 restocked++;
             } else {
-                System.out.println("You have no more cards to draw for the market.");
+                Log.i(TAG, "You have no more cards to draw for the market.");
                 break;
             }
         }
         return restocked;
     }
 
+    /**
+     * Purchase a card from the market.
+     *
+     * @param card The card to purchase.
+     * @return The purchased card.
+     * @throws IllegalArgumentException if the card is not available for purchase.
+     */
     public Card purchase(Card card) {
         if (card == null || !forPurchase.contains(card)) {
             throw new IllegalArgumentException("Card is not to purchase.");
@@ -93,7 +116,7 @@ public class Market {
      * @return The list of cards in the market.
      */
     public List<Card> getCards() {
-        return cards;
+        return forPurchase;
     }
 
     /**
@@ -101,8 +124,8 @@ public class Market {
      *
      * @param cards The list of cards to set in the market.
      */
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
+    public void setCards(Deck<Card> cards) {
+        this.forPurchase = cards;
     }
 
     /**
@@ -111,7 +134,7 @@ public class Market {
      * @param card The card to add to the market.
      */
     public void addCard(Card card) {
-        cards.add(card);
+        forPurchase.add(card);
     }
 
     /**
@@ -120,11 +143,11 @@ public class Market {
      * @param card The card to remove from the market.
      */
     public void removeCard(Card card) {
-        cards.remove(card);
+        forPurchase.remove(card);
     }
 
     /** Clear the market of all cards. */
     public void clear() {
-        cards.clear();
+        forPurchase.clear();
     }
 }

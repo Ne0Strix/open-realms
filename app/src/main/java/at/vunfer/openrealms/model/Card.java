@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.widget.ImageView;
 import at.vunfer.openrealms.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class Card {
 
     private final int imageResource;
     private final String description;
+    private ImageView cardImage;
 
     public Card(Card c) {
         this(c.name, c.cost, new ArrayList<>(c.effects));
@@ -23,6 +25,7 @@ public class Card {
         this.cost = 0;
         this.effects = new ArrayList<>();
         this.imageResource = R.drawable.emptycards;
+        this.cardImage = new ImageView(context);
         this.description = "";
     }
 
@@ -37,9 +40,8 @@ public class Card {
         this.name = name;
         this.cost = cost;
         this.effects = effects;
-
         this.imageResource = R.drawable.emptycards;
-        this.description = toString();
+        this.description = this.toString();
     }
 
     public String getName() {

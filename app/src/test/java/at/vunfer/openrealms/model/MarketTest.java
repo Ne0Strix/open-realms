@@ -24,16 +24,9 @@ class MarketTest {
 
     @Test
     void testBuyNonexistingCard() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    market.purchase(null);
-                });
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    market.purchase(new Card("Test", 5, List.of(new CoinEffect(5))));
-                });
+        assertThrows(IllegalArgumentException.class, () -> market.purchase(null));
+        Card cardToBuy = new Card("Test", 5, List.of(new CoinEffect(5)));
+        assertThrows(IllegalArgumentException.class, () -> market.purchase(cardToBuy));
     }
 
     @Test
