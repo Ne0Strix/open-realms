@@ -71,22 +71,11 @@ public class HandPresenter {
 
             if (numCards % 2 != 0) {
                 // even number of cards, center them
-                int half = numCards / 2;
-                if (i < half) {
-                    params.rightMargin = 8;
-                } else if (i > half) {
-                    params.leftMargin = 8;
-                } else {
-                    // middle card
-                    params.leftMargin = 8;
-                    params.rightMargin = 8;
-                }
+                params.rightMargin = i == numCards / 2 ? 8 : 0;
+                params.leftMargin = i == numCards / 2 ? 8 : 0;
             } else {
-                // odd number of cards, center middle card
-                if (i == numCards / 2) {
-                    params.leftMargin = 8;
-                    params.rightMargin = 8;
-                }
+                params.rightMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
+                params.leftMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
             }
             card.getCardImage().setLayoutParams(new ViewGroup.LayoutParams(180, 250));
             // Position the cards along an arc
