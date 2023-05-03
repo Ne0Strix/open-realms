@@ -2,7 +2,6 @@
 package at.vunfer.openrealms.view;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
