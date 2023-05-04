@@ -4,16 +4,16 @@ package at.vunfer.openrealms.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import at.vunfer.openrealms.R;
+import java.util.ArrayList;
+import java.util.List;
 
 /** View class for the play area. */
-public class PlayAreaView extends FrameLayout {
-    private final TextView textView;
-
+public class PlayAreaView extends LinearLayout {
+    private List<CardView> displayedCards = new ArrayList<>();
     /**
      * Constructor for PlayAreaView.
      *
@@ -41,15 +41,16 @@ public class PlayAreaView extends FrameLayout {
     public PlayAreaView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.play_area_view, this);
-        textView = findViewById(R.id.text_play_area_view);
     }
 
-    /**
-     * Sets the text of the view.
-     *
-     * @param text The text to be set.
-     */
-    public void setText(String text) {
-        textView.setText(text);
+    public void updatePlayArea() {
+        removeAllViews();
+        for (CardView view : displayedCards) {
+            addView(view);
+        }
+    }
+
+    public List<CardView> getDisplayedCards() {
+        return displayedCards;
     }
 }

@@ -1,10 +1,10 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter;
 
-import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.view.CardView;
 import at.vunfer.openrealms.view.PlayAreaView;
 import java.util.ArrayList;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.logging.Logger;
 
 /** Presenter class for the PlayAreaView. Handles logic for adding cards and updating the view. */
@@ -12,8 +12,8 @@ public class PlayAreaPresenter {
     private static final Logger LOGGER = Logger.getLogger(PlayAreaPresenter.class.getName());
     private static final String TAG = "PlayAreaPresenter";
 
-    private PlayAreaView view;
-    private ArrayList<Card> cards = new ArrayList<>();
+    private PlayAreaView playAreaView;
+    private ArrayList<CardView> cards = new ArrayList<>();
 
     /**
      * Constructor for the PlayAreaPresenter.
@@ -21,47 +21,31 @@ public class PlayAreaPresenter {
      * @param view The PlayAreaView to associate with this presenter.
      */
     public PlayAreaPresenter(PlayAreaView view) {
-        this.view = view;
+        this.playAreaView = view;
     }
 
-    /**
-     * Sets the text of the associated PlayAreaView.
-     *
-     * @param text The text to set.
-     */
-    public void setText(String text) {
-        try {
-            view.setText(text);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, TAG + ": Error setting text: " + e.getMessage());
+    public void removeCardFromPlayArea(CardView card) {
+        playAreaView.getDisplayedCards().remove(card);
+        playAreaView.updatePlayArea();
+    }
+
+    public void addCardToPlayArea(CardView card) {
+        playAreaView.getDisplayedCards().add(card);
+        playAreaView.updatePlayArea();
+    }
+
+    public void addCardsToPlayArea(List<CardView> cards) {
+        for (CardView card : cards) {
+            playAreaView.getDisplayedCards().add(card);
         }
+        playAreaView.updatePlayArea();
     }
 
-    /**
-     * Adds a card to the ArrayList of cards on the play area.
-     *
-     * @param card The card to add.
-     */
-    public void addCard(Card card) {
-        cards.add(card);
-    }
-
-    /**
-     * Updates the view by setting the text and forcing a redraw of the view.
-     *
-     * @param text The text to set.
-     */
-    public void updateView(String text) {
-        setText(text);
-        view.invalidate(); // Forces a redraw of the view
-    }
-
-    /**
-     * Gets the list of cards on the play area.
-     *
-     * @return The list of cards on the play area.
-     */
-    public ArrayList<Card> getCards() {
-        return cards;
+    public CardView findViewByCardId(int cardID) {
+        for (CardView view : playAreaView.getDisplayedCards()) {
+            // if(view.getCard().getID == cardID) TODO: implement CardID
+            return view;
+        }
+        return null;
     }
 }

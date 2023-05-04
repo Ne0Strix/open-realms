@@ -3,7 +3,6 @@ package at.vunfer.openrealms.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ public class HandView extends LinearLayout {
     private static final int MAX_HANDS = 10;
 
     private List<CardView> cards = new ArrayList<>();
-    private LinearLayout handView;
 
     public HandView(Context context) {
         super(context);
@@ -48,7 +46,6 @@ public class HandView extends LinearLayout {
         setMinimumHeight(1450);
         setLayoutParams(params);*/
         // handView.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-        Log.d("AB", getChildCount() + "" + getChildAt(0));
     }
 
     /**
@@ -57,50 +54,35 @@ public class HandView extends LinearLayout {
      * @param cards The cards to set.
      * @return True if cards were set, false otherwise.
      */
-    private boolean setCards(List<CardView> cards) {
-        if (cards == null) {
-            return false;
-        }
+    public void updateHand() {
+        removeAllViews();
         int numCards = cards.size();
 
         for (int i = 0; i < numCards; i++) {
             CardView card = cards.get(i);
 
-            Log.d("Card", card.getCard().toString());
             LinearLayout.LayoutParams params =
                     new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
-            /* params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+            /*
+            params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
             params.setMargins(-20, 0, -20, 64);
 
             if (numCards % 2 != 0) {
                 // even number of cards, center them
-                int half = numCards / 2;
-                if (i < half) {
-                    params.rightMargin = 8;
-                } else if (i > half) {
-                    params.leftMargin = 8;
-                } else {
-                    // middle card
-                    params.leftMargin = 8;
-                    params.rightMargin = 8;
-                }
+                params.rightMargin = i == numCards / 2 ? 8 : 0;
+                params.leftMargin = i == numCards / 2 ? 8 : 0;
             } else {
-                // odd number of cards, center middle card
-                if (i == numCards / 2) {
-                    params.leftMargin = 8;
-                    params.rightMargin = 8;
-                }
-            }*/
+                params.rightMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
+                params.leftMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
+            }
+            */
             // Position the cards along an arc
-            positionCards();
+            // positionCards();
 
             // card.setLayoutParams(new ViewGroup.LayoutParams(180, 250));
-            card.setLayoutParams(params);
+            // card.setLayoutParams(params);
             addCard(card);
-            Log.d("A", card.getX() + " " + card.getY() + " " + card.getRotation());
-            Log.d("A", card.getParent().getParent() + "");
         }
-        return true;
     }
 
     private void positionCards() {
@@ -134,13 +116,8 @@ public class HandView extends LinearLayout {
         }
     }
 
-    /**
-     * Creates the first hand of cards for the player.
-     *
-     * @param playerStarterCards The cards to add to the hand.
-     */
-    public void createFirstHand(List<CardView> playerStarterCards) {
-        setCards(playerStarterCards);
+    public List<CardView> getDisplayedCards() {
+        return cards;
     }
 
     private void addCard(CardView card) {

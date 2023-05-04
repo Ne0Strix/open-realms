@@ -8,10 +8,12 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Effect;
@@ -63,21 +65,40 @@ public class CardView extends ConstraintLayout {
         ImageView cardBackground = findViewById(R.id.card_view_background);
         cardBackground.setOnTouchListener(
                 (view, motionEvent) -> {
-                    // Log.i(LOG_TAG, motionEvent.toString() + " " + card);
+                    Log.v(LOG_TAG, motionEvent.toString() + " " + card);
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_UP:
                             if (motionEvent.getEventTime() - motionEvent.getDownTime()
                                     <= HOLD_TIME) {
-                                String position = getParent().toString().split("id/")[1];
-                                Log.i(LOG_TAG, "Sending: " + card + " " + position);
+                                int parentId = ((View) getParent()).getId();
+                                Log.i(
+                                        LOG_TAG,
+                                        "Sending: "
+                                                + card
+                                                + " from int id: "
+                                                + parentId
+                                                + " or String id "
+                                                + getResources().getResourceName(parentId));
+                                // TODO: implement message sending
+                                // TODO: remove temporary cardRemoval
+                                if (parentId == R.id.hand_view) {
+                                    MainActivity.handPresenter.removeCardFromHandView(this);
+                                    MainActivity.playAreaPresenter.addCardToPlayArea(this);
+                                } else if (parentId == R.id.market_view) {
+                                    MainActivity.marketPresenter.removeCardFromMarketView(this);
+                                }
                             } else {
                                 resetFullscreen();
                             }
                             isBeingHeld = false;
                             break;
+                        case MotionEvent.ACTION_CANCEL:
+                            resetFullscreen();
+                            break;
                         case MotionEvent.ACTION_DOWN:
                             isBeingHeld = true;
                             final Handler handler = new Handler(Looper.getMainLooper());
+                            // TODO: don't show fullscreen while scrolling in playArea
                             handler.postDelayed(
                                     () -> {
                                         if (isBeingHeld) {

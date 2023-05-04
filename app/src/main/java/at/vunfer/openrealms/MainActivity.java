@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
-import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
@@ -20,13 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private MarketView marketView;
-    private PlayAreaView playAreaView;
-    private PlayAreaPresenter playAreaPresenter;
-    private MarketPresenter marketPresenter;
-    private Market market;
-    private HandView handView;
-    private HandPresenter handPresenter;
+    public static PlayAreaPresenter playAreaPresenter;
+    public static MarketPresenter marketPresenter;
+    public static HandPresenter handPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +29,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize views
-        marketView = new MarketView(this);
-        marketView.displayMarket(null);
-        playAreaView = new PlayAreaView(this);
-        handView = findViewById(R.id.hand_view);
+        MarketView marketView = findViewById(R.id.market_view);
+        PlayAreaView playAreaView = findViewById(R.id.play_area);
+        HandView handView = findViewById(R.id.hand_view);
 
+        // Initialize presenter
+        marketPresenter = new MarketPresenter(marketView);
+        handPresenter = new HandPresenter(handView);
+        playAreaPresenter = new PlayAreaPresenter(playAreaView);
+
+        // Deck<Card> deck = new Deck<Card>();
+        // handView.createFirstHand(deck);
+        addPlaceholderCards();
+
+        OverlayView overlayView = new OverlayView(this);
+
+        // Add views to layout
+        ConstraintLayout layout = findViewById(R.id.game_area);
+        // layout.addView(marketView.getMarketView());
+        // layout.addView(playAreaView);
+        // layout.addView(handView);
+        layout.addView(overlayView.getOverlayView());
+
+        LOGGER.log(Level.INFO, "Views initialized");
+    }
+
+    public void addPlaceholderCards() {
         // Add Cards to test functionality
         Deck<Card> playerStarterCards = new Deck<>();
         playerStarterCards.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
@@ -53,44 +69,10 @@ public class MainActivity extends AppCompatActivity {
         // Card with 2 Effects
         playerStarterCards.add(
                 new Card("Example", 10, List.of(new HealingEffect(4), new CoinEffect(12))));
-        List<CardView> cardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> handCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> marketCardViews = CardView.getViewFromCards(this, playerStarterCards);
 
-        handView.createFirstHand(cardViews);
-
-        // Initialize presenter
-        marketPresenter = new MarketPresenter(this);
-        handPresenter = new HandPresenter(handView);
-
-        // Deck<Card> deck = new Deck<Card>();
-        // handView.createFirstHand(deck);
-
-        OverlayView overlayView = new OverlayView(this);
-
-        // Initialize market
-        market = Market.getInstance();
-
-        // Add views to layout
-        ConstraintLayout layout = findViewById(R.id.play_area);
-        layout.addView(marketView.getMarketView());
-        layout.addView(playAreaView);
-        // layout.addView(handView);
-        layout.addView(overlayView.getOverlayView());
-
-        LOGGER.log(Level.INFO, "Views initialized");
-    }
-
-    /** Method to update the market view */
-    public void updateMarketView() {
-        marketView.displayMarket(market.getCards());
-    }
-
-    /** Method to update the play area view */
-    public void updatePlayAreaPresenter() {
-        playAreaPresenter.updateView(market.toString());
-    }
-
-    public void displayMarket(List<Card> market) {
-        marketView.showMarket(market);
-        LOGGER.log(Level.INFO, "Market displayed");
+        handPresenter.addCardsToHandView(handCardViews);
+        marketPresenter.addCardsToMarketView(marketCardViews);
     }
 }
