@@ -8,6 +8,15 @@
     android:background="@drawable/playarea"
     tools:context=".MainActivity">
 
+    <at.vunfer.openrealms.view.HandView
+        android:id="@+id/hand_view"
+        android:layout_width="541dp"
+        android:layout_height="116dp"
+        android:gravity="bottom|center_horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <at.vunfer.openrealms.view.CardView
         android:id="@+id/fullscreen_card"
         android:layout_width="wrap_content"
@@ -18,7 +27,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </at.vunfer.openrealms.view.CardView>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -34,11 +45,6 @@
             layout="@layout/market_view"
             android:layout_width="match_parent"
             android:layout_height="323dp" />
-
-        <include
-            layout="@layout/hand_view"
-            android:layout_width="match_parent"
-            android:layout_height="201dp" />
 
     </LinearLayout>
 

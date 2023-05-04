@@ -5,8 +5,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.view.CardView;
 import at.vunfer.openrealms.view.HandView;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,36 +14,20 @@ public class HandPresenter {
     private static final String ERROR_MSG = "Error in HandView: ";
     private static final int MAX_HANDS = 5;
 
-    private final List<Card> cards = new ArrayList<>();
+    private final List<CardView> cards = new ArrayList<>();
     private final LinearLayout handView;
-    private HandPresenter.OnCardSelectedListener onCardSelectedListener;
 
     public HandPresenter(HandView handView) {
         this.handView = handView;
     }
 
-    public List<Card> getCards() {
+    public List<CardView> getCards() {
         return this.cards;
-    }
-
-    public interface OnCardSelectedListener {
-        void onCardSelected(Card card);
-
-        void onCardDropped(Card card);
     }
 
     public void createFirstHand() {
         for (int iterator = 0; iterator < MAX_HANDS; iterator++) {
-            Card card = new Card(handView.getContext());
-            card.getCardImage().setLongClickable(true);
-            card.getCardImage()
-                    .setOnClickListener(
-                            v -> {
-                                if (onCardSelectedListener != null) {
-                                    onCardSelectedListener.onCardSelected(card);
-                                }
-                            });
-            this.cards.add(card);
+            //    Card card = new Card(handView.getContext());
         }
         this.setCards();
     }
@@ -54,8 +37,7 @@ public class HandPresenter {
         int numCards = cards.size();
 
         for (int i = 0; i < numCards; i++) {
-            Card card = cards.get(i);
-            card.getCardImage().setImageResource(R.drawable.emptycards);
+            CardView card = cards.get(i);
 
             LinearLayout.LayoutParams params =
                     new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
@@ -77,7 +59,7 @@ public class HandPresenter {
                 params.rightMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
                 params.leftMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
             }
-            card.getCardImage().setLayoutParams(new ViewGroup.LayoutParams(180, 250));
+            card.setLayoutParams(new ViewGroup.LayoutParams(180, 250));
             // Position the cards along an arc
             positionCards();
 
@@ -101,7 +83,7 @@ public class HandPresenter {
 
         // Position the cards along the arc
         for (int i = 0; i < numCards; i++) {
-            Card card = cards.get(i);
+            CardView card = cards.get(i);
 
             // Calculate the angle of the current card
             float angle = -30.0f + (i * cardAngle);
@@ -111,13 +93,13 @@ public class HandPresenter {
             float y = centerY - (float) Math.cos(Math.toRadians(angle)) * radius;
 
             // Set the position and rotation of the card
-            card.getCardImage().setX(x);
-            card.getCardImage().setY(y);
-            card.getCardImage().setRotation(angle);
+            card.setX(x);
+            card.setY(y);
+            card.setRotation(angle);
         }
     }
 
-    private void addCard(Card card) {
-        this.handView.addView(card.getCardImage());
+    private void addCard(CardView card) {
+        this.handView.addView(card);
     }
 }

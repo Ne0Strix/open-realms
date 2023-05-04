@@ -2,14 +2,10 @@
 package at.vunfer.openrealms.view;
 
 import android.content.Context;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.model.Card;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,54 +13,42 @@ public class HandView extends LinearLayout {
     private static final String ERROR_MSG = "Error in HandView: ";
     private static final int MAX_HANDS = 10;
 
-    private Context context;
-    private List<Card> cards = new ArrayList<>();
+    private List<CardView> cards = new ArrayList<>();
     private LinearLayout handView;
-    private OnCardSelectedListener onCardSelectedListener;
-
-    public interface OnCardSelectedListener {
-        void onCardSelected(Card card);
-
-        void onCardDropped(Card card);
-    }
 
     public HandView(Context context) {
         super(context);
-        this.context = context;
-
-        // Creating the HandView layout parameters
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        // Center the HandView layout parameters at the bottom of the screen.
-        params.gravity = Gravity.BOTTOM;
-
-        // Inflate the HandView layout with the created layout parameters.
-        this.handView =
-                (LinearLayout) LayoutInflater.from(this.context).inflate(R.layout.hand_view, null);
-        this.handView.setOrientation(LinearLayout.HORIZONTAL);
-        this.handView.setMinimumHeight(1450);
-        this.handView.setLayoutParams(params);
+        init();
     }
 
-    public void createFirstHand(List<CardView> cards) {
-        for (CardView card : cards) {
-            card.setLongClickable(true);
-            card.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.i("CARD WAS CLICKED", card.toString());
-                            if (onCardSelectedListener != null) {
-                                onCardSelectedListener.onCardSelected(card);
-                            }
-                        }
-                    });
-            this.cards.add(card);
-        }
-        this.setCards();
+    public HandView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public HandView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public void init() {
+        // Creating the HandView layout parameters
+        /* LinearLayout.LayoutParams params =
+        new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);*/
+
+        // Center the HandView layout parameters at the bottom of the screen.
+
+        // Inflate the HandView layout with the created layout parameters.
+        // handView = (LinearLayout) LayoutInflater.from(this.context).inflate(R.layout.hand_view,
+        // this);
+        // Log.i("EQ",v.equals(getChildAt(0))+" "+v.toString()+" "+getChildAt(0));
+        /*       setOrientation(LinearLayout.HORIZONTAL);
+        setMinimumHeight(1450);
+        setLayoutParams(params);*/
+        // handView.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        Log.d("AB", getChildCount() + "" + getChildAt(0));
     }
 
     /**
@@ -73,7 +57,7 @@ public class HandView extends LinearLayout {
      * @param cards The cards to set.
      * @return True if cards were set, false otherwise.
      */
-    private boolean setCards(Deck<Card> cards) {
+    private boolean setCards(List<CardView> cards) {
         if (cards == null) {
             return false;
         }
@@ -81,19 +65,12 @@ public class HandView extends LinearLayout {
 
         for (int i = 0; i < numCards; i++) {
             CardView card = cards.get(i);
-            // card.getCardImage().setImageResource(R.drawable.emptycards);
 
+            Log.d("Card", card.getCard().toString());
             LinearLayout.LayoutParams params =
                     new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
-            params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+            /* params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
             params.setMargins(-20, 0, -20, 64);
-
-            this.handView.setLayoutParams(
-                    new ConstraintLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            this.handView.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
 
             if (numCards % 2 != 0) {
                 // even number of cards, center them
@@ -113,14 +90,17 @@ public class HandView extends LinearLayout {
                     params.leftMargin = 8;
                     params.rightMargin = 8;
                 }
-            }
+            }*/
             // Position the cards along an arc
             positionCards();
 
-            card.getCardImage().setLayoutParams(new ViewGroup.LayoutParams(180, 250));
-            card.getCardImage().setLayoutParams(params);
+            // card.setLayoutParams(new ViewGroup.LayoutParams(180, 250));
+            card.setLayoutParams(params);
             addCard(card);
+            Log.d("A", card.getX() + " " + card.getY() + " " + card.getRotation());
+            Log.d("A", card.getParent().getParent() + "");
         }
+        return true;
     }
 
     private void positionCards() {
@@ -130,12 +110,11 @@ public class HandView extends LinearLayout {
         float cardAngle = 60.0f / (numCards - 1);
 
         // Calculate the radius of the arc
-        float radius =
-                (float) ((handView.getHeight() / 2.0) / Math.sin(Math.toRadians(cardAngle / 2.0)));
+        float radius = (float) ((getHeight() / 2.0) / Math.sin(Math.toRadians(cardAngle / 2.0)));
 
         // Calculate the center point of the arc
-        float centerX = handView.getWidth() / 2.0f;
-        float centerY = handView.getHeight();
+        float centerX = getWidth() / 2.0f;
+        float centerY = getHeight();
 
         // Position the cards along the arc
         for (int i = 0; i < numCards; i++) {
@@ -155,27 +134,16 @@ public class HandView extends LinearLayout {
         }
     }
 
-    private void addCard(CardView card) {
-        this.handView.addView(card);
-        return true;
-    }
-
-    public LinearLayout getHandView() {
-        return handView;
-    }
-
-    public View getView() {
-        return handView;
-    }
-
     /**
      * Creates the first hand of cards for the player.
      *
      * @param playerStarterCards The cards to add to the hand.
      */
-    public void createFirstHand(Deck<Card> playerStarterCards) {}
+    public void createFirstHand(List<CardView> playerStarterCards) {
+        setCards(playerStarterCards);
+    }
 
-    private void addCard(Card card) {
-        this.handView.addView(card.getCardImage());
+    private void addCard(CardView card) {
+        addView(card);
     }
 }

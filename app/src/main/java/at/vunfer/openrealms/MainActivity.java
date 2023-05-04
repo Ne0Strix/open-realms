@@ -1,11 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
@@ -41,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         marketView = new MarketView(this);
         marketView.displayMarket(null);
         playAreaView = new PlayAreaView(this);
-        handView = new HandView(this);
+        handView = findViewById(R.id.hand_view);
 
         // Add Cards to test functionality
         Deck<Card> playerStarterCards = new Deck<>();
@@ -64,10 +60,9 @@ public class MainActivity extends AppCompatActivity {
         // Initialize presenter
         marketPresenter = new MarketPresenter(this);
         handPresenter = new HandPresenter(handView);
-        HandView handView = new HandView(this);
 
-        Deck<Card> deck = new Deck<Card>();
-        handView.createFirstHand(deck);
+        // Deck<Card> deck = new Deck<Card>();
+        // handView.createFirstHand(deck);
 
         OverlayView overlayView = new OverlayView(this);
 
@@ -78,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout layout = findViewById(R.id.play_area);
         layout.addView(marketView.getMarketView());
         layout.addView(playAreaView);
-        layout.addView(handView.getHandView());
+        // layout.addView(handView);
+        layout.addView(overlayView.getOverlayView());
 
         LOGGER.log(Level.INFO, "Views initialized");
     }
@@ -91,30 +87,6 @@ public class MainActivity extends AppCompatActivity {
     /** Method to update the play area view */
     public void updatePlayAreaPresenter() {
         playAreaPresenter.updateView(market.toString());
-    }
-
-    public void showCardDialog(Context context, Card card) {
-        Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.card_details_dialog);
-        dialog.getWindow()
-                .setLayout(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        // ImageView cardImage = dialog.findViewById(R.id.card_image);
-        //  TextView cardName = dialog.findViewById(R.id.card_name);
-        // TextView cardDescription = dialog.findViewById(R.id.card_description);
-
-        //  cardImage.setImageResource(card.getImageResource());
-        //   cardName.setText(card.getName());
-        //  cardDescription.setText(card.getDescription());
-
-        dialog.show();
-    }
-
-    public void showCardDetails(View v) {
-        CardView cardImageView = (CardView) v;
-        Card card = cardImageView.getCard();
-        showCardDialog(this, card);
     }
 
     public void displayMarket(List<Card> market) {
