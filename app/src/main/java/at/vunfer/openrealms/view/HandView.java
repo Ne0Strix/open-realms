@@ -5,14 +5,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import java.util.ArrayList;
+import at.vunfer.openrealms.view.view_interfaces.CardPileView;
 import java.util.List;
 
-public class HandView extends LinearLayout {
-    private static final String ERROR_MSG = "Error in HandView: ";
-    private static final int MAX_HANDS = 10;
-
-    private List<CardView> cards = new ArrayList<>();
+public class HandView extends LinearLayout implements CardPileView {
 
     public HandView(Context context) {
         super(context);
@@ -48,13 +44,9 @@ public class HandView extends LinearLayout {
         // handView.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
     }
 
-    /**
-     * Sets the cards in the HandView.
-     *
-     * @param cards The cards to set.
-     * @return True if cards were set, false otherwise.
-     */
-    public void updateHand() {
+    /** Sets the cards in the HandView. */
+    @Override
+    public void updateView(List<CardView> cards) {
         removeAllViews();
         int numCards = cards.size();
 
@@ -81,11 +73,11 @@ public class HandView extends LinearLayout {
 
             // card.setLayoutParams(new ViewGroup.LayoutParams(180, 250));
             // card.setLayoutParams(params);
-            addCard(card);
+            addView(card);
         }
     }
 
-    private void positionCards() {
+    private void positionCards(List<CardView> cards) {
         int numCards = cards.size();
 
         // Calculate the angle between cards
@@ -114,13 +106,5 @@ public class HandView extends LinearLayout {
             card.setY(y);
             card.setRotation(angle);
         }
-    }
-
-    public List<CardView> getDisplayedCards() {
-        return cards;
-    }
-
-    private void addCard(CardView card) {
-        addView(card);
     }
 }

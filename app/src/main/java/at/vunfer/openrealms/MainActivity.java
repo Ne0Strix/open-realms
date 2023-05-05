@@ -19,9 +19,14 @@ public class MainActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static PlayAreaPresenter playAreaPresenter;
-    public static MarketPresenter marketPresenter;
-    public static HandPresenter handPresenter;
+    public PlayAreaPresenter playAreaPresenter;
+    public MarketPresenter marketPresenter;
+    public HandPresenter playerHandPresenter;
+    public HandPresenter opponentHandPresenter;
+    public DiscardPilePresenter playerDiscardPilePresenter;
+    public DiscardPilePresenter opponentDiscardPilePresenter;
+    public DeckPresenter playerDeckPresenter;
+    public DeckPresenter opponentDeckPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,25 +35,32 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize views
         MarketView marketView = findViewById(R.id.market_view);
-        PlayAreaView playAreaView = findViewById(R.id.play_area);
-        HandView handView = findViewById(R.id.hand_view);
+        PlayAreaView playAreaView = findViewById(R.id.play_area_view);
+        HandView playerHandView = findViewById(R.id.player_hand_view);
+        HandView opponentHandView = findViewById(R.id.opponent_hand_view);
+        DiscardPileView playerDiscardPileView = findViewById(R.id.player_discard_pile_view);
+        DiscardPileView opponentDiscardPileView = findViewById(R.id.opponent_discard_pile_view);
+        DeckView playerDeckView = findViewById(R.id.player_deck_view);
+        DeckView opponentDeckView = findViewById(R.id.opponent_deck_view);
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(marketView);
-        handPresenter = new HandPresenter(handView);
+        playerHandPresenter = new HandPresenter(playerHandView);
+        opponentHandPresenter = new HandPresenter(opponentHandView);
         playAreaPresenter = new PlayAreaPresenter(playAreaView);
+        playerDiscardPilePresenter = new DiscardPilePresenter(playerDiscardPileView);
+        opponentDiscardPilePresenter = new DiscardPilePresenter(opponentDiscardPileView);
+        playerDeckPresenter = new DeckPresenter(playerDeckView);
+        opponentDeckPresenter = new DeckPresenter(opponentDeckView);
 
-        // Deck<Card> deck = new Deck<Card>();
-        // handView.createFirstHand(deck);
+        // TODO: Remove this and replace it with Cards gotten from Server
         addPlaceholderCards();
 
         OverlayView overlayView = new OverlayView(this);
 
         // Add views to layout
         ConstraintLayout layout = findViewById(R.id.game_area);
-        // layout.addView(marketView.getMarketView());
-        // layout.addView(playAreaView);
-        // layout.addView(handView);
+
         layout.addView(overlayView.getOverlayView());
 
         LOGGER.log(Level.INFO, "Views initialized");
@@ -70,9 +82,23 @@ public class MainActivity extends AppCompatActivity {
         playerStarterCards.add(
                 new Card("Example", 10, List.of(new HealingEffect(4), new CoinEffect(12))));
         List<CardView> handCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> opponentCardViews = CardView.getViewFromCards(this, playerStarterCards);
         List<CardView> marketCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> playAreaCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> playerDiscardPileCardViews =
+                CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> opponentDiscardPileCardViews =
+                CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> playerDeckCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> opponentDeckCardViews = CardView.getViewFromCards(this, playerStarterCards);
 
-        handPresenter.addCardsToHandView(handCardViews);
-        marketPresenter.addCardsToMarketView(marketCardViews);
+        playerHandPresenter.addCardsToView(handCardViews);
+        opponentHandPresenter.addCardsToView(opponentCardViews);
+        marketPresenter.addCardsToView(marketCardViews);
+        playAreaPresenter.addCardsToView(playAreaCardViews);
+        playerDiscardPilePresenter.addCardsToView(playerDiscardPileCardViews);
+        opponentDiscardPilePresenter.addCardsToView(opponentDiscardPileCardViews);
+        playerDeckPresenter.addCardsToView(playerDeckCardViews);
+        opponentDeckPresenter.addCardsToView(opponentDeckCardViews);
     }
 }

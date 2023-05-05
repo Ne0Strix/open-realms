@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Effect;
@@ -65,7 +64,7 @@ public class CardView extends ConstraintLayout {
         ImageView cardBackground = findViewById(R.id.card_view_background);
         cardBackground.setOnTouchListener(
                 (view, motionEvent) -> {
-                    Log.v(LOG_TAG, motionEvent.toString() + " " + card);
+                    // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_UP:
                             if (motionEvent.getEventTime() - motionEvent.getDownTime()
@@ -81,11 +80,11 @@ public class CardView extends ConstraintLayout {
                                                 + getResources().getResourceName(parentId));
                                 // TODO: implement message sending
                                 // TODO: remove temporary cardRemoval
-                                if (parentId == R.id.hand_view) {
-                                    MainActivity.handPresenter.removeCardFromHandView(this);
-                                    MainActivity.playAreaPresenter.addCardToPlayArea(this);
+                                if (parentId == R.id.player_hand_view) {
+                                    //  MainActivity.handPresenter.removeCardFromView(this);
+                                    //   MainActivity.playAreaPresenter.removeCardFromView(this);
                                 } else if (parentId == R.id.market_view) {
-                                    MainActivity.marketPresenter.removeCardFromMarketView(this);
+                                    //   MainActivity.marketPresenter.removeCardFromView(this);
                                 }
                             } else {
                                 resetFullscreen();

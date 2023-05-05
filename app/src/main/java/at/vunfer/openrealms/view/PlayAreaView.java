@@ -8,12 +8,11 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import at.vunfer.openrealms.R;
-import java.util.ArrayList;
+import at.vunfer.openrealms.view.view_interfaces.CardPileView;
 import java.util.List;
 
 /** View class for the play area. */
-public class PlayAreaView extends LinearLayout {
-    private List<CardView> displayedCards = new ArrayList<>();
+public class PlayAreaView extends LinearLayout implements CardPileView {
     /**
      * Constructor for PlayAreaView.
      *
@@ -43,14 +42,10 @@ public class PlayAreaView extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.play_area_view, this);
     }
 
-    public void updatePlayArea() {
+    public void updateView(List<CardView> cards) {
         removeAllViews();
-        for (CardView view : displayedCards) {
+        for (CardView view : cards) {
             addView(view);
         }
-    }
-
-    public List<CardView> getDisplayedCards() {
-        return displayedCards;
     }
 }

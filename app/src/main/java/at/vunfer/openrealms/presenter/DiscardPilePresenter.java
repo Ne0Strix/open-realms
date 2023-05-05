@@ -3,25 +3,24 @@ package at.vunfer.openrealms.presenter;
 
 import at.vunfer.openrealms.presenter.presenter_interfaces.CardPilePresenter;
 import at.vunfer.openrealms.view.CardView;
-import at.vunfer.openrealms.view.MarketView;
+import at.vunfer.openrealms.view.DiscardPileView;
 
-/** Presenter for the MarketView. */
-public class MarketPresenter extends CardPilePresenter {
-    private MarketView marketView;
+public class DiscardPilePresenter extends CardPilePresenter {
+    private final DiscardPileView discardPileView;
 
-    public MarketPresenter(MarketView view) {
-        marketView = view;
+    public DiscardPilePresenter(DiscardPileView discardPileView) {
+        this.discardPileView = discardPileView;
     }
 
     @Override
     public void addCardToView(CardView card) {
         listOfDisplayedCards.add(card);
-        marketView.updateView(listOfDisplayedCards);
+        discardPileView.updateView(listOfDisplayedCards);
     }
 
     @Override
     public void removeCardFromView(CardView card) {
         listOfDisplayedCards.remove(card);
-        marketView.updateView(listOfDisplayedCards);
+        discardPileView.updateView(listOfDisplayedCards);
     }
 }

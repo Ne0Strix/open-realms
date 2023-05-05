@@ -4,17 +4,11 @@ package at.vunfer.openrealms.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import java.util.ArrayList;
+import at.vunfer.openrealms.view.view_interfaces.CardPileView;
 import java.util.List;
-import java.util.logging.Logger;
 
 /** View class for the Market. */
-public class MarketView extends LinearLayout {
-    private static final Logger LOGGER = Logger.getLogger(MarketView.class.getName());
-    private static final String ERROR_MESSAGE = "Error displaying market";
-    private static final String TAG = "MarketView";
-
-    private List<CardView> displayedCards = new ArrayList<>();
+public class MarketView extends LinearLayout implements CardPileView {
 
     public MarketView(Context context) {
         super(context);
@@ -56,9 +50,10 @@ public class MarketView extends LinearLayout {
     }
 
     /** Show the market */
-    public void updateMarket() {
+    @Override
+    public void updateView(List<CardView> cards) {
         removeAllViews();
-        for (CardView card : displayedCards) {
+        for (CardView card : cards) {
             /*   View marketCardView =
                     LayoutInflater.from(this.context).inflate(R.layout.card_view, null);
 
@@ -85,9 +80,5 @@ public class MarketView extends LinearLayout {
             */
             addView(card);
         }
-    }
-
-    public List<CardView> getDisplayedCards() {
-        return displayedCards;
     }
 }
