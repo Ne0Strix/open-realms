@@ -39,6 +39,8 @@ public class Message implements Serializable {
             case PLAYER_STATS:
             case OPTIONS:
                 return value instanceof String;
+            case CHEAT_ACTIVATE:
+                return value instanceof Boolean;
             default:
                 return false;
         }
