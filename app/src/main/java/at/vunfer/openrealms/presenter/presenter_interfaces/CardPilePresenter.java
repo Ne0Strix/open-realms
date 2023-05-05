@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class CardPilePresenter {
     protected List<CardView> listOfDisplayedCards;
 
-    public CardPilePresenter() {
+    protected CardPilePresenter() {
         listOfDisplayedCards = new ArrayList<>();
     }
 

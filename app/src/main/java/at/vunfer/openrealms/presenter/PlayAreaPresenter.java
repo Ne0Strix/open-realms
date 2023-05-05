@@ -4,12 +4,9 @@ package at.vunfer.openrealms.presenter;
 import at.vunfer.openrealms.presenter.presenter_interfaces.CardPilePresenter;
 import at.vunfer.openrealms.view.CardView;
 import at.vunfer.openrealms.view.PlayAreaView;
-import java.util.logging.Logger;
 
 /** Presenter class for the PlayAreaView. Handles logic for adding cards and updating the view. */
 public class PlayAreaPresenter extends CardPilePresenter {
-    private static final Logger LOGGER = Logger.getLogger(PlayAreaPresenter.class.getName());
-    private static final String TAG = "PlayAreaPresenter";
 
     private PlayAreaView playAreaView;
 

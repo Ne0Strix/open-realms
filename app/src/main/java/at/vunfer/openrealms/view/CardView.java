@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,8 +29,8 @@ public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
-    private final long holdTime = 250L;
-    private final String logTag = "CardView";
+    private static final long holdTime = 250L;
+    private static final String logTag = "CardView";
 
     public CardView(Context context) {
         super(context);
@@ -142,7 +143,9 @@ public class CardView extends ConstraintLayout {
         LinearLayout defaultEffects = new LinearLayout(getContext());
         LinearLayout.LayoutParams params =
                 new LinearLayout.LayoutParams(
-                        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f);
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        1f);
         defaultEffects.setOrientation(LinearLayout.HORIZONTAL);
         defaultEffects.setLayoutParams(params);
         for (Effect e : card.getEffects()) {

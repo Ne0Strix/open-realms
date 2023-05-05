@@ -24,28 +24,7 @@ public class MarketView extends LinearLayout implements CardPileView {
     }
 
     /** Constructor for the MarketView class. */
-    public void init() {
-        // Creating MarketView layout parameters
-        /*
-                ConstraintLayout.LayoutParams params =
-                        new ConstraintLayout.LayoutParams(
-                                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                                ConstraintLayout.LayoutParams.WRAP_CONTENT);
-
-                // Centering the MarketView layout parameters in the middle of the game field
-                params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-                params.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
-                params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-                params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        */
-
-        // Inflating the MarketView layout with the created layout parameters
-        /*this.marketView =
-                (LinearLayout)
-                        LayoutInflater.from(getContext()).inflate(R.layout.market_view, null);
-        this.marketView.setMinimumHeight(90);
-        this.marketView.setLayoutParams(params);*/
-    }
+    public void init() {}
 
     /** Show the market */
     @Override
