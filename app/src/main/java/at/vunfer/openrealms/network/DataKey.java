@@ -6,5 +6,7 @@ public enum DataKey {
     DECK,
     CHOICE,
     PLAYER_STATS,
-    OPTIONS
+    OPTIONS,
+    CHEAT_ACTIVATE
+
 }
