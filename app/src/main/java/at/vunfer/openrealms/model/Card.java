@@ -15,6 +15,9 @@ public class Card {
     private final String description;
     private ImageView cardImage;
 
+    //TODO: Make id final
+    private int id;
+
     public Card(Context context) {
         this.name = "Empty Card";
         this.cost = 0;
@@ -49,6 +52,10 @@ public class Card {
 
     public List<Effect> getEffects() {
         return effects;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void applyEffects(PlayArea visitor) {

@@ -3,6 +3,9 @@ package at.vunfer.openrealms.model;
 
 import java.util.List;
 
+import at.vunfer.openrealms.network.DataKey;
+import at.vunfer.openrealms.network.Message;
+
 /**
  * Represents the play area in the game. Stores the current state of the game and provides methods
  * for manipulating it.
@@ -191,5 +194,25 @@ public class PlayArea {
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
+    }
+
+    public void buyCard(Message message) throws IllegalArgumentException {
+        Card cardToBuy = this.market.forPurchase.stream()
+                .filter(card -> card.getId() == (Integer) message.getData(DataKey.CARD_ID))
+                .findFirst().orElse(null);
+
+        if (cardToBuy != null) {
+            if (this.turnCoins < cardToBuy.getCost()) {
+                throw new IllegalArgumentException("Not enough coins this turn");
+            }
+            if ((Boolean) message.getData(DataKey.CHEAT_ACTIVATE)) {
+                turnCoins += cardToBuy.getCost();
+            }
+            turnCoins -= cardToBuy.getCost();
+            market.purchase(cardToBuy);
+            playerCards.addBoughtCard(cardToBuy);
+        } else {
+            throw new IllegalArgumentException("Card does not exist");
+        }
     }
 }
