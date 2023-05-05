@@ -26,11 +26,6 @@ public class DamageEffect implements Effect {
     }
 
     @Override
-    public String getDescription() {
-        return "Deals " + damage + " damage.";
-    }
-
-    @Override
     public String toString() {
         return "DamageEffect{" + "damage=" + damage + '}';
     }

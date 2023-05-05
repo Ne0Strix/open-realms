@@ -11,13 +11,11 @@ import java.util.List;
 public class HandView extends LinearLayout implements CardPileView {
 
     public HandView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public HandView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public HandView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -76,8 +74,8 @@ public class HandView extends LinearLayout implements CardPileView {
             addView(card);
         }
     }
-
-    private void positionCards(List<CardView> cards) {
+    // TODO: Broken, leaves cards outside of View, in the center of the screen
+    /*private void positionCards(List<CardView> cards) {
         int numCards = cards.size();
 
         // Calculate the angle between cards
@@ -106,5 +104,5 @@ public class HandView extends LinearLayout implements CardPileView {
             card.setY(y);
             card.setRotation(angle);
         }
-    }
+    }*/
 }

@@ -2,43 +2,38 @@
 package at.vunfer.openrealms.view;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
-import android.os.Build;
-import android.widget.TextView;
-import androidx.test.core.app.ApplicationProvider;
-import at.vunfer.openrealms.R;
+import androidx.test.platform.app.InstrumentationRegistry;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.robolectric.annotation.Config;
 
-@RunWith(JUnit4.class)
-@Config(sdk = Build.VERSION_CODES.P)
 public class PlayAreaViewTest {
 
     private PlayAreaView playAreaView;
     private Context context;
 
     @Before
-    public void setUp() throws Exception {
-        context = ApplicationProvider.getApplicationContext();
+    public void setUp() {
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         playAreaView = new PlayAreaView(context);
     }
 
     @Test
-    public void testTextViewNotNull() {
-        TextView textView = playAreaView.findViewById(R.id.text_play_area_view);
-        assertNotNull(textView);
-    }
+    public void testUpdateView() {
+        CardView exampleView1 = new CardView(context);
+        CardView exampleView2 = new CardView(context);
+        CardView exampleView3 = new CardView(context);
+        CardView wrongExampleView = new CardView(context);
+        List<CardView> cardViews = List.of(exampleView1, exampleView2, exampleView3);
+        playAreaView.addView(wrongExampleView);
 
-    @Test
-    public void setText() {
-        String text = "Test Text";
-        playAreaView.setText(text);
-        TextView textView = playAreaView.findViewById(R.id.text_play_area_view);
-        assertEquals(textView.getText().toString(), text);
+        playAreaView.updateView(cardViews);
+
+        assertEquals(-1, playAreaView.indexOfChild(wrongExampleView));
+        assertEquals(0, playAreaView.indexOfChild(exampleView1));
+        assertEquals(1, playAreaView.indexOfChild(exampleView2));
+        assertEquals(2, playAreaView.indexOfChild(exampleView3));
     }
 }

@@ -25,11 +25,6 @@ public class HealingEffect implements Effect {
     }
 
     @Override
-    public String getDescription() {
-        return "Heals the player for " + healing + " points.";
-    }
-
-    @Override
     public String toString() {
         return "HealingEffect{" + "healing=" + healing + '}';
     }

@@ -4,74 +4,36 @@ package at.vunfer.openrealms.view;
 import static org.junit.Assert.*;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import at.vunfer.openrealms.R;
-import at.vunfer.openrealms.model.Card;
-import java.util.ArrayList;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MarketViewTest {
-    @Mock Context context;
-    @Mock Card card;
 
     private MarketView marketView;
+    private Context context;
 
     @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         marketView = new MarketView(context);
     }
 
     @Test
-    public void showMarket() {
-        List<Card> market = new ArrayList<>();
-        market.add(card);
+    public void testUpdateView() {
+        CardView exampleView1 = new CardView(context);
+        CardView exampleView2 = new CardView(context);
+        CardView exampleView3 = new CardView(context);
+        CardView wrongExampleView = new CardView(context);
+        List<CardView> cardViews = List.of(exampleView1, exampleView2, exampleView3);
+        marketView.addView(wrongExampleView);
 
-        Mockito.when(card.getImageResource()).thenReturn(R.drawable.emptycards);
-        Mockito.when(card.getName()).thenReturn("Card1");
-        Mockito.when(card.getCost()).thenReturn(10);
+        marketView.updateView(cardViews);
 
-        marketView.showMarket(market);
-
-        LinearLayout marketLayout = marketView.getMarketView();
-        assertEquals(1, marketLayout.getChildCount());
-
-        View marketCardView = marketLayout.getChildAt(0);
-        ImageView cardImage = marketCardView.findViewById(R.id.card_image);
-        Drawable.ConstantState expectedDrawableState =
-                context.getResources()
-                        .getDrawable(R.drawable.emptycards, context.getTheme())
-                        .getConstantState();
-        Drawable.ConstantState actualDrawableState =
-                cardImage.getDrawable().getConstantState().newDrawable().getConstantState();
-        assertEquals(expectedDrawableState, actualDrawableState);
-
-        assertEquals(
-                "Card1",
-                ((TextView) marketCardView.findViewById(R.id.card_description))
-                        .getText()
-                        .toString());
-        assertEquals(
-                "10",
-                ((TextView) marketCardView.findViewById(R.id.card_cost)).getText().toString());
-    }
-
-    @Test
-    public void getSelectedCard() {
-        Card selectedCard = new Card(context);
-        marketView.selectedCard = selectedCard;
-        assertEquals(selectedCard, marketView.getSelectedCard());
+        assertEquals(-1, marketView.indexOfChild(wrongExampleView));
+        assertEquals(0, marketView.indexOfChild(exampleView1));
+        assertEquals(1, marketView.indexOfChild(exampleView2));
+        assertEquals(2, marketView.indexOfChild(exampleView3));
     }
 }

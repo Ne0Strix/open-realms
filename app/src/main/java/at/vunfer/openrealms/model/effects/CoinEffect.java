@@ -26,11 +26,6 @@ public class CoinEffect implements Effect {
     }
 
     @Override
-    public String getDescription() {
-        return "Gain " + coin + " coins.";
-    }
-
-    @Override
     public String toString() {
         return "CoinEffect{" + "coin=" + coin + '}';
     }

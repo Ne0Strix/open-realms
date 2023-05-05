@@ -5,49 +5,35 @@ import static org.junit.Assert.*;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
-import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.Deck;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
 public class HandViewTest {
+
     private HandView handView;
+    private Context context;
 
     @Before
-    public void setUp() throws Exception {
-        handView = new HandView(null);
+    public void setUp() {
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        handView = new HandView(context);
     }
 
     @Test
-    public void getHandView() {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        HandView handView = new HandView(context);
+    public void testUpdateView() {
+        CardView exampleView1 = new CardView(context);
+        CardView exampleView2 = new CardView(context);
+        CardView exampleView3 = new CardView(context);
+        CardView wrongExampleView = new CardView(context);
+        List<CardView> cardViews = List.of(exampleView1, exampleView2, exampleView3);
+        handView.addView(wrongExampleView);
 
-        assertNotNull(handView.getHandView());
-    }
+        handView.updateView(cardViews);
 
-    @Test
-    public void getView() {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        HandView handView = new HandView(context);
-
-        assertNotNull(handView.getView());
-    }
-
-    @Test
-    public void createFirstHand() {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        HandView handView = new HandView(context);
-        Deck<Card> playerStarterCards = new Deck<>();
-
-        // Add some cards to the deck
-        playerStarterCards.add(new Card(context));
-        playerStarterCards.add(new Card(context));
-        playerStarterCards.add(new Card(context));
-
-        handView.createFirstHand(playerStarterCards);
-
-        // Verify that the correct number of cards were added to the HandView
-        assertEquals(playerStarterCards.size(), handView.getHandView().getChildCount());
+        assertEquals(-1, handView.indexOfChild(wrongExampleView));
+        assertEquals(0, handView.indexOfChild(exampleView1));
+        assertEquals(1, handView.indexOfChild(exampleView2));
+        assertEquals(2, handView.indexOfChild(exampleView3));
     }
 }

@@ -11,13 +11,11 @@ import java.util.List;
 public class MarketView extends LinearLayout implements CardPileView {
 
     public MarketView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public MarketView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public MarketView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -54,30 +52,6 @@ public class MarketView extends LinearLayout implements CardPileView {
     public void updateView(List<CardView> cards) {
         removeAllViews();
         for (CardView card : cards) {
-            /*   View marketCardView =
-                    LayoutInflater.from(this.context).inflate(R.layout.card_view, null);
-
-            // ImageView cardImage = marketCardView.findViewById(R.id.card_image);
-            TextView cardName = marketCardView.findViewById(R.id.card_view_name);
-            TextView cardCost = marketCardView.findViewById(R.id.card_view_cost);
-
-            // Set the image resource directly on the ImageView
-            //    cardImage.setImageResource(card.getImageResource());
-
-            cardName.setText(card.getName());
-            cardCost.setText(String.valueOf(card.getCost()));*/
-
-            // Add an OnClickListener to the card image view
-            /*    cardImage.setOnClickListener(
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Log.i("MARKET CLICKED", card.toString());
-                                        selectedCard = card;
-                                        ((MainActivity) context).showCardDetails(v);
-                                    }
-                                });
-            */
             addView(card);
         }
     }

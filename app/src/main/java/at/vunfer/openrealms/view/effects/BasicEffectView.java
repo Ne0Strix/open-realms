@@ -18,32 +18,20 @@ public class BasicEffectView extends ConstraintLayout {
     private Effect effect;
 
     public BasicEffectView(@NonNull Context context) {
-        super(context);
-        init();
+        this(context, (AttributeSet) null);
     }
 
     public BasicEffectView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public BasicEffectView(
             @NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    public BasicEffectView(
-            @NonNull Context context,
-            @Nullable AttributeSet attrs,
-            int defStyleAttr,
-            int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
     }
 
     public BasicEffectView(Context context, Effect effect) {
-        super(context);
+        this(context);
         this.effect = effect;
         init();
     }
