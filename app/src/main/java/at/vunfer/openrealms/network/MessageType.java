@@ -10,6 +10,7 @@ public enum MessageType {
     // Server -> Client
     ADD_CARD,
     REMOVE_CARD,
+    BUY_CARD,
     CHOOSE_OPTION,
     UPDATE_PLAYER_STATS
 }
