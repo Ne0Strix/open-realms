@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class MarketPresenterTest {
+class MarketPresenterTest {
     private MarketView marketView;
     private MarketPresenter marketPresenter;
     private CardView testCard;
@@ -24,7 +24,7 @@ public class MarketPresenterTest {
     }
 
     @Test
-    public void testAddCardToView() {
+    void testAddCardToView() {
         marketPresenter.addCardToView(testCard);
 
         assertEquals(1, marketPresenter.getListOfDisplayedCards().size());
@@ -33,7 +33,7 @@ public class MarketPresenterTest {
     }
 
     @Test
-    public void testRemoveCardFromView() {
+    void testRemoveCardFromView() {
         marketPresenter.addCardToView(testCard);
         marketPresenter.removeCardFromView(testCard);
 

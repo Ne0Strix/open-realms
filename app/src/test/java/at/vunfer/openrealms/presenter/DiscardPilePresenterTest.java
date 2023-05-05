@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class DiscardPilePresenterTest {
+class DiscardPilePresenterTest {
 
     private DiscardPileView discardPileView;
     private DiscardPilePresenter discardPilePresenter;
@@ -27,7 +27,7 @@ public class DiscardPilePresenterTest {
     }
 
     @Test
-    public void testAddCardToView() {
+    void testAddCardToView() {
         discardPilePresenter.addCardToView(testCard);
 
         assertEquals(1, discardPilePresenter.getListOfDisplayedCards().size());
@@ -36,7 +36,7 @@ public class DiscardPilePresenterTest {
     }
 
     @Test
-    public void testRemoveCardFromView() {
+    void testRemoveCardFromView() {
         discardPilePresenter.addCardToView(testCard);
         discardPilePresenter.removeCardFromView(testCard);
 

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class HandPresenterTest {
+class HandPresenterTest {
     private HandView handView;
     private HandPresenter handPresenter;
     private CardView testCard;
@@ -24,7 +24,7 @@ public class HandPresenterTest {
     }
 
     @Test
-    public void testAddCardToView() {
+    void testAddCardToView() {
         handPresenter.addCardToView(testCard);
 
         assertEquals(1, handPresenter.getListOfDisplayedCards().size());
@@ -33,7 +33,7 @@ public class HandPresenterTest {
     }
 
     @Test
-    public void testRemoveCardFromView() {
+    void testRemoveCardFromView() {
         handPresenter.addCardToView(testCard);
         handPresenter.removeCardFromView(testCard);
 
