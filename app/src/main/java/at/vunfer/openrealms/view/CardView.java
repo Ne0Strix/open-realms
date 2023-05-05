@@ -28,8 +28,8 @@ public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
-    private final long HOLD_TIME = 250L;
-    private final String LOG_TAG = "CardView";
+    private final long holdTime = 250L;
+    private final String logTag = "CardView";
 
     public CardView(Context context) {
         super(context);
@@ -68,10 +68,10 @@ public class CardView extends ConstraintLayout {
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_UP:
                             if (motionEvent.getEventTime() - motionEvent.getDownTime()
-                                    <= HOLD_TIME) {
+                                    <= holdTime) {
                                 int parentId = ((View) getParent()).getId();
                                 Log.i(
-                                        LOG_TAG,
+                                        logTag,
                                         "Sending: "
                                                 + card
                                                 + " from int id: "
@@ -104,7 +104,7 @@ public class CardView extends ConstraintLayout {
                                             setFullscreen();
                                         }
                                     },
-                                    HOLD_TIME);
+                                    holdTime);
                             break;
                     }
                     return false;
