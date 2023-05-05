@@ -2,44 +2,44 @@
 package at.vunfer.openrealms.presenter;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.view.CardView;
 import at.vunfer.openrealms.view.PlayAreaView;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class PlayAreaPresenterTest {
-    private PlayAreaView view;
-    private PlayAreaPresenter presenter;
-    private Card card;
 
-    @Before
+    private PlayAreaView playAreaView;
+    private PlayAreaPresenter playAreaPresenter;
+    private CardView testCard;
+
+    @BeforeEach
     public void setUp() {
-        view = mock(PlayAreaView.class);
-        presenter = new PlayAreaPresenter(view);
-        card = mock(Card.class);
+        playAreaView = Mockito.mock(PlayAreaView.class);
+        playAreaPresenter = new PlayAreaPresenter(playAreaView);
+
+        testCard = mock(CardView.class);
     }
 
     @Test
-    public void setText() {
-        presenter.setText("Test Text");
-        verify(view, times(1)).setText("Test Text");
+    public void testAddCardToView() {
+        playAreaPresenter.addCardToView(testCard);
+
+        assertEquals(1, playAreaPresenter.getListOfDisplayedCards().size());
+        assertEquals(testCard, playAreaPresenter.getListOfDisplayedCards().get(0));
+        verify(playAreaView).updateView(playAreaPresenter.getListOfDisplayedCards());
     }
 
     @Test
-    public void addCard() {
-        presenter.addCard(card);
-        assertEquals(1, presenter.getCards().size());
-    }
+    public void testRemoveCardFromView() {
+        playAreaPresenter.addCardToView(testCard);
+        playAreaPresenter.removeCardFromView(testCard);
 
-    @Test
-    public void updateView() {
-        presenter.addCard(card);
-        presenter.updateView("New Text");
-        verify(view, times(1)).setText("New Text");
-        verify(view, times(1)).invalidate();
+        assertEquals(0, playAreaPresenter.getListOfDisplayedCards().size());
+        verify(playAreaView, times(2)).updateView(playAreaPresenter.getListOfDisplayedCards());
     }
 }

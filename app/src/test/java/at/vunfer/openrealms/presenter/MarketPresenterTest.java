@@ -1,79 +1,43 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.Deck;
-import at.vunfer.openrealms.model.Market;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import at.vunfer.openrealms.view.CardView;
+import at.vunfer.openrealms.view.MarketView;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MarketPresenterTest {
-
+    private MarketView marketView;
     private MarketPresenter marketPresenter;
-    private MarketPresenter.View viewMock;
+    private CardView testCard;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        marketPresenter = new MarketPresenter(null);
-        viewMock = mock(MarketPresenter.View.class);
-        marketPresenter.attachView(viewMock);
+        marketView = Mockito.mock(MarketView.class);
+        marketPresenter = new MarketPresenter(marketView);
+
+        testCard = mock(CardView.class);
     }
 
     @Test
-    public void onMarketChanged() {
-        List<Card> cards = Arrays.asList(new Card("Card 1", 1, null), new Card("Card 2", 2, null));
-        Deck<Card> deck = new Deck<>();
-        deck.addAll(cards);
-        Market.getInstance().setCards(deck);
+    public void testAddCardToView() {
+        marketPresenter.addCardToView(testCard);
 
-        marketPresenter.onMarketChanged(deck);
-
-        verify(viewMock).displayMarket(cards);
-        assertEquals(cards, Market.getInstance().getCards());
+        assertEquals(1, marketPresenter.getListOfDisplayedCards().size());
+        assertEquals(testCard, marketPresenter.getListOfDisplayedCards().get(0));
+        verify(marketView).updateView(marketPresenter.getListOfDisplayedCards());
     }
 
     @Test
-    public void onCardPurchased() {
-        Card card1 = new Card("Card 1", 1, null);
-        Card card2 = new Card("Card 2", 2, null);
-        List<Card> cards = Arrays.asList(card1, card2);
-        Deck<Card> deck = new Deck<>();
-        deck.addAll(cards);
-        Market.getInstance().setCards(deck);
+    public void testRemoveCardFromView() {
+        marketPresenter.addCardToView(testCard);
+        marketPresenter.removeCardFromView(testCard);
 
-        marketPresenter.onCardPurchased(card1);
-
-        List<Card> expectedCards = Arrays.asList(card2);
-        assertEquals(expectedCards, Market.getInstance().getCards());
-    }
-
-    @Test
-    public void getMarketData() {
-        List<Card> cards = Arrays.asList(new Card("Card 1", 1, null), new Card("Card 2", 2, null));
-        Deck<Card> deck = new Deck<>();
-        deck.addAll(cards);
-        Market.getInstance().setCards(deck);
-
-        List<Card> result = marketPresenter.getMarketData();
-
-        assertEquals(cards, result);
-    }
-
-    @Test
-    public void testDisplayMarket() {
-        List<Card> cards = Arrays.asList(new Card("Card 1", 1, null), new Card("Card 2", 2, null));
-
-        marketPresenter.displayMarket(cards);
-
-        verify(viewMock).displayMarket(cards);
+        assertEquals(0, marketPresenter.getListOfDisplayedCards().size());
+        verify(marketView, times(2)).updateView(marketPresenter.getListOfDisplayedCards());
     }
 }
