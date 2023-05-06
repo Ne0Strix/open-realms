@@ -192,4 +192,16 @@ public class PlayArea {
         market.purchase(card);
         playerCards.addBoughtCard(card);
     }
+
+    public int playCardById(int id) {
+        Card card;
+        for (Card c : playerCards.getHandCards()) {
+            if (c.getId() == id) {
+                card = c;
+                playCard(card);
+                return card.getId();
+            }
+        }
+        return -1;
+    }
 }

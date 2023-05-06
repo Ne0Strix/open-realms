@@ -1,5 +1,5 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package at.vunfer.openrealms.presenter;
+package at.vunfer.openrealms.network.client;
 
 import android.util.Log;
 import at.vunfer.openrealms.UIUpdateListener;
@@ -10,7 +10,7 @@ public class ClientMessageHandler implements IHandleMessage {
     private static final String TAG = "ClientMessageHandler";
     private final UIUpdateListener uiUpdater;
 
-    public MessageHandler(UIUpdateListener uiUpdater) {
+    public ClientMessageHandler(UIUpdateListener uiUpdater) {
         this.uiUpdater = uiUpdater;
     }
 

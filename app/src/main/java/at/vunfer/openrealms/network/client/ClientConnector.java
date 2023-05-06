@@ -5,7 +5,6 @@ import android.util.Log;
 import at.vunfer.openrealms.UIUpdateListener;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.presenter.MessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,7 +31,9 @@ public class ClientConnector extends Thread {
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             Log.i("Info", "Client was connected to " + targetServer.toString());
 
-            comm = new Communication(inputStream, outputStream, new MessageHandler(uiUpdater));
+            comm =
+                    new Communication(
+                            inputStream, outputStream, new ClientMessageHandler(uiUpdater));
         } catch (IOException e) {
             throw new RuntimeException("Unable to create client connection.", e);
         }

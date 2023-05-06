@@ -4,7 +4,6 @@ package at.vunfer.openrealms.network.server;
 import android.util.Log;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.client.MessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,7 +23,7 @@ public class ClientHandler {
             socket = clientSocket;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
-            comm = new Communication(inputStream, outputStream, new MessageHandler());
+            comm = new Communication(inputStream, outputStream, new ServerMessageHandler());
             Log.i(TAG, "ClientHandler successfully attached to a new client.");
         } catch (IOException ex) {
             Log.e("Error", "IO Exception!");
