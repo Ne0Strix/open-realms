@@ -16,6 +16,10 @@ public class CoinEffect implements Effect {
         this.coin = coin;
     }
 
+    public int getCoin() {
+        return coin;
+    }
+
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitCoin(coin);
@@ -37,10 +41,5 @@ public class CoinEffect implements Effect {
     @Override
     public int hashCode() {
         return Objects.hash(coin);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Gain " + coin + " coins.";
     }
 }

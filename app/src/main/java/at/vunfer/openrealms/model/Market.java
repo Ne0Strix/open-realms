@@ -18,6 +18,8 @@ public class Market {
     private Market() {
         marketDeck = new Deck<>();
         forPurchase = new Deck<>();
+
+        // Add some test cards to the market deck
         marketDeck.add(
                 new Card(
                         "Testcard1",
@@ -52,6 +54,11 @@ public class Market {
         restock();
     }
 
+    /**
+     * Get an instance of the market.
+     *
+     * @return The market instance.
+     */
     public static Market getInstance() {
         if (marketInstance == null) {
             marketInstance = new Market();
@@ -59,10 +66,20 @@ public class Market {
         return marketInstance;
     }
 
+    /**
+     * Get the list of cards available for purchase.
+     *
+     * @return The list of cards for purchase.
+     */
     public ArrayList<Card> getForPurchase() {
         return forPurchase;
     }
 
+    /**
+     * Restock the market with cards from the market deck.
+     *
+     * @return The number of cards restocked.
+     */
     public int restock() {
         int restocked = 0;
         while (forPurchase.size() < TOTAL_PURCHASABLE) {
@@ -78,6 +95,13 @@ public class Market {
         return restocked;
     }
 
+    /**
+     * Purchase a card from the market.
+     *
+     * @param card The card to purchase.
+     * @return The purchased card.
+     * @throws IllegalArgumentException if the card is not available for purchase.
+     */
     public Card purchase(Card card) {
         if (card == null || !forPurchase.contains(card)) {
             throw new IllegalArgumentException("Card is not to purchase.");
@@ -85,6 +109,7 @@ public class Market {
         forPurchase.remove(card);
         return card;
     }
+
     /**
      * Get the list of cards in the market.
      *
@@ -111,6 +136,7 @@ public class Market {
     public void addCard(Card card) {
         forPurchase.add(card);
     }
+
     /**
      * Remove a card from the market.
      *

@@ -4,6 +4,7 @@ package at.vunfer.openrealms.network.server;
 import android.util.Log;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.client.MessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
