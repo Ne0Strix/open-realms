@@ -16,6 +16,10 @@ public class DamageEffect implements Effect {
         this.damage = damage;
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitDamage(damage);
@@ -37,10 +41,5 @@ public class DamageEffect implements Effect {
     @Override
     public int hashCode() {
         return Objects.hash(damage);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Deals " + damage + " damage.";
     }
 }

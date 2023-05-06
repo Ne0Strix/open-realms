@@ -1,11 +1,12 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package at.vunfer.openrealms;
+package at.vunfer.openrealms.presenter.communication;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import at.vunfer.openrealms.R;
 
 public class GameActivity extends AppCompatActivity {
 

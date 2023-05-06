@@ -82,9 +82,17 @@ class CardTest {
 
     @Test
     void testToString() {
-        assertEquals("Card{name='Card 1', cost=1}", card1.toString());
-        assertEquals("Card{name='Card 2', cost=1}", card2.toString());
-        assertEquals("Card{name='Card 3', cost=1}", card3.toString());
+        assertEquals(
+                "Card{name='Card 1', cost=1, effects=[CoinEffect{coin=1}, DamageEffect{damage=2}]}",
+                card1.toString());
+        assertEquals(
+                "Card{name='Card 2', cost=1, effects=[CoinEffect{coin=2},"
+                        + " HealingEffect{healing=3}]}",
+                card2.toString());
+        assertEquals(
+                "Card{name='Card 3', cost=1, effects=[HealingEffect{healing=1},"
+                        + " DamageEffect{damage=1}]}",
+                card3.toString());
     }
 
     @Test

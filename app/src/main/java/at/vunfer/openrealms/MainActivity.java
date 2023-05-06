@@ -1,17 +1,14 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.Market;
+import at.vunfer.openrealms.model.Deck;
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
 import java.util.List;
@@ -22,9 +19,14 @@ public class MainActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private MarketView marketView;
-    private PlayAreaView playAreaView;
-    private Market market;
+    public PlayAreaPresenter playAreaPresenter;
+    public MarketPresenter marketPresenter;
+    public HandPresenter playerHandPresenter;
+    public HandPresenter opponentHandPresenter;
+    public DiscardPilePresenter playerDiscardPilePresenter;
+    public DiscardPilePresenter opponentDiscardPilePresenter;
+    public DeckPresenter playerDeckPresenter;
+    public DeckPresenter opponentDeckPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,62 +34,71 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize views
-        marketView = new MarketView(this);
-        marketView.displayMarket(null);
-        playAreaView = new PlayAreaView(this);
-        HandView handView = new HandView(this);
-        handView.createFirstHand();
+        MarketView marketView = findViewById(R.id.market_view);
+        PlayAreaView playAreaView = findViewById(R.id.play_area_view);
+        HandView playerHandView = findViewById(R.id.player_hand_view);
+        HandView opponentHandView = findViewById(R.id.opponent_hand_view);
+        DiscardPileView playerDiscardPileView = findViewById(R.id.player_discard_pile_view);
+        DiscardPileView opponentDiscardPileView = findViewById(R.id.opponent_discard_pile_view);
+        DeckView playerDeckView = findViewById(R.id.player_deck_view);
+        DeckView opponentDeckView = findViewById(R.id.opponent_deck_view);
+
+        // Initialize presenter
+        marketPresenter = new MarketPresenter(marketView);
+        playerHandPresenter = new HandPresenter(playerHandView);
+        opponentHandPresenter = new HandPresenter(opponentHandView);
+        playAreaPresenter = new PlayAreaPresenter(playAreaView);
+        playerDiscardPilePresenter = new DiscardPilePresenter(playerDiscardPileView);
+        opponentDiscardPilePresenter = new DiscardPilePresenter(opponentDiscardPileView);
+        playerDeckPresenter = new DeckPresenter(playerDeckView);
+        opponentDeckPresenter = new DeckPresenter(opponentDeckView);
+
+        // TODO: Remove this and replace it with Cards gotten from Server
+        addPlaceholderCards();
+
         OverlayView overlayView = new OverlayView(this);
 
-        // Initialize market
-        market = Market.getInstance();
-
         // Add views to layout
-        ConstraintLayout layout = findViewById(R.id.play_area);
-        layout.addView(marketView.getMarketView());
-        layout.addView(playAreaView);
-        layout.addView(handView.getHandView());
+        ConstraintLayout layout = findViewById(R.id.game_area);
+
         layout.addView(overlayView.getOverlayView());
 
-        overlayView.setOpponentHealth(100);
+        LOGGER.log(Level.INFO, "Views initialized");
     }
 
-    /** Method to update the market view */
-    public void updateMarketView() {
-        marketView.displayMarket(market.getCards());
-    }
+    public void addPlaceholderCards() {
+        // Add Cards to test functionality
+        Deck<Card> playerStarterCards = new Deck<>();
+        playerStarterCards.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
+        playerStarterCards.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
+        playerStarterCards.add(new Card("Shortsword", 0, List.of(new DamageEffect(1))));
+        // Card with the longest name in the Original game and 3 Effects
+        playerStarterCards.add(
+                new Card(
+                        "Varrick, the Necromancer",
+                        7,
+                        List.of(new DamageEffect(2), new HealingEffect(4), new CoinEffect(12))));
+        // Card with 2 Effects
+        playerStarterCards.add(
+                new Card("Example", 10, List.of(new HealingEffect(4), new CoinEffect(12))));
+        List<CardView> handCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> opponentCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> marketCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> playAreaCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> playerDiscardPileCardViews =
+                CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> opponentDiscardPileCardViews =
+                CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> playerDeckCardViews = CardView.getViewFromCards(this, playerStarterCards);
+        List<CardView> opponentDeckCardViews = CardView.getViewFromCards(this, playerStarterCards);
 
-    /** Method to update the play area view */
-    public void updatePlayAreaView() {
-        playAreaView.updateView(market.toString());
-    }
-
-    public void showCardDialog(Context context, Card card) {
-        Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.card_details_dialog);
-        dialog.getWindow()
-                .setLayout(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        ImageView cardImage = dialog.findViewById(R.id.card_image);
-        TextView cardName = dialog.findViewById(R.id.card_title);
-        TextView cardDescription = dialog.findViewById(R.id.card_description);
-
-        cardImage.setImageResource(card.getImageResource());
-        cardName.setText(card.getName());
-        cardDescription.setText(card.getDescription());
-
-        dialog.show();
-    }
-
-    public void showCardDetails(View v) {
-        CardImageView cardImageView = (CardImageView) v;
-        Card card = cardImageView.getCard();
-        showCardDialog(this, card);
-    }
-
-    public void displayMarket(List<Card> market) {
-        marketView.showMarket(market);
-        LOGGER.log(Level.INFO, "Market displayed");
+        playerHandPresenter.addCardsToView(handCardViews);
+        opponentHandPresenter.addCardsToView(opponentCardViews);
+        marketPresenter.addCardsToView(marketCardViews);
+        playAreaPresenter.addCardsToView(playAreaCardViews);
+        playerDiscardPilePresenter.addCardsToView(playerDiscardPileCardViews);
+        opponentDiscardPilePresenter.addCardsToView(opponentDiscardPileCardViews);
+        playerDeckPresenter.addCardsToView(playerDeckCardViews);
+        opponentDeckPresenter.addCardsToView(opponentDeckCardViews);
     }
 }

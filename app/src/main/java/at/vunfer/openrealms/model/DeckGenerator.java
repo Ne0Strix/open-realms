@@ -57,7 +57,8 @@ public class DeckGenerator {
                     Log.v(LOGGING_TAG, "Adding Card " + amount + " Times");
                     Card c = parseCard(xmlParser);
                     Log.v(LOGGING_TAG, "Finished Card: " + c);
-                    for (int i = 0; i < amount; i++) deck.add(c);
+                    deck.add(c);
+                    for (int i = 1; i < amount; i++) deck.add(new Card(c));
                 }
             }
         } catch (IOException | XmlPullParserException e) {
