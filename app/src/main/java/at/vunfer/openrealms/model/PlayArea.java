@@ -8,10 +8,12 @@ import java.util.List;
  * for manipulating it.
  */
 public class PlayArea {
+    private static int idCounter = 0;
     private int health;
     private int turnDamage;
     private int turnHealing;
     private int turnCoins;
+    private int id;
 
     private Market market;
     private Deck<Card> playedCards;
@@ -203,5 +205,9 @@ public class PlayArea {
             }
         }
         return -1;
+    }
+
+    public int getId() {
+        return id;
     }
 }
