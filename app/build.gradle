@@ -51,7 +51,12 @@ gradle.projectsEvaluated {
 task jacocoTestReport(type: JacocoReport) {
 	mustRunAfter "testDebugUnitTest"
 	mustRunAfter "createDebugCoverageReport"
-	dependsOn ':app:mergeReleaseAssets', ':app:compressReleaseAssets', ':app:extractProguardFiles', ':app:dexBuilderRelease', ':app:mergeDexRelease', ':app:lintReportDebug', ':app:mergeReleaseJniLibFolders', ':app:packageRelease', ':app:mergeReleaseJavaResource', ':app:lintAnalyzeDebug', ':app:lintVitalAnalyzeRelease', ':app:spotlessJava', ':app:spotlessMisc'
+	dependsOn ':app:checkDebugDuplicateClasses', ':app:compressDebugAssets', ':app:compressReleaseAssets', ':app:createDebugCoverageReport', ':app:desugarDebugFileDependencies',
+			':app:dexBuilderDebug', ':app:dexBuilderRelease', ':app:extractProguardFiles', ':app:generateDebugAndroidTestBuildConfig', ':app:lintAnalyzeDebug',
+			':app:lintReportDebug', ':app:lintVitalAnalyzeRelease', ':app:mergeDebugAssets', ':app:mergeDebugJavaResource', ':app:mergeDebugJniLibFolders',
+			':app:mergeDexRelease', ':app:mergeExtDexDebug', ':app:mergeLibDexDebug', ':app:mergeProjectDexDebug', ':app:mergeReleaseAssets',
+			':app:mergeReleaseJavaResource', ':app:mergeReleaseJniLibFolders', ':app:packageDebug', ':app:packageRelease', ':app:processDebugAndroidTestManifest',
+			':app:spotlessJava', ':app:spotlessMisc', ':app:testDebugUnitTest', ':app:validateSigningDebug'
 	reports {
 		xml.required = true
 		html.required = true
