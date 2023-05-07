@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.menu);
     }
 
@@ -94,22 +95,22 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void connectServer(View view) throws IOException, InterruptedException {
         EditText getIp = (EditText) findViewById(R.id.get_text);
+        Button join = (Button) findViewById(R.id.join);
+        Button start = (Button) findViewById(R.id.joinGameClient);
+
         connectionIP = getIp.getText().toString();
         Log.i(TAG, "Connecting to IP: " + connectionIP);
         connection = new ClientConnector(this);
 
         connection.setConnectionTarget(connectionIP, connectionPort);
         connection.start();
+
+        join.setVisibility(View.GONE);
+        start.setVisibility(View.VISIBLE);
     }
 
     public void startGame(View view) throws IOException {
         setContentView(R.layout.activity_main);
-    }
-
-    @Override
-    public void updateUI(Message message) {
-        TextView target = findViewById(R.id.message_display);
-        runOnUiThread(() -> target.setText(message.getType().toString()));
 
         // Initialize views
         MarketView marketView = findViewById(R.id.market_view);
@@ -143,6 +144,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         LOGGER.log(Level.INFO, "Views initialized");
     }
+
+    @Override
+    public void updateUI(Message message) {}
 
     public void addPlaceholderCards() {
         // Add Cards to test functionality
