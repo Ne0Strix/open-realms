@@ -70,115 +70,13 @@ public class ServerThread extends Thread {
             Player opponent = gameSession.getOpponent(player);
             int opponentTurnNumber = gameSession.getPlayers().indexOf(opponent);
 
-            // Message with player-stats
-            Message playerStatsMsg = new Message(MessageType.UPDATE_PLAYER_STATS);
-            playerStatsMsg.setData(DataKey.TARGET_PLAYER, playerTurnNumber);
-            playerStatsMsg.setData(
-                    DataKey.PLAYER_STATS,
-                    new PlayerStats(
-                            player.getPlayerName(),
-                            player.getPlayArea().getHealth(),
-                            player.getPlayArea().getTurnDamage(),
-                            player.getPlayArea().getTurnHealing(),
-                            player.getPlayArea().getTurnCoins()));
-
-            // Message with opponent-stats
-            Message opponentStatsMsg = new Message(MessageType.UPDATE_PLAYER_STATS);
-            opponentStatsMsg.setData(DataKey.TARGET_PLAYER, opponentTurnNumber);
-            opponentStatsMsg.setData(
-                    DataKey.PLAYER_STATS,
-                    new PlayerStats(
-                            opponent.getPlayerName(),
-                            opponent.getPlayArea().getHealth(),
-                            opponent.getPlayArea().getTurnDamage(),
-                            opponent.getPlayArea().getTurnHealing(),
-                            opponent.getPlayArea().getTurnCoins()));
-
-            // Message with fullCardCollection
-            Message fullDeckMsg = new Message(MessageType.FULL_CARD_DECK);
-            fullDeckMsg.setData(DataKey.DECK, Card.getFullCardCollection());
-
-            // send the messages
-            try {
-                client.sendMessage(playerStatsMsg);
-                client.sendMessage(opponentStatsMsg);
-                client.sendMessage(fullDeckMsg);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            // deal hand cards to player
-            for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
-                // add card to player-hand
-                Message addCardMsg = new Message(MessageType.ADD_CARD);
-                addCardMsg.setData(DataKey.TARGET_PLAYER, playerTurnNumber);
-                addCardMsg.setData(DataKey.DECK, DeckType.HAND);
-                addCardMsg.setData(DataKey.CARD_ID, card.getId());
-
-                // remove card from player-deck
-                Message removeCardMsg = new Message(MessageType.REMOVE_CARD);
-                removeCardMsg.setData(DataKey.TARGET_PLAYER, playerTurnNumber);
-                removeCardMsg.setData(DataKey.DECK, DeckType.DECK);
-                removeCardMsg.setData(DataKey.CARD_ID, card.getId());
-                try {
-                    client.sendMessage(addCardMsg);
-                    client.sendMessage(removeCardMsg);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            // deal hand cards to opponent
-            for (Card card : opponent.getPlayArea().getPlayerCards().getHandCards()) {
-                // add card to opponent-hand
-                Message addCardMsg = new Message(MessageType.ADD_CARD);
-                addCardMsg.setData(DataKey.TARGET_PLAYER, opponentTurnNumber);
-                addCardMsg.setData(DataKey.DECK, DeckType.HAND);
-                addCardMsg.setData(DataKey.CARD_ID, card.getId());
-
-                // remove card from opponent-deck
-                Message removeCardMsg = new Message(MessageType.REMOVE_CARD);
-                removeCardMsg.setData(DataKey.TARGET_PLAYER, opponentTurnNumber);
-                removeCardMsg.setData(DataKey.DECK, DeckType.DECK);
-                removeCardMsg.setData(DataKey.CARD_ID, card.getId());
-                try {
-                    client.sendMessage(addCardMsg);
-                    client.sendMessage(removeCardMsg);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            // deal market cards to purchaseArea
-            for (Card card : Market.getInstance().getForPurchase()) {
-                // add card to purchaseArea
-                Message addCardMsg = new Message(MessageType.ADD_CARD);
-                addCardMsg.setData(DataKey.DECK, DeckType.FOR_PURCHASE);
-                addCardMsg.setData(DataKey.CARD_ID, card.getId());
-
-                // remove card from marketDeck
-                Message removeCardMsg = new Message(MessageType.REMOVE_CARD);
-                removeCardMsg.setData(DataKey.DECK, DeckType.MARKET);
-                removeCardMsg.setData(DataKey.CARD_ID, card.getId());
-
-                try {
-                    client.sendMessage(addCardMsg);
-                    client.sendMessage(removeCardMsg);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            Message yourTurnMsg = new Message(MessageType.TURN_NOTIFICATION);
-            if (playerTurnNumber == 0) {
-                yourTurnMsg.setData(DataKey.YOUR_TURN, true);
-            } else {
-                yourTurnMsg.setData(DataKey.YOUR_TURN, false);
-            }
-            try {
-                client.sendMessage(yourTurnMsg);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            sendPlayerAndOpponentStats(
+                    client, playerTurnNumber, player, opponentTurnNumber, opponent);
+            sendFullDeck(client);
+            dealCardsToPlayerAndOpponent(
+                    client, playerTurnNumber, player, opponentTurnNumber, opponent);
+            dealMarketCardsToPurchaseArea(client);
+            sendTurnNotification(client, playerTurnNumber);
         }
     }
 
@@ -261,6 +159,135 @@ public class ServerThread extends Thread {
         }
 
         return null;
+    }
+
+    private void sendPlayerAndOpponentStats(
+            ClientHandler client,
+            int playerTurnNumber,
+            Player player,
+            int opponentTurnNumber,
+            Player opponent) {
+        Message playerStatsMsg = createPlayerStatsMessage(playerTurnNumber, player);
+        Message opponentStatsMsg = createPlayerStatsMessage(opponentTurnNumber, opponent);
+
+        try {
+            client.sendMessage(playerStatsMsg);
+            client.sendMessage(opponentStatsMsg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Message createPlayerStatsMessage(int targetPlayerTurnNumber, Player player) {
+        Message playerStatsMsg = new Message(MessageType.UPDATE_PLAYER_STATS);
+        playerStatsMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
+        playerStatsMsg.setData(
+                DataKey.PLAYER_STATS,
+                new PlayerStats(
+                        player.getPlayerName(),
+                        player.getPlayArea().getHealth(),
+                        player.getPlayArea().getTurnDamage(),
+                        player.getPlayArea().getTurnHealing(),
+                        player.getPlayArea().getTurnCoins()));
+        return playerStatsMsg;
+    }
+
+    private void sendFullDeck(ClientHandler client) {
+        Message fullDeckMsg = new Message(MessageType.FULL_CARD_DECK);
+        fullDeckMsg.setData(DataKey.DECK, Card.getFullCardCollection());
+
+        try {
+            client.sendMessage(fullDeckMsg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void dealCardsToPlayerAndOpponent(
+            ClientHandler client,
+            int playerTurnNumber,
+            Player player,
+            int opponentTurnNumber,
+            Player opponent) {
+        dealHandCards(client, playerTurnNumber, player);
+        dealHandCards(client, opponentTurnNumber, opponent);
+    }
+
+    private void dealHandCards(ClientHandler client, int targetPlayerTurnNumber, Player player) {
+        for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
+            Message addCardMsg =
+                    createAddCardMessage(targetPlayerTurnNumber, DeckType.HAND, card.getId());
+            Message removeCardMsg =
+                    createRemoveCardMessage(targetPlayerTurnNumber, DeckType.DECK, card.getId());
+
+            try {
+                client.sendMessage(addCardMsg);
+                client.sendMessage(removeCardMsg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private Message createAddCardMessage(
+            int targetPlayerTurnNumber, DeckType deckType, int cardId) {
+        Message addCardMsg = new Message(MessageType.ADD_CARD);
+        addCardMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
+        addCardMsg.setData(DataKey.DECK, deckType);
+        addCardMsg.setData(DataKey.CARD_ID, cardId);
+        return addCardMsg;
+    }
+
+    private Message createRemoveCardMessage(
+            int targetPlayerTurnNumber, DeckType deckType, int cardId) {
+        Message removeCardMsg = new Message(MessageType.REMOVE_CARD);
+        removeCardMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
+        removeCardMsg.setData(DataKey.DECK, deckType);
+        removeCardMsg.setData(DataKey.CARD_ID, cardId);
+        return removeCardMsg;
+    }
+
+    private void dealMarketCardsToPurchaseArea(ClientHandler client) {
+        for (Card card : Market.getInstance().getForPurchase()) {
+            Message addCardMsg = createAddMarketCardMessage(DeckType.FOR_PURCHASE, card.getId());
+            Message removeCardMsg = createRemoveMarketCardMessage(DeckType.MARKET, card.getId());
+
+            try {
+                client.sendMessage(addCardMsg);
+                client.sendMessage(removeCardMsg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private Message createAddMarketCardMessage(DeckType deckType, int cardId) {
+        Message addCardMsg = new Message(MessageType.ADD_CARD);
+        addCardMsg.setData(DataKey.DECK, deckType);
+        addCardMsg.setData(DataKey.CARD_ID, cardId);
+        return addCardMsg;
+    }
+
+    private Message createRemoveMarketCardMessage(DeckType deckType, int cardId) {
+        Message removeCardMsg = new Message(MessageType.REMOVE_CARD);
+        removeCardMsg.setData(DataKey.DECK, deckType);
+        removeCardMsg.setData(DataKey.CARD_ID, cardId);
+        return removeCardMsg;
+    }
+
+    private void sendTurnNotification(ClientHandler client, int playerTurnNumber) {
+        Message yourTurnMsg = new Message(MessageType.TURN_NOTIFICATION);
+        if (playerTurnNumber == 0) {
+            yourTurnMsg.setData(DataKey.YOUR_TURN, true);
+        } else {
+            yourTurnMsg.setData(DataKey.YOUR_TURN, false);
+        }
+
+        try {
+            client.sendMessage(yourTurnMsg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static ServerThread getInstance() {
