@@ -1,7 +1,9 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network;
 
-public class PlayerStats {
+import java.io.Serializable;
+
+public class PlayerStats implements Serializable {
     private String playerName;
     private int playerHealth;
     private int turnDamage;
