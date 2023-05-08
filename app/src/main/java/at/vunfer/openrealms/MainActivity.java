@@ -17,6 +17,7 @@ import at.vunfer.openrealms.model.effects.HealingEffect;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.PlayerStats;
 import at.vunfer.openrealms.network.client.ClientConnector;
 import at.vunfer.openrealms.network.server.ServerThread;
 import at.vunfer.openrealms.presenter.*;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static List<CardView> cardViews;
     private boolean isHost = false;
 
+    private int playerId;
+
     public PlayAreaPresenter playAreaPresenter;
     public MarketPresenter marketPresenter;
     public HandPresenter playerHandPresenter;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public DiscardPilePresenter opponentDiscardPilePresenter;
     public DeckPresenter playerDeckPresenter;
     public DeckPresenter opponentDeckPresenter;
+    public OverlayPresenter overlayViewPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         // TODO: Remove this and replace it with Cards gotten from Server
 
         OverlayView overlayView = new OverlayView(this);
+        overlayViewPresenter = new OverlayPresenter(overlayView);
 
         // Add views to layout
         ConstraintLayout layout = findViewById(R.id.game_area);
@@ -151,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         if (isHost) {
             server.setupClients();
+        }
+
+        if (isHost) {
+            this.playerId = 0;
+        } else {
+            this.playerId = 1;
         }
     }
 
@@ -183,7 +194,19 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             case CHOOSE_OPTION:
                 // TODO instructions for UI
             case UPDATE_PLAYER_STATS:
-                // TODO instructions for UI
+                int target = (int) message.getData(DataKey.TARGET_PLAYER);
+                PlayerStats stats = (PlayerStats) message.getData(DataKey.PLAYER_STATS);
+                if (this.playerId == target) {
+                    overlayViewPresenter.updatePlayerName(stats.getPlayerName());
+                    overlayViewPresenter.updatePlayerHealth(stats.getPlayerHealth());
+                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+
+                } else {
+                    overlayViewPresenter.updateOpponentName(stats.getPlayerName());
+                    overlayViewPresenter.updateOpponentHealth(stats.getPlayerHealth());
+                }
                 break;
             case FULL_CARD_DECK:
                 Log.i(TAG, "Received full card deck.");
