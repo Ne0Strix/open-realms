@@ -6,6 +6,7 @@ import java.util.List;
 public class GameSession {
     private List<Player> players;
     private Player currentPlayer;
+    private Market market;
 
     /**
      * Constructs a GameSession with a list of players and the current player.
@@ -20,6 +21,7 @@ public class GameSession {
         }
         this.players = players;
         this.currentPlayer = currentPlayer;
+        market = Market.getInstance();
     }
 
     public List<Player> getPlayers() {
@@ -60,7 +62,7 @@ public class GameSession {
         // version there will only be 2 players
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
         currentPlayer.getPlayArea().resetTurnPool();
-        Market.getInstance().restock();
+        market.restock();
         nextPlayer();
     }
 
