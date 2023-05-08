@@ -194,8 +194,7 @@ public class ServerThread extends Thread {
 
     private void sendFullDeck(ClientHandler client) {
         Message fullDeckMsg = new Message(MessageType.FULL_CARD_DECK);
-        fullDeckMsg.setData(DataKey.DECK, Card.getFullCardCollection());
-
+        fullDeckMsg.setData(DataKey.COLLECTION, Card.getFullCardCollection());
         try {
             client.sendMessage(fullDeckMsg);
         } catch (IOException e) {

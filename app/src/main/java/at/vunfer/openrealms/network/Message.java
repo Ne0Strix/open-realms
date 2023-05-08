@@ -35,6 +35,7 @@ public class Message implements Serializable {
             case CARD_ID:
                 return value instanceof Integer;
             case DECK:
+                return value instanceof DeckType;
             case CHOICE:
             case PLAYER_STATS:
             case OPTIONS:

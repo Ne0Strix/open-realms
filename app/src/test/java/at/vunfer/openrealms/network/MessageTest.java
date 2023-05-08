@@ -64,7 +64,7 @@ class MessageTest {
     @Test
     void testSetDataDeck() {
         Message message = new Message(MessageType.CHOICE);
-        assertDoesNotThrow(() -> message.setData(DataKey.DECK, "some option"));
+        assertDoesNotThrow(() -> message.setData(DataKey.DECK, DeckType.DECK));
         assertThrows(IllegalArgumentException.class, () -> message.setData(DataKey.DECK, 456));
     }
 
@@ -95,8 +95,8 @@ class MessageTest {
     @Test
     void testGetDataDeck() {
         Message message = new Message(MessageType.CHOICE);
-        message.setData(DataKey.DECK, "some deck");
-        assertEquals("some deck", message.getData(DataKey.DECK));
+        message.setData(DataKey.DECK, DeckType.MARKET);
+        assertEquals(DeckType.MARKET, message.getData(DataKey.DECK));
     }
 
     @Test
