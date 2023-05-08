@@ -59,10 +59,9 @@ public class ServerThread extends Thread {
             ex.printStackTrace();
         }
         createGame();
-        setupClients();
     }
 
-    private void setupClients() {
+    public void setupClients() {
         for (ClientHandler client : connections) {
             int playerTurnNumber = getTurnNumber(client);
             Player player = gameSession.getPlayers().get(playerTurnNumber);
