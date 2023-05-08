@@ -10,7 +10,7 @@ public class Card {
     private final int cost;
     private final List<Effect> effects;
     private int id;
-    private static Deck<Card> fullCardCollection;
+    private static Deck<Card> fullCardCollection = new Deck<>();
 
     public Card(Card c) {
         this(c.name, c.cost, new ArrayList<>(c.effects));

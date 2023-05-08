@@ -8,7 +8,8 @@ public class PlayerStats {
     private int turnHealing;
     private int turnCoin;
 
-    public PlayerStats(String playerName, int playerHealth, int turnDamage, int turnHealing, int turnCoin) {
+    public PlayerStats(
+            String playerName, int playerHealth, int turnDamage, int turnHealing, int turnCoin) {
         this.playerName = playerName;
         this.playerHealth = playerHealth;
         this.turnDamage = turnDamage;
@@ -55,5 +56,4 @@ public class PlayerStats {
     public void setTurnCoin(int turnCoin) {
         this.turnCoin = turnCoin;
     }
-
 }

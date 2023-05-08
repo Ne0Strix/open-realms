@@ -20,4 +20,8 @@ public class PlayerFactory {
         PlayArea playArea = new PlayArea(INITIAL_HEALTH, playerCards);
         return new Player(playerName, playArea);
     }
+
+    public static int getInitialHealth() {
+        return INITIAL_HEALTH;
+    }
 }

@@ -21,7 +21,9 @@ class PlayAreaTest {
         player1 = PlayerFactory.createPlayer("Player 1");
         playerCards = new PlayerCards();
         playArea = new PlayArea(70, playerCards);
+        playerCards.setDeckCards(playerCards.getOldTestDeck());
         market = Market.getInstance();
+        market.setMarketDeck(market.getOldTestMarketDeck());
     }
 
     @Test

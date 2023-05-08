@@ -2,6 +2,9 @@
 package at.vunfer.openrealms.model;
 
 import android.util.Log;
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,5 +120,40 @@ public class Market {
     /** Clear the market of all cards. */
     public void clear() {
         forPurchase.clear();
+    }
+
+    public Deck<Card> getOldTestMarketDeck() {
+        Deck<Card> testMarketDeck = new Deck<>();
+        testMarketDeck.add(
+                new Card(
+                        "Testcard1",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard2",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard3",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard4",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard5",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard6",
+                        3,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        return testMarketDeck;
     }
 }

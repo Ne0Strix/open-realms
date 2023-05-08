@@ -1,6 +1,11 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import at.vunfer.openrealms.model.effects.CoinEffect;
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.HealingEffect;
+import java.util.List;
+
 public class PlayerCards {
     private final Deck<Card> handCards;
     private final Deck<Card> deckCards;
@@ -58,7 +63,7 @@ public class PlayerCards {
      *
      * @return The maximum size of the player's hand.
      */
-    public int getHandSize() {
+    public static int getHandSize() {
         return HANDSIZE;
     }
 
@@ -108,5 +113,16 @@ public class PlayerCards {
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
         }
+    }
+
+    public Deck<Card> getOldTestDeck() {
+        Deck<Card> testDeck = new Deck<>();
+        testDeck.add(new Card("Dagger", 0, List.of(new DamageEffect(1))));
+        testDeck.add(new Card("Shortsword", 0, List.of(new HealingEffect(2))));
+        testDeck.add(new Card("Ruby ", 0, List.of(new CoinEffect(2))));
+        for (int i = 0; i < 7; i++) {
+            testDeck.add(new Card("Coin", 0, List.of(new CoinEffect(1))));
+        }
+        return testDeck;
     }
 }

@@ -15,6 +15,7 @@ class PlayerCardsTest {
     @BeforeEach
     void handSetup() {
         cards = new PlayerCards();
+        cards.setDeckCards(cards.getOldTestDeck());
     }
 
     @AfterEach
