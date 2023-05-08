@@ -37,10 +37,11 @@ public class ClientMessageHandler implements IHandleMessage {
                 uiUpdater.updateUI(message);
                 break;
             case UPDATE_PLAYER_STATS:
-                // TODO instructions for UI
+                /*PlayerStats stats = message.getPlayerStats();
+                uiUpdater.updatePlayerStats(stats);
                 Log.i(TAG, "Handled message of type " + message.getType());
                 uiUpdater.updateUI(message);
-                break;
+                break;*/
             default:
                 Log.i(TAG, "Received message of unknown type.");
         }
