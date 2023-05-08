@@ -2,6 +2,9 @@
 package at.vunfer.openrealms.network.client;
 
 import android.util.Log;
+
+import java.util.List;
+
 import at.vunfer.openrealms.UIUpdateListener;
 import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
@@ -27,7 +30,12 @@ public class ClientMessageHandler implements IHandleMessage {
                 uiUpdater.updateUI(message);
                 break;
             case CHOOSE_OPTION:
-                // TODO instructions for UI
+                List<String> options = message.getOptions();
+                String selectedOption = uiUpdater.displayOptions(options);
+                message.setSelectedOption(selectedOption);
+                Log.i(TAG, "Displayed options and waited for player's choice");
+                uiUpdater.updateUI(message);
+                break;
             case UPDATE_PLAYER_STATS:
                 // TODO instructions for UI
                 Log.i(TAG, "Handled message of type " + message.getType());
