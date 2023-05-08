@@ -8,9 +8,9 @@ public class MessageHandler {
     public boolean handleMessage(Message message) {
         switch (message.getType()) {
             case ADD_CARD:
-                // TODO instructions for UI
+                handleAddCardMessage(message);
             case REMOVE_CARD:
-                // TODO instructions for UI
+                handleRemoveCardMessage(message);
             case CHOOSE_OPTION:
                 // TODO instructions for UI
             case UPDATE_PLAYER_STATS:
@@ -18,5 +18,11 @@ public class MessageHandler {
             default:
                 return false;
         }
+    }
+    private void handleAddCardMessage(Message message) {
+        // TODO instructions for UI
+    }
+    private void handleRemoveCardMessage(Message message) {
+        // TODO instructions for UI
     }
 }
