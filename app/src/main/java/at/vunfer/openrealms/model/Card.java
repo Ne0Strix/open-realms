@@ -10,6 +10,7 @@ public class Card {
     private final int cost;
     private final List<Effect> effects;
     private int id;
+    private static Deck<Card> fullCardCollection;
 
     public Card(Card c) {
         this(c.name, c.cost, new ArrayList<>(c.effects));
@@ -27,6 +28,7 @@ public class Card {
         this.cost = cost;
         this.effects = effects;
         this.id = idCounter++;
+        fullCardCollection.add(this);
     }
 
     public String getName() {
@@ -59,5 +61,9 @@ public class Card {
 
     public int getId() {
         return id;
+    }
+
+    public static Deck<Card> getFullCardCollection() {
+        return fullCardCollection;
     }
 }
