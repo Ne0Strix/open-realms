@@ -14,6 +14,8 @@ import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.network.DataKey;
+import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.client.ClientConnector;
 import at.vunfer.openrealms.network.server.ServerThread;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private ClientConnector connection;
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static List<CardView> cardViews;
 
     public PlayAreaPresenter playAreaPresenter;
     public MarketPresenter marketPresenter;
@@ -146,7 +149,103 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     @Override
-    public void updateUI(Message message) {}
+    public void updateUI(Message message) {
+        Log.i(TAG, "Received message of type: " + message.getType());
+        switch (message.getType()) {
+            case ADD_CARD:
+                CardView cardToAdd = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+                addCard((DeckType) message.getData(DataKey.DECK), cardToAdd);
+                Log.i(
+                        TAG,
+                        "Added card "
+                                + (int) message.getData(DataKey.CARD_ID)
+                                + " to deck "
+                                + message.getData(DataKey.DECK)
+                                + ".");
+                break;
+            case REMOVE_CARD:
+                CardView cardToRemove = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+                addCard((DeckType) message.getData(DataKey.DECK), cardToRemove);
+                Log.i(
+                        TAG,
+                        "Removed card "
+                                + (int) message.getData(DataKey.CARD_ID)
+                                + " from deck "
+                                + message.getData(DataKey.DECK)
+                                + ".");
+                break;
+            case CHOOSE_OPTION:
+                // TODO instructions for UI
+            case UPDATE_PLAYER_STATS:
+                // TODO instructions for UI
+                break;
+            case FULL_CARD_DECK:
+                Log.i(TAG, "Received full card deck.");
+                cardViews =
+                        CardView.getViewFromCards(
+                                this, (List<Card>) message.getData(DataKey.COLLECTION));
+                Log.i(TAG, "Created CardViews from Cards.");
+                break;
+            default:
+                Log.i(TAG, "Received message of unknown type.");
+        }
+    }
+
+    private void addCard(DeckType deck, CardView card) {
+        switch (deck) {
+            case DECK:
+                playerDeckPresenter.addCardToView(card);
+                break;
+            case HAND:
+                playerHandPresenter.addCardToView(card);
+                break;
+            case DISCARD:
+                playerDiscardPilePresenter.addCardToView(card);
+                break;
+            case PLAYED:
+                playAreaPresenter.addCardToView(card);
+                break;
+            case MARKET:
+                marketPresenter.addCardToView(card);
+                break;
+            case FOR_PURCHASE:
+                marketPresenter.addCardToView(card);
+                break;
+        }
+    }
+
+    private void removeCard(DeckType deck, CardView card) {
+        switch (deck) {
+            case DECK:
+                playerDeckPresenter.removeCardFromView(card);
+                break;
+            case HAND:
+                playerHandPresenter.removeCardFromView(card);
+                break;
+            case DISCARD:
+                playerDiscardPilePresenter.removeCardFromView(card);
+                break;
+            case PLAYED:
+                playAreaPresenter.removeCardFromView(card);
+                break;
+            case MARKET:
+                marketPresenter.removeCardFromView(card);
+                break;
+            case FOR_PURCHASE:
+                marketPresenter.removeCardFromView(card);
+                break;
+        }
+    }
+
+    private CardView getCardViewFromCard(int cardId) {
+        for (CardView card : cardViews) {
+            if (card.getCardId() == cardId) {
+                return card;
+            }
+        }
+
+        return null;
+    }
 
     public void addPlaceholderCards() {
         // Add Cards to test functionality

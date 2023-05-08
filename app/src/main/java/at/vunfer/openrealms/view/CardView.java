@@ -198,4 +198,8 @@ public class CardView extends ConstraintLayout {
     public Card getCard() {
         return card;
     }
+
+    public int getCardId() {
+        return card.getId();
+    }
 }

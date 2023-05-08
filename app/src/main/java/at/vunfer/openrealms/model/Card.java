@@ -1,10 +1,11 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Card {
+public class Card implements Serializable {
     private static int idCounter = 0;
     private final String name;
     private final int cost;
