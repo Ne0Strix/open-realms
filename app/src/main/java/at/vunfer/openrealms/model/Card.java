@@ -66,4 +66,13 @@ public class Card {
     public static Deck<Card> getFullCardCollection() {
         return fullCardCollection;
     }
+
+    public static Card getCardById(int id) {
+        for (Card c : fullCardCollection) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
+    }
 }
