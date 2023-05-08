@@ -17,7 +17,10 @@ public class ClientMessageHandler implements IHandleMessage {
     public void handleMessage(Message message) {
         switch (message.getType()) {
             case ADD_CARD:
-                // TODO instructions for UI
+                uiUpdater.addCardToPlayArea(message.getCard());
+                Log.i(TAG, "Added card to hand or play area");
+                uiUpdater.updateUI(message);
+                break;
             case REMOVE_CARD:
                 // TODO instructions for UI
             case CHOOSE_OPTION:
