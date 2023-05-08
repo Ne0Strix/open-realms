@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
+    private boolean isHost = false;
 
     public PlayAreaPresenter playAreaPresenter;
     public MarketPresenter marketPresenter;
@@ -64,9 +65,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         if (server != null) {
             server.stopServer();
         }
+        isHost = false;
     }
 
     public void startServer(View view) throws InterruptedException {
+        isHost = true;
         server = new ServerThread(this, connectionPort);
         TextView showIpPrompt = (TextView) findViewById(R.id.prompt_text);
         Button openLobbyButton = (Button) findViewById(R.id.openLobby);
@@ -136,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentDeckPresenter = new DeckPresenter(opponentDeckView);
 
         // TODO: Remove this and replace it with Cards gotten from Server
-        addPlaceholderCards();
 
         OverlayView overlayView = new OverlayView(this);
 
@@ -146,6 +148,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         layout.addView(overlayView.getOverlayView());
 
         LOGGER.log(Level.INFO, "Views initialized");
+
+        if (isHost) {
+            server.setupClients();
+        }
     }
 
     @Override
