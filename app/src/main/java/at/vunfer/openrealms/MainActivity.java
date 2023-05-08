@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static List<CardView> cardViews;
     private boolean isHost = false;
 
+    private Context context = this;
     private int playerId;
 
     public PlayAreaPresenter playAreaPresenter;
@@ -168,56 +170,68 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     @Override
     public void updateUI(Message message) {
         Log.i(TAG, "Received message of type: " + message.getType());
-        switch (message.getType()) {
-            case ADD_CARD:
-                CardView cardToAdd = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
-                addCard((DeckType) message.getData(DataKey.DECK), cardToAdd);
-                Log.i(
-                        TAG,
-                        "Added card "
-                                + (int) message.getData(DataKey.CARD_ID)
-                                + " to deck "
-                                + message.getData(DataKey.DECK)
-                                + ".");
-                break;
-            case REMOVE_CARD:
-                CardView cardToRemove = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
-                addCard((DeckType) message.getData(DataKey.DECK), cardToRemove);
-                Log.i(
-                        TAG,
-                        "Removed card "
-                                + (int) message.getData(DataKey.CARD_ID)
-                                + " from deck "
-                                + message.getData(DataKey.DECK)
-                                + ".");
-                break;
-            case CHOOSE_OPTION:
-                // TODO instructions for UI
-            case UPDATE_PLAYER_STATS:
-                int target = (int) message.getData(DataKey.TARGET_PLAYER);
-                PlayerStats stats = (PlayerStats) message.getData(DataKey.PLAYER_STATS);
-                if (this.playerId == target) {
-                    overlayViewPresenter.updatePlayerName(stats.getPlayerName());
-                    overlayViewPresenter.updatePlayerHealth(stats.getPlayerHealth());
-                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
-                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
-                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+        runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (message.getType()) {
+                            case ADD_CARD:
+                                CardView cardToAdd =
+                                        getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+                                addCard((DeckType) message.getData(DataKey.DECK), cardToAdd);
+                                Log.i(
+                                        TAG,
+                                        "Added card "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + " to deck "
+                                                + message.getData(DataKey.DECK)
+                                                + ".");
+                                break;
+                            case REMOVE_CARD:
+                                CardView cardToRemove =
+                                        getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+                                addCard((DeckType) message.getData(DataKey.DECK), cardToRemove);
+                                Log.i(
+                                        TAG,
+                                        "Removed card "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + " from deck "
+                                                + message.getData(DataKey.DECK)
+                                                + ".");
+                                break;
+                            case CHOOSE_OPTION:
+                                // TODO instructions for UI
+                            case UPDATE_PLAYER_STATS:
+                                int target = (int) message.getData(DataKey.TARGET_PLAYER);
+                                PlayerStats stats =
+                                        (PlayerStats) message.getData(DataKey.PLAYER_STATS);
+                                if (playerId == target) {
+                                    overlayViewPresenter.updatePlayerName(stats.getPlayerName());
+                                    overlayViewPresenter.updatePlayerHealth(
+                                            stats.getPlayerHealth());
+                                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
 
-                } else {
-                    overlayViewPresenter.updateOpponentName(stats.getPlayerName());
-                    overlayViewPresenter.updateOpponentHealth(stats.getPlayerHealth());
-                }
-                break;
-            case FULL_CARD_DECK:
-                Log.i(TAG, "Received full card deck.");
-                cardViews =
-                        CardView.getViewFromCards(
-                                this, (List<Card>) message.getData(DataKey.COLLECTION));
-                Log.i(TAG, "Created CardViews from Cards.");
-                break;
-            default:
-                Log.i(TAG, "Received message of unknown type.");
-        }
+                                } else {
+                                    overlayViewPresenter.updateOpponentName(stats.getPlayerName());
+                                    overlayViewPresenter.updateOpponentHealth(
+                                            stats.getPlayerHealth());
+                                }
+                                break;
+                            case FULL_CARD_DECK:
+                                Log.i(TAG, "Received full card deck.");
+                                cardViews =
+                                        CardView.getViewFromCards(
+                                                context,
+                                                (List<Card>) message.getData(DataKey.COLLECTION));
+                                Log.i(TAG, "Created CardViews from Cards.");
+                                break;
+                            default:
+                                Log.i(TAG, "Received message of unknown type.");
+                        }
+                    }
+                });
     }
 
     private void addCard(DeckType deck, CardView card) {
