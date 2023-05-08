@@ -12,8 +12,9 @@ public class MessageHandler {
             case REMOVE_CARD:
                 handleRemoveCardMessage(message);
             case CHOOSE_OPTION:
-                handleChooseOptionMessage(message);            case UPDATE_PLAYER_STATS:
-                // TODO instructions for UI
+                handleChooseOptionMessage(message);
+            case UPDATE_PLAYER_STATS:
+                handleUpdatePlayerStatsMessage(message);
             default:
                 return false;
         }
@@ -25,6 +26,9 @@ public class MessageHandler {
         // TODO instructions for UI
     }
     private void handleChooseOptionMessage(Message message) {
+        // TODO instructions for UI
+    }
+    private void handleUpdatePlayerStatsMessage(Message message) {
         // TODO instructions for UI
     }
 }
