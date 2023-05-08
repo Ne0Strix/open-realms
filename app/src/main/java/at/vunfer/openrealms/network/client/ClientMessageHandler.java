@@ -22,7 +22,10 @@ public class ClientMessageHandler implements IHandleMessage {
                 uiUpdater.updateUI(message);
                 break;
             case REMOVE_CARD:
-                // TODO instructions for UI
+                uiUpdater.removeCardFromPlayArea(message.getCard());
+                Log.i(TAG, "Removed card from hand or play area");
+                uiUpdater.updateUI(message);
+                break;
             case CHOOSE_OPTION:
                 // TODO instructions for UI
             case UPDATE_PLAYER_STATS:
