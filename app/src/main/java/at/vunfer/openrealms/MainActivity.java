@@ -176,9 +176,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     public void run() {
                         switch (message.getType()) {
                             case ADD_CARD:
-                                CardView cardToAdd =
-                                        getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
-                                addCard((DeckType) message.getData(DataKey.DECK), cardToAdd);
+                                addCard(message);
                                 Log.i(
                                         TAG,
                                         "Added card "
@@ -186,11 +184,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                                 + " to deck "
                                                 + message.getData(DataKey.DECK)
                                                 + ".");
+
                                 break;
                             case REMOVE_CARD:
-                                CardView cardToRemove =
-                                        getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
-                                addCard((DeckType) message.getData(DataKey.DECK), cardToRemove);
+                                removeCard(message);
                                 Log.i(
                                         TAG,
                                         "Removed card "
@@ -198,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                                 + " from deck "
                                                 + message.getData(DataKey.DECK)
                                                 + ".");
+
                                 break;
                             case CHOOSE_OPTION:
                                 // TODO instructions for UI
@@ -234,22 +232,36 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                 });
     }
 
-    private void addCard(DeckType deck, CardView card) {
+    private void addCard(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        DeckType deck = (DeckType) message.getData(DataKey.DECK);
         switch (deck) {
             case DECK:
-                playerDeckPresenter.addCardToView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerDeckPresenter.addCardToView(card);
+                } else {
+                    opponentDeckPresenter.addCardToView(card);
+                }
                 break;
             case HAND:
-                playerHandPresenter.addCardToView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerHandPresenter.addCardToView(card);
+                } else {
+                    opponentHandPresenter.addCardToView(card);
+                }
                 break;
             case DISCARD:
-                playerDiscardPilePresenter.addCardToView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerDiscardPilePresenter.addCardToView(card);
+                } else {
+                    opponentDiscardPilePresenter.addCardToView(card);
+                }
                 break;
             case PLAYED:
-                playAreaPresenter.addCardToView(card);
-                break;
-            case MARKET:
-                marketPresenter.addCardToView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playAreaPresenter.addCardToView(card);
+                }
                 break;
             case FOR_PURCHASE:
                 marketPresenter.addCardToView(card);
@@ -257,22 +269,31 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         }
     }
 
-    private void removeCard(DeckType deck, CardView card) {
+    private void removeCard(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        DeckType deck = (DeckType) message.getData(DataKey.DECK);
         switch (deck) {
             case DECK:
-                playerDeckPresenter.removeCardFromView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerDeckPresenter.removeCardFromView(card);
+                }
                 break;
             case HAND:
-                playerHandPresenter.removeCardFromView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerHandPresenter.removeCardFromView(card);
+                }
                 break;
             case DISCARD:
-                playerDiscardPilePresenter.removeCardFromView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+
+                    playerDiscardPilePresenter.removeCardFromView(card);
+                }
                 break;
             case PLAYED:
-                playAreaPresenter.removeCardFromView(card);
-                break;
-            case MARKET:
-                marketPresenter.removeCardFromView(card);
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playAreaPresenter.removeCardFromView(card);
+                }
                 break;
             case FOR_PURCHASE:
                 marketPresenter.removeCardFromView(card);
