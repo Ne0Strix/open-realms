@@ -38,6 +38,7 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
 
         if (!cardsToDisplay.isEmpty()) {
             CardView lastCard = cardsToDisplay.get(cardsToDisplay.size() - 1);
+            lastCard.setFaceUp();
             cardHolder.addView(lastCard);
         }
     }

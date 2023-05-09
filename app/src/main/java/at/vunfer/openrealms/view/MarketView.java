@@ -31,6 +31,7 @@ public class MarketView extends LinearLayout implements CardPileView {
     public void updateView(List<CardView> cards) {
         removeAllViews();
         for (CardView card : cards) {
+            card.setFaceUp();
             addView(card);
         }
     }
