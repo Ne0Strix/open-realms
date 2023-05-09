@@ -14,6 +14,8 @@ import java.util.List;
 
 /** View class for the play area. */
 public class PlayAreaView extends LinearLayout implements CardPileView {
+    private final float screenDensity;
+    private static final float CARD_SCALE = 0.6f;
     /**
      * Constructor for PlayAreaView.
      *
@@ -41,12 +43,17 @@ public class PlayAreaView extends LinearLayout implements CardPileView {
     public PlayAreaView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.play_area_view, this);
+        screenDensity = getResources().getDisplayMetrics().density;
     }
 
     public void updateView(List<CardView> cards) {
         removeAllViews();
         for (CardView view : cards) {
-            view.setLayoutParams(new ConstraintLayout.LayoutParams(200, 106));
+            view.setLayoutParams(
+                    new ConstraintLayout.LayoutParams(
+                            (int) (CARD_SCALE * screenDensity * 77),
+                            (int) (CARD_SCALE * screenDensity * 106)));
+            view.setFaceUp();
             addView(view);
         }
     }
