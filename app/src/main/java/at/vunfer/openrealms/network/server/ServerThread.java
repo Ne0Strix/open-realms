@@ -183,7 +183,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    private Message createPlayerStatsMessage(int targetPlayerTurnNumber, Player player) {
+    public Message createPlayerStatsMessage(int targetPlayerTurnNumber, Player player) {
         Message playerStatsMsg = new Message(MessageType.UPDATE_PLAYER_STATS);
         playerStatsMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
         playerStatsMsg.setData(
@@ -217,19 +217,62 @@ public class ServerThread extends Thread {
         dealHandCards(client, opponentTurnNumber, opponent);
     }
 
-    private void dealHandCards(ClientHandler client, int targetPlayerTurnNumber, Player player) {
+    public void dealHandCards(ClientHandler client, int targetPlayerTurnNumber, Player player) {
         for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
-            Message addCardMsg =
-                    createAddCardMessage(targetPlayerTurnNumber, DeckType.HAND, card.getId());
             Message removeCardMsg =
                     createRemoveCardMessage(targetPlayerTurnNumber, DeckType.DECK, card.getId());
+            Message addCardMsg =
+                    createAddCardMessage(targetPlayerTurnNumber, DeckType.HAND, card.getId());
 
             try {
-                client.sendMessage(addCardMsg);
                 client.sendMessage(removeCardMsg);
+                client.sendMessage(addCardMsg);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public void dealHandCardsBasedOnTurnNumber(int targetPlayerTurnNumber, Player player) {
+        ClientHandler client = connections.get(targetPlayerTurnNumber);
+        for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
+            Message removeCardMsg =
+                    createRemoveCardMessage(targetPlayerTurnNumber, DeckType.DECK, card.getId());
+            Message addCardMsg =
+                    createAddCardMessage(targetPlayerTurnNumber, DeckType.HAND, card.getId());
+
+            try {
+                client.sendMessage(removeCardMsg);
+                client.sendMessage(addCardMsg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void discardHandCards(int targetPlayerTurnNumber, Player player) {
+        ClientHandler client = connections.get(targetPlayerTurnNumber);
+        for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
+            Message removeCardMsg =
+                    createRemoveCardMessage(targetPlayerTurnNumber, DeckType.HAND, card.getId());
+            Message addCardMsg =
+                    createAddCardMessage(targetPlayerTurnNumber, DeckType.DISCARD, card.getId());
+
+            try {
+                client.sendMessage(removeCardMsg);
+                client.sendMessage(addCardMsg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendTurnNotificationToAllClients(int playerTurnNumber) {
+        Message turnNotificationMsg = createTurnNotificationMessage(playerTurnNumber);
+        try {
+            sendMessageToAllClients(turnNotificationMsg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -248,6 +291,12 @@ public class ServerThread extends Thread {
         removeCardMsg.setData(DataKey.DECK, deckType);
         removeCardMsg.setData(DataKey.CARD_ID, cardId);
         return removeCardMsg;
+    }
+
+    public Message createTurnNotificationMessage(int targetPlayerTurnNumber) {
+        Message turnNotificationMsg = new Message(MessageType.TURN_NOTIFICATION);
+        turnNotificationMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
+        return turnNotificationMsg;
     }
 
     private void dealMarketCardsToPurchaseArea(ClientHandler client) {

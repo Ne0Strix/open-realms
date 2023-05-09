@@ -41,6 +41,10 @@ public class ServerMessageHandler implements IHandleMessage {
                                             gameSession.getPlayerTurnNumber(currentPlayer),
                                             DeckType.PLAYED,
                                             cardId));
+                            serverThread.sendMessageToAllClients(
+                                    serverThread.createPlayerStatsMessage(
+                                            gameSession.getPlayerTurnNumber(currentPlayer),
+                                            currentPlayer));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -72,7 +76,20 @@ public class ServerMessageHandler implements IHandleMessage {
                 // TODO instructions for backend
                 break;
             case END_TURN:
+                serverThread.discardHandCards(
+                        gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
                 gameSession.endTurn();
+                try {
+                    serverThread.dealHandCardsBasedOnTurnNumber(
+                            gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
+                    serverThread.sendMessageToAllClients(
+                            serverThread.createPlayerStatsMessage(
+                                    gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+                    serverThread.sendTurnNotificationToAllClients(
+                            gameSession.getPlayerTurnNumber(currentPlayer));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             default:
                 Log.i(TAG, "Received message of unknown type.");
