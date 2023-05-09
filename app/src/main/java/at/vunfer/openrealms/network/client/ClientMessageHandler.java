@@ -2,12 +2,10 @@
 package at.vunfer.openrealms.network.client;
 
 import android.util.Log;
-
-import java.util.List;
-
 import at.vunfer.openrealms.UIUpdateListener;
 import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
+import java.util.List;
 
 public class ClientMessageHandler implements IHandleMessage {
     private static final String TAG = "ClientMessageHandler";

@@ -1,12 +1,11 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network;
 
+import at.vunfer.openrealms.model.Card;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import at.vunfer.openrealms.model.Card;
 
 public class Message implements Serializable {
     private MessageType type;
@@ -14,7 +13,7 @@ public class Message implements Serializable {
     private Card card;
     private List<String> options;
     private String selectedOption;
-    //private PlayerStats playerStats;
+    // private PlayerStats playerStats;
 
     public Message(MessageType type) {
         this.type = type;
@@ -50,9 +49,11 @@ public class Message implements Serializable {
                 return false;
         }
     }
+
     public Card getCard() {
         return card;
     }
+
     public void setCard(Card card) {
         this.card = card;
     }

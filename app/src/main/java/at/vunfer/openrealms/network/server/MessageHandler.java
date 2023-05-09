@@ -1,10 +1,9 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server;
 
-import java.util.Map;
-
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
+import java.util.Map;
 
 public class MessageHandler {
     public boolean handleMessage(Message message) {
@@ -16,7 +15,8 @@ public class MessageHandler {
                 Object rawData = message.getData(DataKey.OPTIONS);
                 if (rawData instanceof Map) {
                     Map<String, Object> data = (Map<String, Object>) rawData;
-                    System.out.println("Received CHOICE message with option: " + data.get("option"));
+                    System.out.println(
+                            "Received CHOICE message with option: " + data.get("option"));
                 }
                 return true;
             case END_TURN:
