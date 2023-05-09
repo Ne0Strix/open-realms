@@ -8,6 +8,8 @@
     android:background="@drawable/playarea"
     tools:context=".MainActivity">
 
+
+
     <at.vunfer.openrealms.view.HandView
         android:id="@+id/player_hand_view"
         android:layout_width="541dp"
@@ -106,5 +108,16 @@
         android:layout_height="106dp"
         app:layout_constraintBottom_toTopOf="@+id/player_deck_view"
         app:layout_constraintStart_toEndOf="@+id/player_discard_pile_view" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Turn"
+        android:onClick="endTurn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

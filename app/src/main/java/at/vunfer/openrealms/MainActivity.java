@@ -211,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
-
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
                                     overlayViewPresenter.updateOpponentHealth(
@@ -291,7 +290,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                 break;
             case DISCARD:
                 if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
-
                     playerDiscardPilePresenter.removeCardFromView(card);
                 } else {
                     opponentDiscardPilePresenter.addCardToView(card);
@@ -362,5 +360,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         Message message = new Message(MessageType.TOUCHED);
         message.setData(DataKey.CARD_ID, id);
         return message;
+    }
+
+    public void endTurn(View view) throws IOException {
+        Message endTurn = new Message(MessageType.END_TURN);
+        connection.sendMessage(endTurn);
     }
 }
