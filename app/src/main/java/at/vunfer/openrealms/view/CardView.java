@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Effect;
@@ -82,9 +83,13 @@ public class CardView extends ConstraintLayout {
                                 // TODO: implement message sending
                                 // TODO: remove temporary cardRemoval
                                 if (parentId == R.id.player_hand_view) {
-                                    //  MainActivity.handPresenter.removeCardFromView(this);
-                                    //   MainActivity.playAreaPresenter.removeCardFromView(this);
-                                } else if (parentId == R.id.market_view) {
+                                    MainActivity.playerHandPresenter.removeCardFromView(this);
+                                }
+                                if (parentId == R.id.opponent_hand_view) {
+                                    MainActivity.opponentHandPresenter.removeCardFromView(this);
+                                }
+                                //   MainActivity.playAreaPresenter.removeCardFromView(this);
+                                else if (parentId == R.id.market_view) {
                                     //   MainActivity.marketPresenter.removeCardFromView(this);
                                 }
                             } else {

@@ -24,6 +24,7 @@
         android:layout_width="541dp"
         android:layout_height="116dp"
         android:gravity="bottom|center_horizontal"
+        android:scaleY="-1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,6 +35,7 @@
         android:id="@+id/market_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,15 +43,13 @@
 
     <at.vunfer.openrealms.view.CardView
         android:id="@+id/fullscreen_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleX="3"
-        android:scaleY="3"
+        android:layout_width="270dp"
+        android:layout_height="371dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
     </at.vunfer.openrealms.view.CardView>
 
@@ -75,6 +75,7 @@
         android:layout_width="77dp"
         android:layout_height="106dp"
         android:layout_marginBottom="116dp"
+        android:scaleY="-1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/player_hand_view"
         app:layout_constraintHorizontal_bias="0.0"
@@ -104,6 +105,7 @@
         android:id="@+id/opponent_deck_view"
         android:layout_width="77dp"
         android:layout_height="106dp"
+        android:scaleY="-1"
         app:layout_constraintBottom_toTopOf="@+id/player_deck_view"
         app:layout_constraintStart_toEndOf="@+id/player_discard_pile_view" />
 

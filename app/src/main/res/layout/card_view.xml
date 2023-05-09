@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_width="77dp"
-    android:layout_height="106dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:contextClickable="true">
 
     <ImageView
@@ -16,6 +16,7 @@
         android:contentDescription="@string/card_image"
         android:scaleType="fitXY"
         android:src="@drawable/emptycards"
+        app:layout_constraintDimensionRatio="0.726415:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

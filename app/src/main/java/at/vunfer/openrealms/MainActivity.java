@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     public PlayAreaPresenter playAreaPresenter;
     public MarketPresenter marketPresenter;
-    public HandPresenter playerHandPresenter;
-    public HandPresenter opponentHandPresenter;
+    public static HandPresenter playerHandPresenter;
+    public static HandPresenter opponentHandPresenter;
     public DiscardPilePresenter playerDiscardPilePresenter;
     public DiscardPilePresenter opponentDiscardPilePresenter;
     public DeckPresenter playerDeckPresenter;

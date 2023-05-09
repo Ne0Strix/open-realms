@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.view.view_interfaces.CardPileView;
 import java.util.List;
@@ -45,6 +46,7 @@ public class PlayAreaView extends LinearLayout implements CardPileView {
     public void updateView(List<CardView> cards) {
         removeAllViews();
         for (CardView view : cards) {
+            view.setLayoutParams(new ConstraintLayout.LayoutParams(200, 106));
             addView(view);
         }
     }
