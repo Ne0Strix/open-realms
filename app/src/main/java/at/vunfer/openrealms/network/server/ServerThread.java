@@ -52,8 +52,8 @@ public class ServerThread extends Thread {
             Log.i(TAG, "Server reachable under: " + ipAddr + ":" + serverSocket.getLocalPort());
             connections.add(new ClientHandler(serverSocket.accept()));
             Log.i(TAG, "Local client connected!");
-            connections.add(new ClientHandler(serverSocket.accept()));
-            Log.i(TAG, "Remote client connected!");
+            // connections.add(new ClientHandler(serverSocket.accept()));
+            // Log.i(TAG, "Remote client connected!");
         } catch (IOException ex) {
             Log.e(TAG, "IO Exception on Server!");
             ex.printStackTrace();

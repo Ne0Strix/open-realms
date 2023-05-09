@@ -30,6 +30,7 @@ public class Communication {
                 () -> {
                     try {
                         output.writeObject(msg);
+                        Log.i(TAG, "Executor submitted message.");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

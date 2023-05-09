@@ -18,6 +18,7 @@ import at.vunfer.openrealms.model.effects.HealingEffect;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
 import at.vunfer.openrealms.network.PlayerStats;
 import at.vunfer.openrealms.network.client.ClientConnector;
 import at.vunfer.openrealms.network.server.ServerThread;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private final int connectionPort = 1337;
     private String connectionIP;
     private ServerThread server;
-    private ClientConnector connection;
+    private static ClientConnector connection;
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
@@ -345,5 +346,15 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentDiscardPilePresenter.addCardsToView(opponentDiscardPileCardViews);
         playerDeckPresenter.addCardsToView(playerDeckCardViews);
         opponentDeckPresenter.addCardsToView(opponentDeckCardViews);
+    }
+
+    public static void sendMessage(Message msg) throws IOException {
+        connection.sendMessage(msg);
+    }
+
+    public static Message buildTouchMessage(int id) {
+        Message message = new Message(MessageType.TOUCHED);
+        message.setData(DataKey.CARD_ID, id);
+        return message;
     }
 }
