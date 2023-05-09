@@ -1,12 +1,14 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.List;
 
 public class PlayerCards {
+    private static final String TAG = "PlayerCards";
     private final Deck<Card> handCards;
     private final Deck<Card> deckCards;
     private final Deck<Card> discardedCards;
@@ -22,14 +24,13 @@ public class PlayerCards {
         this.handCards = new Deck<>();
         this.deckCards = new Deck<>();
         this.discardedCards = new Deck<>();
-        this.deckCards.add(new Card("Dagger", 0, List.of(new DamageEffect(1))));
-        this.deckCards.add(new Card("Shortsword", 0, List.of(new HealingEffect(2))));
-        this.deckCards.add(new Card("Ruby ", 0, List.of(new CoinEffect(2))));
-        for (int i = 0; i < 7; i++) {
-            this.deckCards.add(new Card("Coin", 0, List.of(new CoinEffect(1))));
-        }
+    }
+
+    public void setDeckCards(Deck<Card> deckCards) {
+        this.deckCards.addAll(deckCards);
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
+            Log.i(TAG, "Added random card to hand.");
         }
     }
 
@@ -65,7 +66,7 @@ public class PlayerCards {
      *
      * @return The maximum size of the player's hand.
      */
-    public int getHandSize() {
+    public static int getHandSize() {
         return HANDSIZE;
     }
 
@@ -77,6 +78,7 @@ public class PlayerCards {
      */
     public void discard(Card card) throws IllegalArgumentException {
         discardedCards.add(handCards.draw(card));
+        Log.i(TAG, "Discarded card " + card.getName() + " from hand.");
     }
 
     /**
@@ -86,6 +88,7 @@ public class PlayerCards {
      */
     public void addBoughtCard(Card card) {
         discardedCards.add(card);
+        Log.i(TAG, "Added card " + card.getName() + " to discarded cards.");
     }
 
     /**
@@ -100,11 +103,15 @@ public class PlayerCards {
 
     /** Restocks the player's hand */
     public void restockHand() {
+        Log.i(TAG, "Restocking hand.");
+        Log.i(TAG, "Discarding all cards from hand.");
         for (int i = this.handCards.size() - 1; i >= 0; i--) {
             discardedCards.add(this.popFromHand(this.getHandCards().get(i)));
+            Log.i(TAG, "Discarded card " + this.getHandCards().get(i).getName() + " from hand.");
         }
 
         if (deckCards.size() < HANDSIZE) {
+            Log.i(TAG, "Deck is empty. Restocking deck.");
             handCards.addAll(deckCards);
             deckCards.clear();
 
@@ -112,8 +119,21 @@ public class PlayerCards {
             discardedCards.clear();
         }
 
+        Log.i(TAG, "Drawing cards from deck.");
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
+            Log.i(TAG, "Added random card to hand.");
         }
+    }
+
+    public Deck<Card> getOldTestDeck() {
+        Deck<Card> testDeck = new Deck<>();
+        testDeck.add(new Card("Dagger", 0, List.of(new DamageEffect(1))));
+        testDeck.add(new Card("Shortsword", 0, List.of(new HealingEffect(2))));
+        testDeck.add(new Card("Ruby ", 0, List.of(new CoinEffect(2))));
+        for (int i = 0; i < 7; i++) {
+            testDeck.add(new Card("Coin", 0, List.of(new CoinEffect(1))));
+        }
+        return testDeck;
     }
 }

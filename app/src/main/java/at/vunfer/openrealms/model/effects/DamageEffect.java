@@ -3,9 +3,10 @@ package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class DamageEffect implements Effect {
+public class DamageEffect implements Effect, Serializable {
 
     private final int damage;
 

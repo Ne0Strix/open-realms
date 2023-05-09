@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +15,10 @@ import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.network.DataKey;
+import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.PlayerStats;
 import at.vunfer.openrealms.network.client.ClientConnector;
 import at.vunfer.openrealms.network.server.ServerThread;
 import at.vunfer.openrealms.presenter.*;
@@ -31,6 +35,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private ClientConnector connection;
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static List<CardView> cardViews;
+    private boolean isHost = false;
+
+    private Context context = this;
+    private int playerId;
 
     public PlayAreaPresenter playAreaPresenter;
     public MarketPresenter marketPresenter;
@@ -40,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public DiscardPilePresenter opponentDiscardPilePresenter;
     public DeckPresenter playerDeckPresenter;
     public DeckPresenter opponentDeckPresenter;
+    public OverlayPresenter overlayViewPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +71,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         if (server != null) {
             server.stopServer();
         }
+        isHost = false;
     }
 
     public void startServer(View view) throws InterruptedException {
+        isHost = true;
         server = new ServerThread(this, connectionPort);
         TextView showIpPrompt = (TextView) findViewById(R.id.prompt_text);
         Button openLobbyButton = (Button) findViewById(R.id.openLobby);
@@ -133,9 +145,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentDeckPresenter = new DeckPresenter(opponentDeckView);
 
         // TODO: Remove this and replace it with Cards gotten from Server
-        addPlaceholderCards();
 
         OverlayView overlayView = new OverlayView(this);
+        overlayViewPresenter = new OverlayPresenter(overlayView);
 
         // Add views to layout
         ConstraintLayout layout = findViewById(R.id.game_area);
@@ -143,10 +155,161 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         layout.addView(overlayView.getOverlayView());
 
         LOGGER.log(Level.INFO, "Views initialized");
+
+        if (isHost) {
+            server.setupClients();
+        }
+
+        if (isHost) {
+            this.playerId = 0;
+        } else {
+            this.playerId = 1;
+        }
     }
 
     @Override
-    public void updateUI(Message message) {}
+    public void updateUI(Message message) {
+        Log.i(TAG, "Received message of type: " + message.getType());
+        runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (message.getType()) {
+                            case ADD_CARD:
+                                addCard(message);
+                                Log.i(
+                                        TAG,
+                                        "Added card "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + " to deck "
+                                                + message.getData(DataKey.DECK)
+                                                + ".");
+
+                                break;
+                            case REMOVE_CARD:
+                                removeCard(message);
+                                Log.i(
+                                        TAG,
+                                        "Removed card "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + " from deck "
+                                                + message.getData(DataKey.DECK)
+                                                + ".");
+
+                                break;
+                            case CHOOSE_OPTION:
+                                // TODO instructions for UI
+                            case UPDATE_PLAYER_STATS:
+                                int target = (int) message.getData(DataKey.TARGET_PLAYER);
+                                PlayerStats stats =
+                                        (PlayerStats) message.getData(DataKey.PLAYER_STATS);
+                                if (playerId == target) {
+                                    overlayViewPresenter.updatePlayerName(stats.getPlayerName());
+                                    overlayViewPresenter.updatePlayerHealth(
+                                            stats.getPlayerHealth());
+                                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+
+                                } else {
+                                    overlayViewPresenter.updateOpponentName(stats.getPlayerName());
+                                    overlayViewPresenter.updateOpponentHealth(
+                                            stats.getPlayerHealth());
+                                }
+                                break;
+                            case FULL_CARD_DECK:
+                                Log.i(TAG, "Received full card deck.");
+                                cardViews =
+                                        CardView.getViewFromCards(
+                                                context,
+                                                (List<Card>) message.getData(DataKey.COLLECTION));
+                                Log.i(TAG, "Created CardViews from Cards.");
+                                break;
+                            default:
+                                Log.i(TAG, "Received message of unknown type.");
+                        }
+                    }
+                });
+    }
+
+    private void addCard(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        DeckType deck = (DeckType) message.getData(DataKey.DECK);
+        switch (deck) {
+            case DECK:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerDeckPresenter.addCardToView(card);
+                } else {
+                    opponentDeckPresenter.addCardToView(card);
+                }
+                break;
+            case HAND:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerHandPresenter.addCardToView(card);
+                } else {
+                    opponentHandPresenter.addCardToView(card);
+                }
+                break;
+            case DISCARD:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerDiscardPilePresenter.addCardToView(card);
+                } else {
+                    opponentDiscardPilePresenter.addCardToView(card);
+                }
+                break;
+            case PLAYED:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playAreaPresenter.addCardToView(card);
+                }
+                break;
+            case FOR_PURCHASE:
+                marketPresenter.addCardToView(card);
+                break;
+        }
+    }
+
+    private void removeCard(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        DeckType deck = (DeckType) message.getData(DataKey.DECK);
+        switch (deck) {
+            case DECK:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerDeckPresenter.removeCardFromView(card);
+                }
+                break;
+            case HAND:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerHandPresenter.removeCardFromView(card);
+                }
+                break;
+            case DISCARD:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+
+                    playerDiscardPilePresenter.removeCardFromView(card);
+                }
+                break;
+            case PLAYED:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playAreaPresenter.removeCardFromView(card);
+                }
+                break;
+            case FOR_PURCHASE:
+                marketPresenter.removeCardFromView(card);
+                break;
+        }
+    }
+
+    private CardView getCardViewFromCard(int cardId) {
+        for (CardView card : cardViews) {
+            if (card.getCardId() == cardId) {
+                return card;
+            }
+        }
+
+        return null;
+    }
 
     public void addPlaceholderCards() {
         // Add Cards to test functionality

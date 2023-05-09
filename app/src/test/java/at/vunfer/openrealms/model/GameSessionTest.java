@@ -24,6 +24,7 @@ public class GameSessionTest {
         player2 = PlayerFactory.createPlayer("Player 2");
         players = Arrays.asList(player1, player2);
         gameSession = new GameSession(players, player1);
+        Market.getInstance().setMarketDeck(Market.getInstance().getOldTestMarketDeck());
     }
 
     @Test

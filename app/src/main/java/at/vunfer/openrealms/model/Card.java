@@ -1,15 +1,17 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Card {
+public class Card implements Serializable {
     private static int idCounter = 0;
     private final String name;
     private final int cost;
     private final List<Effect> effects;
     private int id;
+    private static Deck<Card> fullCardCollection = new Deck<>();
 
     public Card(Card c) {
         this(c.name, c.cost, new ArrayList<>(c.effects));
@@ -27,6 +29,7 @@ public class Card {
         this.cost = cost;
         this.effects = effects;
         this.id = idCounter++;
+        fullCardCollection.add(this);
     }
 
     public String getName() {
@@ -59,5 +62,18 @@ public class Card {
 
     public int getId() {
         return id;
+    }
+
+    public static Deck<Card> getFullCardCollection() {
+        return fullCardCollection;
+    }
+
+    public static Card getCardById(int id) {
+        for (Card c : fullCardCollection) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
     }
 }
