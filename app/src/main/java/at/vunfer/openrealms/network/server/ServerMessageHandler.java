@@ -76,9 +76,25 @@ public class ServerMessageHandler implements IHandleMessage {
                 // TODO instructions for backend
                 break;
             case END_TURN:
+                Log.i(
+                        TAG,
+                        "Size remaining deck: "
+                                + currentPlayer
+                                        .getPlayArea()
+                                        .getPlayerCards()
+                                        .getHandCards()
+                                        .size());
                 serverThread.discardHandCards(
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
                 gameSession.endTurn();
+                Log.i(
+                        TAG,
+                        "Size deck after restock: "
+                                + currentPlayer
+                                        .getPlayArea()
+                                        .getPlayerCards()
+                                        .getHandCards()
+                                        .size());
                 try {
                     serverThread.dealHandCardsBasedOnTurnNumber(
                             gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);

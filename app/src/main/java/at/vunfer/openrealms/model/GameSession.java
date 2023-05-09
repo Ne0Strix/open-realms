@@ -67,6 +67,7 @@ public class GameSession {
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
         currentPlayer.getPlayArea().resetTurnPool();
         market.restock();
+        currentPlayer.getPlayArea().getPlayerCards().restockHand();
         nextPlayer();
     }
 

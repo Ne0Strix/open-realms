@@ -123,7 +123,7 @@ public class PlayArea {
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
         card.applyEffects(this);
-        Log.i(TAG, "Card " + card.getId() + "played successfully.");
+        Log.i(TAG, "Card " + card.getId() + " played successfully.");
     }
 
     // commented out by since it is not used in first sprint
@@ -196,7 +196,7 @@ public class PlayArea {
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
-        Log.i(TAG, "Card " + card.getId() + "bought successfully.");
+        Log.i(TAG, "Card " + card.getId() + " bought successfully.");
     }
 
     public int playCardById(int id) {

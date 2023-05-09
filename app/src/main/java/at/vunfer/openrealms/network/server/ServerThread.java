@@ -242,8 +242,8 @@ public class ServerThread extends Thread {
                     createAddCardMessage(targetPlayerTurnNumber, DeckType.HAND, card.getId());
 
             try {
-                client.sendMessage(removeCardMsg);
-                client.sendMessage(addCardMsg);
+                sendMessageToAllClients(removeCardMsg);
+                sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -259,8 +259,8 @@ public class ServerThread extends Thread {
                     createAddCardMessage(targetPlayerTurnNumber, DeckType.DISCARD, card.getId());
 
             try {
-                client.sendMessage(removeCardMsg);
-                client.sendMessage(addCardMsg);
+                sendMessageToAllClients(removeCardMsg);
+                sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
