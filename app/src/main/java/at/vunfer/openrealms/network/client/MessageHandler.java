@@ -1,15 +1,14 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.client;
 
-import java.util.List;
-
 import at.vunfer.openrealms.UIUpdateListener;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
+import java.util.List;
 
 public class MessageHandler {
-    private UIUpdateListener uiUpdateListener;
+    public UIUpdateListener uiUpdateListener;
 
     public boolean handleMessage(Message message) {
         switch (message.getType()) {
@@ -30,20 +29,28 @@ public class MessageHandler {
         }
         return true;
     }
+
     private void handleAddCardMessage(Message message) {
         Card card = (Card) message.getData(DataKey.CARD_ID);
         uiUpdateListener.addCardToPlayArea(card);
     }
+
     private void handleRemoveCardMessage(Message message) {
         Card card = (Card) message.getData(DataKey.CARD_ID);
         uiUpdateListener.removeCardFromPlayArea(card);
     }
+
     private void handleChooseOptionMessage(Message message) {
         List<String> options = (List<String>) message.getData(DataKey.OPTIONS);
         String selectedOption = uiUpdateListener.displayOptions(options);
     }
+
     private void handleUpdatePlayerStatsMessage(Message message) {
-        //PlayerStats stats = (PlayerStats) message.getData();
+        // PlayerStats stats = (PlayerStats) message.getData();
         // uiUpdateListener.updatePlayerStats(stats); - not implemented
+    }
+
+    public void setListener(UIUpdateListener listener) {
+        this.uiUpdateListener = listener;
     }
 }
