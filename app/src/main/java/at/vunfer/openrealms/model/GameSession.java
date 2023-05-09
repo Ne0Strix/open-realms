@@ -32,6 +32,10 @@ public class GameSession {
         return currentPlayer;
     }
 
+    public int getPlayerTurnNumber(Player player) {
+        return players.indexOf(player);
+    }
+
     /**
      * Returns the opponent of the current player.
      *
