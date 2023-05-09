@@ -38,11 +38,11 @@ public class Message implements Serializable {
                 return value instanceof Integer;
             case DECK:
                 return value instanceof DeckType;
+            case OPTIONS:
             case CHOICE:
+                return value instanceof String;
             case PLAYER_STATS:
                 return value instanceof PlayerStats;
-            case OPTIONS:
-                return value instanceof String;
             case YOUR_TURN:
                 return value instanceof Boolean;
             case COLLECTION:

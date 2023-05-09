@@ -71,7 +71,8 @@ class MessageTest {
     @Test
     void testSetDataPlayerStats() {
         Message message = new Message(MessageType.UPDATE_PLAYER_STATS);
-        assertDoesNotThrow(() -> message.setData(DataKey.PLAYER_STATS, "invalid_player_stats"));
+        PlayerStats playerStats = new PlayerStats("Name", 70, 1, 2, 3);
+        assertDoesNotThrow(() -> message.setData(DataKey.PLAYER_STATS, playerStats));
         assertThrows(
                 IllegalArgumentException.class, () -> message.setData(DataKey.PLAYER_STATS, 5));
     }
@@ -109,8 +110,9 @@ class MessageTest {
     @Test
     void testGetDataPlayerStats() {
         Message message = new Message(MessageType.UPDATE_PLAYER_STATS);
-        message.setData(DataKey.PLAYER_STATS, "some stats");
-        assertEquals("some stats", message.getData(DataKey.PLAYER_STATS));
+        PlayerStats playerStats = new PlayerStats("Name", 70, 1, 3, 5);
+        message.setData(DataKey.PLAYER_STATS, playerStats);
+        assertEquals(playerStats, message.getData(DataKey.PLAYER_STATS));
     }
 
     @Test
