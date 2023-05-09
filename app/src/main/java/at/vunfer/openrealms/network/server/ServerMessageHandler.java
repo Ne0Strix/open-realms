@@ -32,14 +32,14 @@ public class ServerMessageHandler implements IHandleMessage {
                         Log.i(TAG, "Card " + cardId + "played successfully.");
                         try {
                             serverThread.sendMessageToAllClients(
-                                    serverThread.createAddCardMessage(
-                                            gameSession.getPlayerTurnNumber(currentPlayer),
-                                            DeckType.PLAYED,
-                                            cardId));
-                            serverThread.sendMessageToAllClients(
                                     serverThread.createRemoveCardMessage(
                                             gameSession.getPlayerTurnNumber(currentPlayer),
                                             DeckType.HAND,
+                                            cardId));
+                            serverThread.sendMessageToAllClients(
+                                    serverThread.createAddCardMessage(
+                                            gameSession.getPlayerTurnNumber(currentPlayer),
+                                            DeckType.PLAYED,
                                             cardId));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -49,13 +49,13 @@ public class ServerMessageHandler implements IHandleMessage {
                         Log.i(TAG, "Card " + cardId + "bought successfully.");
                         try {
                             serverThread.sendMessageToAllClients(
+                                    serverThread.createRemoveMarketCardMessage(
+                                            DeckType.FOR_PURCHASE, cardId));
+                            serverThread.sendMessageToAllClients(
                                     serverThread.createAddCardMessage(
                                             gameSession.getPlayerTurnNumber(currentPlayer),
                                             DeckType.DISCARD,
                                             cardId));
-                            serverThread.sendMessageToAllClients(
-                                    serverThread.createRemoveMarketCardMessage(
-                                            DeckType.FOR_PURCHASE, cardId));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
