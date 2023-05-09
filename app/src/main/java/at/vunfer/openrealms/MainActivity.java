@@ -148,6 +148,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     @Override
     public void updateUI(Message message) {}
 
+    @Override
+    public void addCardToPlayArea(Card card) {}
+
+    @Override
+    public void removeCardFromPlayArea(Card card) {}
+
+    @Override
+    public String displayOptions(List<String> options) {
+        return null;
+    }
+
     public void addPlaceholderCards() {
         // Add Cards to test functionality
         Deck<Card> playerStarterCards = new Deck<>();
