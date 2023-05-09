@@ -1,5 +1,5 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package at.vunfer.openrealms.model;
+package model;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ public class PlayArea {
         this.turnDamage = 0;
         this.turnHealing = 0;
         this.turnCoins = 0;
-        this.playedCards = new Deck<>();
-        this.playedChampions = new Deck<>();
+        this.playedCards = new Deck<Card>();
+        this.playedChampions = new Deck<Card>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
     }
@@ -54,35 +54,30 @@ public class PlayArea {
         return playedChampions;
     }
 
-    public Market getMarket() {
-        return market;
-    }
-
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
-        card.applyEffects(this);
     }
 
-    // commented out by since it is not used in first sprint
-    //    public Card useCardAllyEffect(Card card) {
-    //        return null;
-    //    }
-    //
-    //    public Card useCardSacrificeEffect(Card card) {
-    //        return null;
-    //    }
-    //
-    //    public Card useCardExpendEffect() {
-    //        return null;
-    //    }
-    //
-    //    public Card attackChampion(Champion champion, PlayArea playArea) {
-    //        return null;
-    //    }
-    //
-    //    public Card championIsAttacked(Champion champion) {
-    //        return null;
-    //    }
+    public Card useCardAllyEffect(Card card) {
+        return null;
+    }
+
+    public Card useCardSacrificeEffect(Card card) {
+        return null;
+    }
+
+    public Card useCardExpendEffect() {
+
+        return null;
+    }
+
+    public Card attackChampion(Champion champion, PlayArea playArea) {
+        return null;
+    }
+
+    public Card championIsAttacked(Champion champion) {
+        return null;
+    }
 
     public void resetTurnPool() {
         this.turnDamage = 0;
@@ -117,28 +112,5 @@ public class PlayArea {
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
-    }
-
-    // 0 - handcard to play, 1 - marketcard to buy, -1 - not found
-    public int playOrBuyCardById(int id) {
-        Card card;
-        for (Card c : playerCards.getHandCards()) {
-            if (c.getId() == id) {
-                card = c;
-                playCard(card);
-                return 0;
-            }
-        }
-
-        //search in market cards
-        for (Card c : market.getForPurchase()) {
-            if (c.getId() == id) {
-                card = c;
-                buyCard(card);
-                return 1;
-            }
-        }
-
-        return -1;
     }
 }

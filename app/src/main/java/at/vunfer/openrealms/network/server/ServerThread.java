@@ -10,6 +10,8 @@ import android.util.Log;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.model.PlayerFactory;
+import at.vunfer.openrealms.network.Message;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -128,5 +130,11 @@ public class ServerThread extends Thread {
 
     public GameSession getGameSession() {
         return gameSession;
+    }
+
+    public void sendMsgToAll(Message msg) throws IOException {
+        for (ClientHandler client : connections) {
+            client.sendMessage(msg);
+        }
     }
 }

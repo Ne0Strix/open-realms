@@ -12,8 +12,9 @@ public class Market {
     private static Market marketInstance;
     private static final int TOTAL_PURCHASABLE = 5;
     private static final String TAG = "Market";
-    Deck<Card> marketDeck;
-    Deck<Card> forPurchase;
+    // die zwei decks waren public. Ist es Absicht?
+    private Deck<Card> marketDeck;
+    private Deck<Card> forPurchase;
 
     private Market() {
         marketDeck = new Deck<>();
@@ -63,6 +64,7 @@ public class Market {
         return forPurchase;
     }
 
+    // karten nachziehen
     public int restock() {
         int restocked = 0;
         while (forPurchase.size() < TOTAL_PURCHASABLE) {

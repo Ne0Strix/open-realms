@@ -5,6 +5,7 @@ public enum DataKey {
     CARD_ID,
     DECK,
     CHOICE,
-    PLAYER_STATS,
-    OPTIONS
+    PLAYER_STATS,           //
+    OPTIONS,
+    TARGET_PLAYER
 }
