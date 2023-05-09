@@ -115,5 +115,18 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/card_view_back_of_card"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/card_view_background"
+        app:srcCompat="@drawable/cardback" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

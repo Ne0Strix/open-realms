@@ -28,24 +28,29 @@ import java.util.List;
 /** This class is used to represent a CardImageView. */
 public class CardView extends ConstraintLayout {
     private Card card;
+    private boolean isFaceUp = true;
     private boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
     private static final long holdTime = 250L;
     private static final String logTag = "CardView";
 
     public CardView(Context context) {
-        super(context);
-        init();
+        this(context, (AttributeSet) null);
     }
 
     public CardView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public CardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    public CardView(Context context, Card card) {
+        super(context);
+        init();
+        setCard(card);
     }
 
     public void init() {
@@ -66,6 +71,7 @@ public class CardView extends ConstraintLayout {
         ImageView cardBackground = findViewById(R.id.card_view_background);
         cardBackground.setOnTouchListener(
                 (view, motionEvent) -> {
+                    if (!isFaceUp) return false;
                     // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_UP:
@@ -171,18 +177,27 @@ public class CardView extends ConstraintLayout {
         // expand effects
     }
 
-    public CardView(Context context, Card card) {
-        super(context);
-        init();
-        setCard(card);
-    }
-
     public static List<CardView> getViewFromCards(Context context, List<Card> cards) {
         List<CardView> views = new ArrayList<>();
         for (Card c : cards) {
             views.add(new CardView(context, c));
         }
         return views;
+    }
+
+    public void setFaceUpOrDown(boolean faceDown) {
+        if (faceDown) setFaceDown();
+        else setFaceUp();
+    }
+
+    public void setFaceDown() {
+        isFaceUp = false;
+        findViewById(R.id.card_view_back_of_card).setVisibility(VISIBLE);
+    }
+
+    public void setFaceUp() {
+        isFaceUp = true;
+        findViewById(R.id.card_view_back_of_card).setVisibility(INVISIBLE);
     }
 
     /**
