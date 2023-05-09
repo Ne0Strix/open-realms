@@ -2,10 +2,12 @@
 package at.vunfer.openrealms.network;
 
 public enum DataKey {
-    CARD_ID,
-    DECK,
+    TARGET_PLAYER, // used to specify the target player of an action
+    CARD_ID, // used to specify the card id of an action
+    DECK, // used to specify the deck of an action, uses DeckType
     CHOICE,
-    PLAYER_STATS, //
+    PLAYER_STATS, // used to specify the player stats of a player
     OPTIONS,
-    TARGET_PLAYER
+    YOUR_TURN, // used to specify if it is the turn of the player
+    COLLECTION // carries the collection of cards
 }

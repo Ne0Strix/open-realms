@@ -13,7 +13,6 @@ import at.vunfer.openrealms.network.MessageType;
 import java.io.IOException;
 
 public class ServerMessageHandler implements IHandleMessage {
-
     private static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
 

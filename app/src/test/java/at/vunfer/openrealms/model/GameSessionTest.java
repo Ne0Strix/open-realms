@@ -24,6 +24,7 @@ public class GameSessionTest {
         player2 = PlayerFactory.createPlayer("Player 2");
         players = Arrays.asList(player1, player2);
         gameSession = new GameSession(players, player1);
+        Market.getInstance().setMarketDeck(Market.getInstance().getOldTestMarketDeck());
     }
 
     @Test
@@ -74,10 +75,19 @@ public class GameSessionTest {
         assertEquals(player1.getPlayArea().getTurnDamage(), 5);
         player1.getPlayArea().visitHealing(3);
         assertEquals(player1.getPlayArea().getTurnHealing(), 3);
+
+        int initialMarketSize = Market.getInstance().getCards().size();
+        Card cardToPurchase = Market.getInstance().getCards().get(0);
+        int cardToPurchaseCost = cardToPurchase.getCost();
+        player1.getPlayArea().visitCoin(cardToPurchaseCost);
+        player1.getPlayArea().buyCard(cardToPurchase);
+        assertEquals(initialMarketSize - 1, Market.getInstance().getCards().size());
+
         gameSession.endTurn();
         assertEquals(player2, gameSession.getCurrentPlayer());
         assertEquals(initialPlayer2Health - 5, player2.getPlayArea().getHealth());
         assertEquals(initialPlayer1Health + 3, player1.getPlayArea().getHealth());
+        assertEquals(Market.getInstance().forPurchase.size(), initialMarketSize);
     }
 
     @Test

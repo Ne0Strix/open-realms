@@ -7,6 +7,12 @@ public class Player {
     private String playerName;
     private PlayArea playArea;
 
+    /**
+     * Constructor for Player class.
+     *
+     * @param playerName the name of the player
+     * @param playArea the play area of the player
+     */
     public Player(String playerName, PlayArea playArea) {
         this.playerName = playerName;
         this.playArea = playArea;
@@ -28,6 +34,11 @@ public class Player {
         this.playArea = playArea;
     }
 
+    /**
+     * Returns the player name
+     *
+     * @return the player name
+     */
     @NonNull @Override
     public String toString() {
         return getPlayerName();

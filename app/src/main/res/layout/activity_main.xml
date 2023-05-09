@@ -2,32 +2,109 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/play_area"
+    android:id="@+id/game_area"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/playarea"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
+    <at.vunfer.openrealms.view.HandView
+        android:id="@+id/player_hand_view"
+        android:layout_width="541dp"
+        android:layout_height="116dp"
+        android:gravity="bottom|center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+
+    </at.vunfer.openrealms.view.HandView>
+
+    <at.vunfer.openrealms.view.HandView
+        android:id="@+id/opponent_hand_view"
+        android:layout_width="541dp"
+        android:layout_height="116dp"
+        android:gravity="bottom|center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            layout="@layout/market_view"
-            android:layout_width="match_parent"
-            android:layout_height="323dp" />
+    </at.vunfer.openrealms.view.HandView>
 
-        <include
-            layout="@layout/hand_view"
-            android:layout_width="match_parent"
-            android:layout_height="201dp" />
+    <at.vunfer.openrealms.view.MarketView
+        android:id="@+id/market_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    <at.vunfer.openrealms.view.CardView
+        android:id="@+id/fullscreen_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="3"
+        android:scaleY="3"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </at.vunfer.openrealms.view.CardView>
+
+    <ScrollView
+        android:layout_width="88dp"
+        android:layout_height="248dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.57">
+
+
+            <at.vunfer.openrealms.view.PlayAreaView
+                android:id="@+id/play_area_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+    </ScrollView>
+
+    <at.vunfer.openrealms.view.DiscardPileView
+        android:id="@+id/opponent_discard_pile_view"
+        android:layout_width="77dp"
+        android:layout_height="106dp"
+        android:layout_marginBottom="116dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/player_hand_view"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </at.vunfer.openrealms.view.DiscardPileView>
+
+    <at.vunfer.openrealms.view.DiscardPileView
+        android:id="@+id/player_discard_pile_view"
+        android:layout_width="77dp"
+        android:layout_height="106dp"
+        app:layout_constraintBottom_toTopOf="@+id/opponent_discard_pile_view"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </at.vunfer.openrealms.view.DiscardPileView>
+
+    <at.vunfer.openrealms.view.DeckView
+        android:id="@+id/player_deck_view"
+        android:layout_width="77dp"
+        android:layout_height="106dp"
+        app:layout_constraintBottom_toTopOf="@+id/player_hand_view"
+        app:layout_constraintStart_toEndOf="@+id/opponent_discard_pile_view" >
+
+    </at.vunfer.openrealms.view.DeckView>
+
+    <at.vunfer.openrealms.view.DeckView
+        android:id="@+id/opponent_deck_view"
+        android:layout_width="77dp"
+        android:layout_height="106dp"
+        app:layout_constraintBottom_toTopOf="@+id/player_deck_view"
+        app:layout_constraintStart_toEndOf="@+id/player_discard_pile_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

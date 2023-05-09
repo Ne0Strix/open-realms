@@ -1,30 +1,20 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.content.Context;
-import android.widget.ImageView;
-import at.vunfer.openrealms.R;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Card {
+public class Card implements Serializable {
     private static int idCounter = 0;
-    private int id;
     private final String name;
     private final int cost;
     private final List<Effect> effects;
+    private int id;
+    private static Deck<Card> fullCardCollection = new Deck<>();
 
-    private final int imageResource;
-    private final String description;
-    private ImageView cardImage;
-
-    public Card(Context context) {
-        this.name = "Empty Card";
-        this.cost = 0;
-        this.effects = new ArrayList<>();
-        this.imageResource = R.drawable.emptycards;
-        this.cardImage = new ImageView(context);
-        this.description = "";
+    public Card(Card c) {
+        this(c.name, c.cost, new ArrayList<>(c.effects));
     }
 
     public Card(String name, int cost, List<Effect> effects) throws IllegalArgumentException {
@@ -39,8 +29,7 @@ public class Card {
         this.cost = cost;
         this.effects = effects;
         this.id = idCounter++;
-        this.imageResource = R.drawable.emptycards;
-        this.description = this.toString();
+        fullCardCollection.add(this);
     }
 
     public String getName() {
@@ -63,7 +52,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + "}";
+        return "Card{" + "name='" + name + '\'' + ", cost=" + cost + ", effects=" + effects + '}';
     }
 
     public boolean isIdentical(Card c) {
@@ -71,23 +60,20 @@ public class Card {
         return cost == c.cost && name.equals(c.name) && effects.equals(c.effects);
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public int getImageResource() {
-        return imageResource;
-    }
-
-    public ImageView getCardImage() {
-        return cardImage;
-    }
-
-    public void setCardImage(ImageView cardImage) {
-        this.cardImage = cardImage;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public static Deck<Card> getFullCardCollection() {
+        return fullCardCollection;
+    }
+
+    public static Card getCardById(int id) {
+        for (Card c : fullCardCollection) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
     }
 }

@@ -1,65 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="8dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="77dp"
+    android:layout_height="106dp"
+    android:contextClickable="true">
+
+    <ImageView
+        android:id="@+id/card_view_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:contentDescription="@string/card_image"
+        android:scaleType="fitXY"
+        android:src="@drawable/emptycards"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/card_image"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:src="@drawable/emptycards"
-            android:clickable="true"
-            android:scaleType="fitCenter" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10" />
 
-        <TextView
-            android:id="@+id/card_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/card_image"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="95"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/card_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/card_title"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:maxLines="4"
-            android:text="@string/card_description"
-            android:textAlignment="center"
-            android:textSize="12sp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3" />
 
-        <TextView
-            android:id="@+id/card_cost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:padding="4dp"
-            android:text="@string/cost"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/card_view_cost"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="2"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/card_view_name"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="10"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:maxLines="2"
+                    android:text="TEST"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/card_view_synergy_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    app:srcCompat="@drawable/effect_icon_coin" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/card_view_image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="25"
+                android:contentDescription="@string/card_image"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/playarea" />
+
+            <LinearLayout
+                android:id="@+id/card_view_effectArea"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="25"
+                android:orientation="vertical" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8" />
+
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

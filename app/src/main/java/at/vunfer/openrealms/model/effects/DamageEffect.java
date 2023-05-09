@@ -3,9 +3,10 @@ package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class DamageEffect implements Effect {
+public class DamageEffect implements Effect, Serializable {
 
     private final int damage;
 
@@ -14,6 +15,10 @@ public class DamageEffect implements Effect {
             throw new IllegalArgumentException("Damage must not be negative");
         }
         this.damage = damage;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
     @Override
@@ -37,10 +42,5 @@ public class DamageEffect implements Effect {
     @Override
     public int hashCode() {
         return Objects.hash(damage);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Deals " + damage + " damage.";
     }
 }

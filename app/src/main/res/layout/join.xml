@@ -35,7 +35,7 @@
         />
 
     <Button
-        android:id="@+id/send_message"
+        android:id="@+id/join"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -46,15 +46,27 @@
         app:layout_constraintTop_toBottomOf="@id/get_text" />
 
     <Button
-        android:id="@+id/toMainMenu"
+        android:id="@+id/joinGameClient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:onClick="startGame"
+        android:text="Start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/get_text"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/toMainMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
         android:onClick="toMainMenu"
         android:text="Back to Main Menu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/send_message" />
+        app:layout_constraintTop_toBottomOf="@id/join" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

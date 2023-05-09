@@ -3,9 +3,10 @@ package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class HealingEffect implements Effect {
+public class HealingEffect implements Effect, Serializable {
     private final int healing;
 
     public HealingEffect(int healing) {
@@ -13,6 +14,10 @@ public class HealingEffect implements Effect {
             throw new IllegalArgumentException("Healing must not be negative");
         }
         this.healing = healing;
+    }
+
+    public int getHealing() {
+        return healing;
     }
 
     @Override
@@ -36,10 +41,5 @@ public class HealingEffect implements Effect {
     @Override
     public int hashCode() {
         return Objects.hash(healing);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Heals the player for " + healing + " points.";
     }
 }

@@ -3,9 +3,10 @@ package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class CoinEffect implements Effect {
+public class CoinEffect implements Effect, Serializable {
 
     private final int coin;
 
@@ -14,6 +15,10 @@ public class CoinEffect implements Effect {
             throw new IllegalArgumentException("Coin must not be negative");
         }
         this.coin = coin;
+    }
+
+    public int getCoin() {
+        return coin;
     }
 
     @Override
@@ -37,10 +42,5 @@ public class CoinEffect implements Effect {
     @Override
     public int hashCode() {
         return Objects.hash(coin);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Gain " + coin + " coins.";
     }
 }

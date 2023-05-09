@@ -2,8 +2,10 @@
 package at.vunfer.openrealms.network;
 
 public enum DeckType {
+    DECK,
     HAND,
-    MARKET, // oeffentlichen sichtbare karten (for Purchase)
-    PLAYED_CARDS,
-    DISCARDED
+    DISCARD,
+    PLAYED,
+    MARKET,
+    FOR_PURCHASE
 }
