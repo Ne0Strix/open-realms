@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.view;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -23,6 +24,10 @@ public class DeckView extends ConstraintLayout implements CardPileView {
     public DeckView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         inflate(context, R.layout.deck_view, this);
+
+        TextView outline = findViewById(R.id.deck_view_amount_outline);
+        outline.getPaint().setStrokeWidth(5);
+        outline.getPaint().setStyle(Paint.Style.STROKE);
     }
 
     @Override
@@ -34,5 +39,8 @@ public class DeckView extends ConstraintLayout implements CardPileView {
         }
         TextView txtAmount = findViewById(R.id.deck_view_amount);
         txtAmount.setText("" + cardsToDisplay.size());
+
+        TextView txtAmountOutline = findViewById(R.id.deck_view_amount_outline);
+        txtAmountOutline.setText("" + cardsToDisplay.size());
     }
 }

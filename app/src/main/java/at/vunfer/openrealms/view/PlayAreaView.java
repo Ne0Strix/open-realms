@@ -15,7 +15,7 @@ import java.util.List;
 /** View class for the play area. */
 public class PlayAreaView extends LinearLayout implements CardPileView {
     private final float screenDensity;
-    private static final float CARD_SCALE = 0.6f;
+    private static final float CARD_SCALE = 0.8f;
     /**
      * Constructor for PlayAreaView.
      *

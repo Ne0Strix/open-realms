@@ -3,12 +3,15 @@ package at.vunfer.openrealms.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.LinearLayout;
 import at.vunfer.openrealms.view.view_interfaces.CardPileView;
 import java.util.List;
 
 /** View class for the Market. */
 public class MarketView extends LinearLayout implements CardPileView {
+    private static final float CARD_SCALE = 1f;
+    private float screenDensity;
 
     public MarketView(Context context) {
         this(context, null);
@@ -24,7 +27,10 @@ public class MarketView extends LinearLayout implements CardPileView {
     }
 
     /** Constructor for the MarketView class. */
-    public void init() {}
+    public void init() {
+        screenDensity = getResources().getDisplayMetrics().density;
+        setGravity(Gravity.CENTER);
+    }
 
     /** Show the market */
     @Override
@@ -32,6 +38,15 @@ public class MarketView extends LinearLayout implements CardPileView {
         removeAllViews();
         for (CardView card : cards) {
             card.setFaceUp();
+
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(
+                            (int) (CARD_SCALE * screenDensity * 77),
+                            (int) (CARD_SCALE * screenDensity * 106));
+            params.leftMargin = 20;
+            params.rightMargin = 20;
+            card.setLayoutParams(params);
+
             addView(card);
         }
     }
