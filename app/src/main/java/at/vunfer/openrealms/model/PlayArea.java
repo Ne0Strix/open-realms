@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ public class PlayArea {
     private int turnHealing;
     private int turnCoins;
     private int id;
+    private static final String TAG = "PlayArea";
 
     private Market market;
     private Deck<Card> playedCards;
@@ -121,6 +123,7 @@ public class PlayArea {
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
         card.applyEffects(this);
+        Log.i(TAG, "Card " + card.getId() + "played successfully.");
     }
 
     // commented out by since it is not used in first sprint
@@ -193,6 +196,7 @@ public class PlayArea {
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
+        Log.i(TAG, "Card " + card.getId() + "bought successfully.");
     }
 
     public int playCardById(int id) {
@@ -201,7 +205,14 @@ public class PlayArea {
             if (c.getId() == id) {
                 card = c;
                 playCard(card);
-                return card.getId();
+                return 0;
+            }
+        }
+        for (Card c : market.getForPurchase()) {
+            if (c.getId() == id) {
+                card = c;
+                buyCard(card);
+                return 1;
             }
         }
         return -1;

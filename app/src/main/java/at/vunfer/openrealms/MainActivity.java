@@ -259,9 +259,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                 }
                 break;
             case PLAYED:
-                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
-                    playAreaPresenter.addCardToView(card);
-                }
+                playAreaPresenter.addCardToView(card);
                 break;
             case FOR_PURCHASE:
                 marketPresenter.addCardToView(card);
@@ -278,21 +276,21 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                 if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
                     playerDeckPresenter.removeCardFromView(card);
                 } else {
-                    opponentDeckPresenter.addCardToView(card);
+                    opponentDeckPresenter.removeCardFromView(card);
                 }
                 break;
             case HAND:
                 if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
                     playerHandPresenter.removeCardFromView(card);
                 } else {
-                    opponentHandPresenter.addCardToView(card);
+                    opponentHandPresenter.removeCardFromView(card);
                 }
                 break;
             case DISCARD:
                 if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
                     playerDiscardPilePresenter.removeCardFromView(card);
                 } else {
-                    opponentDiscardPilePresenter.addCardToView(card);
+                    opponentDiscardPilePresenter.removeCardFromView(card);
                 }
                 break;
             case PLAYED:

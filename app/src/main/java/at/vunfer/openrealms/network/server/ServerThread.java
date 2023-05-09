@@ -52,8 +52,8 @@ public class ServerThread extends Thread {
             Log.i(TAG, "Server reachable under: " + ipAddr + ":" + serverSocket.getLocalPort());
             connections.add(new ClientHandler(serverSocket.accept()));
             Log.i(TAG, "Local client connected!");
-            // connections.add(new ClientHandler(serverSocket.accept()));
-            // Log.i(TAG, "Remote client connected!");
+            connections.add(new ClientHandler(serverSocket.accept()));
+            Log.i(TAG, "Remote client connected!");
         } catch (IOException ex) {
             Log.e(TAG, "IO Exception on Server!");
             ex.printStackTrace();
@@ -118,6 +118,12 @@ public class ServerThread extends Thread {
 
     public InetAddress getLocalAddress() {
         return serverSocket.getInetAddress();
+    }
+
+    public void sendMessageToAllClients(Message message) throws IOException {
+        for (ClientHandler client : connections) {
+            client.sendMessage(message);
+        }
     }
 
     public String getIpAddr() {
@@ -227,8 +233,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    private Message createAddCardMessage(
-            int targetPlayerTurnNumber, DeckType deckType, int cardId) {
+    public Message createAddCardMessage(int targetPlayerTurnNumber, DeckType deckType, int cardId) {
         Message addCardMsg = new Message(MessageType.ADD_CARD);
         addCardMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
         addCardMsg.setData(DataKey.DECK, deckType);
@@ -236,7 +241,7 @@ public class ServerThread extends Thread {
         return addCardMsg;
     }
 
-    private Message createRemoveCardMessage(
+    public Message createRemoveCardMessage(
             int targetPlayerTurnNumber, DeckType deckType, int cardId) {
         Message removeCardMsg = new Message(MessageType.REMOVE_CARD);
         removeCardMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
@@ -259,14 +264,14 @@ public class ServerThread extends Thread {
         }
     }
 
-    private Message createAddMarketCardMessage(DeckType deckType, int cardId) {
+    public Message createAddMarketCardMessage(DeckType deckType, int cardId) {
         Message addCardMsg = new Message(MessageType.ADD_CARD);
         addCardMsg.setData(DataKey.DECK, deckType);
         addCardMsg.setData(DataKey.CARD_ID, cardId);
         return addCardMsg;
     }
 
-    private Message createRemoveMarketCardMessage(DeckType deckType, int cardId) {
+    public Message createRemoveMarketCardMessage(DeckType deckType, int cardId) {
         Message removeCardMsg = new Message(MessageType.REMOVE_CARD);
         removeCardMsg.setData(DataKey.DECK, deckType);
         removeCardMsg.setData(DataKey.CARD_ID, cardId);
