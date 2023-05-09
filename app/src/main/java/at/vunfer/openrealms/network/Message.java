@@ -33,13 +33,13 @@ public class Message implements Serializable {
 
     private boolean validateData(DataKey key, Object value) {
         switch (key) {
-            case CARD_ID:
             case TARGET_PLAYER:
+            case CARD_ID:
                 return value instanceof Integer;
             case DECK:
                 return value instanceof DeckType;
-            case OPTIONS:
             case CHOICE:
+            case OPTIONS:
                 return value instanceof String;
             case PLAYER_STATS:
                 return value instanceof PlayerStats;
