@@ -104,6 +104,7 @@ public class CardView extends ConstraintLayout {
                             isBeingHeld = false;
                             break;
                         case MotionEvent.ACTION_CANCEL:
+                            isBeingHeld = false;
                             resetFullscreen();
                             break;
                         case MotionEvent.ACTION_DOWN:
