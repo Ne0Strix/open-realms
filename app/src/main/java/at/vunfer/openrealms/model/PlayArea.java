@@ -130,7 +130,7 @@ public class PlayArea {
             }
         }
 
-        //search in market cards
+        // search in market cards
         for (Card c : market.getForPurchase()) {
             if (c.getId() == id) {
                 card = c;

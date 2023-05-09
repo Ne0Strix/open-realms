@@ -2,9 +2,6 @@
 package at.vunfer.openrealms.network.server;
 
 import android.util.Log;
-
-import java.io.IOException;
-
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.model.Player;
@@ -13,6 +10,7 @@ import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.MessageType;
+import java.io.IOException;
 
 public class ServerMessageHandler implements IHandleMessage {
 
@@ -31,32 +29,30 @@ public class ServerMessageHandler implements IHandleMessage {
                 Player player = session.getCurrentPlayer();
                 PlayArea area = player.getPlayArea();
 
-                //play card
+                // play card
 
-                //0-handcard, 1-marketcard
+                // 0-handcard, 1-marketcard
                 int typeOfCard = area.playOrBuyCardById(cardId);
 
-                //send an answer back
-                //handcard
+                // send an answer back
+                // handcard
                 if (typeOfCard == 0) {
                     Message msg = new Message(MessageType.REMOVE_CARD);
                     msg.setData(DataKey.CARD_ID, cardId);
                     msg.setData(DataKey.DECK, DeckType.HAND);
                     try {
                         serverThread.sendMsgToAll(msg);
-                    }
-                    catch (IOException ex) {
+                    } catch (IOException ex) {
                         Log.e("Error", "IO Exception!");
                     }
 
                     Message msg2 = new Message(MessageType.ADD_CARD);
                     msg2.setData(DataKey.CARD_ID, cardId);
                     msg2.setData(DataKey.DECK, DeckType.PLAYED_CARDS);
-                    //msg2.setData(DataKey.TARGET_PLAYER, player.);
+                    // msg2.setData(DataKey.TARGET_PLAYER, player.);
                     try {
                         serverThread.sendMsgToAll(msg2);
-                    }
-                    catch (IOException ex) {
+                    } catch (IOException ex) {
                         Log.e("Error", "IO Exception!");
                     }
 
@@ -66,8 +62,7 @@ public class ServerMessageHandler implements IHandleMessage {
                     msg.setData(DataKey.DECK, DeckType.MARKET);
                     try {
                         serverThread.sendMsgToAll(msg);
-                    }
-                    catch (IOException ex) {
+                    } catch (IOException ex) {
                         Log.e("Error", "IO Exception!");
                     }
 
@@ -76,8 +71,7 @@ public class ServerMessageHandler implements IHandleMessage {
                     msg2.setData(DataKey.DECK, DeckType.DISCARDED);
                     try {
                         serverThread.sendMsgToAll(msg);
-                    }
-                    catch (IOException ex) {
+                    } catch (IOException ex) {
                         Log.e("Error", "IO Exception!");
                     }
                 }
