@@ -278,17 +278,23 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             case DECK:
                 if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
                     playerDeckPresenter.removeCardFromView(card);
+                } else {
+                    opponentDeckPresenter.addCardToView(card);
                 }
                 break;
             case HAND:
                 if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
                     playerHandPresenter.removeCardFromView(card);
+                } else {
+                    opponentHandPresenter.addCardToView(card);
                 }
                 break;
             case DISCARD:
                 if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
 
                     playerDiscardPilePresenter.removeCardFromView(card);
+                } else {
+                    opponentDiscardPilePresenter.addCardToView(card);
                 }
                 break;
             case PLAYED:
