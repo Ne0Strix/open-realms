@@ -34,6 +34,11 @@ public class Communication {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    //                    try {
+                    //                        sleep(100);
+                    //                    } catch (InterruptedException e) {
+                    //                        throw new RuntimeException(e);
+                    //                    }
                 });
         Log.i(TAG, "Sent: " + msg.getType());
     }

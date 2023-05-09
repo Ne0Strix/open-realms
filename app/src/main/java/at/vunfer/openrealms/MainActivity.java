@@ -170,7 +170,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     @Override
     public void updateUI(Message message) {
-        Log.i(TAG, "Received message of type: " + message.getType());
+        Log.i(
+                TAG,
+                "Received message of type: "
+                        + message.getType()
+                        + " Card ID: "
+                        + message.getData(DataKey.CARD_ID)
+                        + " Deck: "
+                        + message.getData(DataKey.DECK));
         runOnUiThread(
                 new Runnable() {
                     @Override
@@ -294,9 +301,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                 }
                 break;
             case PLAYED:
-                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
-                    playAreaPresenter.removeCardFromView(card);
-                }
+                playAreaPresenter.removeCardFromView(card);
                 break;
             case FOR_PURCHASE:
                 marketPresenter.removeCardFromView(card);

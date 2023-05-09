@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import java.util.List;
 
 public class GameSession {
@@ -58,17 +59,24 @@ public class GameSession {
      * opponent and heals the current player.
      */
     public void endTurn() {
+        Log.i("Game Session", "1");
         dealDamage(
                 getOpponent(currentPlayer),
                 currentPlayer
                         .getPlayArea()
                         .getTurnDamage()); // deal damage to player next in line, since in this
         // version there will only be 2 players
+        Log.i("Game Session", "2");
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
+        Log.i("Game Session", "3");
         currentPlayer.getPlayArea().resetTurnPool();
+        Log.i("Game Session", "4");
         market.restock();
+        Log.i("Game Session", "5");
         currentPlayer.getPlayArea().getPlayerCards().restockHand();
+        Log.i("Game Session", "before next player");
         nextPlayer();
+        Log.i("Game Session", "after next player");
     }
 
     /**

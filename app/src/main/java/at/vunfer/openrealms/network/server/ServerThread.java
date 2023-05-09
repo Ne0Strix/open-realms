@@ -234,7 +234,6 @@ public class ServerThread extends Thread {
     }
 
     public void dealHandCardsBasedOnTurnNumber(int targetPlayerTurnNumber, Player player) {
-        ClientHandler client = connections.get(targetPlayerTurnNumber);
         for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
             Message removeCardMsg =
                     createRemoveCardMessage(targetPlayerTurnNumber, DeckType.DECK, card.getId());
@@ -250,11 +249,23 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void discardHandCards(int targetPlayerTurnNumber, Player player) {
-        ClientHandler client = connections.get(targetPlayerTurnNumber);
+    public void discardCardsAfterTurn(int targetPlayerTurnNumber, Player player) {
         for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
             Message removeCardMsg =
                     createRemoveCardMessage(targetPlayerTurnNumber, DeckType.HAND, card.getId());
+            Message addCardMsg =
+                    createAddCardMessage(targetPlayerTurnNumber, DeckType.DISCARD, card.getId());
+
+            try {
+                sendMessageToAllClients(removeCardMsg);
+                sendMessageToAllClients(addCardMsg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for (Card card : player.getPlayArea().getPlayedCards()) {
+            Message removeCardMsg =
+                    createRemoveCardMessage(targetPlayerTurnNumber, DeckType.PLAYED, card.getId());
             Message addCardMsg =
                     createAddCardMessage(targetPlayerTurnNumber, DeckType.DISCARD, card.getId());
 
@@ -301,12 +312,12 @@ public class ServerThread extends Thread {
 
     private void dealMarketCardsToPurchaseArea(ClientHandler client) {
         for (Card card : Market.getInstance().getForPurchase()) {
-            Message addCardMsg = createAddMarketCardMessage(DeckType.FOR_PURCHASE, card.getId());
             Message removeCardMsg = createRemoveMarketCardMessage(DeckType.MARKET, card.getId());
+            Message addCardMsg = createAddMarketCardMessage(DeckType.FOR_PURCHASE, card.getId());
 
             try {
-                client.sendMessage(addCardMsg);
                 client.sendMessage(removeCardMsg);
+                client.sendMessage(addCardMsg);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

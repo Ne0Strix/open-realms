@@ -106,9 +106,11 @@ public class PlayerCards {
         Log.i(TAG, "Restocking hand.");
         Log.i(TAG, "Discarding all cards from hand.");
         for (int i = this.handCards.size() - 1; i >= 0; i--) {
+            Log.i("PlayerCards", "Loop 1");
             discardedCards.add(this.popFromHand(this.getHandCards().get(i)));
-            Log.i(TAG, "Discarded card " + this.getHandCards().get(i).getName() + " from hand.");
+            // Log.i(TAG, "Discarded card " + this.getHandCards().get(i).getName() + " from hand.");
         }
+        Log.i("PlayerCards", "1");
 
         if (deckCards.size() < HANDSIZE) {
             Log.i(TAG, "Deck is empty. Restocking deck.");

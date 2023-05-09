@@ -1,6 +1,8 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server;
 
+import static java.lang.Thread.sleep;
+
 import android.util.Log;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.PlayArea;
@@ -29,7 +31,7 @@ public class ServerMessageHandler implements IHandleMessage {
                 int cardType = currentPlayerPlayArea.playCardById(cardId);
                 switch (cardType) {
                     case 0:
-                        Log.i(TAG, "Card " + cardId + "played successfully.");
+                        Log.i(TAG, "Card " + cardId + " played successfully.");
                         try {
                             serverThread.sendMessageToAllClients(
                                     serverThread.createRemoveCardMessage(
@@ -50,7 +52,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         }
                         break;
                     case 1:
-                        Log.i(TAG, "Card " + cardId + "bought successfully.");
+                        Log.i(TAG, "Card " + cardId + " bought successfully.");
                         try {
                             serverThread.sendMessageToAllClients(
                                     serverThread.createRemoveMarketCardMessage(
@@ -84,9 +86,20 @@ public class ServerMessageHandler implements IHandleMessage {
                                         .getPlayerCards()
                                         .getHandCards()
                                         .size());
-                serverThread.discardHandCards(
+                serverThread.discardCardsAfterTurn(
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
+                Log.i(TAG, "before Sleep before endTurn() called.");
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                }
+                Log.i(TAG, "Sleep before endTurn() called.");
                 gameSession.endTurn();
+                Log.i(TAG, "endTurn() called.");
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                }
                 Log.i(
                         TAG,
                         "Size deck after restock: "
@@ -98,11 +111,14 @@ public class ServerMessageHandler implements IHandleMessage {
                 try {
                     serverThread.dealHandCardsBasedOnTurnNumber(
                             gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
+                    Log.i(TAG, "dealHandCardsBasedOnTurnNumber called.");
                     serverThread.sendMessageToAllClients(
                             serverThread.createPlayerStatsMessage(
                                     gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+                    Log.i(TAG, "createPlayerStatsMessage called.");
                     serverThread.sendTurnNotificationToAllClients(
                             gameSession.getPlayerTurnNumber(currentPlayer));
+                    Log.i(TAG, "sendTurnNotificationToAllClients called.");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
