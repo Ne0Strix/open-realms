@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,7 +27,7 @@ import java.util.List;
 public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isFaceUp = true;
-    private boolean isBeingHeld = false;
+    public boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
     private static final long holdTime = 250L;
     private static final String logTag = "CardView";
@@ -77,48 +76,41 @@ public class CardView extends ConstraintLayout {
     @SuppressLint("ClickableViewAccessibility")
     public void setUpListeners() {
         ImageView cardBackground = findViewById(R.id.card_view_background);
-        cardBackground.setOnTouchListener(
-                (view, motionEvent) -> {
-                    if (!isFaceUp) return false;
-                    // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_UP:
-                            if (motionEvent.getEventTime() - motionEvent.getDownTime()
-                                    <= holdTime) {
-                                int parentId = ((View) getParent()).getId();
-                                Log.i(
-                                        logTag,
-                                        "Sending: "
-                                                + card
-                                                + " from int id: "
-                                                + parentId
-                                                + " or String id "
-                                                + getResources().getResourceName(parentId));
-                                // TODO: implement message sending
-                                // TODO: remove temporary cardRemoval
-                            }
-                            isBeingHeld = false;
-                            resetFullscreen();
-                            handler.removeCallbacks(setFullscreen);
-                            break;
-                        case MotionEvent.ACTION_CANCEL:
-                            isBeingHeld = false;
-                            resetFullscreen();
-                            handler.removeCallbacks(setFullscreen);
-                            break;
-                        case MotionEvent.ACTION_DOWN:
-                            isBeingHeld = true;
-                            handler.postDelayed(setFullscreen, holdTime);
-                            break;
-                    }
-                    return false;
-                });
+        cardBackground.setOnTouchListener((view, motionEvent) -> onClick(motionEvent));
+    }
+
+    public boolean onClick(MotionEvent motionEvent) {
+        if (!isFaceUp) return false;
+        // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
+        switch (motionEvent.getAction()) {
+            case MotionEvent.ACTION_UP:
+                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= holdTime) {
+                    Log.i(logTag, "Sending: " + card);
+                    // TODO: implement message sending
+                    // TODO: remove temporary cardRemoval
+                }
+                isBeingHeld = false;
+                resetFullscreen();
+                handler.removeCallbacks(setFullscreen);
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                isBeingHeld = false;
+                resetFullscreen();
+                handler.removeCallbacks(setFullscreen);
+                break;
+            case MotionEvent.ACTION_DOWN:
+                isBeingHeld = true;
+                handler.postDelayed(setFullscreen, holdTime);
+                break;
+        }
+        return false;
     }
 
     /** Enables the FullscreenPreview */
     private void setFullscreen() {
         // Get the view for the Fullscreen_Card Object from RootView
         CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
+
         fullScreenCard.setCard(card);
         fullScreenCard.setVisibility(VISIBLE);
         // Make sure that the the Fullscreen_Card Object is drawn in front of everything

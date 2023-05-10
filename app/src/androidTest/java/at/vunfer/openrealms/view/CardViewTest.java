@@ -2,10 +2,11 @@
 package at.vunfer.openrealms.view;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -55,28 +56,80 @@ public class CardViewTest {
     }
 
     @Test
-    public void testClickCard() {
-        /*
-                Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-                Card exampleCard = new Card("CardName", 4, List.of(new CoinEffect(2)));
+    public void testFullscreenView() throws InterruptedException {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Card exampleCard = new Card("CardName", 4, List.of(new CoinEffect(2)));
 
-                LinearLayout l = new LinearLayout(targetContext);
-                CardView fullscreenView = spy(new CardView(targetContext));
-                fullscreenView.setId(R.id.fullscreen_card);
-                l.addView(fullscreenView);
+        CardView fullscreenView = new CardView(targetContext);
+        fullscreenView.setId(R.id.fullscreen_card);
 
-                CardView v = new CardView(targetContext,exampleCard);
-                CardView spyView = spy(v);
-                when(spyView.getRootView()).thenReturn(l);
+        CardView v = new CardView(targetContext, exampleCard);
+        ((ViewGroup) v.getRootView()).addView(fullscreenView);
 
-                onView(withId(R.id.card_view_background)).perform(ViewActions.long)
-                // PowerMockito.verifyPrivate(v).invoke("applyCardDetail");
+        MotionEvent down = MotionEvent.obtain(10, 10, MotionEvent.ACTION_DOWN, 0, 0, 0);
+        MotionEvent up = MotionEvent.obtain(10, 510, MotionEvent.ACTION_UP, 0, 0, 0);
 
-                //spyView.performClick();
+        v.onClick(down);
+        assertTrue(v.isBeingHeld);
+        Thread.sleep(500);
+        assertEquals(View.VISIBLE, fullscreenView.getVisibility());
+        v.onClick(up);
+        assertFalse(v.isBeingHeld);
+        assertEquals(View.INVISIBLE, fullscreenView.getVisibility());
+    }
 
-                verify(fullscreenView).setVisibility(View.VISIBLE);
-                // PowerMockito.verifyPrivate(v).invoke("setFullscreen");
-        */
+    @Test
+    public void testShortClick() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Card exampleCard = new Card("CardName", 4, List.of(new CoinEffect(2)));
+
+        CardView v = new CardView(targetContext, exampleCard);
+
+        MotionEvent down = MotionEvent.obtain(10, 10, MotionEvent.ACTION_DOWN, 0, 0, 0);
+        MotionEvent up = MotionEvent.obtain(10, 20, MotionEvent.ACTION_UP, 0, 0, 0);
+
+        v.onClick(down);
+        assertTrue(v.isBeingHeld);
+
+        v.onClick(up);
+        assertFalse(v.isBeingHeld);
+    }
+
+    @Test
+    public void testAbortWithCancelAction() throws InterruptedException {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Card exampleCard = new Card("CardName", 4, List.of(new CoinEffect(2)));
+
+        CardView fullscreenView = new CardView(targetContext);
+        fullscreenView.setId(R.id.fullscreen_card);
+
+        CardView v = new CardView(targetContext, exampleCard);
+        ((ViewGroup) v.getRootView()).addView(fullscreenView);
+
+        MotionEvent down = MotionEvent.obtain(10, 10, MotionEvent.ACTION_DOWN, 0, 0, 0);
+        MotionEvent up = MotionEvent.obtain(10, 510, MotionEvent.ACTION_CANCEL, 0, 0, 0);
+
+        v.onClick(down);
+        assertTrue(v.isBeingHeld);
+        Thread.sleep(500);
+        assertEquals(View.VISIBLE, fullscreenView.getVisibility());
+        v.onClick(up);
+        assertFalse(v.isBeingHeld);
+        assertEquals(View.INVISIBLE, fullscreenView.getVisibility());
+    }
+
+    @Test
+    public void testClickOnFaceDownCard() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Card exampleCard = new Card("CardName", 4, List.of(new CoinEffect(2)));
+
+        CardView v = new CardView(targetContext, exampleCard);
+        v.setFaceDown();
+
+        MotionEvent down = MotionEvent.obtain(10, 10, MotionEvent.ACTION_DOWN, 0, 0, 0);
+
+        v.onClick(down);
+        assertFalse(v.isBeingHeld);
     }
 
     @Test
