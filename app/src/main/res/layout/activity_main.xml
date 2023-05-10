@@ -8,6 +8,8 @@
     android:background="@drawable/playarea"
     tools:context=".MainActivity">
 
+
+
     <at.vunfer.openrealms.view.HandView
         android:id="@+id/player_hand_view"
         android:layout_width="541dp"
@@ -106,5 +108,40 @@
         android:layout_height="106dp"
         app:layout_constraintBottom_toTopOf="@+id/player_deck_view"
         app:layout_constraintStart_toEndOf="@+id/player_discard_pile_view" />
+
+    <Button
+        android:id="@+id/end_turn_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Turn"
+        android:onClick="endTurn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"/>
+
+    <ImageView
+        android:id="@+id/victory_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        android:src="@drawable/victory_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/defeat_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        android:src="@drawable/defeat_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

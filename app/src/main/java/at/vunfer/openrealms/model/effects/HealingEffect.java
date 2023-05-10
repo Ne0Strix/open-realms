@@ -3,9 +3,10 @@ package at.vunfer.openrealms.model.effects;
 
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.PlayArea;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class HealingEffect implements Effect {
+public class HealingEffect implements Effect, Serializable {
     private final int healing;
 
     public HealingEffect(int healing) {

@@ -8,10 +8,13 @@ import java.util.List;
  * for manipulating it.
  */
 public class PlayArea {
+    private static int idCounter = 0;
     private int health;
     private int turnDamage;
     private int turnHealing;
     private int turnCoins;
+    private int id;
+    private static final String TAG = "PlayArea";
 
     private Market market;
     private Deck<Card> playedCards;
@@ -119,6 +122,16 @@ public class PlayArea {
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
         card.applyEffects(this);
+        for (Card c : playedCards) {}
+    }
+
+    public void clearPlayedCards() {
+
+        for (int i = playedCards.size() - 1; i >= 0; i--) {
+            Card c = playedCards.get(i);
+            playedCards.remove(c);
+            playerCards.getDiscardedCards().add(c);
+        }
     }
 
     // commented out by since it is not used in first sprint
@@ -184,12 +197,39 @@ public class PlayArea {
         turnHealing += healing;
     }
 
-    public void buyCard(Card card) throws IllegalArgumentException {
+    public boolean buyCard(Card card) throws IllegalArgumentException {
         if (this.turnCoins < card.getCost()) {
-            throw new IllegalArgumentException("Not enough coins this turn");
+            return false;
+            // throw new IllegalArgumentException("Not enough coins this turn");
         }
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
+        return true;
+    }
+
+    public int playCardById(int id) {
+        Card card;
+        for (Card c : playerCards.getHandCards()) {
+            if (c.getId() == id) {
+                card = c;
+                playCard(card);
+                return 0;
+            }
+        }
+        for (Card c : market.getForPurchase()) {
+            if (c.getId() == id) {
+                card = c;
+                if (buyCard(card)) {
+                    return 1;
+                }
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    public int getId() {
+        return id;
     }
 }

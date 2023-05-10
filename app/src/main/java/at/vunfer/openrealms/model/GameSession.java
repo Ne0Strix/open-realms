@@ -6,6 +6,7 @@ import java.util.List;
 public class GameSession {
     private List<Player> players;
     private Player currentPlayer;
+    private Market market;
 
     /**
      * Constructs a GameSession with a list of players and the current player.
@@ -20,6 +21,7 @@ public class GameSession {
         }
         this.players = players;
         this.currentPlayer = currentPlayer;
+        market = Market.getInstance();
     }
 
     public List<Player> getPlayers() {
@@ -28,6 +30,10 @@ public class GameSession {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public int getPlayerTurnNumber(Player player) {
+        return players.indexOf(player);
     }
 
     /**
@@ -51,7 +57,8 @@ public class GameSession {
      * Ends the turn of the current player and switches to the next player. Deals damage to the
      * opponent and heals the current player.
      */
-    public void endTurn() {
+    public Deck<Card> endTurn() {
+        Deck<Card> restockedFromDiscarded = new Deck<>();
         dealDamage(
                 getOpponent(currentPlayer),
                 currentPlayer
@@ -60,7 +67,11 @@ public class GameSession {
         // version there will only be 2 players
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
         currentPlayer.getPlayArea().resetTurnPool();
+        market.restock();
+        currentPlayer.getPlayArea().clearPlayedCards();
+        restockedFromDiscarded = currentPlayer.getPlayArea().getPlayerCards().restockHand();
         nextPlayer();
+        return restockedFromDiscarded;
     }
 
     /**
