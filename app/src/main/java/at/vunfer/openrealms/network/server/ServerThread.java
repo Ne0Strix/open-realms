@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.DeckGenerator;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Market;
@@ -268,6 +269,23 @@ public class ServerThread extends Thread {
                     createRemoveCardMessage(targetPlayerTurnNumber, DeckType.PLAYED, card.getId());
             Message addCardMsg =
                     createAddCardMessage(targetPlayerTurnNumber, DeckType.DISCARD, card.getId());
+
+            try {
+                sendMessageToAllClients(removeCardMsg);
+                sendMessageToAllClients(addCardMsg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendRestockDeckFromDiscard(
+            int targetPlayerTurnNumber, Player player, Deck<Card> restockedFromDiscarded) {
+        for (Card card : restockedFromDiscarded) {
+            Message removeCardMsg =
+                    createRemoveCardMessage(targetPlayerTurnNumber, DeckType.DISCARD, card.getId());
+            Message addCardMsg =
+                    createAddCardMessage(targetPlayerTurnNumber, DeckType.DECK, card.getId());
 
             try {
                 sendMessageToAllClients(removeCardMsg);

@@ -4,6 +4,7 @@ package at.vunfer.openrealms.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Card implements Serializable {
     private static int idCounter = 0;
@@ -75,5 +76,21 @@ public class Card implements Serializable {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return cost == card.cost
+                && id == card.id
+                && Objects.equals(name, card.name)
+                && Objects.equals(effects, card.effects);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, cost, effects, id);
     }
 }

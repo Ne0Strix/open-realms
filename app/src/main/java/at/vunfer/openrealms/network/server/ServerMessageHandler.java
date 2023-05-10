@@ -1,9 +1,9 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server;
 
-import static java.lang.Thread.sleep;
-
 import android.util.Log;
+import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.model.Player;
@@ -89,17 +89,27 @@ public class ServerMessageHandler implements IHandleMessage {
                 serverThread.discardCardsAfterTurn(
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
                 Log.i(TAG, "before Sleep before endTurn() called.");
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
+                //                try {
+                //                    sleep(100);
+                //                } catch (InterruptedException e) {
+                //                }
+                printCardsFromPlayer(currentPlayer);
+
+                Deck<Card> restockedFromDiscarded = gameSession.endTurn();
+
+                printCardsFromPlayer(currentPlayer);
+                if (restockedFromDiscarded
+                        != null) { // case that discardPile was emptied to restock deck
+                    serverThread.sendRestockDeckFromDiscard(
+                            gameSession.getPlayerTurnNumber(currentPlayer),
+                            currentPlayer,
+                            restockedFromDiscarded);
+                    Log.i(TAG, "sendRestockDeckFromDiscard called.");
                 }
-                Log.i(TAG, "Sleep before endTurn() called.");
-                gameSession.endTurn();
-                Log.i(TAG, "endTurn() called.");
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                }
+                //                try {
+                //                    sleep(100);
+                //                } catch (InterruptedException e) {
+                //                }
                 Log.i(
                         TAG,
                         "Size deck after restock: "
@@ -125,6 +135,12 @@ public class ServerMessageHandler implements IHandleMessage {
                 break;
             default:
                 Log.i(TAG, "Received message of unknown type.");
+        }
+    }
+
+    public void printCardsFromPlayer(Player player) {
+        for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
+            Log.i(TAG, "Card in player Hand: " + card.getId());
         }
     }
 }

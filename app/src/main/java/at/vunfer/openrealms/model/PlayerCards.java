@@ -28,9 +28,13 @@ public class PlayerCards {
 
     public void setDeckCards(Deck<Card> deckCards) {
         this.deckCards.addAll(deckCards);
+
+        for (Card c : deckCards) {
+            Log.i(TAG, "Added card " + c.getName() + " to deck.");
+        }
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
-            Log.i(TAG, "Added random card to hand.");
+            Log.i(TAG, "Added random card + to hand.");
         }
     }
 
@@ -79,6 +83,9 @@ public class PlayerCards {
     public void discard(Card card) throws IllegalArgumentException {
         discardedCards.add(handCards.draw(card));
         Log.i(TAG, "Discarded card " + card.getName() + " from hand.");
+        for (Card c : discardedCards) {
+            Log.i(TAG, "All Discarded card in discard" + c.getName());
+        }
     }
 
     /**
@@ -89,6 +96,9 @@ public class PlayerCards {
     public void addBoughtCard(Card card) {
         discardedCards.add(card);
         Log.i(TAG, "Added card " + card.getName() + " to discarded cards.");
+        for (Card c : discardedCards) {
+            Log.i(TAG, "All Discarded card in adBoughtCard" + c.getName());
+        }
     }
 
     /**
@@ -102,7 +112,8 @@ public class PlayerCards {
     }
 
     /** Restocks the player's hand */
-    public void restockHand() {
+    public Deck<Card> restockHand() {
+        Deck<Card> restockedFromDiscarded = null;
         Log.i(TAG, "Restocking hand.");
         Log.i(TAG, "Discarding all cards from hand.");
         for (int i = this.handCards.size() - 1; i >= 0; i--) {
@@ -118,6 +129,9 @@ public class PlayerCards {
             deckCards.clear();
 
             deckCards.addAll(discardedCards);
+
+            restockedFromDiscarded = new Deck<>();
+            restockedFromDiscarded.addAll(discardedCards);
             discardedCards.clear();
         }
 
@@ -126,6 +140,7 @@ public class PlayerCards {
             handCards.add(deckCards.drawRandom());
             Log.i(TAG, "Added random card to hand.");
         }
+        return restockedFromDiscarded;
     }
 
     public Deck<Card> getOldTestDeck() {

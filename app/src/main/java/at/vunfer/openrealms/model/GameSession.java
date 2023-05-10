@@ -58,7 +58,8 @@ public class GameSession {
      * Ends the turn of the current player and switches to the next player. Deals damage to the
      * opponent and heals the current player.
      */
-    public void endTurn() {
+    public Deck<Card> endTurn() {
+        Deck<Card> restockedFromDiscarded = new Deck<>();
         Log.i("Game Session", "1");
         dealDamage(
                 getOpponent(currentPlayer),
@@ -73,10 +74,13 @@ public class GameSession {
         Log.i("Game Session", "4");
         market.restock();
         Log.i("Game Session", "5");
-        currentPlayer.getPlayArea().getPlayerCards().restockHand();
+        currentPlayer.getPlayArea().clearPlayedCards();
+        Log.i("Game Session", "6");
+        restockedFromDiscarded = currentPlayer.getPlayArea().getPlayerCards().restockHand();
         Log.i("Game Session", "before next player");
         nextPlayer();
         Log.i("Game Session", "after next player");
+        return restockedFromDiscarded;
     }
 
     /**
