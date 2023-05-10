@@ -5,7 +5,7 @@
     android:id="@+id/game_area"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/playarea"
+    android:background="@drawable/background_floor"
     tools:context=".MainActivity">
 
     <at.vunfer.openrealms.view.HandView
@@ -77,9 +77,9 @@
         android:layout_height="85dp"
         android:layout_marginEnd="175dp"
         android:scaleY="-1"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/opponent_hand_view">
+        app:layout_constraintStart_toEndOf="@+id/opponent_hand_view"
+        app:layout_constraintTop_toTopOf="parent">
 
     </at.vunfer.openrealms.view.DiscardPileView>
 
