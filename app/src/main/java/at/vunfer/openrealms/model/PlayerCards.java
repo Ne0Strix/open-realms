@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
@@ -29,14 +28,9 @@ public class PlayerCards {
     public void setDeckCards(Deck<Card> deckCards) {
         this.deckCards = deckCards;
 
-        for (Card c : deckCards) {
-            Log.i(TAG, "Added card " + c.getName() + " to deck.");
-        }
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
-            Log.i(TAG, "Added random card + to hand.");
         }
-        Log.i("DECK TROUBLE", "Size of deck setDeckCards: " + deckCards.size());
     }
 
     /**
@@ -83,10 +77,6 @@ public class PlayerCards {
      */
     public void discard(Card card) throws IllegalArgumentException {
         discardedCards.add(handCards.draw(card));
-        Log.i(TAG, "Discarded card " + card.getName() + " from hand.");
-        for (Card c : discardedCards) {
-            Log.i(TAG, "All Discarded card in discard" + c.getName());
-        }
     }
 
     /**
@@ -96,10 +86,6 @@ public class PlayerCards {
      */
     public void addBoughtCard(Card card) {
         discardedCards.add(card);
-        Log.i(TAG, "Added card " + card.getName() + " to discarded cards.");
-        for (Card c : discardedCards) {
-            Log.i(TAG, "All Discarded card in adBoughtCard" + c.getName());
-        }
     }
 
     /**
@@ -115,25 +101,11 @@ public class PlayerCards {
     /** Restocks the player's hand */
     public Deck<Card> restockHand() {
         Deck<Card> restockedFromDiscarded = null;
-        Log.i(TAG, "Restocking hand.");
-        Log.i(TAG, "Discarding all cards from hand.");
         for (int i = this.handCards.size() - 1; i >= 0; i--) {
-            Log.i("PlayerCards", "Loop 1");
             discardedCards.add(this.popFromHand(this.getHandCards().get(i)));
-            // Log.i(TAG, "Discarded card " + this.getHandCards().get(i).getName() + " from hand.");
         }
-        Log.i(
-                TAG,
-                (", Discarded : "
-                        + getDiscardedCards().size()
-                        + "Hand: "
-                        + getHandCards().size()
-                        + "Deck: "
-                        + getDeckCards().size()));
-        Log.i("PlayerCards", "1");
 
         if (deckCards.size() < HANDSIZE) {
-            Log.i(TAG, "Deck is empty. Restocking deck.");
             handCards.addAll(deckCards);
             deckCards.clear();
 
@@ -144,10 +116,8 @@ public class PlayerCards {
             discardedCards.clear();
         }
 
-        Log.i(TAG, "Drawing cards from deck.");
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
-            Log.i(TAG, "Added random card to hand.");
         }
         return restockedFromDiscarded;
     }

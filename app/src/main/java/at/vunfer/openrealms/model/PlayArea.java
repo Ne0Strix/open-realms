@@ -123,10 +123,7 @@ public class PlayArea {
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
         card.applyEffects(this);
-        Log.i(TAG, "Card " + card.getId() + " played successfully.");
-        for (Card c : playedCards) {
-            Log.i(TAG, "Played card in Played: " + c.getId());
-        }
+        for (Card c : playedCards) {}
     }
 
     public void clearPlayedCards() {
@@ -135,17 +132,6 @@ public class PlayArea {
             Card c = playedCards.get(i);
             playedCards.remove(c);
             playerCards.getDiscardedCards().add(c);
-            Log.i(TAG, "Card " + c.getId() + " discarded from played successfully in MODEL.");
-            Log.i(
-                    TAG,
-                    "Remaining Size of Played : "
-                            + playedCards.size()
-                            + ", Discarded : "
-                            + playerCards.getDiscardedCards().size()
-                            + "Hand: "
-                            + playerCards.getHandCards().size()
-                            + "Deck: "
-                            + playerCards.getDeckCards().size());
         }
     }
 
