@@ -3,22 +3,14 @@ package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 class PlayerCardsTest {
     PlayerCards cards;
-
-    @BeforeAll
-    static void setUpAll() {
-        Mockito.mockStatic(Log.class);
-    }
 
     @BeforeEach
     void handSetup() {
