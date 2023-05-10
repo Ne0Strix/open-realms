@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
 
         layout.addView(overlayView.getOverlayView());
 
+        // Flip the Text on opponent DiscardPile and Deck, to always be right-side up
+        opponentDiscardPileView.findViewById(R.id.discardPileAmount).setScaleY(-1);
+        opponentDiscardPileView.findViewById(R.id.discardPileAmountOutline).setScaleY(-1);
+        opponentDeckView.findViewById(R.id.deck_view_amount).setScaleY(-1);
+        opponentDeckView.findViewById(R.id.deck_view_amount_outline).setScaleY(-1);
+
         LOGGER.log(Level.INFO, "Views initialized");
     }
 
