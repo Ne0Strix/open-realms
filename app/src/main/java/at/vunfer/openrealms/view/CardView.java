@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
@@ -24,13 +22,10 @@ import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 import at.vunfer.openrealms.view.effects.BasicEffectView;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class is used to represent a CardImageView.
- */
+/** This class is used to represent a CardImageView. */
 public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isFaceUp = true;
@@ -131,9 +126,7 @@ public class CardView extends ConstraintLayout {
                 });
     }
 
-    /**
-     * Enables the FullscreenPreview
-     */
+    /** Enables the FullscreenPreview */
     private void setFullscreen() {
         // Get the view for the Fullscreen_Card Object from RootView
         CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
@@ -143,9 +136,7 @@ public class CardView extends ConstraintLayout {
         fullScreenCard.getParent().bringChildToFront(fullScreenCard);
     }
 
-    /**
-     * Disables the FullscreenPreview
-     */
+    /** Disables the FullscreenPreview */
     private void resetFullscreen() {
         CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
         if (fullScreenCard != null) {
@@ -153,9 +144,7 @@ public class CardView extends ConstraintLayout {
         }
     }
 
-    /**
-     * Applies the details of the current card to the View.
-     */
+    /** Applies the details of the current card to the View. */
     private void applyCardDetail() {
         TextView name = findViewById(R.id.card_view_name);
         name.setText(card.getName());

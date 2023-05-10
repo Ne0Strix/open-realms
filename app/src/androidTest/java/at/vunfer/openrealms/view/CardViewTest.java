@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -75,5 +77,26 @@ public class CardViewTest {
                 verify(fullscreenView).setVisibility(View.VISIBLE);
                 // PowerMockito.verifyPrivate(v).invoke("setFullscreen");
         */
+    }
+
+    @Test
+    public void testFaceUpOrDown() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+        CardView view =
+                new CardView(targetContext, new Card("Card1", 1, List.of(new CoinEffect(1))));
+        ImageView backOfCard = view.findViewById(R.id.card_view_back_of_card);
+
+        view.setFaceUp();
+        assertEquals(View.INVISIBLE, backOfCard.getVisibility());
+
+        view.setFaceDown();
+        assertEquals(View.VISIBLE, backOfCard.getVisibility());
+
+        view.setFaceUpOrDown(false);
+        assertEquals(View.INVISIBLE, backOfCard.getVisibility());
+
+        view.setFaceUpOrDown(true);
+        assertEquals(View.VISIBLE, backOfCard.getVisibility());
     }
 }
