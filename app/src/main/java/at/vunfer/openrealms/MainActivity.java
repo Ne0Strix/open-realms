@@ -99,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         connectionIP = server.getIpAddr();
 
         button.setVisibility(View.GONE);
-        showIp.setText("Your IP address is:\n" + connectionIP);
+        showIp.setText(
+                "Your IP address is:\n"
+                        + connectionIP
+                        + "\n(Start after Guest\nhas joined and started)");
         startButton.setVisibility(View.VISIBLE);
 
         connection = new ClientConnector(this);
