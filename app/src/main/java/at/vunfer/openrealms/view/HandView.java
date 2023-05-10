@@ -54,7 +54,7 @@ public class HandView extends LinearLayout implements CardPileView {
 
     private void positionCards(List<CardView> cards) {
         int numCards = cards.size();
-        int originalCardAngle = 12 * numCards;
+        float originalCardAngle = 12f * numCards;
 
         // Calculate the angle between cards
         float cardAngle = originalCardAngle / (numCards - 1);
