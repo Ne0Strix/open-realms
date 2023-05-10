@@ -10,7 +10,7 @@ import java.util.List;
 public class PlayerCards {
     private static final String TAG = "PlayerCards";
     private final Deck<Card> handCards;
-    private final Deck<Card> deckCards;
+    private Deck<Card> deckCards;
     private final Deck<Card> discardedCards;
 
     /** The maximum size of the hand. */
@@ -27,7 +27,7 @@ public class PlayerCards {
     }
 
     public void setDeckCards(Deck<Card> deckCards) {
-        this.deckCards.addAll(deckCards);
+        this.deckCards = deckCards;
 
         for (Card c : deckCards) {
             Log.i(TAG, "Added card " + c.getName() + " to deck.");
@@ -36,6 +36,8 @@ public class PlayerCards {
             handCards.add(deckCards.drawRandom());
             Log.i(TAG, "Added random card + to hand.");
         }
+        Log.i("DECK TROUBLE", "Size of deck setDeckCards: " + deckCards.size());
+
     }
 
     /**
@@ -121,6 +123,14 @@ public class PlayerCards {
             discardedCards.add(this.popFromHand(this.getHandCards().get(i)));
             // Log.i(TAG, "Discarded card " + this.getHandCards().get(i).getName() + " from hand.");
         }
+        Log.i(
+                TAG,(
+                        ", Discarded : "
+                        + getDiscardedCards().size()
+                        + "Hand: "
+                        + getHandCards().size()
+                        + "Deck: "
+                        + getDeckCards().size()));
         Log.i("PlayerCards", "1");
 
         if (deckCards.size() < HANDSIZE) {

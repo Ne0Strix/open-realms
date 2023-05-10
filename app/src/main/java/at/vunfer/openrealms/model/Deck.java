@@ -12,8 +12,11 @@ public class Deck<T> extends ArrayList<T> {
         if (super.isEmpty()) {
             throw new IllegalStateException("Cannot draw from empty source.");
         }
-
-        int index = rand.nextInt(super.size() - 1);
+        int index = 0;
+        if (super.size() > 1) {
+            index = rand.nextInt(super.size() - 1);
+        }
+        Log.i("DrawRandom", "drew card index: " + index);
         T drawn = super.get(index);
         Log.i("Deck", "Size of Deck before draw: " + super.size());
         Log.i("Deck", "Drew " + index + " from deck.");

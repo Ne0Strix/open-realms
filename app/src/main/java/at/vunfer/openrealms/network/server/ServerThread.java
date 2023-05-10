@@ -67,6 +67,8 @@ public class ServerThread extends Thread {
             int playerTurnNumber = getTurnNumber(client);
             Player player = gameSession.getPlayers().get(playerTurnNumber);
 
+            Log.i("DECK TROUBLE", "Size of deck setupClients: " + player.getPlayArea().getPlayerCards().getDeckCards().size());
+
             Player opponent = gameSession.getOpponent(player);
             int opponentTurnNumber = gameSession.getPlayers().indexOf(opponent);
 
@@ -92,6 +94,8 @@ public class ServerThread extends Thread {
         Market.getInstance().setMarketDeck(DeckGenerator.generateMarketDeck(context));
         List<Player> players = List.of(player1, player2);
         gameSession = new GameSession(players, player1);
+        Log.i("DECK TROUBLE", "Size of deck createGame: " + player1.getPlayArea().getPlayerCards().getDeckCards().size());
+
     }
 
     public int getTurnNumber(ClientHandler client) {
