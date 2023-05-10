@@ -152,6 +152,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         // Add views to layout
         ConstraintLayout layout = findViewById(R.id.game_area);
 
+        Button endTurnButton = findViewById(R.id.end_turn_button);
+        endTurnButton.setVisibility(View.INVISIBLE);
+
         layout.addView(overlayView.getOverlayView());
 
         LOGGER.log(Level.INFO, "Views initialized");
@@ -258,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                     if (targetPlayer != null) {
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        if (playerId != (Integer) targetPlayer) {
+                                        if (playerId == (Integer) targetPlayer) {
                                             endTurnButton.setVisibility(View.VISIBLE);
                                         } else {
                                             endTurnButton.setVisibility(View.INVISIBLE);

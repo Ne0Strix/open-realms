@@ -81,8 +81,10 @@ public class ServerThread extends Thread {
             dealCardsToPlayerAndOpponent(
                     client, playerTurnNumber, player, opponentTurnNumber, opponent);
             dealMarketCardsToPurchaseArea(client);
-            sendTurnNotification(client, playerTurnNumber);
+            // sendTurnNotification(client, playerTurnNumber);
         }
+        sendTurnNotificationToAllClients(
+                gameSession.getPlayerTurnNumber(gameSession.getCurrentPlayer()));
     }
 
     private void createGame() {
