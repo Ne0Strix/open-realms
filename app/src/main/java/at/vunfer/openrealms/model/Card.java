@@ -84,9 +84,9 @@ public class Card implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
         return cost == card.cost
-                && id == card.id
                 && Objects.equals(name, card.name)
-                && Objects.equals(effects, card.effects);
+                && Objects.equals(effects, card.effects)
+                && id == card.id;
     }
 
     @Override
