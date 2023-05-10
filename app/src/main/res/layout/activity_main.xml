@@ -110,7 +110,7 @@
         app:layout_constraintStart_toEndOf="@+id/player_discard_pile_view" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/end_turn_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="End Turn"

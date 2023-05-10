@@ -212,14 +212,16 @@ public class PlayArea {
         turnHealing += healing;
     }
 
-    public void buyCard(Card card) throws IllegalArgumentException {
+    public boolean buyCard(Card card) throws IllegalArgumentException {
         if (this.turnCoins < card.getCost()) {
-            throw new IllegalArgumentException("Not enough coins this turn");
+            return false;
+            //throw new IllegalArgumentException("Not enough coins this turn");
         }
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
         Log.i(TAG, "Card " + card.getId() + " bought successfully.");
+        return true;
     }
 
     public int playCardById(int id) {
@@ -234,8 +236,10 @@ public class PlayArea {
         for (Card c : market.getForPurchase()) {
             if (c.getId() == id) {
                 card = c;
-                buyCard(card);
-                return 1;
+                if (buyCard(card)) {
+                    return 1;
+                }
+                return -1;
             }
         }
         return -1;

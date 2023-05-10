@@ -83,8 +83,8 @@ public class ServerThread extends Thread {
     }
 
     private void createGame() {
-        Player player1 = PlayerFactory.createPlayer("Player 1");
-        Player player2 = PlayerFactory.createPlayer("Player 2");
+        Player player1 = PlayerFactory.createPlayer("Vünfer");
+        Player player2 = PlayerFactory.createPlayer("Macho");
         player1.getPlayArea()
                 .getPlayerCards()
                 .setDeckCards(DeckGenerator.generatePlayerStarterDeck(context));
