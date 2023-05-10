@@ -37,7 +37,6 @@ public class PlayerCards {
             Log.i(TAG, "Added random card + to hand.");
         }
         Log.i("DECK TROUBLE", "Size of deck setDeckCards: " + deckCards.size());
-
     }
 
     /**
@@ -124,8 +123,8 @@ public class PlayerCards {
             // Log.i(TAG, "Discarded card " + this.getHandCards().get(i).getName() + " from hand.");
         }
         Log.i(
-                TAG,(
-                        ", Discarded : "
+                TAG,
+                (", Discarded : "
                         + getDiscardedCards().size()
                         + "Hand: "
                         + getHandCards().size()
