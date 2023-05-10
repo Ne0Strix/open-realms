@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static final int connectionPort = 1337;
     private String connectionIP;
     private ServerThread server;
-    private ClientConnector connection;
+    private static ClientConnector connection;
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         start.setVisibility(View.VISIBLE);
     }
 
-    public void startGame(View view) throws IOException {
+    public void startGame(View view) {
         setContentView(R.layout.activity_main);
 
         // Initialize views
@@ -144,8 +144,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentDiscardPilePresenter = new DiscardPilePresenter(opponentDiscardPileView);
         playerDeckPresenter = new DeckPresenter(playerDeckView);
         opponentDeckPresenter = new DeckPresenter(opponentDeckView);
-
-        // TODO: Remove this and replace it with Cards gotten from Server
 
         OverlayView overlayView = new OverlayView(this);
         overlayViewPresenter = new OverlayPresenter(overlayView);
