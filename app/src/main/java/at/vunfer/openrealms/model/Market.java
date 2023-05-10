@@ -13,10 +13,12 @@ public class Market {
     private static final String TAG = "Market";
     Deck<Card> marketDeck;
     Deck<Card> forPurchase;
+    Deck<Card> newToPurchase;
 
     private Market() {
         marketDeck = new Deck<>();
         forPurchase = new Deck<>();
+        newToPurchase = new Deck<>();
     }
 
     public void setMarketDeck(Deck<Card> marketDeck) {
@@ -52,10 +54,12 @@ public class Market {
      */
     public int restock() {
         int restocked = 0;
+        newToPurchase = new Deck<>();
         while (forPurchase.size() < TOTAL_PURCHASABLE) {
             Card card = marketDeck.drawRandom();
             if (card != null) {
                 forPurchase.add(card);
+                newToPurchase.add(card);
                 restocked++;
             } else {
                 break;
@@ -86,6 +90,14 @@ public class Market {
      */
     public List<Card> getCards() {
         return forPurchase;
+    }
+
+    public Deck<Card> getNewToPurchase() {
+        return newToPurchase;
+    }
+
+    public void setGetNewToPurchase(Deck<Card> newToPurchase) {
+        this.newToPurchase = newToPurchase;
     }
 
     /**

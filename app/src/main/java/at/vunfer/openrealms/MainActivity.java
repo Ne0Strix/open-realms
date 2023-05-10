@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -177,79 +178,96 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                         + " Deck: "
                         + message.getData(DataKey.DECK));
         runOnUiThread(
-                () -> {
-                    switch (message.getType()) {
-                        case ADD_CARD:
-                            addCard(message);
-                            Log.i(
-                                    TAG,
-                                    "Added card "
-                                            + (int) message.getData(DataKey.CARD_ID)
-                                            + " to deck "
-                                            + message.getData(DataKey.DECK)
-                                            + ".");
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (message.getType()) {
+                            case ADD_CARD:
+                                addCard(message);
+                                Log.i(
+                                        TAG,
+                                        "Added card "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + " to deck "
+                                                + message.getData(DataKey.DECK)
+                                                + ".");
 
-                            break;
-                        case REMOVE_CARD:
-                            removeCard(message);
-                            Log.i(
-                                    TAG,
-                                    "Removed card "
-                                            + (int) message.getData(DataKey.CARD_ID)
-                                            + " from deck "
-                                            + message.getData(DataKey.DECK)
-                                            + ".");
+                                break;
+                            case REMOVE_CARD:
+                                removeCard(message);
+                                Log.i(
+                                        TAG,
+                                        "Removed card "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + " from deck "
+                                                + message.getData(DataKey.DECK)
+                                                + ".");
 
-                            break;
-                        case CHOOSE_OPTION:
-                            // TODO instructions for UI
-                        case UPDATE_PLAYER_STATS:
-                            int target = (int) message.getData(DataKey.TARGET_PLAYER);
-                            PlayerStats stats = (PlayerStats) message.getData(DataKey.PLAYER_STATS);
-                            if (playerId == target) {
-                                overlayViewPresenter.updatePlayerName(stats.getPlayerName());
-                                overlayViewPresenter.updatePlayerHealth(stats.getPlayerHealth());
-                                overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
-                                overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
-                                overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
-                            } else {
-                                overlayViewPresenter.updateOpponentName(stats.getPlayerName());
-                                overlayViewPresenter.updateOpponentHealth(stats.getPlayerHealth());
-                                overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
-                                overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
-                                overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
-                            }
-                            break;
-                        case FULL_CARD_DECK:
-                            Log.i(TAG, "Received full card deck.");
-                            cardViews =
-                                    CardView.getViewFromCards(
-                                            context,
-                                            (List<Card>) message.getData(DataKey.COLLECTION));
-                            Log.i(TAG, "Created CardViews from Cards.");
-                            break;
-                        case TURN_NOTIFICATION:
-                            Object isMyTurn = message.getData(DataKey.YOUR_TURN);
-                            if (isMyTurn != null) {
-                                Button endTurnButton = findViewById(R.id.end_turn_button);
-                                if ((Boolean) isMyTurn) {
-                                    endTurnButton.setVisibility(View.VISIBLE);
+                                break;
+                            case CHOOSE_OPTION:
+                                // TODO instructions for UI
+                            case UPDATE_PLAYER_STATS:
+                                int target = (int) message.getData(DataKey.TARGET_PLAYER);
+                                PlayerStats stats =
+                                        (PlayerStats) message.getData(DataKey.PLAYER_STATS);
+                                if (playerId == target) {
+
+                                    overlayViewPresenter.updatePlayerName(stats.getPlayerName());
+                                    overlayViewPresenter.updatePlayerHealth(
+                                            stats.getPlayerHealth());
+                                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+                                    if (stats.getPlayerHealth() < 1) {
+                                        //                                        //this adds the
+                                        // defeat screen on top of the game
+                                        ImageView defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage.setVisibility(View.VISIBLE);
+                                        defeatImage.getParent().bringChildToFront(defeatImage);
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.GONE);
+                                    }
                                 } else {
-                                    endTurnButton.setVisibility(View.GONE);
+                                    overlayViewPresenter.updateOpponentName(stats.getPlayerName());
+                                    overlayViewPresenter.updateOpponentHealth(
+                                            stats.getPlayerHealth());
+                                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+                                    if (stats.getPlayerHealth() < 1) {
+                                        ImageView victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.VISIBLE);
+                                        victoryImage.getParent().bringChildToFront(victoryImage);
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.GONE);
+                                    }
                                 }
-                            }
-                            Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
-                            if (targetPlayer != null) {
-                                Button endTurnButton = findViewById(R.id.end_turn_button);
-                                if (playerId != (Integer) targetPlayer) {
-                                    endTurnButton.setVisibility(View.VISIBLE);
-                                } else {
-                                    endTurnButton.setVisibility(View.GONE);
+                                break;
+                            case FULL_CARD_DECK:
+                                Log.i(TAG, "Received full card deck.");
+                                cardViews =
+                                        CardView.getViewFromCards(
+                                                context,
+                                                (List<Card>) message.getData(DataKey.COLLECTION));
+                                Log.i(TAG, "Created CardViews from Cards.");
+                                break;
+                            case TURN_NOTIFICATION:
+                                if (findViewById(R.id.defeat_image).getVisibility() != View.VISIBLE
+                                        && findViewById(R.id.victory_image).getVisibility()
+                                                != View.VISIBLE) {
+                                    Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
+                                    if (targetPlayer != null) {
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        if (playerId != (Integer) targetPlayer) {
+                                            endTurnButton.setVisibility(View.VISIBLE);
+                                        } else {
+                                            endTurnButton.setVisibility(View.INVISIBLE);
+                                        }
+                                    }
                                 }
-                            }
-
-                        default:
-                            Log.i(TAG, "Received message of unknown type.");
+                            default:
+                                Log.i(TAG, "Received message of unknown type.");
+                        }
                     }
                 });
     }
