@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
 import java.util.List;
 
 /**
@@ -123,10 +122,7 @@ public class PlayArea {
     public void playCard(Card card) {
         playedCards.add(playerCards.popFromHand(card));
         card.applyEffects(this);
-        Log.i(TAG, "Card " + card.getId() + " played successfully.");
-        for (Card c : playedCards) {
-            Log.i(TAG, "Played card in Played: " + c.getId());
-        }
+        for (Card c : playedCards) {}
     }
 
     public void clearPlayedCards() {
@@ -135,17 +131,6 @@ public class PlayArea {
             Card c = playedCards.get(i);
             playedCards.remove(c);
             playerCards.getDiscardedCards().add(c);
-            Log.i(TAG, "Card " + c.getId() + " discarded from played successfully in MODEL.");
-            Log.i(
-                    TAG,
-                    "Remaining Size of Played : "
-                            + playedCards.size()
-                            + ", Discarded : "
-                            + playerCards.getDiscardedCards().size()
-                            + "Hand: "
-                            + playerCards.getHandCards().size()
-                            + "Deck: "
-                            + playerCards.getDeckCards().size());
         }
     }
 
@@ -215,12 +200,11 @@ public class PlayArea {
     public boolean buyCard(Card card) throws IllegalArgumentException {
         if (this.turnCoins < card.getCost()) {
             return false;
-            //throw new IllegalArgumentException("Not enough coins this turn");
+            // throw new IllegalArgumentException("Not enough coins this turn");
         }
         turnCoins -= card.getCost();
         market.purchase(card);
         playerCards.addBoughtCard(card);
-        Log.i(TAG, "Card " + card.getId() + " bought successfully.");
         return true;
     }
 

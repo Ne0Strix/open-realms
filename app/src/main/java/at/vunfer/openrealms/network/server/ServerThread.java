@@ -67,7 +67,10 @@ public class ServerThread extends Thread {
             int playerTurnNumber = getTurnNumber(client);
             Player player = gameSession.getPlayers().get(playerTurnNumber);
 
-            Log.i("DECK TROUBLE", "Size of deck setupClients: " + player.getPlayArea().getPlayerCards().getDeckCards().size());
+            Log.i(
+                    "DECK TROUBLE",
+                    "Size of deck setupClients: "
+                            + player.getPlayArea().getPlayerCards().getDeckCards().size());
 
             Player opponent = gameSession.getOpponent(player);
             int opponentTurnNumber = gameSession.getPlayers().indexOf(opponent);
@@ -94,8 +97,10 @@ public class ServerThread extends Thread {
         Market.getInstance().setMarketDeck(DeckGenerator.generateMarketDeck(context));
         List<Player> players = List.of(player1, player2);
         gameSession = new GameSession(players, player1);
-        Log.i("DECK TROUBLE", "Size of deck createGame: " + player1.getPlayArea().getPlayerCards().getDeckCards().size());
-
+        Log.i(
+                "DECK TROUBLE",
+                "Size of deck createGame: "
+                        + player1.getPlayArea().getPlayerCards().getDeckCards().size());
     }
 
     public int getTurnNumber(ClientHandler client) {
@@ -222,7 +227,6 @@ public class ServerThread extends Thread {
         dealHandCards(client, opponentTurnNumber, opponent);
         dealDeckCards(client, playerTurnNumber, player);
         dealDeckCards(client, opponentTurnNumber, opponent);
-
     }
 
     public void dealDeckCards(ClientHandler client, int targetPlayerTurnNumber, Player player) {
@@ -319,7 +323,6 @@ public class ServerThread extends Thread {
         }
     }
 
-
     public void sendTurnNotificationToAllClients(int playerTurnNumber) {
         Message turnNotificationMsg = createTurnNotificationMessage(playerTurnNumber);
         try {
@@ -365,6 +368,7 @@ public class ServerThread extends Thread {
             }
         }
     }
+
     public void dealMarketCardsToPurchaseAreaToAll() {
         for (Card card : Market.getInstance().getNewToPurchase()) {
             Message removeCardMsg = createRemoveMarketCardMessage(DeckType.MARKET, card.getId());

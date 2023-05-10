@@ -133,7 +133,9 @@ public class ServerMessageHandler implements IHandleMessage {
                                     gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
                     serverThread.sendMessageToAllClients(
                             serverThread.createPlayerStatsMessage(
-                                    gameSession.getPlayerTurnNumber(gameSession.getOpponent(currentPlayer)), gameSession.getOpponent(currentPlayer)));
+                                    gameSession.getPlayerTurnNumber(
+                                            gameSession.getOpponent(currentPlayer)),
+                                    gameSession.getOpponent(currentPlayer)));
                     Log.i(TAG, "createPlayerStatsMessage called.");
                     serverThread.sendTurnNotificationToAllClients(
                             gameSession.getPlayerTurnNumber(currentPlayer));

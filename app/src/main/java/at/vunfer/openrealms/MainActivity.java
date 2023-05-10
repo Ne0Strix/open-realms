@@ -8,10 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
@@ -34,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity implements UIUpdateListener {
-    private final int connectionPort = 1337;
+    private static final int connectionPort = 1337;
     private String connectionIP;
     private ServerThread server;
     private static ClientConnector connection;
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         isHost = false;
     }
 
-    public void startServer(View view) throws InterruptedException {
+    public void startServer(View view) {
         isHost = true;
         server = new ServerThread(this, connectionPort);
         TextView showIpPrompt = (TextView) findViewById(R.id.prompt_text);
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         server.start();
     }
 
-    public void showIp(View view) throws IOException, InterruptedException {
+    public void showIp(View view) {
         TextView showIp = (TextView) findViewById(R.id.prompt_text);
         Button button = (Button) findViewById(R.id.showIp);
         Button startButton = (Button) findViewById(R.id.startGame);
@@ -110,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         connection.start();
     }
 
-    public void connectServer(View view) throws IOException, InterruptedException {
+    public void connectServer(View view) {
         EditText getIp = (EditText) findViewById(R.id.get_text);
         Button join = (Button) findViewById(R.id.join);
         Button start = (Button) findViewById(R.id.joinGameClient);
@@ -126,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         start.setVisibility(View.VISIBLE);
     }
 
-    public void startGame(View view) throws IOException {
+    public void startGame(View view) {
         setContentView(R.layout.activity_main);
 
         // Initialize views
@@ -148,8 +145,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentDiscardPilePresenter = new DiscardPilePresenter(opponentDiscardPileView);
         playerDeckPresenter = new DeckPresenter(playerDeckView);
         opponentDeckPresenter = new DeckPresenter(opponentDeckView);
-
-        // TODO: Remove this and replace it with Cards gotten from Server
 
         OverlayView overlayView = new OverlayView(this);
         overlayViewPresenter = new OverlayPresenter(overlayView);
@@ -224,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-//                                        //this adds the defeat screen on top of the game
+                                        //                                        //this adds the
+                                        // defeat screen on top of the game
                                         ImageView defeatImage = findViewById(R.id.defeat_image);
                                         defeatImage.setVisibility(View.VISIBLE);
                                         defeatImage.getParent().bringChildToFront(defeatImage);
@@ -256,20 +252,19 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 Log.i(TAG, "Created CardViews from Cards.");
                                 break;
                             case TURN_NOTIFICATION:
-                                if (findViewById(R.id.defeat_image).getVisibility() != View.VISIBLE && findViewById(R.id.victory_image).getVisibility() != View.VISIBLE) {
+                                if (findViewById(R.id.defeat_image).getVisibility() != View.VISIBLE
+                                        && findViewById(R.id.victory_image).getVisibility()
+                                                != View.VISIBLE) {
                                     Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                     if (targetPlayer != null) {
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        if (playerId!=(Integer) targetPlayer) {
+                                        if (playerId != (Integer) targetPlayer) {
                                             endTurnButton.setVisibility(View.VISIBLE);
                                         } else {
                                             endTurnButton.setVisibility(View.INVISIBLE);
                                         }
                                     }
                                 }
-
-
-
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
                         }
