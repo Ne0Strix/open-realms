@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Effect;
@@ -20,6 +21,7 @@ import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 import at.vunfer.openrealms.view.effects.BasicEffectView;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,8 +88,11 @@ public class CardView extends ConstraintLayout {
             case MotionEvent.ACTION_UP:
                 if (motionEvent.getEventTime() - motionEvent.getDownTime() <= holdTime) {
                     Log.i(logTag, "Sending: " + card);
-                    // TODO: implement message sending
-                    // TODO: remove temporary cardRemoval
+                    try {
+                        MainActivity.sendMessage(MainActivity.buildTouchMessage(card.getId()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 isBeingHeld = false;
                 resetFullscreen();
@@ -203,5 +208,9 @@ public class CardView extends ConstraintLayout {
      */
     public Card getCard() {
         return card;
+    }
+
+    public int getCardId() {
+        return card.getId();
     }
 }

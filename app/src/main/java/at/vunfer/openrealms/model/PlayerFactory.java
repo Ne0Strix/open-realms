@@ -6,7 +6,7 @@ public class PlayerFactory {
 
     private PlayerFactory() {}
 
-    private static final int INITIAL_HEALTH = 70;
+    private static final int INITIAL_HEALTH = 30;
 
     /**
      * Creates a new Player instance with the given player name, initializes their starting health
@@ -19,5 +19,9 @@ public class PlayerFactory {
         PlayerCards playerCards = new PlayerCards();
         PlayArea playArea = new PlayArea(INITIAL_HEALTH, playerCards);
         return new Player(playerName, playArea);
+    }
+
+    public static int getInitialHealth() {
+        return INITIAL_HEALTH;
     }
 }

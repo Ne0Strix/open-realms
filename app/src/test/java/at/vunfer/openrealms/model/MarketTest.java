@@ -15,6 +15,7 @@ class MarketTest {
     @BeforeEach
     public void setUp() {
         market = Market.getInstance();
+        market.setMarketDeck(market.getOldTestMarketDeck());
     }
 
     @AfterEach

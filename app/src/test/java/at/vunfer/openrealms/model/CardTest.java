@@ -131,4 +131,30 @@ class CardTest {
 
         assertTrue(cardA.isIdentical(cardB));
     }
+
+    @Test
+    void testEqualsEqualObject() {
+        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        assertTrue(card1.equals(card1));
+    }
+
+    @Test
+    void testEqualsEqualParameter() {
+        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card card2 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        assertFalse(card1.equals(card2));
+    }
+
+    @Test
+    void testHashCode() {
+        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        assertEquals(card1.hashCode(), card1.hashCode());
+    }
+
+    @Test
+    void testGetCardById() {
+        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        int id = card1.getId();
+        assertEquals(card1, Card.getCardById(id));
+    }
 }

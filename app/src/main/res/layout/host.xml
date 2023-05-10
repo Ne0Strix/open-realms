@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+
+    <TextView
+        android:id="@+id/prompt_text"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="Press &quot;Open Lobby&quot; to start the server."
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_max="250dp"
+        />
+
+    <Button
+        android:id="@+id/showIp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Show my IP Address"
+        android:onClick="showIp"
+        app:layout_constraintTop_toBottomOf="@id/prompt_text"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        />
+    <Button
+        android:id="@+id/openLobby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startServer"
+        android:text="Open Lobby"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/prompt_text"
+        android:layout_marginTop="10dp"
+        />
+
+    <Button
+        android:id="@+id/startGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="startGame"
+        android:text="Start Game"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/prompt_text"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/toMainMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:onClick="toMainMenu"
+        android:text="Back to Main Menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/prompt_text" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

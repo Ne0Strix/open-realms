@@ -10,8 +10,13 @@ class PlayerFactoryTest {
     @Test
     void testCreatePlayer() {
         Player player = PlayerFactory.createPlayer("John");
+        player.getPlayArea()
+                .getPlayerCards()
+                .setDeckCards(player.getPlayArea().getPlayerCards().getOldTestDeck());
         assertEquals("John", player.getPlayerName());
-        assertEquals(70, player.getPlayArea().getHealth());
-        assertEquals(5, player.getPlayArea().getPlayerCards().getHandCards().size());
+        assertEquals(PlayerFactory.getInitialHealth(), player.getPlayArea().getHealth());
+        assertEquals(
+                PlayerCards.getHandSize(),
+                player.getPlayArea().getPlayerCards().getHandCards().size());
     }
 }
