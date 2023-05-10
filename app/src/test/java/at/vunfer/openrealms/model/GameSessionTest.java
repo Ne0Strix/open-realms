@@ -5,14 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
-import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class GameSessionTest {
 
@@ -20,11 +17,8 @@ public class GameSessionTest {
     private Player player2;
     private GameSession gameSession;
     List<Player> players;
-
-    @BeforeAll
-    static void setUpAll() {
-        Mockito.mockStatic(Log.class);
-    }
+    PlayerCards player1Cards;
+    PlayerCards player2Cards;
 
     @BeforeEach
     void setUp() {
@@ -33,6 +27,10 @@ public class GameSessionTest {
         players = Arrays.asList(player1, player2);
         gameSession = new GameSession(players, player1);
         Market.getInstance().setMarketDeck(Market.getInstance().getOldTestMarketDeck());
+        player1Cards = player1.getPlayArea().getPlayerCards();
+        player2Cards = player2.getPlayArea().getPlayerCards();
+        player1Cards.setDeckCards(player1Cards.getOldTestDeck());
+        player2Cards.setDeckCards(player2Cards.getOldTestDeck());
     }
 
     @Test

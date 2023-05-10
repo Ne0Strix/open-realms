@@ -3,9 +3,11 @@ package at.vunfer.openrealms.network;
 
 import static org.mockito.Mockito.*;
 
+import android.util.Log;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,6 +21,11 @@ public class CommunicationTest {
     IHandleMessage messageHandler;
 
     Communication communication;
+
+    @BeforeAll
+    static void setUpAll() {
+        Mockito.mockStatic(Log.class);
+    }
 
     @BeforeEach
     void setUp() {
