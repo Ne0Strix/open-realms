@@ -3,6 +3,7 @@ package at.vunfer.openrealms.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import at.vunfer.openrealms.view.view_interfaces.CardPileView;
 import java.util.List;
@@ -31,6 +32,8 @@ public class MarketView extends LinearLayout implements CardPileView {
     public void updateView(List<CardView> cards) {
         removeAllViews();
         for (CardView card : cards) {
+            if (card.getParent() != null)
+                ((ViewGroup) card.getParent()).removeView(card);
             addView(card);
         }
     }

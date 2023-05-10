@@ -62,6 +62,10 @@ public class ServerMessageHandler implements IHandleMessage {
                                             gameSession.getPlayerTurnNumber(currentPlayer),
                                             DeckType.DISCARD,
                                             cardId));
+                            serverThread.sendMessageToAllClients(
+                                    serverThread.createPlayerStatsMessage(
+                                            gameSession.getPlayerTurnNumber(currentPlayer),
+                                            currentPlayer));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -96,6 +100,8 @@ public class ServerMessageHandler implements IHandleMessage {
                 printCardsFromPlayer(currentPlayer);
 
                 Deck<Card> restockedFromDiscarded = gameSession.endTurn();
+
+                serverThread.dealMarketCardsToPurchaseAreaToAll();
 
                 printCardsFromPlayer(currentPlayer);
                 if (restockedFromDiscarded

@@ -7,7 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
@@ -212,12 +216,21 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 PlayerStats stats =
                                         (PlayerStats) message.getData(DataKey.PLAYER_STATS);
                                 if (playerId == target) {
+
                                     overlayViewPresenter.updatePlayerName(stats.getPlayerName());
                                     overlayViewPresenter.updatePlayerHealth(
                                             stats.getPlayerHealth());
                                     overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+                                    if (stats.getPlayerHealth() < 1) {
+//                                        //this adds the defeat screen on top of the game
+                                        ImageView defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage.setVisibility(View.VISIBLE);
+                                        defeatImage.getParent().bringChildToFront(defeatImage);
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.GONE);
+                                    }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
                                     overlayViewPresenter.updateOpponentHealth(
@@ -225,6 +238,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+                                    if (stats.getPlayerHealth() < 1) {
+                                        ImageView victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.VISIBLE);
+                                        victoryImage.getParent().bringChildToFront(victoryImage);
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.GONE);
+                                    }
                                 }
                                 break;
                             case FULL_CARD_DECK:
@@ -236,24 +256,18 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 Log.i(TAG, "Created CardViews from Cards.");
                                 break;
                             case TURN_NOTIFICATION:
-                                Object isMyTurn = message.getData(DataKey.YOUR_TURN);
-                                if (isMyTurn != null) {
-                                    Button endTurnButton = findViewById(R.id.end_turn_button);
-                                    if ((Boolean) isMyTurn) {
-                                        endTurnButton.setVisibility(View.VISIBLE);
-                                    } else {
-                                        endTurnButton.setVisibility(View.GONE);
+                                if (findViewById(R.id.defeat_image).getVisibility() != View.VISIBLE && findViewById(R.id.victory_image).getVisibility() != View.VISIBLE) {
+                                    Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
+                                    if (targetPlayer != null) {
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        if (playerId!=(Integer) targetPlayer) {
+                                            endTurnButton.setVisibility(View.VISIBLE);
+                                        } else {
+                                            endTurnButton.setVisibility(View.INVISIBLE);
+                                        }
                                     }
                                 }
-                                Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
-                                if (targetPlayer != null) {
-                                    Button endTurnButton = findViewById(R.id.end_turn_button);
-                                    if (playerId!=(Integer) targetPlayer) {
-                                        endTurnButton.setVisibility(View.VISIBLE);
-                                    } else {
-                                        endTurnButton.setVisibility(View.GONE);
-                                    }
-                                }
+
 
 
                             default:
