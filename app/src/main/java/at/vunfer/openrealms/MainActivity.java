@@ -99,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         connectionIP = server.getIpAddr();
 
         button.setVisibility(View.GONE);
-        showIp.setText("Your IP address is:\n" + connectionIP);
+        showIp.setText(
+                "Your IP address is:\n"
+                        + connectionIP
+                        + "\n(Start after Guest\nhas joined and started)");
         startButton.setVisibility(View.VISIBLE);
 
         connection = new ClientConnector(this);
@@ -151,6 +154,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         // Add views to layout
         ConstraintLayout layout = findViewById(R.id.game_area);
+
+        Button endTurnButton = findViewById(R.id.end_turn_button);
+        endTurnButton.setVisibility(View.INVISIBLE);
 
         layout.addView(overlayView.getOverlayView());
 
@@ -258,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                     if (targetPlayer != null) {
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        if (playerId != (Integer) targetPlayer) {
+                                        if (playerId == (Integer) targetPlayer) {
                                             endTurnButton.setVisibility(View.VISIBLE);
                                         } else {
                                             endTurnButton.setVisibility(View.INVISIBLE);
