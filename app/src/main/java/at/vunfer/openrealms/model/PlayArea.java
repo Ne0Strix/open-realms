@@ -201,7 +201,7 @@ public class PlayArea {
     public boolean buyCard(Card card) throws IllegalArgumentException {
         if (this.turnCoins < card.getCost()) {
             return false;
-            //throw new IllegalArgumentException("Not enough coins this turn");
+            // throw new IllegalArgumentException("Not enough coins this turn");
         }
         turnCoins -= card.getCost();
         market.purchase(card);

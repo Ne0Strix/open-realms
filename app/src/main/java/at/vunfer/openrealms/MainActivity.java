@@ -248,13 +248,12 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                 if (targetPlayer != null) {
                                     Button endTurnButton = findViewById(R.id.end_turn_button);
-                                    if (playerId!=(Integer) targetPlayer) {
+                                    if (playerId != (Integer) targetPlayer) {
                                         endTurnButton.setVisibility(View.VISIBLE);
                                     } else {
                                         endTurnButton.setVisibility(View.GONE);
                                     }
                                 }
-
 
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
