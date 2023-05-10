@@ -222,6 +222,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
                                     overlayViewPresenter.updateOpponentHealth(
                                             stats.getPlayerHealth());
+                                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                 }
                                 break;
                             case FULL_CARD_DECK:
@@ -232,6 +235,27 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                                 (List<Card>) message.getData(DataKey.COLLECTION));
                                 Log.i(TAG, "Created CardViews from Cards.");
                                 break;
+                            case TURN_NOTIFICATION:
+                                Object isMyTurn = message.getData(DataKey.YOUR_TURN);
+                                if (isMyTurn != null) {
+                                    Button endTurnButton = findViewById(R.id.end_turn_button);
+                                    if ((Boolean) isMyTurn) {
+                                        endTurnButton.setVisibility(View.VISIBLE);
+                                    } else {
+                                        endTurnButton.setVisibility(View.GONE);
+                                    }
+                                }
+                                Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
+                                if (targetPlayer != null) {
+                                    Button endTurnButton = findViewById(R.id.end_turn_button);
+                                    if (playerId!=(Integer) targetPlayer) {
+                                        endTurnButton.setVisibility(View.VISIBLE);
+                                    } else {
+                                        endTurnButton.setVisibility(View.GONE);
+                                    }
+                                }
+
+
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
                         }
