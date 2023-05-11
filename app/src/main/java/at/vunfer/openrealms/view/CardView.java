@@ -88,11 +88,7 @@ public class CardView extends ConstraintLayout {
             case MotionEvent.ACTION_UP:
                 if (motionEvent.getEventTime() - motionEvent.getDownTime() <= holdTime) {
                     Log.i(logTag, "Sending: " + card);
-                    try {
-                        MainActivity.sendMessage(MainActivity.buildTouchMessage(card.getId()));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    sendTouchMessage();
                 }
                 isBeingHeld = false;
                 resetFullscreen();
@@ -109,6 +105,14 @@ public class CardView extends ConstraintLayout {
                 break;
         }
         return false;
+    }
+
+    public void sendTouchMessage() {
+        try {
+            MainActivity.sendMessage(MainActivity.buildTouchMessage(card.getId()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /** Enables the FullscreenPreview */

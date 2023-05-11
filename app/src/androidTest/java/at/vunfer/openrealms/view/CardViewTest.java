@@ -2,6 +2,9 @@
 package at.vunfer.openrealms.view;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import android.content.Context;
 import android.view.MotionEvent;
@@ -9,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Card;
@@ -19,9 +21,7 @@ import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(AndroidJUnit4.class)
 public class CardViewTest {
 
     @Test
@@ -83,7 +83,8 @@ public class CardViewTest {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         Card exampleCard = new Card("CardName", 4, List.of(new CoinEffect(2)));
 
-        CardView v = new CardView(targetContext, exampleCard);
+        CardView v = spy(new CardView(targetContext, exampleCard));
+        doNothing().when(v).sendTouchMessage();
 
         MotionEvent down = MotionEvent.obtain(10, 10, MotionEvent.ACTION_DOWN, 0, 0, 0);
         MotionEvent up = MotionEvent.obtain(10, 20, MotionEvent.ACTION_UP, 0, 0, 0);
@@ -93,6 +94,7 @@ public class CardViewTest {
 
         v.onClick(up);
         assertFalse(v.isBeingHeld);
+        verify(v).sendTouchMessage();
     }
 
     @Test
