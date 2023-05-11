@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
+import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.effects.DamageEffect;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,10 +24,11 @@ public class HandViewTest {
 
     @Test
     public void testUpdateView() {
-        CardView exampleView1 = new CardView(context);
-        CardView exampleView2 = new CardView(context);
-        CardView exampleView3 = new CardView(context);
-        CardView wrongExampleView = new CardView(context);
+        Card c = new Card("CardName", 2, List.of(new DamageEffect(2)));
+        CardView exampleView1 = new CardView(context, c);
+        CardView exampleView2 = new CardView(context, c);
+        CardView exampleView3 = new CardView(context, c);
+        CardView wrongExampleView = new CardView(context, c);
         List<CardView> cardViews = List.of(exampleView1, exampleView2, exampleView3);
         handView.addView(wrongExampleView);
 

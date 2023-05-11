@@ -383,7 +383,7 @@ public class ServerThread extends Thread {
                 throw new RuntimeException(e);
             }
         }
-        Market.getInstance().setGetNewToPurchase(new Deck<>());
+        Market.getInstance().setNewToPurchase(new Deck<>());
     }
 
     public Message createAddMarketCardMessage(DeckType deckType, int cardId) {

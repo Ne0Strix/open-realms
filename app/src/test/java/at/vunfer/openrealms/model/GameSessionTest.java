@@ -82,12 +82,12 @@ public class GameSessionTest {
         player1.getPlayArea().visitHealing(3);
         assertEquals(player1.getPlayArea().getTurnHealing(), 3);
 
-        int initialMarketSize = Market.getInstance().getCards().size();
-        Card cardToPurchase = Market.getInstance().getCards().get(0);
+        int initialMarketSize = Market.getInstance().getForPurchase().size();
+        Card cardToPurchase = Market.getInstance().getForPurchase().get(0);
         int cardToPurchaseCost = cardToPurchase.getCost();
         player1.getPlayArea().visitCoin(cardToPurchaseCost);
         player1.getPlayArea().buyCard(cardToPurchase);
-        assertEquals(initialMarketSize - 1, Market.getInstance().getCards().size());
+        assertEquals(initialMarketSize - 1, Market.getInstance().getForPurchase().size());
 
         gameSession.endTurn();
         assertEquals(player2, gameSession.getCurrentPlayer());
@@ -108,6 +108,12 @@ public class GameSessionTest {
         int initialPlayer1Health = player1.getPlayArea().getHealth();
         gameSession.healPlayer(3);
         assertEquals(initialPlayer1Health + 3, player1.getPlayArea().getHealth());
+    }
+
+    @Test
+    void testGetPlayerTurnNumber() {
+        assertEquals(0, gameSession.getPlayerTurnNumber(player1));
+        assertEquals(1, gameSession.getPlayerTurnNumber(player2));
     }
 
     @AfterEach

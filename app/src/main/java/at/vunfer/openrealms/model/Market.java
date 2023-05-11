@@ -83,20 +83,11 @@ public class Market {
         return card;
     }
 
-    /**
-     * Get the list of cards in the market.
-     *
-     * @return The list of cards in the market.
-     */
-    public List<Card> getCards() {
-        return forPurchase;
-    }
-
     public Deck<Card> getNewToPurchase() {
         return newToPurchase;
     }
 
-    public void setGetNewToPurchase(Deck<Card> newToPurchase) {
+    public void setNewToPurchase(Deck<Card> newToPurchase) {
         this.newToPurchase = newToPurchase;
     }
 

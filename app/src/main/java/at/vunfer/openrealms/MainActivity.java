@@ -12,10 +12,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.Deck;
-import at.vunfer.openrealms.model.effects.CoinEffect;
-import at.vunfer.openrealms.model.effects.DamageEffect;
-import at.vunfer.openrealms.model.effects.HealingEffect;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
@@ -159,6 +155,12 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         endTurnButton.setVisibility(View.INVISIBLE);
 
         layout.addView(overlayView.getOverlayView());
+
+        // Flip the Text on opponent DiscardPile and Deck, to always be right-side up
+        opponentDiscardPileView.findViewById(R.id.discardPileAmount).setScaleY(-1);
+        opponentDiscardPileView.findViewById(R.id.discardPileAmountOutline).setScaleY(-1);
+        opponentDeckView.findViewById(R.id.deck_view_amount).setScaleY(-1);
+        opponentDeckView.findViewById(R.id.deck_view_amount_outline).setScaleY(-1);
 
         LOGGER.log(Level.INFO, "Views initialized");
 
@@ -356,42 +358,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         }
 
         return null;
-    }
-
-    public void addPlaceholderCards() {
-        // Add Cards to test functionality
-        Deck<Card> playerStarterCards = new Deck<>();
-        playerStarterCards.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
-        playerStarterCards.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
-        playerStarterCards.add(new Card("Shortsword", 0, List.of(new DamageEffect(1))));
-        // Card with the longest name in the Original game and 3 Effects
-        playerStarterCards.add(
-                new Card(
-                        "Varrick, the Necromancer",
-                        7,
-                        List.of(new DamageEffect(2), new HealingEffect(4), new CoinEffect(12))));
-        // Card with 2 Effects
-        playerStarterCards.add(
-                new Card("Example", 10, List.of(new HealingEffect(4), new CoinEffect(12))));
-        List<CardView> handCardViews = CardView.getViewFromCards(this, playerStarterCards);
-        List<CardView> opponentCardViews = CardView.getViewFromCards(this, playerStarterCards);
-        List<CardView> marketCardViews = CardView.getViewFromCards(this, playerStarterCards);
-        List<CardView> playAreaCardViews = CardView.getViewFromCards(this, playerStarterCards);
-        List<CardView> playerDiscardPileCardViews =
-                CardView.getViewFromCards(this, playerStarterCards);
-        List<CardView> opponentDiscardPileCardViews =
-                CardView.getViewFromCards(this, playerStarterCards);
-        List<CardView> playerDeckCardViews = CardView.getViewFromCards(this, playerStarterCards);
-        List<CardView> opponentDeckCardViews = CardView.getViewFromCards(this, playerStarterCards);
-
-        playerHandPresenter.addCardsToView(handCardViews);
-        opponentHandPresenter.addCardsToView(opponentCardViews);
-        marketPresenter.addCardsToView(marketCardViews);
-        playAreaPresenter.addCardsToView(playAreaCardViews);
-        playerDiscardPilePresenter.addCardsToView(playerDiscardPileCardViews);
-        opponentDiscardPilePresenter.addCardsToView(opponentDiscardPileCardViews);
-        playerDeckPresenter.addCardsToView(playerDeckCardViews);
-        opponentDeckPresenter.addCardsToView(opponentDeckCardViews);
     }
 
     public static void sendMessage(Message msg) throws IOException {
