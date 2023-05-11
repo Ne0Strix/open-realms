@@ -273,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         }
                                     }
                                 }
+                                break;
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
                         }
