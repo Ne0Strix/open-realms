@@ -4,7 +4,10 @@ package at.vunfer.openrealms.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import at.vunfer.openrealms.model.effects.DamageEffect;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -118,15 +121,12 @@ class PlayAreaTest {
         assertEquals(initialTurnHealing + 5, playArea.getTurnHealing());
     }
 
-    /*
-
     @Test
-
     void testBuyCardTooPoor() {
         PlayArea playArea1 = player1.getPlayArea();
         Card toBuy = playArea1.getMarket().getForPurchase().get(0);
-        assertThrows(IllegalArgumentException.class, () -> playArea1.buyCard(toBuy));
-    }*/
+        Assertions.assertFalse(playArea1.buyCard(toBuy));
+    }
 
     @Test
     void testBuyCard() {
@@ -137,6 +137,17 @@ class PlayAreaTest {
         player1.getPlayArea().buyCard(toBuy);
 
         assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
+    }
+
+    @Test
+    void testClearPlayedCards() {
+        Card c = new Card("Test", 2, List.of(new DamageEffect(2)));
+        playArea.getPlayedCards().add(c);
+
+        playArea.clearPlayedCards();
+
+        assertTrue(playArea.getPlayedCards().isEmpty());
+        assertTrue(playArea.getPlayerCards().getDiscardedCards().contains(c));
     }
 
     @AfterEach

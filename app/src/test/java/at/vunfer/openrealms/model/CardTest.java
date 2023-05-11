@@ -7,6 +7,7 @@ import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +27,11 @@ class CardTest {
     @BeforeEach
     void setUp() {
         playArea = new PlayArea(70, new PlayerCards());
+    }
+
+    @AfterEach
+    void tearDown() {
+        Card.getFullCardCollection().clear();
     }
 
     void reset() {
@@ -156,5 +162,17 @@ class CardTest {
         Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
         int id = card1.getId();
         assertEquals(card1, Card.getCardById(id));
+    }
+
+    @Test
+    void testGetCardByIdNotIn() {
+        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        int id = card1.getId() + 1;
+        assertNull(Card.getCardById(id));
+    }
+
+    @Test
+    void testGetFullCardCollection() {
+        assertEquals(List.of(card1, card2, card3), Card.getFullCardCollection());
     }
 }

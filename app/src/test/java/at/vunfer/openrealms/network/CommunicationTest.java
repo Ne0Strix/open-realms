@@ -36,9 +36,10 @@ public class CommunicationTest {
     }
 
     @Test
-    void sendMessageTest() throws IOException {
+    void sendMessageTest() throws IOException, InterruptedException {
         Message msg = new Message(MessageType.TOUCHED);
         communication.sendMessage(msg);
+        Thread.sleep(200); // Make sure the executor has time to run
         verify(output).writeObject(msg);
     }
 
