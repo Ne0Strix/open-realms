@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,24 +28,38 @@ import java.util.List;
 /** This class is used to represent a CardImageView. */
 public class CardView extends ConstraintLayout {
     private Card card;
-    private boolean isBeingHeld = false;
+    private boolean isFaceUp = true;
+    public boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
     private static final long holdTime = 250L;
     private static final String logTag = "CardView";
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable setFullscreen =
+            new Runnable() {
+                public void run() {
+                    if (isBeingHeld) {
+                        setFullscreen();
+                    }
+                }
+            };
 
     public CardView(Context context) {
-        super(context);
-        init();
+        this(context, (AttributeSet) null);
     }
 
     public CardView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public CardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    public CardView(Context context, Card card) {
+        super(context);
+        init();
+        setCard(card);
     }
 
     public void init() {
@@ -65,65 +78,48 @@ public class CardView extends ConstraintLayout {
     @SuppressLint("ClickableViewAccessibility")
     public void setUpListeners() {
         ImageView cardBackground = findViewById(R.id.card_view_background);
-        cardBackground.setOnTouchListener(
-                (view, motionEvent) -> {
-                    // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_UP:
-                            if (motionEvent.getEventTime() - motionEvent.getDownTime()
-                                    <= holdTime) {
-                                int parentId = ((View) getParent()).getId();
-                                Log.i(
-                                        logTag,
-                                        "Sending: "
-                                                + card
-                                                + " from int id: "
-                                                + parentId
-                                                + " or String id "
-                                                + getResources().getResourceName(parentId));
+        cardBackground.setOnTouchListener((view, motionEvent) -> onClick(motionEvent));
+    }
 
-                                try {
-                                    MainActivity.sendMessage(
-                                            MainActivity.buildTouchMessage(card.getId()));
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+    public boolean onClick(MotionEvent motionEvent) {
+        if (!isFaceUp) return false;
+        // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
+        switch (motionEvent.getAction()) {
+            case MotionEvent.ACTION_UP:
+                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= holdTime) {
+                    Log.i(logTag, "Sending: " + card);
+                    sendTouchMessage();
+                }
+                isBeingHeld = false;
+                resetFullscreen();
+                handler.removeCallbacks(setFullscreen);
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                isBeingHeld = false;
+                resetFullscreen();
+                handler.removeCallbacks(setFullscreen);
+                break;
+            case MotionEvent.ACTION_DOWN:
+                isBeingHeld = true;
+                handler.postDelayed(setFullscreen, holdTime);
+                break;
+        }
+        return false;
+    }
 
-                                if (parentId == R.id.player_hand_view) {
-                                    //  MainActivity.handPresenter.removeCardFromView(this);
-                                    //   MainActivity.playAreaPresenter.removeCardFromView(this);
-                                } else if (parentId == R.id.market_view) {
-                                    //   MainActivity.marketPresenter.removeCardFromView(this);
-                                }
-                            } else {
-                                resetFullscreen();
-                            }
-                            isBeingHeld = false;
-                            break;
-                        case MotionEvent.ACTION_CANCEL:
-                            resetFullscreen();
-                            break;
-                        case MotionEvent.ACTION_DOWN:
-                            isBeingHeld = true;
-                            final Handler handler = new Handler(Looper.getMainLooper());
-                            // TODO: don't show fullscreen while scrolling in playArea
-                            handler.postDelayed(
-                                    () -> {
-                                        if (isBeingHeld) {
-                                            setFullscreen();
-                                        }
-                                    },
-                                    holdTime);
-                            break;
-                    }
-                    return false;
-                });
+    public void sendTouchMessage() {
+        try {
+            MainActivity.sendMessage(MainActivity.buildTouchMessage(card.getId()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /** Enables the FullscreenPreview */
     private void setFullscreen() {
         // Get the view for the Fullscreen_Card Object from RootView
         CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
+
         fullScreenCard.setCard(card);
         fullScreenCard.setVisibility(VISIBLE);
         // Make sure that the the Fullscreen_Card Object is drawn in front of everything
@@ -133,7 +129,9 @@ public class CardView extends ConstraintLayout {
     /** Disables the FullscreenPreview */
     private void resetFullscreen() {
         CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
-        fullScreenCard.setVisibility(INVISIBLE);
+        if (fullScreenCard != null) {
+            fullScreenCard.setVisibility(INVISIBLE);
+        }
     }
 
     /** Applies the details of the current card to the View. */
@@ -174,18 +172,27 @@ public class CardView extends ConstraintLayout {
         // expand effects
     }
 
-    public CardView(Context context, Card card) {
-        super(context);
-        init();
-        setCard(card);
-    }
-
     public static List<CardView> getViewFromCards(Context context, List<Card> cards) {
         List<CardView> views = new ArrayList<>();
         for (Card c : cards) {
             views.add(new CardView(context, c));
         }
         return views;
+    }
+
+    public void setFaceUpOrDown(boolean faceDown) {
+        if (faceDown) setFaceDown();
+        else setFaceUp();
+    }
+
+    public void setFaceDown() {
+        isFaceUp = false;
+        findViewById(R.id.card_view_back_of_card).setVisibility(VISIBLE);
+    }
+
+    public void setFaceUp() {
+        isFaceUp = true;
+        findViewById(R.id.card_view_back_of_card).setVisibility(INVISIBLE);
     }
 
     /**

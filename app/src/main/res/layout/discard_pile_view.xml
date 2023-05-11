@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/emptycards" />
+        app:srcCompat="@drawable/card_outline" />
 
     <FrameLayout
         android:id="@+id/discardPileCardHolder"
@@ -28,6 +28,22 @@
 
     <TextView
         android:id="@+id/discardPileAmount"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="500sp"
+        android:autoSizeMinTextSize="11sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="0"
+        android:textAlignment="gravity"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+ <TextView
+        android:id="@+id/discardPileAmountOutline"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeMaxTextSize="500sp"
