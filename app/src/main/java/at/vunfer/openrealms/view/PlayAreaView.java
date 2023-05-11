@@ -49,6 +49,8 @@ public class PlayAreaView extends LinearLayout implements CardPileView {
     public void updateView(List<CardView> cards) {
         removeAllViews();
         for (CardView view : cards) {
+            view.setRotation(0);
+
             view.setLayoutParams(
                     new ConstraintLayout.LayoutParams(
                             (int) (CARD_SCALE * screenDensity * 77),

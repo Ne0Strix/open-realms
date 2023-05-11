@@ -41,6 +41,7 @@ public class MarketView extends LinearLayout implements CardPileView {
             if (card.getParent() != null) ((ViewGroup) card.getParent()).removeView(card);
 
             card.setFaceUp();
+            card.setRotation(0);
 
             LinearLayout.LayoutParams params =
                     new LinearLayout.LayoutParams(

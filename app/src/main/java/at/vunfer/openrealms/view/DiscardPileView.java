@@ -47,6 +47,7 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
 
         if (!cardsToDisplay.isEmpty()) {
             CardView lastCard = cardsToDisplay.get(cardsToDisplay.size() - 1);
+            lastCard.setRotation(0);
             lastCard.setFaceUp();
             lastCard.setLayoutParams(
                     new LayoutParams(
