@@ -145,6 +145,31 @@ public class CardView extends ConstraintLayout {
         LinearLayout effectArea = findViewById(R.id.card_view_effectArea);
         effectArea.removeAllViews();
 
+        ImageView typeIcon = findViewById(R.id.card_view_type_icon);
+        ImageView background = findViewById(R.id.card_view_background);
+        switch (card.getType()) {
+            case GUILD:
+                background.setImageResource(R.drawable.card_guild);
+                typeIcon.setImageResource(R.drawable.guild_icon);
+                break;
+            case IMPERIAL:
+                background.setImageResource(R.drawable.card_imperial);
+                typeIcon.setImageResource(R.drawable.imperial_icon);
+                break;
+            case NECROS:
+                background.setImageResource(R.drawable.card_necros);
+                typeIcon.setImageResource(R.drawable.necros_icon);
+                break;
+            case WILD:
+                background.setImageResource(R.drawable.card_wild);
+                typeIcon.setImageResource(R.drawable.wild_icon);
+                break;
+            default:
+                background.setImageResource(R.drawable.emptycards);
+                typeIcon.setVisibility(INVISIBLE);
+                break;
+        }
+
         // Default effects
         LinearLayout defaultEffects = new LinearLayout(getContext());
         LinearLayout.LayoutParams params =
