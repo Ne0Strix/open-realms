@@ -7,6 +7,6 @@ public enum DataKey {
     CHOICE,
     PLAYER_STATS,
     OPTIONS,
-    CHEAT_ACTIVATE
-
+    CHEAT_ACTIVATE,
+    ERROR_MESSAGE
 }
