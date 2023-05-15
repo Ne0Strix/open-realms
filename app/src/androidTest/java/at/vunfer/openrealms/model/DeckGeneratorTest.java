@@ -49,6 +49,7 @@ public class DeckGeneratorTest {
                         + "<card amount=\"3\">"
                         + "   <name>testName</name>"
                         + "   <cost>5</cost>"
+                        + "   <type>wild</type>"
                         + "   <ability>"
                         + "      <amount>5</amount>"
                         + "      <type>coin</type>"
@@ -57,6 +58,7 @@ public class DeckGeneratorTest {
                         + "<card amount=\"1\">"
                         + "   <name>otherTestName</name>"
                         + "   <cost>16</cost>"
+                        + "   <type>necros</type>"
                         + "   <ability>"
                         + "       <amount>2</amount>"
                         + "       <type>attack</type>"
@@ -69,13 +71,20 @@ public class DeckGeneratorTest {
                         + "</deck>";
 
         Deck<Card> expectedDeck = new Deck<>();
-        expectedDeck.add(new Card("testName", 5, new ArrayList<>(List.of(new CoinEffect(5)))));
-        expectedDeck.add(new Card("testName", 5, new ArrayList<>(List.of(new CoinEffect(5)))));
-        expectedDeck.add(new Card("testName", 5, new ArrayList<>(List.of(new CoinEffect(5)))));
+        expectedDeck.add(
+                new Card(
+                        "testName", 5, CardType.WILD, new ArrayList<>(List.of(new CoinEffect(5)))));
+        expectedDeck.add(
+                new Card(
+                        "testName", 5, CardType.WILD, new ArrayList<>(List.of(new CoinEffect(5)))));
+        expectedDeck.add(
+                new Card(
+                        "testName", 5, CardType.WILD, new ArrayList<>(List.of(new CoinEffect(5)))));
         expectedDeck.add(
                 new Card(
                         "otherTestName",
                         16,
+                        CardType.NECROS,
                         new ArrayList<>(List.of(new DamageEffect(2), new HealingEffect(5)))));
 
         Deck<Card> deck = DeckGenerator.generateDeckFromString(xmlToParse);
@@ -122,12 +131,13 @@ public class DeckGeneratorTest {
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
+                        + "        <type>guild</type>"
                         + "        <ability>"
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>"
                         + "        </ability>";
         Deck<Card> expectedDeck = new Deck<>();
-        expectedDeck.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
+        expectedDeck.add(new Card("Gold", 0, CardType.GUILD, List.of(new CoinEffect(1))));
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
@@ -143,11 +153,12 @@ public class DeckGeneratorTest {
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
+                        + "        <type>imperial</type>"
                         + "        <ability>"
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>";
         Deck<Card> expectedDeck = new Deck<>();
-        expectedDeck.add(new Card("Gold", 0, List.of(new CoinEffect(1))));
+        expectedDeck.add(new Card("Gold", 0, CardType.IMPERIAL, List.of(new CoinEffect(1))));
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
@@ -213,6 +224,27 @@ public class DeckGeneratorTest {
 
         assertThrows(
                 "Ability Ordering Error: The \"amount\"-tag must come before the \"type\"-tag.",
+                IllegalArgumentException.class,
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
+    }
+
+    @Test
+    public void testInvalidType() {
+        String xmlToParse =
+                "<deck>"
+                        + "    <card amount=\"1\">"
+                        + "        <name>Gold</name>"
+                        + "        <cost>0</cost>"
+                        + "        <type>ERROR</type>"
+                        + "        <ability>"
+                        + "            <amount>10</amount>"
+                        + "            <type>attack</type>"
+                        + "        </ability>"
+                        + "    </card>"
+                        + "</deck>";
+
+        assertThrows(
+                "Unrecognized card type \"ERROR\".",
                 IllegalArgumentException.class,
                 () -> DeckGenerator.generateDeckFromString(xmlToParse));
     }

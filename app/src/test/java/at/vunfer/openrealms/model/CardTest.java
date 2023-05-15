@@ -69,6 +69,7 @@ class CardTest {
         assertEquals("Card 1", card1.getName());
         assertEquals(1, card1.getCost());
         assertEquals(oneCoinTwoDamage, card1.getEffects());
+        assertEquals(CardType.NONE, card1.getType());
     }
 
     @Test

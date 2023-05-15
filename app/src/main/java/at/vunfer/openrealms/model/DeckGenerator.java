@@ -72,6 +72,7 @@ public class DeckGenerator {
             throws XmlPullParserException, IOException {
         String cardName = null;
         int cardCost = -1;
+        CardType cardType = CardType.NONE;
         List<Effect> cardEffects = new ArrayList<>();
         Log.v(LOGGING_TAG, "Starting with Card");
         int event = 0;
@@ -89,6 +90,10 @@ public class DeckGenerator {
                         cardCost = Integer.parseInt(xmlParser.nextText());
                         Log.v(LOGGING_TAG, "Added cost: " + cardCost);
                         break;
+                    case "type":
+                        cardType = getCardTypeFromString(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added type: " + cardCost);
+                        break;
                     case "ability":
                         Effect ability = getCardAbility(xmlParser);
                         cardEffects.add(ability);
@@ -100,7 +105,24 @@ public class DeckGenerator {
             }
             if (event == XmlPullParser.END_TAG) break;
         }
-        return new Card(cardName, cardCost, CardType.NONE, cardEffects);
+        return new Card(cardName, cardCost, cardType, cardEffects);
+    }
+
+    private static CardType getCardTypeFromString(String s) {
+        switch (s) {
+            case "guild":
+                return CardType.GUILD;
+            case "imperial":
+                return CardType.IMPERIAL;
+            case "necros":
+                return CardType.NECROS;
+            case "wild":
+                return CardType.WILD;
+            case "none":
+                return CardType.NONE;
+            default:
+                throw new IllegalArgumentException("Unrecognized card type \"" + s + "+\".");
+        }
     }
 
     private static Effect getCardAbility(XmlPullParser xmlParser)

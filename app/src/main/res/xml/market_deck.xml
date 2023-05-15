@@ -3,6 +3,7 @@
     <card amount="1">
         <name>Close Ranks</name>
         <cost>3</cost>
+        <type>imperial</type>
         <ability>
             <amount>5</amount>
             <type>attack</type>
@@ -11,6 +12,7 @@
     <card amount="1">
         <name>Command</name>
         <cost>5</cost>
+        <type>imperial</type>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -27,6 +29,7 @@
     <card amount="1">
         <name>Domination</name>
         <cost>7</cost>
+        <type>imperial</type>
         <ability>
             <amount>6</amount>
             <type>attack</type>
@@ -39,6 +42,7 @@
     <card amount="1">
         <name>Rally the Troops</name>
         <cost>4</cost>
+        <type>imperial</type>
         <ability>
             <amount>5</amount>
             <type>attack</type>
@@ -51,6 +55,7 @@
     <card amount="3">
         <name>Recruit</name>
         <cost>2</cost>
+        <type>imperial</type>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -63,6 +68,7 @@
     <card amount="3">
         <name>Taxation</name>
         <cost>1</cost>
+        <type>imperial</type>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -71,6 +77,7 @@
     <card amount="3">
         <name>Bribe</name>
         <cost>3</cost>
+        <type>guild</type>
         <ability>
             <amount>3</amount>
             <type>coin</type>
@@ -79,6 +86,7 @@
     <card amount="1">
         <name>Death Threat</name>
         <cost>3</cost>
+        <type>guild</type>
         <ability>
             <amount>1</amount>
             <type>attack</type>
@@ -87,6 +95,7 @@
     <card amount="1">
         <name>Deception</name>
         <cost>5</cost>
+        <type>guild</type>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -95,6 +104,7 @@
     <card amount="1">
         <name>Fire Bomb</name>
         <cost>8</cost>
+        <type>guild</type>
         <ability>
             <amount>8</amount>
             <type>attack</type>
@@ -103,6 +113,7 @@
     <card amount="1">
         <name>Hit Job</name>
         <cost>4</cost>
+        <type>guild</type>
         <ability>
             <amount>7</amount>
             <type>attack</type>
@@ -111,6 +122,7 @@
     <card amount="2">
         <name>Intimidation</name>
         <cost>2</cost>
+        <type>guild</type>
         <ability>
             <amount>5</amount>
             <type>attack</type>
@@ -119,6 +131,7 @@
     <card amount="3">
         <name>Profit</name>
         <cost>1</cost>
+        <type>guild</type>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -127,6 +140,7 @@
     <card amount="1">
         <name>Smash and Grab</name>
         <cost>6</cost>
+        <type>guild</type>
         <ability>
             <amount>6</amount>
             <type>attack</type>
@@ -135,6 +149,7 @@
     <card amount="1">
         <name>Dark Energy</name>
         <cost>4</cost>
+        <type>necros</type>
         <ability>
             <amount>7</amount>
             <type>attack</type>
@@ -143,6 +158,7 @@
     <card amount="1">
         <name>Dark Reward</name>
         <cost>5</cost>
+        <type>necros</type>
         <ability>
             <amount>3</amount>
             <type>coin</type>
@@ -151,6 +167,7 @@
     <card amount="1">
         <name>Death Touch</name>
         <cost>5</cost>
+        <type>necros</type>
         <ability>
             <amount>2</amount>
             <type>attack</type>
@@ -159,6 +176,7 @@
     <card amount="3">
         <name>Influence</name>
         <cost>2</cost>
+        <type>necros</type>
         <ability>
             <amount>3</amount>
             <type>coin</type>
@@ -167,6 +185,7 @@
     <card amount="1">
         <name>Life Drain</name>
         <cost>6</cost>
+        <type>necros</type>
         <ability>
             <amount>8</amount>
             <type>attack</type>
@@ -175,22 +194,25 @@
     <card amount="2">
         <name>The Rot</name>
         <cost>3</cost>
+        <type>necros</type>
         <ability>
             <amount>4</amount>
             <type>attack</type>
         </ability>
     </card>
     <card amount="2">
-        <name>Even Curse</name>
+        <name>Elven Curse</name>
         <cost>3</cost>
+        <type>wild</type>
         <ability>
             <amount>6</amount>
             <type>attack</type>
         </ability>
     </card>
     <card amount="3">
-        <name>Even Gift</name>
+        <name>Elven Gift</name>
         <cost>3</cost>
+        <type>wild</type>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -199,6 +221,7 @@
     <card amount="1">
         <name>Nature's Bounty</name>
         <cost>4</cost>
+        <type>wild</type>
         <ability>
             <amount>4</amount>
             <type>coin</type>
@@ -207,6 +230,7 @@
     <card amount="1">
         <name>Rampage</name>
         <cost>6</cost>
+        <type>wild</type>
         <ability>
             <amount>6</amount>
             <type>attack</type>
@@ -215,6 +239,7 @@
     <card amount="3">
         <name>Spark</name>
         <cost>1</cost>
+        <type>wild</type>
         <ability>
             <amount>3</amount>
             <type>attack</type>
@@ -223,6 +248,7 @@
     <card amount="1">
         <name>Wolf Form</name>
         <cost>5</cost>
+        <type>wild</type>
         <ability>
             <amount>8</amount>
             <type>attack</type>
