@@ -14,10 +14,18 @@ public class ClientConnector {
     private ObjectInputStream inputStream;
     private MessageHandler messageHandler;
 
-    public ClientConnector() {
-        // TODO make connection to server
+    public ClientConnector(String serverAddress, int serverPort) {
+        try {
+            // Connect to the server
+            socket = new Socket(serverAddress, serverPort);
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
 
-        new Thread(this::listenForMessages).start();
+            new Thread(this::listenForMessages).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Error handling in case of connection problems
+        }
     }
 
     private void listenForMessages() {
