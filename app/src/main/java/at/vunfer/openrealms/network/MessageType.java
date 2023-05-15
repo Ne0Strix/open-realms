@@ -6,6 +6,8 @@ public enum MessageType {
     TOUCHED,
     CHOICE,
     END_TURN,
+    BUY_CARD_CONFIRMATION,
+    BUY_CARD_ERROR,
 
     // Server -> Client
     ADD_CARD,
