@@ -14,10 +14,18 @@ public class ClientHandler {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
     private MessageHandler messageHandler;
+    private ClientHandler clientHandler;
 
     public ClientHandler() {
-        // TODO make connection to client
+        this.socket = socket;
+        this.messageHandler = messageHandler;
 
+        try {
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new Thread(this::listenForMessages).start();
     }
 
