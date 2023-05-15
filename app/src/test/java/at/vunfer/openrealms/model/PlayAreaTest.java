@@ -141,7 +141,7 @@ class PlayAreaTest {
 
     @Test
     void testClearPlayedCards() {
-        Card c = new Card("Test", 2, List.of(new DamageEffect(2)));
+        Card c = new Card("Test", 2, CardType.NONE, List.of(new DamageEffect(2)));
         playArea.getPlayedCards().add(c);
 
         playArea.clearPlayedCards();

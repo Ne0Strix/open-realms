@@ -4,6 +4,7 @@ package at.vunfer.openrealms.network;
 import static org.junit.jupiter.api.Assertions.*;
 
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.CardType;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.effects.CoinEffect;
@@ -132,7 +133,7 @@ class MessageTest {
         Effect testEffect = new CoinEffect(1);
         ArrayList effectlist = new ArrayList<>();
         effectlist.add(testEffect);
-        Card card1 = new Card("Test", 1, effectlist);
+        Card card1 = new Card("Test", 1, CardType.NONE, effectlist);
         Deck<Card> cards = new Deck<>();
         cards.add(card1);
         assertDoesNotThrow(() -> message.setData(DataKey.COLLECTION, cards));
@@ -198,7 +199,7 @@ class MessageTest {
         Effect testEffect = new CoinEffect(1);
         ArrayList effectlist = new ArrayList<>();
         effectlist.add(testEffect);
-        Card card1 = new Card("Test", 1, effectlist);
+        Card card1 = new Card("Test", 1, CardType.NONE, effectlist);
         Deck<Card> cards = new Deck<>();
         cards.add(card1);
         message.setData(DataKey.COLLECTION, cards);

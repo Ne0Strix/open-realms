@@ -18,9 +18,9 @@ class CardTest {
     List<Effect> emptyList = List.of();
     List<Effect> nullList = null;
 
-    Card card1 = new Card("Card 1", 1, oneCoinTwoDamage);
-    Card card2 = new Card("Card 2", 1, twoCoinThreeHealing);
-    Card card3 = new Card("Card 3", 1, oneHealingOneDamage);
+    Card card1 = new Card("Card 1", 1, CardType.NONE, oneCoinTwoDamage);
+    Card card2 = new Card("Card 2", 1, CardType.NONE, twoCoinThreeHealing);
+    Card card3 = new Card("Card 3", 1, CardType.NONE, oneHealingOneDamage);
 
     PlayArea playArea;
 
@@ -40,19 +40,28 @@ class CardTest {
 
     @Test
     void testNameConstraints() {
-        assertThrows(IllegalArgumentException.class, () -> new Card(null, 1, oneCoinTwoDamage));
-        assertThrows(IllegalArgumentException.class, () -> new Card("", 1, twoCoinThreeHealing));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Card(null, 1, CardType.NONE, oneCoinTwoDamage));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Card("", 1, CardType.NONE, twoCoinThreeHealing));
     }
 
     @Test
     void testCostConstraint() {
-        assertThrows(IllegalArgumentException.class, () -> new Card("test", -1, oneCoinTwoDamage));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Card("test", -1, CardType.NONE, oneCoinTwoDamage));
     }
 
     @Test
     void testEffectConstraints() {
-        assertThrows(IllegalArgumentException.class, () -> new Card("test", 1, nullList));
-        assertThrows(IllegalArgumentException.class, () -> new Card("test", 1, emptyList));
+        assertThrows(
+                IllegalArgumentException.class, () -> new Card("test", 1, CardType.NONE, nullList));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Card("test", 1, CardType.NONE, emptyList));
     }
 
     @Test
@@ -103,24 +112,24 @@ class CardTest {
 
     @Test
     void testIsIdenticalDifferentName() {
-        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
-        Card cardB = new Card("Different Name", 1, List.of(new DamageEffect(1)));
+        Card cardA = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Different Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
 
         assertFalse(cardA.isIdentical(cardB));
     }
 
     @Test
     void testIsIdenticalDifferentCost() {
-        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
-        Card cardB = new Card("Name", 2, List.of(new DamageEffect(1)));
+        Card cardA = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Name", 2, CardType.NONE, List.of(new DamageEffect(1)));
 
         assertFalse(cardA.isIdentical(cardB));
     }
 
     @Test
     void testIsIdenticalDifferentEffect() {
-        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
-        Card cardB = new Card("Name", 1, List.of(new HealingEffect(2)));
+        Card cardA = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Name", 1, CardType.NONE, List.of(new HealingEffect(2)));
 
         assertFalse(cardA.isIdentical(cardB));
     }
@@ -132,41 +141,41 @@ class CardTest {
 
     @Test
     void testIsIdenticalIdenticalObject() {
-        Card cardA = new Card("Name", 1, List.of(new DamageEffect(1)));
-        Card cardB = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card cardA = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
+        Card cardB = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
 
         assertTrue(cardA.isIdentical(cardB));
     }
 
     @Test
     void testEqualsEqualObject() {
-        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         assertTrue(card1.equals(card1));
     }
 
     @Test
     void testEqualsEqualParameter() {
-        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
-        Card card2 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
+        Card card2 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         assertFalse(card1.equals(card2));
     }
 
     @Test
     void testHashCode() {
-        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         assertEquals(card1.hashCode(), card1.hashCode());
     }
 
     @Test
     void testGetCardById() {
-        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         int id = card1.getId();
         assertEquals(card1, Card.getCardById(id));
     }
 
     @Test
     void testGetCardByIdNotIn() {
-        Card card1 = new Card("Name", 1, List.of(new DamageEffect(1)));
+        Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         int id = card1.getId() + 1;
         assertNull(Card.getCardById(id));
     }
