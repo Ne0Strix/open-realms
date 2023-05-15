@@ -16,4 +16,16 @@ public class MessageHandler {
                 return false;
         }
     }
+    public void handleSpecificMessage(Message message) {
+        switch (message.getType()) {
+            case BUY_CARD:
+                // Logic for handling the buyCard message
+                break;
+            // More message types can be processed here
+            default:
+                // Error handling for unknown message types
+                System.out.println("Received unknown message type: " + message.getType());
+                break;
+        }
+    }
 }
