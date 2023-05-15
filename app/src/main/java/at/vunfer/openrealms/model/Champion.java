@@ -4,7 +4,8 @@ package at.vunfer.openrealms.model;
 import java.util.List;
 
 public class Champion extends Card {
-    public Champion(String name, int cost, List<Effect> effects) throws IllegalArgumentException {
-        super(name, cost, effects);
+    public Champion(String name, int cost, CardType type, List<Effect> effects)
+            throws IllegalArgumentException {
+        super(name, cost, type, effects);
     }
 }

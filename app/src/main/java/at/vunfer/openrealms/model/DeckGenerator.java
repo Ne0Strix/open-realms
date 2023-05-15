@@ -100,7 +100,7 @@ public class DeckGenerator {
             }
             if (event == XmlPullParser.END_TAG) break;
         }
-        return new Card(cardName, cardCost, cardEffects);
+        return new Card(cardName, cardCost, CardType.NONE, cardEffects);
     }
 
     private static Effect getCardAbility(XmlPullParser xmlParser)

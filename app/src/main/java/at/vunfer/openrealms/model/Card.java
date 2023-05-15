@@ -10,15 +10,17 @@ public class Card implements Serializable {
     private static int idCounter = 0;
     private final String name;
     private final int cost;
+    private final CardType type;
     private final List<Effect> effects;
     private int id;
     private static Deck<Card> fullCardCollection = new Deck<>();
 
     public Card(Card c) {
-        this(c.name, c.cost, new ArrayList<>(c.effects));
+        this(c.name, c.cost, c.type, new ArrayList<>(c.effects));
     }
 
-    public Card(String name, int cost, List<Effect> effects) throws IllegalArgumentException {
+    public Card(String name, int cost, CardType type, List<Effect> effects)
+            throws IllegalArgumentException {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name must not be null or empty");
         } else if (cost < 0) {
@@ -29,6 +31,7 @@ public class Card implements Serializable {
         this.name = name;
         this.cost = cost;
         this.effects = effects;
+        this.type = type;
         this.id = idCounter++;
         fullCardCollection.add(this);
     }
@@ -59,6 +62,10 @@ public class Card implements Serializable {
     public boolean isIdentical(Card c) {
         if (this == c) return true;
         return cost == c.cost && name.equals(c.name) && effects.equals(c.effects);
+    }
+
+    public CardType getType() {
+        return type;
     }
 
     public int getId() {
