@@ -28,6 +28,20 @@ public class ClientConnector {
         }
     }
 
+    public void connectAndSendBuyCardMessage(Message message) {
+        try {
+            // send buyCard message
+            outputStream.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Error handling for send errors
+        }
+    }
+
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+    }
+
     private void listenForMessages() {
         try {
             while (true) {
