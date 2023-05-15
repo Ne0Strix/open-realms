@@ -14,5 +14,6 @@ public enum MessageType {
     REMOVE_CARD,
     BUY_CARD,
     CHOOSE_OPTION,
-    UPDATE_PLAYER_STATS
+    UPDATE_PLAYER_STATS,
+    SENSOR_ACTIVATION  // New message type for sensor activation
 }
