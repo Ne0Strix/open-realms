@@ -33,6 +33,7 @@ public class CardViewTest {
                         "CardName",
                         4,
                         CardType.NONE,
+                        List.of(new CoinEffect(2), new DamageEffect(4), new HealingEffect(19)),
                         List.of(new CoinEffect(2), new DamageEffect(4), new HealingEffect(19)));
 
         CardView v = new CardView(targetContext, exampleCard);
@@ -40,6 +41,24 @@ public class CardViewTest {
         assertTrue(exampleCard.isIdentical(v.getCard()));
         assertEquals("CardName", ((TextView) (v.findViewById(R.id.card_view_name))).getText());
         assertEquals("4", ((TextView) (v.findViewById(R.id.card_view_cost))).getText());
+        assertEquals(View.INVISIBLE, v.findViewById(R.id.card_view_type_icon).getVisibility());
+    }
+
+    @Test
+    public void testConstructCardViewTypeIcons() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        List<Card> cardList =
+                List.of(
+                        new Card("Wild", 4, CardType.WILD, List.of(new CoinEffect(2))),
+                        new Card("Necros", 4, CardType.NECROS, List.of(new CoinEffect(2))),
+                        new Card("Guild", 4, CardType.GUILD, List.of(new CoinEffect(2))),
+                        new Card("Imperial", 4, CardType.IMPERIAL, List.of(new CoinEffect(2))));
+
+        List<CardView> views = CardView.getViewFromCards(targetContext, cardList);
+
+        for (CardView c : views) {
+            assertEquals(View.VISIBLE, c.findViewById(R.id.card_view_type_icon).getVisibility());
+        }
     }
 
     @Test
@@ -157,5 +176,15 @@ public class CardViewTest {
 
         view.setFaceUpOrDown(true);
         assertEquals(View.VISIBLE, backOfCard.getVisibility());
+    }
+
+    @Test
+    public void testGetCardId() {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+        Card c = new Card("Card1", 1, CardType.NONE, List.of(new CoinEffect(1)));
+        CardView view = new CardView(targetContext, c);
+
+        assertEquals(c.getId(), view.getCardId());
     }
 }
