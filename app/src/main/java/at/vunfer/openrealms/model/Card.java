@@ -11,8 +11,8 @@ public class Card implements Serializable {
     private final String name;
     private final int cost;
     private final List<Effect> effects;
-    private int id;
-    private static Deck<Card> fullCardCollection = new Deck<>();
+    private final int id;
+    private static final Deck<Card> fullCardCollection = new Deck<>();
 
     public Card(Card c) {
         this(c.name, c.cost, new ArrayList<>(c.effects));
