@@ -70,8 +70,8 @@ public class ChampionTest {
                         CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1)));
         assertEquals(
-                "Card{name='Test Champion', cost=3, effects=[DamageEffect{damage=1},"
-                        + " HealingEffect{healing=1}, CoinEffect{coin=1}]}",
-                champion.toString());
+                "Card{name='Test Champion', cost=3, type=NONE, effects=[DamageEffect{damage=1},"
+                        + " HealingEffect{healing=1}, CoinEffect{coin=1}], synergyEffects=[], ",
+                champion.toString().split("id")[0]);
     }
 }

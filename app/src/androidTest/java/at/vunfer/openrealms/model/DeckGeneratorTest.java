@@ -54,6 +54,10 @@ public class DeckGeneratorTest {
                         + "      <amount>5</amount>"
                         + "      <type>coin</type>"
                         + "   </ability>"
+                        + "        <synergy>"
+                        + "            <amount>3</amount>"
+                        + "            <type>attack</type>"
+                        + "        </synergy>"
                         + "</card>"
                         + "<card amount=\"1\">"
                         + "   <name>otherTestName</name>"
@@ -73,19 +77,34 @@ public class DeckGeneratorTest {
         Deck<Card> expectedDeck = new Deck<>();
         expectedDeck.add(
                 new Card(
-                        "testName", 5, CardType.WILD, new ArrayList<>(List.of(new CoinEffect(5)))));
+                        "testName",
+                        5,
+                        CardType.WILD,
+                        new ArrayList<>(List.of(new CoinEffect(5))),
+                        List.of(new DamageEffect(3))));
         expectedDeck.add(
                 new Card(
-                        "testName", 5, CardType.WILD, new ArrayList<>(List.of(new CoinEffect(5)))));
+                        "testName",
+                        5,
+                        CardType.WILD,
+                        new ArrayList<>(List.of(new CoinEffect(5))),
+                        List.of(new DamageEffect(3))));
+
         expectedDeck.add(
                 new Card(
-                        "testName", 5, CardType.WILD, new ArrayList<>(List.of(new CoinEffect(5)))));
+                        "testName",
+                        5,
+                        CardType.WILD,
+                        new ArrayList<>(List.of(new CoinEffect(5))),
+                        List.of(new DamageEffect(3))));
+
         expectedDeck.add(
                 new Card(
                         "otherTestName",
                         16,
                         CardType.NECROS,
-                        new ArrayList<>(List.of(new DamageEffect(2), new HealingEffect(5)))));
+                        new ArrayList<>(List.of(new DamageEffect(2), new HealingEffect(5))),
+                        new ArrayList<>()));
 
         Deck<Card> deck = DeckGenerator.generateDeckFromString(xmlToParse);
 
@@ -137,7 +156,8 @@ public class DeckGeneratorTest {
                         + "            <type>coin</type>"
                         + "        </ability>";
         Deck<Card> expectedDeck = new Deck<>();
-        expectedDeck.add(new Card("Gold", 0, CardType.GUILD, List.of(new CoinEffect(1))));
+        expectedDeck.add(
+                new Card("Gold", 0, CardType.GUILD, List.of(new CoinEffect(1)), new ArrayList<>()));
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
@@ -158,7 +178,13 @@ public class DeckGeneratorTest {
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>";
         Deck<Card> expectedDeck = new Deck<>();
-        expectedDeck.add(new Card("Gold", 0, CardType.IMPERIAL, List.of(new CoinEffect(1))));
+        expectedDeck.add(
+                new Card(
+                        "Gold",
+                        0,
+                        CardType.IMPERIAL,
+                        List.of(new CoinEffect(1)),
+                        new ArrayList<>()));
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 

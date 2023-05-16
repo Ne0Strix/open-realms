@@ -8,6 +8,10 @@
             <amount>5</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>6</amount>
+            <type>heal</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Command</name>
@@ -64,6 +68,10 @@
             <amount>5</amount>
             <type>heal</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>coin</type>
+        </synergy>
     </card>
     <card amount="3">
         <name>Taxation</name>
@@ -73,6 +81,10 @@
             <amount>2</amount>
             <type>coin</type>
         </ability>
+        <synergy>
+            <amount>6</amount>
+            <type>heal</type>
+        </synergy>
     </card>
     <card amount="3">
         <name>Bribe</name>
@@ -127,6 +139,10 @@
             <amount>5</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>2</amount>
+            <type>coin</type>
+        </synergy>
     </card>
     <card amount="3">
         <name>Profit</name>
@@ -136,6 +152,10 @@
             <amount>2</amount>
             <type>coin</type>
         </ability>
+        <synergy>
+            <amount>4</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Smash and Grab</name>
@@ -163,6 +183,10 @@
             <amount>3</amount>
             <type>coin</type>
         </ability>
+        <synergy>
+            <amount>6</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Death Touch</name>
@@ -172,6 +196,10 @@
             <amount>2</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>2</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="3">
         <name>Influence</name>
@@ -181,6 +209,10 @@
             <amount>3</amount>
             <type>coin</type>
         </ability>
+        <synergy>
+            <amount>3</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Life Drain</name>
@@ -199,6 +231,10 @@
             <amount>4</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>3</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="2">
         <name>Elven Curse</name>
@@ -208,6 +244,10 @@
             <amount>6</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>3</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="3">
         <name>Elven Gift</name>
@@ -217,6 +257,10 @@
             <amount>2</amount>
             <type>coin</type>
         </ability>
+        <synergy>
+            <amount>4</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Nature's Bounty</name>
@@ -244,6 +288,10 @@
             <amount>3</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>2</amount>
+            <type>attack</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Wolf Form</name>
