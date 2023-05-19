@@ -1,6 +1,8 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.content.Context;
+
 /** A factory class for creating new Player instances. */
 public class PlayerFactory {
 
@@ -15,9 +17,9 @@ public class PlayerFactory {
      * @param playerName The name of the player
      * @return A new Player instance
      */
-    public static Player createPlayer(String playerName) {
+    public static Player createPlayer(String playerName, Context context) {
         PlayerCards playerCards = new PlayerCards();
-        PlayArea playArea = new PlayArea(INITIAL_HEALTH, playerCards);
+        PlayArea playArea = new PlayArea(INITIAL_HEALTH, playerCards, context);
         return new Player(playerName, playArea);
     }
 }

@@ -238,6 +238,7 @@ public class PlayArea extends Thread {
 
         // Check if the device has an accelerometer sensor
         if (sensorManager != null && sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+            // Create a sensor listener
             SensorEventListener sensorEventListener = new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent event) {
@@ -252,17 +253,23 @@ public class PlayArea extends Thread {
 
                     // Check if the phone is turned over or upside down
                     if (delta > 2.0) {
+                        cheat = true;
                     } else {
+                        cheat = false;
                     }
                 }
+
                 @Override
                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                    // Handle accuracy changes if needed
                 }
             };
+
+            // Register the sensor listener for accelerometer sensor with a specific sampling rate
             Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
-        return false;
+        return cheat;
     }
 
     @Override

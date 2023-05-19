@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
+import android.content.Context;
+
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -20,8 +22,9 @@ public class GameSessionTest {
 
     @BeforeEach
     void setUp() {
-        player1 = PlayerFactory.createPlayer("Player 1");
-        player2 = PlayerFactory.createPlayer("Player 2");
+        Context context = null;
+        player1 = PlayerFactory.createPlayer("Player 1", context);
+        player2 = PlayerFactory.createPlayer("Player 2", context);
         players = Arrays.asList(player1, player2);
         gameSession = new GameSession(players, player1);
     }
@@ -33,7 +36,8 @@ public class GameSessionTest {
 
     @Test
     void testGameSessionConstructorWithInvalidPlayers() {
-        Player invalidPlayer = PlayerFactory.createPlayer("Invalid Player");
+        Context context = null;
+        Player invalidPlayer = PlayerFactory.createPlayer("Invalid Player", context);
         assertThrows(IllegalArgumentException.class, () -> new GameSession(players, invalidPlayer));
     }
 
