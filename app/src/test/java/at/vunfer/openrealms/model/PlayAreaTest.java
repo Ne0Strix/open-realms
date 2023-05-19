@@ -5,9 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testng.Assert.assertTrue;
 
+import android.content.Context;
+
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import at.vunfer.openrealms.network.DataKey;
+import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
 
 class PlayAreaTest {
 
@@ -18,9 +25,10 @@ class PlayAreaTest {
 
     @BeforeEach
     void setUp() {
-        player1 = PlayerFactory.createPlayer("Player 1");
+        Context context = null;
+        player1 = PlayerFactory.createPlayer("Player 1", context);
         playerCards = new PlayerCards();
-        playArea = new PlayArea(70, playerCards);
+        playArea = new PlayArea(70, playerCards, context);
         market = Market.getInstance();
     }
 
@@ -133,6 +141,41 @@ class PlayAreaTest {
         player1.getPlayArea().buyCard(toBuy);
 
         assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
+    }
+
+    @Test
+    void testBuyCardCheating() {
+        Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
+        Message message = new Message(MessageType.BUY_CARD);
+        message.setData(DataKey.CARD_ID, Integer.toString(toBuy.getId()));
+        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(true));
+
+        int initialCoins = player1.getPlayArea().getTurnCoins();
+        player1.getPlayArea().buyCard(message);
+        assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
+        assertEquals(initialCoins - toBuy.getCost(), player1.getPlayArea().getTurnCoins());
+    }
+
+    @Test
+    void testBuyCardNotEnoughCoins() {
+        Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
+        Message message = new Message(MessageType.BUY_CARD);
+        message.setData(DataKey.CARD_ID, Integer.toString(toBuy.getId()));
+        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(false));
+
+        int initialCoins = player1.getPlayArea().getTurnCoins();
+        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
+        Assertions.assertFalse(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
+        assertEquals(initialCoins, player1.getPlayArea().getTurnCoins());
+    }
+
+    @Test
+    void testBuyCardInvalidCard() {
+        Message message = new Message(MessageType.BUY_CARD);
+        message.setData(DataKey.CARD_ID, "-1");
+        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(true));
+
+        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
     }
 
     @AfterEach
