@@ -1,5 +1,22 @@
 # open-realms: an open-deckbuilding game
 
+## Communication
+
+Communication is handled within the `Communication` class. All classes that want to communicate in any way can use a `Communication` object to do so. Once instantiated, it listens for messages and sends them to a `MessageHandler`. Client and Server each have their own message-handler. The client-messagehandler only forwards the message into the UI-thread as UI updates have to be done there. The server-messagehandler handles the message and sends a response back to the client.
+
+### Message
+
+Messages are identified using the `MessageType` enum, the data inside is stored in key-value pairs. All keys are defined in the `DataKey` enum.
+
+When adding a new Message/Datatype bear the following things in mind:
+* **only communicate the bare minimum of information**: e.g. it's sufficient to only communicate the id of a card to be played, as the server knows where the card is and who sent the message anyway. We do this to avoid communicating inconsistent data.
+* **reusable `DataKeys`**: make keys reusable and give them a clear purpose. Validate the integrity of the key in the `Message` class.
+### Player Stats
+This class is used to communicate the current state of a player. It *always* contains the variables declared in the class. We use the DataKey `TARGET_PLAYER` to specify the player the stats are for.
+
+### DataKeys
+Please comment the specific usage of a key in the `DataKey` enum. If you need a new key, please add it to the bottom of the enum and make sure to add a comment. Also verify the integrity of the key in the `Message` class and add corresponding tests. 
+
 ## Project Setup
 
 To auto-format all java-files please copy the `pre-commit` file to `.git/hooks/` (without any file-endings). This allows spotless to run before each commit and help us keep the same codestyle across all systems. Under Linux execute `cp pre-commit .git/hooks/pre-commit`.
@@ -20,12 +37,6 @@ GitHub can perform actions automatically on issues by using keywords. For exampl
 - `git commit -m "fix #10"`
 
 Please refer to the [official documentation](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) for more details.
-
-### Git Flow
-
-The branching scheme we use is called _git flow_, you can find more info [here](https://datasift.github.io/gitflow/IntroducingGitFlow.html).
-
-![git-flow diagram](https://camo.githubusercontent.com/8789c3f5dd8727bbb8814c5fddb79f0f75e07ddbea4b08b6fdfbd550ea5ad91a/68747470733a2f2f65787465726e616c2d636f6e74656e742e6475636b6475636b676f2e636f6d2f69752f3f753d6874747073253341253246253246692e737461636b2e696d6775722e636f6d2532466e37504b6a2e706e6726663d31266e6f66623d31)
 
 ## About Issues, Milestones, Tasks, …
 
