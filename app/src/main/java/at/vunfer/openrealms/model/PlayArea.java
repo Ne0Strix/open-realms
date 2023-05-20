@@ -123,12 +123,21 @@ public class PlayArea {
         // Synergy effects:
         int numOfCardsWithSameType = 0;
         Card cardWithSameType = null;
+        // check normal cards
         for (Card c : playedCards) {
             if (card.getType() != CardType.NONE && c.getType() == card.getType()) {
                 numOfCardsWithSameType++;
                 cardWithSameType = c;
             }
         }
+        // check champions
+        for (Card c : playedChampions) {
+            if (card.getType() != CardType.NONE && c.getType() == card.getType()) {
+                numOfCardsWithSameType++;
+                cardWithSameType = c;
+            }
+        }
+
         if (numOfCardsWithSameType > 0) {
             card.applySynergyEffects(this);
         }
@@ -139,7 +148,12 @@ public class PlayArea {
         // Default effects:
         card.applyEffects(this);
 
-        playedCards.add(playerCards.popFromHand(card));
+        if (card instanceof Champion) {
+            playedChampions.add(playerCards.popFromHand(card));
+        } else {
+            playedCards.add(playerCards.popFromHand(card));
+        }
+
         for (Card c : playedCards) {}
     }
 
@@ -161,13 +175,31 @@ public class PlayArea {
     //        return null;
     //    }
     //
-    //    public Card attackChampion(Champion champion, PlayArea playArea) {
-    //        return null;
-    //    }
-    //
-    //    public Card championIsAttacked(Champion champion) {
-    //        return null;
-    //    }
+
+    public boolean expendChampion(Champion champion) {
+        if (champion.expend()) {
+            champion.applyEffects(this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean attackChampion(Champion champion, PlayArea enemyPlayArea) {
+        if (enemyPlayArea.championIsAttacked(champion, turnDamage)) {
+            turnDamage -= champion.getHealth();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean championIsAttacked(Champion champion, int turnDamage) {
+        if (champion.isKilled(turnDamage)) {
+            playedChampions.remove(champion);
+            playerCards.getDiscardedCards().add(champion);
+            return true;
+        }
+        return false;
+    }
 
     /** Resets the turn damage, healing, and coins to 0. */
     public void resetTurnPool() {
@@ -236,6 +268,14 @@ public class PlayArea {
             return false;
         }
         return buyCard(card);
+    }
+
+    public boolean expendChampionById(int id) {
+        Card card = findCardById(playedChampions, id);
+        if (card == null) {
+            return false;
+        }
+        return expendChampion((Champion) card);
     }
 
     private Card findCardById(List<Card> cards, int id) {
