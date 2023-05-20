@@ -126,12 +126,8 @@ public class PlayArea {
     }
 
     public void clearPlayedCards() {
-
-        for (int i = playedCards.size() - 1; i >= 0; i--) {
-            Card c = playedCards.get(i);
-            playedCards.remove(c);
-            playerCards.getDiscardedCards().add(c);
-        }
+        playerCards.getDiscardedCards().addAll(playedCards);
+        playedCards.clear();
     }
 
     // commented out by since it is not used in first sprint
@@ -200,7 +196,6 @@ public class PlayArea {
     public boolean buyCard(Card card) throws IllegalArgumentException {
         if (this.turnCoins < card.getCost()) {
             return false;
-            // throw new IllegalArgumentException("Not enough coins this turn");
         }
         turnCoins -= card.getCost();
         market.purchase(card);
@@ -208,25 +203,30 @@ public class PlayArea {
         return true;
     }
 
-    public int playCardById(int id) {
-        Card card;
-        for (Card c : playerCards.getHandCards()) {
+    public boolean playCardById(int id) {
+        Card card = findCardById(playerCards.getHandCards(), id);
+        if (card == null) {
+            return false;
+        }
+        playCard(card);
+        return true;
+    }
+
+    public boolean buyCardById(int id) {
+        Card card = findCardById(market.getForPurchase(), id);
+        if (card == null) {
+            return false;
+        }
+        return buyCard(card);
+    }
+
+    private Card findCardById(List<Card> cards, int id) {
+        for (Card c : cards) {
             if (c.getId() == id) {
-                card = c;
-                playCard(card);
-                return 0;
+                return c;
             }
         }
-        for (Card c : market.getForPurchase()) {
-            if (c.getId() == id) {
-                card = c;
-                if (buyCard(card)) {
-                    return 1;
-                }
-                return -1;
-            }
-        }
-        return -1;
+        return null;
     }
 
     public int getId() {

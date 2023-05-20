@@ -4,9 +4,9 @@ package at.vunfer.openrealms.model;
 import java.util.List;
 
 public class GameSession {
-    private List<Player> players;
+    private final List<Player> players;
     private Player currentPlayer;
-    private Market market;
+    private final Market market;
 
     /**
      * Constructs a GameSession with a list of players and the current player.
@@ -57,21 +57,14 @@ public class GameSession {
      * Ends the turn of the current player and switches to the next player. Deals damage to the
      * opponent and heals the current player.
      */
-    public Deck<Card> endTurn() {
-        Deck<Card> restockedFromDiscarded = new Deck<>();
-        dealDamage(
-                getOpponent(currentPlayer),
-                currentPlayer
-                        .getPlayArea()
-                        .getTurnDamage()); // deal damage to player next in line, since in this
-        // version there will only be 2 players
+    public void endTurn() {
+        dealDamage(getOpponent(currentPlayer), currentPlayer.getPlayArea().getTurnDamage());
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
         currentPlayer.getPlayArea().resetTurnPool();
         market.restock();
         currentPlayer.getPlayArea().clearPlayedCards();
-        restockedFromDiscarded = currentPlayer.getPlayArea().getPlayerCards().restockHand();
+        currentPlayer.getPlayArea().getPlayerCards().restockHand();
         nextPlayer();
-        return restockedFromDiscarded;
     }
 
     /**

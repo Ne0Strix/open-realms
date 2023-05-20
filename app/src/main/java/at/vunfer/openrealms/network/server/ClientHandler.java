@@ -34,7 +34,7 @@ public class ClientHandler {
         socket.close();
     }
 
-    public void sendMessage(Message msg) throws IOException {
+    public void sendMessage(Message msg) {
         comm.sendMessage(msg);
         Log.i(TAG, "Sent message: " + msg.getType());
     }
