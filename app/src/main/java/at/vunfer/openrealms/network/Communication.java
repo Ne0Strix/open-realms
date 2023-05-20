@@ -77,6 +77,13 @@ public class Communication {
         return removeCardMsg;
     }
 
+    public static Message createExpendChampionMessage(int targetPlayerTurnNumber, int cardId) {
+        Message expendChampionMsg = new Message(MessageType.EXPEND_CHAMPION);
+        expendChampionMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
+        expendChampionMsg.setData(DataKey.CARD_ID, cardId);
+        return expendChampionMsg;
+    }
+
     public static Message createTurnNotificationMessage(int targetPlayerTurnNumber) {
         Message turnNotificationMsg = new Message(MessageType.TURN_NOTIFICATION);
         turnNotificationMsg.setData(DataKey.TARGET_PLAYER, targetPlayerTurnNumber);
