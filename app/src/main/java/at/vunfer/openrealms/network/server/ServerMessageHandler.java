@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.network.server;
 
 import static at.vunfer.openrealms.network.Communication.createAddCardMessage;
+import static at.vunfer.openrealms.network.Communication.createExpendChampionMessage;
 import static at.vunfer.openrealms.network.Communication.createPlayerStatsMessage;
 import static at.vunfer.openrealms.network.Communication.createRemoveCardMessage;
 
@@ -50,16 +51,19 @@ public class ServerMessageHandler implements IHandleMessage {
         try {
             if (currentPlayer.getPlayArea().playCardById(cardId)) {
                 Log.i(TAG, "Card " + cardId + " played successfully.");
-                sendCardChangeToAllClients(
+                sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.PLAYED, cardId);
             } else if (currentPlayer.getPlayArea().buyCardById(cardId)) {
                 Log.i(TAG, "Card " + cardId + " bought successfully.");
-                sendCardChangeToAllClients(
+                sendCardMovementToAllClients(
                         gameSession,
                         currentPlayer,
                         DeckType.FOR_PURCHASE,
                         DeckType.DISCARD,
                         cardId);
+            } else if (currentPlayer.getPlayArea().expendChampionById(cardId)) {
+                Log.i(TAG, "Champion " + cardId + " expended successfully.");
+                sendChampionExpendedToAllClients(gameSession, currentPlayer, cardId);
             } else {
                 Log.i(TAG, "Card cannot be played/bought by this player.");
             }
@@ -70,7 +74,7 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void sendCardChangeToAllClients(
+    private void sendCardMovementToAllClients(
             GameSession gameSession,
             Player currentPlayer,
             DeckType deckTypeRemove,
@@ -86,6 +90,13 @@ public class ServerMessageHandler implements IHandleMessage {
         serverThread.sendMessageToAllClients(
                 createPlayerStatsMessage(
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+    }
+
+    private void sendChampionExpendedToAllClients(
+            GameSession gameSession, Player currentPlayer, int cardId) throws IOException {
+        serverThread.sendMessageToAllClients(
+                createExpendChampionMessage(
+                        gameSession.getPlayerTurnNumber(currentPlayer), cardId));
     }
 
     private void handleEndTurn(GameSession gameSession, Player currentPlayer) {
