@@ -145,21 +145,51 @@ public class CardView extends ConstraintLayout {
         LinearLayout effectArea = findViewById(R.id.card_view_effectArea);
         effectArea.removeAllViews();
 
+        ImageView typeIcon = findViewById(R.id.card_view_type_icon);
+        ImageView background = findViewById(R.id.card_view_background);
+        int typeIconResoucrce = -1;
+        switch (card.getType()) {
+            case GUILD:
+                background.setImageResource(R.drawable.card_guild);
+                typeIconResoucrce = R.drawable.guild_icon;
+                typeIcon.setImageResource(typeIconResoucrce);
+                break;
+            case IMPERIAL:
+                background.setImageResource(R.drawable.card_imperial);
+                typeIconResoucrce = R.drawable.imperial_icon;
+                typeIcon.setImageResource(typeIconResoucrce);
+                break;
+            case NECROS:
+                background.setImageResource(R.drawable.card_necros);
+                typeIconResoucrce = R.drawable.necros_icon;
+                typeIcon.setImageResource(typeIconResoucrce);
+                break;
+            case WILD:
+                background.setImageResource(R.drawable.card_wild);
+                typeIconResoucrce = R.drawable.wild_icon;
+                typeIcon.setImageResource(typeIconResoucrce);
+                break;
+            default:
+                background.setImageResource(R.drawable.emptycards);
+                typeIcon.setVisibility(INVISIBLE);
+                break;
+        }
+
         // Default effects
         LinearLayout defaultEffects = new LinearLayout(getContext());
-        LinearLayout.LayoutParams params =
+        LinearLayout.LayoutParams paramsMatchParentHighWeight =
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        1f);
+                        0.5f);
         defaultEffects.setOrientation(LinearLayout.HORIZONTAL);
-        defaultEffects.setLayoutParams(params);
+        defaultEffects.setLayoutParams(paramsMatchParentHighWeight);
         for (Effect e : card.getEffects()) {
             if (e instanceof DamageEffect
                     || e instanceof HealingEffect
                     || e instanceof CoinEffect) {
                 BasicEffectView effectView = new BasicEffectView(getContext(), e);
-                effectView.setLayoutParams(params);
+                effectView.setLayoutParams(paramsMatchParentHighWeight);
                 defaultEffects.addView(effectView);
             }
         }
@@ -168,7 +198,32 @@ public class CardView extends ConstraintLayout {
         // sacrifice effects
 
         // synergy effects
+        if (!card.getSynergyEffects().isEmpty()) {
+            LinearLayout synergyEffects = new LinearLayout(getContext());
+            synergyEffects.setOrientation(LinearLayout.HORIZONTAL);
+            synergyEffects.setLayoutParams(paramsMatchParentHighWeight);
 
+            LinearLayout.LayoutParams paramsMatchParentLowWeight =
+                    new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            1);
+            ImageView synergyIcon = new ImageView(getContext());
+            synergyIcon.setImageResource(typeIconResoucrce);
+            synergyIcon.setLayoutParams(paramsMatchParentLowWeight);
+            synergyEffects.addView(synergyIcon);
+
+            for (Effect e : card.getSynergyEffects()) {
+                if (e instanceof DamageEffect
+                        || e instanceof HealingEffect
+                        || e instanceof CoinEffect) {
+                    BasicEffectView effectView = new BasicEffectView(getContext(), e);
+                    effectView.setLayoutParams(paramsMatchParentHighWeight);
+                    synergyEffects.addView(effectView);
+                }
+            }
+            effectArea.addView(synergyEffects);
+        }
         // expand effects
     }
 

@@ -78,7 +78,7 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/card_view_synergy_icon"
+                    android:id="@+id/card_view_type_icon"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"

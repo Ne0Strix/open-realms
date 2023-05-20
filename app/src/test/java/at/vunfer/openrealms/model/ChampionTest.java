@@ -18,7 +18,7 @@ public class ChampionTest {
         // Test valid construction
         List<Effect> effects =
                 List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1));
-        Champion champion = new Champion("Test Champion", 3, effects);
+        Champion champion = new Champion("Test Champion", 3, CardType.NONE, effects);
         assertEquals("Test Champion", champion.getName());
         assertEquals(3, champion.getCost());
         assertEquals(effects, champion.getEffects());
@@ -29,13 +29,17 @@ public class ChampionTest {
         // Test invalid construction
         List<Effect> effects =
                 List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1));
-        assertThrows(IllegalArgumentException.class, () -> new Champion("", 3, effects));
         assertThrows(
-                IllegalArgumentException.class, () -> new Champion("Test Champion", -3, effects));
-        assertThrows(IllegalArgumentException.class, () -> new Champion("Test Champion", 3, null));
+                IllegalArgumentException.class, () -> new Champion("", 3, CardType.NONE, effects));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new Champion("Test Champion", 3, new ArrayList<>()));
+                () -> new Champion("Test Champion", -3, CardType.NONE, effects));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Champion("Test Champion", 3, CardType.NONE, null));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Champion("Test Champion", 3, CardType.NONE, new ArrayList<>()));
     }
 
     @Test
@@ -44,7 +48,10 @@ public class ChampionTest {
         PlayArea playArea = new PlayArea(20, new PlayerCards());
         Champion champion =
                 new Champion(
-                        "Test Champion", 3, List.of(new DamageEffect(1), new HealingEffect(1)));
+                        "Test Champion",
+                        3,
+                        CardType.NONE,
+                        List.of(new DamageEffect(1), new HealingEffect(1)));
 
         // Apply effects to play area
         champion.applyEffects(playArea);
@@ -60,10 +67,11 @@ public class ChampionTest {
                 new Champion(
                         "Test Champion",
                         3,
+                        CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1)));
         assertEquals(
-                "Card{name='Test Champion', cost=3, effects=[DamageEffect{damage=1},"
-                        + " HealingEffect{healing=1}, CoinEffect{coin=1}]}",
-                champion.toString());
+                "Card{name='Test Champion', cost=3, type=NONE, effects=[DamageEffect{damage=1},"
+                        + " HealingEffect{healing=1}, CoinEffect{coin=1}], synergyEffects=[], ",
+                champion.toString().split("id")[0]);
     }
 }

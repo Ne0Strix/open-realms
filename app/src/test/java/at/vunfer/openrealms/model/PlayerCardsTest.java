@@ -25,7 +25,7 @@ class PlayerCardsTest {
 
     @Test
     void testBoughtCardToDiscardPile() {
-        Card card = new Card("test_card", 2, List.of(new CoinEffect(1)));
+        Card card = new Card("test_card", 2, CardType.NONE, List.of(new CoinEffect(1)));
         cards.addBoughtCard(card);
         assertTrue(cards.getDiscardedCards().contains(card));
     }
@@ -109,8 +109,10 @@ class PlayerCardsTest {
         cards.getDeckCards().subList(0, cards.getDeckCards().size() - 4).clear();
 
         // add 2 cards to the discard pile
-        cards.getDiscardedCards().add(new Card("card1", 1, List.of(new CoinEffect(1))));
-        cards.getDiscardedCards().add(new Card("card2", 1, List.of(new CoinEffect(1))));
+        cards.getDiscardedCards()
+                .add(new Card("card1", 1, CardType.NONE, List.of(new CoinEffect(1))));
+        cards.getDiscardedCards()
+                .add(new Card("card2", 1, CardType.NONE, List.of(new CoinEffect(1))));
 
         // restock the hand
         cards.restockHand();
