@@ -176,6 +176,10 @@ public class PlayArea {
         health -= value;
     }
 
+    public void visitCoin(int coin) {
+        turnCoins += coin;
+    }
+
     /**
      * Adds the specified damage to the total turn damage.
      *
@@ -185,8 +189,10 @@ public class PlayArea {
         turnDamage += damage;
     }
 
-    public void visitCoin(int coin) {
-        turnCoins += coin;
+    public void visitDraw(int amount) {
+        for (int i = 0; i < amount; i++) {
+            playerCards.addToHand(playerCards.drawRandomFromDeck());
+        }
     }
 
     public void visitHealing(int healing) {

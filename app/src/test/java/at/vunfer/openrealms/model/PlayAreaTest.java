@@ -108,6 +108,13 @@ class PlayAreaTest {
     }
 
     @Test
+    void testVisitDraw() {
+        int initialHandSize = playArea.getPlayerCards().getHandCards().size();
+        playArea.visitDraw(5);
+        assertEquals(initialHandSize + 5, playArea.getPlayerCards().getHandCards().size());
+    }
+
+    @Test
     void testVisitCoin() {
         int initialTurnCoins = playArea.getTurnCoins();
         playArea.visitCoin(5);
