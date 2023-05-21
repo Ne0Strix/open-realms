@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testng.Assert.assertTrue;
 
+import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.MessageType;
-import at.vunfer.openrealms.model.effects.DamageEffect;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
