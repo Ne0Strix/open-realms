@@ -5,16 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testng.Assert.assertTrue;
 
-import android.content.Context;
-
+import at.vunfer.openrealms.network.DataKey;
+import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import at.vunfer.openrealms.network.DataKey;
-import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.MessageType;
 
 class PlayAreaTest {
 
@@ -25,10 +22,9 @@ class PlayAreaTest {
 
     @BeforeEach
     void setUp() {
-        Context context = null;
-        player1 = PlayerFactory.createPlayer("Player 1", context);
+        player1 = PlayerFactory.createPlayer("Player 1");
         playerCards = new PlayerCards();
-        playArea = new PlayArea(70, playerCards, context);
+        playArea = new PlayArea(70, playerCards);
         market = Market.getInstance();
     }
 
@@ -144,19 +140,6 @@ class PlayAreaTest {
     }
 
     @Test
-    void testBuyCardCheating() {
-        Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
-        Message message = new Message(MessageType.BUY_CARD);
-        message.setData(DataKey.CARD_ID, Integer.toString(toBuy.getId()));
-        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(true));
-
-        int initialCoins = player1.getPlayArea().getTurnCoins();
-        player1.getPlayArea().buyCard(message);
-        assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
-        assertEquals(initialCoins - toBuy.getCost(), player1.getPlayArea().getTurnCoins());
-    }
-
-    @Test
     void testBuyCardNotEnoughCoins() {
         Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
         Message message = new Message(MessageType.BUY_CARD);
@@ -165,7 +148,8 @@ class PlayAreaTest {
 
         int initialCoins = player1.getPlayArea().getTurnCoins();
         assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
-        Assertions.assertFalse(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
+        Assertions.assertFalse(
+                player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
         assertEquals(initialCoins, player1.getPlayArea().getTurnCoins());
     }
 

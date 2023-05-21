@@ -59,6 +59,7 @@ public class ClientHandler {
             }
         }
     }
+
     public void handleClientMessage(Message message) {
         if (message.getType() == MessageType.BUY_CARD) {
             try {

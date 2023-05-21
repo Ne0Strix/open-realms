@@ -16,7 +16,7 @@ public class MessageHandler {
             case UPDATE_PLAYER_STATS:
                 // TODO instructions for UI
             case BUY_CARD:
-                //TODO: instructions for UI
+                // TODO: instructions for UI
             default:
                 return false;
         }

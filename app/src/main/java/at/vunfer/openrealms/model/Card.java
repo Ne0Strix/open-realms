@@ -15,7 +15,7 @@ public class Card {
     private final String description;
     private ImageView cardImage;
 
-    //TODO: Make id final
+    // TODO: Make id final
     private int id;
 
     public Card(Context context) {

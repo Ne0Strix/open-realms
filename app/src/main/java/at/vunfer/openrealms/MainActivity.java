@@ -28,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private Market market;
     private HandView handView;
     private HandPresenter handPresenter;
+    private PlayArea playArea;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PlayArea.setContext(this);
 
         // Initialize views
         marketView = new MarketView(this);

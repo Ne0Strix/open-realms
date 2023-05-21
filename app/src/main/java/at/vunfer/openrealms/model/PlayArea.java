@@ -6,11 +6,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
-import java.util.List;
-
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
+import java.util.List;
 
 /**
  * Represents the play area in the game. Stores the current state of the game and provides methods
@@ -22,11 +20,11 @@ public class PlayArea extends Thread {
     private int turnHealing;
     private int turnCoins;
 
-    private Market market;
+    private final Market market;
     private final Deck<Card> playedCards;
     private final Deck<Card> playedChampions;
     private final PlayerCards playerCards;
-    private final Context context;
+    private static Context context;
 
     private boolean cheat;
 
@@ -35,10 +33,10 @@ public class PlayArea extends Thread {
      * turn damage, healing, and coins to 0, and initializes the played cards and played champions
      * decks.
      *
-     * @param health      The health of the player.
+     * @param health The health of the player.
      * @param playerCards The player's cards.
      */
-    public PlayArea(int health, PlayerCards playerCards, Context context) {
+    public PlayArea(int health, PlayerCards playerCards) {
 
         this.health = health;
         this.turnDamage = 0;
@@ -49,7 +47,15 @@ public class PlayArea extends Thread {
         this.playerCards = playerCards;
         this.market = Market.getInstance();
         this.context = context;
-        this.market = Market.getInstance();
+    }
+
+    /**
+     * Sets the context for the PlayArea.
+     *
+     * @param context The context to set.
+     */
+    public static void setContext(Context context) {
+        context = context;
     }
 
     /**
@@ -156,9 +162,7 @@ public class PlayArea extends Thread {
     //        return null;
     //    }
 
-    /**
-     * Resets the turn damage, healing, and coins to 0.
-     */
+    /** Resets the turn damage, healing, and coins to 0. */
     public void resetTurnPool() {
         this.turnDamage = 0;
         this.turnHealing = 0;
@@ -210,72 +214,108 @@ public class PlayArea extends Thread {
     }
 
     public void buyCard(Message message) throws IllegalArgumentException {
-        Card cardToBuy = this.market.forPurchase.stream()
-                .filter(card -> card.getId() == (Integer) message.getData(DataKey.CARD_ID))
-                .findFirst().orElse(null);
+        int cardId = Integer.parseInt(message.getData(DataKey.CARD_ID).toString());
 
-        if (cardToBuy != null) {
-            if (this.turnCoins < cardToBuy.getCost()) {
+        Card cardToBuy =
+                market.forPurchase.stream()
+                        .filter(card -> card.getId() == cardId)
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("Card does not exist"));
+
+        int cardCost = cardToBuy.getCost();
+
+        boolean cheatActivated =
+                Boolean.parseBoolean(message.getData(DataKey.CHEAT_ACTIVATE).toString());
+        if (cheatActivated && isPhoneTurnedOver()) {
+            turnCoins += cardCost;
+        } else {
+            if (turnCoins < cardCost) {
                 throw new IllegalArgumentException("Not enough coins this turn");
             }
-            if ((Boolean) message.getData(DataKey.CHEAT_ACTIVATE)) {
-                // Check if phone is turned over or upside down (cheating condition)
-                if (this.cheat) {
-                    turnCoins += cardToBuy.getCost();
-                }
-                turnCoins -= cardToBuy.getCost();
-                market.purchase(cardToBuy);
-                playerCards.addBoughtCard(cardToBuy);
-            } else {
-                throw new IllegalArgumentException("Card does not exist");
-            }
+
+            turnCoins -= cardCost;
+            market.purchase(cardToBuy);
+            playerCards.addBoughtCard(cardToBuy);
         }
     }
 
     public boolean isPhoneTurnedOver() {
-        // Get the sensor service
-        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-
-        // Check if the device has an accelerometer sensor
-        if (sensorManager != null && sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-            // Create a sensor listener
-            SensorEventListener sensorEventListener = new SensorEventListener() {
-                @Override
-                public void onSensorChanged(SensorEvent event) {
-                    float x = event.values[0];
-                    float y = event.values[1];
-                    float z = event.values[2];
-
-                    // Calculate the device orientation
-                    double magnitude = Math.sqrt(x * x + y * y + z * z);
-                    double gravity = SensorManager.GRAVITY_EARTH;
-                    double delta = Math.abs(gravity - magnitude);
-
-                    // Check if the phone is turned over or upside down
-                    if (delta > 2.0) {
-                        cheat = true;
-                    } else {
-                        cheat = false;
-                    }
-                }
-
-                @Override
-                public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                    // Handle accuracy changes if needed
-                }
-            };
-
-            // Register the sensor listener for accelerometer sensor with a specific sampling rate
-            Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (context == null) {
+            throw new IllegalStateException(
+                    "Context not set. Call setContext() before using isPhoneTurnedOver().");
         }
-        return cheat;
+        SensorManager sensorManager =
+                (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager == null) {
+            throw new NullPointerException("Sensor service is null");
+        }
+
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (accelerometerSensor == null) {
+            throw new NullPointerException("Accelerometer sensor is not available");
+        }
+
+        return isTurnedOver(sensorManager, accelerometerSensor);
+    }
+
+    private boolean isTurnedOver(SensorManager sensorManager, Sensor accelerometerSensor) {
+        final class CheatWrapper {
+            boolean cheat = false;
+        }
+
+        final CheatWrapper cheatWrapper = new CheatWrapper();
+
+        SensorEventListener sensorEventListener =
+                new SensorEventListener() {
+                    @Override
+                    public void onSensorChanged(SensorEvent event) {
+                        float x = event.values[0];
+                        float y = event.values[1];
+                        float z = event.values[2];
+
+                        double magnitude = Math.sqrt(x * x + y * y + z * z);
+                        double gravity = SensorManager.GRAVITY_EARTH;
+                        double delta = Math.abs(gravity - magnitude);
+
+                        if (delta > 2.0) {
+                            cheatWrapper.cheat = true;
+                        } else {
+                            cheatWrapper.cheat = false;
+                        }
+                    }
+
+                    @Override
+                    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                        // Handle accuracy changes if needed
+                    }
+                };
+
+        sensorManager.registerListener(
+                sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            // Log.e("PlayArea", "InterruptedException occurred: " + e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+
+        sensorManager.unregisterListener(sensorEventListener);
+
+        return cheatWrapper.cheat;
     }
 
     @Override
     public void run() {
-        while (true) {
-            this.cheat = this.isPhoneTurnedOver();
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                if (this != null && this.isPhoneTurnedOver()) {
+                    this.cheat = true;
+                }
+            } catch (NullPointerException e) {
+                // Log.e("PlayArea", "NullPointerException occurred while checking phone
+                // orientation: " + e.getMessage());
+            }
         }
     }
 }
