@@ -25,7 +25,7 @@ public class ClientConnector extends Thread {
         this.uiUpdater = uiUpdater;
         try {
             // Connect to the server
-            socket = new Socket(serverAddress, serverPort);
+            //socket = new Socket(serverAddress, serverPort);
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
             new Thread(this::listenForMessages).start();
