@@ -42,11 +42,13 @@ public class Message implements Serializable {
         switch (key) {
             case TARGET_PLAYER:
             case CARD_ID:
-                return value instanceof Integer;
+                return value instanceof String;
             case DECK:
                 return value instanceof DeckType;
             case CHOICE:
             case OPTIONS:
+                return value instanceof String;
+            case CHEAT_ACTIVATE:
                 return value instanceof String;
             case PLAYER_STATS:
                 return value instanceof PlayerStats;

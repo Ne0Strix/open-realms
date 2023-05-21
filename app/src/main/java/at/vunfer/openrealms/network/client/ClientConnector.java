@@ -15,15 +15,68 @@ public class ClientConnector extends Thread {
     private static final String TAG = "ClientConnector";
     private final UIUpdateListener uiUpdater;
     private Socket socket;
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
+    private MessageHandler messageHandler;
     private InetSocketAddress targetServer;
     private Communication comm;
 
     public ClientConnector(UIUpdateListener uiUpdater) {
-        this.socket = new Socket();
         this.uiUpdater = uiUpdater;
+        try {
+            // Connect to the server
+            socket = new Socket(serverAddress, serverPort);
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
+            new Thread(this::listenForMessages).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Error handling in case of connection problems
+        }
     }
 
-    @Override
+    public void connectAndSendBuyCardMessage(Message message) {
+        try {
+            // send buyCard message
+            outputStream.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Error handling for send errors
+        }
+    }
+
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+        this.socket = new Socket();
+    }
+
+    private void listenForMessages() {
+        try {
+            while (true) {
+                Message msg = (Message) inputStream.readObject();
+                messageHandler.handleMessage(msg);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) inputStream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            try {
+                if (outputStream != null) outputStream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            try {
+                if (socket != null) socket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+        @Override
     public void run() {
         try {
             socket.connect(targetServer);

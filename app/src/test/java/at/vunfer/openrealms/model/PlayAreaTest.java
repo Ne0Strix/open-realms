@@ -2,8 +2,12 @@
 package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testng.Assert.assertTrue;
 
+import at.vunfer.openrealms.network.DataKey;
+import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -125,7 +129,7 @@ class PlayAreaTest {
     void testBuyCardTooPoor() {
         PlayArea playArea1 = player1.getPlayArea();
         Card toBuy = playArea1.getMarket().getForPurchase().get(0);
-        Assertions.assertFalse(playArea1.buyCard(toBuy));
+        assertThrows(IllegalArgumentException.class, () -> playArea1.buyCard(toBuy));
     }
 
     @Test
@@ -137,6 +141,29 @@ class PlayAreaTest {
         player1.getPlayArea().buyCard(toBuy);
 
         assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
+    }
+
+    @Test
+    void testBuyCardNotEnoughCoins() {
+        Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
+        Message message = new Message(MessageType.BUY_CARD);
+        message.setData(DataKey.CARD_ID, Integer.toString(toBuy.getId()));
+        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(false));
+
+        int initialCoins = player1.getPlayArea().getTurnCoins();
+        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
+        Assertions.assertFalse(
+                player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
+        assertEquals(initialCoins, player1.getPlayArea().getTurnCoins());
+    }
+
+    @Test
+    void testBuyCardInvalidCard() {
+        Message message = new Message(MessageType.BUY_CARD);
+        message.setData(DataKey.CARD_ID, "-1");
+        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(true));
+
+        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
     }
 
     @Test

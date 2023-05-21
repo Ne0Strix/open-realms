@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Market;
+import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
@@ -36,11 +38,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static List<CardView> cardViews;
     private boolean isHost = false;
 
-    private Context context = this;
-    private int playerId;
-
-    public PlayAreaPresenter playAreaPresenter;
-    public MarketPresenter marketPresenter;
+    private MarketView marketView;
+    private PlayAreaView playAreaView;
+    private PlayAreaPresenter playAreaPresenter;
+    private MarketPresenter marketPresenter;
+    private Market market;
+    private HandView handView;
+    private HandPresenter handPresenter;
+    private PlayArea playArea;
     public HandPresenter playerHandPresenter;
     public HandPresenter opponentHandPresenter;
     public DiscardPilePresenter playerDiscardPilePresenter;
@@ -48,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public DeckPresenter playerDeckPresenter;
     public DeckPresenter opponentDeckPresenter;
     public OverlayPresenter overlayViewPresenter;
+
+    private Context context = this;
+    private int playerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +132,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void startGame(View view) {
         setContentView(R.layout.activity_main);
+
+        PlayArea.setContext(this);
 
         // Initialize views
         MarketView marketView = findViewById(R.id.market_view);

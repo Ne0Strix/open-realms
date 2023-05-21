@@ -1,13 +1,20 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import at.vunfer.openrealms.network.DataKey;
+import at.vunfer.openrealms.network.Message;
 import java.util.List;
 
 /**
  * Represents the play area in the game. Stores the current state of the game and provides methods
  * for manipulating it.
  */
-public class PlayArea {
+public class PlayArea extends Thread {
     private static int idCounter = 0;
     private int health;
     private int turnDamage;
@@ -16,10 +23,13 @@ public class PlayArea {
     private int id;
     private static final String TAG = "PlayArea";
 
-    private Market market;
-    private Deck<Card> playedCards;
-    private Deck<Card> playedChampions;
-    private PlayerCards playerCards;
+    private final Market market;
+    private final Deck<Card> playedCards;
+    private final Deck<Card> playedChampions;
+    private final PlayerCards playerCards;
+    private static Context context;
+
+    private boolean cheat;
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -39,6 +49,16 @@ public class PlayArea {
         this.playedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
+        this.context = context;
+    }
+
+    /**
+     * Sets the context for the PlayArea.
+     *
+     * @param context The context to set.
+     */
+    public static void setContext(Context context) {
+        context = context;
     }
 
     /**
@@ -229,7 +249,109 @@ public class PlayArea {
         return null;
     }
 
-    public int getId() {
-        return id;
+    public void buyCard(Message message) throws IllegalArgumentException {
+        int cardId = Integer.parseInt(message.getData(DataKey.CARD_ID).toString());
+
+        Card cardToBuy =
+                market.forPurchase.stream()
+                        .filter(card -> card.getId() == cardId)
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("Card does not exist"));
+
+        int cardCost = cardToBuy.getCost();
+
+        boolean cheatActivated =
+                Boolean.parseBoolean(message.getData(DataKey.CHEAT_ACTIVATE).toString());
+        if (cheatActivated && isPhoneTurnedOver()) {
+            turnCoins += cardCost;
+        } else {
+            if (turnCoins < cardCost) {
+                throw new IllegalArgumentException("Not enough coins this turn");
+            }
+
+            turnCoins -= cardCost;
+            market.purchase(cardToBuy);
+            playerCards.addBoughtCard(cardToBuy);
+        }
+    }
+
+    public boolean isPhoneTurnedOver() {
+        if (context == null) {
+            throw new IllegalStateException(
+                    "Context not set. Call setContext() before using isPhoneTurnedOver().");
+        }
+        SensorManager sensorManager =
+                (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager == null) {
+            throw new NullPointerException("Sensor service is null");
+        }
+
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (accelerometerSensor == null) {
+            throw new NullPointerException("Accelerometer sensor is not available");
+        }
+
+        return isTurnedOver(sensorManager, accelerometerSensor);
+    }
+
+    private boolean isTurnedOver(SensorManager sensorManager, Sensor accelerometerSensor) {
+        final class CheatWrapper {
+            boolean cheat = false;
+        }
+
+        final CheatWrapper cheatWrapper = new CheatWrapper();
+
+        SensorEventListener sensorEventListener =
+                new SensorEventListener() {
+                    @Override
+                    public void onSensorChanged(SensorEvent event) {
+                        float x = event.values[0];
+                        float y = event.values[1];
+                        float z = event.values[2];
+
+                        double magnitude = Math.sqrt(x * x + y * y + z * z);
+                        double gravity = SensorManager.GRAVITY_EARTH;
+                        double delta = Math.abs(gravity - magnitude);
+
+                        if (delta > 2.0) {
+                            cheatWrapper.cheat = true;
+                        } else {
+                            cheatWrapper.cheat = false;
+                        }
+                    }
+
+                    @Override
+                    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                        // Handle accuracy changes if needed
+                    }
+                };
+
+        sensorManager.registerListener(
+                sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            // Log.e("PlayArea", "InterruptedException occurred: " + e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+
+        sensorManager.unregisterListener(sensorEventListener);
+
+        return cheatWrapper.cheat;
+    }
+
+    @Override
+    public void run() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                if (this != null && this.isPhoneTurnedOver()) {
+                    this.cheat = true;
+                }
+            } catch (NullPointerException e) {
+                // Log.e("PlayArea", "NullPointerException occurred while checking phone
+                // orientation: " + e.getMessage());
+            }
+        }
     }
 }

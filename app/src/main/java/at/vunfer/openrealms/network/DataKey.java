@@ -8,6 +8,8 @@ public enum DataKey {
     CHOICE,
     PLAYER_STATS, // used to specify the player stats of a player
     OPTIONS,
+    CHEAT_ACTIVATE,
+    ERROR_MESSAGE,
     YOUR_TURN, // used to specify if it is the turn of the player
     COLLECTION // carries the collection of cards
 }

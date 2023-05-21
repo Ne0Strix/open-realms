@@ -16,6 +16,7 @@ public class Player {
     public Player(String playerName, PlayArea playArea) {
         this.playerName = playerName;
         this.playArea = playArea;
+        this.playArea.start();
     }
 
     public String getPlayerName() {
