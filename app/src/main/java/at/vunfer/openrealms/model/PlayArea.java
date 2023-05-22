@@ -15,13 +15,10 @@ import java.util.List;
  * for manipulating it.
  */
 public class PlayArea extends Thread {
-    private static int idCounter = 0;
     private int health;
     private int turnDamage;
     private int turnHealing;
     private int turnCoins;
-    private int id;
-    private static final String TAG = "PlayArea";
 
     private final Market market;
     private final Deck<Card> playedCards;
@@ -49,7 +46,6 @@ public class PlayArea extends Thread {
         this.playedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
-        this.context = context;
     }
 
     /**
