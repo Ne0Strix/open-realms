@@ -19,7 +19,7 @@ public class Message implements Serializable {
         return type;
     }
 
-    public void setData(DataKey key, Object value){
+    public void setData(DataKey key, Object value) {
         if (validateData(key, value)) {
             data.put(key, value);
         } else {
