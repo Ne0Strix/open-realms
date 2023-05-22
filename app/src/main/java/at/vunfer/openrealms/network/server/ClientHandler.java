@@ -19,12 +19,9 @@ public class ClientHandler {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
     private MessageHandler messageHandler;
-    private ClientHandler clientHandler;
     private Communication comm;
 
     public ClientHandler(Socket clientSocket) {
-        this.socket = socket;
-        this.messageHandler = messageHandler;
         try {
             socket = clientSocket;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
