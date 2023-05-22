@@ -23,20 +23,20 @@ public class ClientConnector extends Thread {
 
     public ClientConnector(UIUpdateListener uiUpdater) {
         this.uiUpdater = uiUpdater;
-        try {
-            // Connect to the server
-            // socket = new Socket(serverAddress, serverPort);
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            inputStream = new ObjectInputStream(socket.getInputStream());
-            new Thread(this::listenForMessages).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Error handling in case of connection problems
-        }
     }
 
     public void connectAndSendBuyCardMessage(Message message) {
         try {
+            // Create the socket
+            socket = new Socket();
+            // Set the socket connection target
+            socket.connect(targetServer);
+            // Create the output stream after successful connection
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
+            // Start listening for messages
+            new Thread(this::listenForMessages).start();
+
             // send buyCard message
             outputStream.writeObject(message);
         } catch (IOException e) {
@@ -47,7 +47,6 @@ public class ClientConnector extends Thread {
 
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
-        this.socket = new Socket();
     }
 
     private void listenForMessages() {
