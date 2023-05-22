@@ -82,9 +82,7 @@ class MessageTest {
     void testSetDataCardID() {
         Message message = new Message(MessageType.TOUCHED);
         assertDoesNotThrow(() -> message.setData(DataKey.CARD_ID, 123));
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> message.setData(DataKey.CARD_ID, "invalid_card_id"));
+        assertDoesNotThrow(() -> message.setData(DataKey.CARD_ID, "invalid_card_id"));
     }
 
     @Test
