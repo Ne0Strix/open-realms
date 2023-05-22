@@ -58,7 +58,7 @@ public class PlayArea extends Thread {
      * @param context The context to set.
      */
     public static void setContext(Context context) {
-        context = context;
+        PlayArea.context = context;
     }
 
     /**
@@ -213,9 +213,9 @@ public class PlayArea extends Thread {
         turnHealing += healing;
     }
 
-    public boolean buyCard(Card card) throws IllegalArgumentException {
+    public boolean buyCard(Card card) {
         if (this.turnCoins < card.getCost()) {
-            return false;
+            throw new IllegalArgumentException("Insufficient coins to buy the card");
         }
         turnCoins -= card.getCost();
         market.purchase(card);
@@ -275,9 +275,16 @@ public class PlayArea extends Thread {
         }
     }
 
+
+    /**
+     * Checks if the phone is turned over.
+     *
+     * @return True if the phone is turned over, false otherwise.
+     * @throws IllegalArgumentException If the context is not set.
+     */
     public boolean isPhoneTurnedOver() {
-        if (context == null) {
-            throw new IllegalStateException(
+        if (context != null) {
+            throw new IllegalArgumentException(
                     "Context not set. Call setContext() before using isPhoneTurnedOver().");
         }
         SensorManager sensorManager =
