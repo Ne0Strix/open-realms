@@ -275,7 +275,6 @@ public class PlayArea extends Thread {
         }
     }
 
-
     /**
      * Checks if the phone is turned over.
      *
