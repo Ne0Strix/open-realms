@@ -19,7 +19,7 @@ public class Message implements Serializable {
         return type;
     }
 
-    public void setData(DataKey key, Object value) throws IllegalArgumentException {
+    public void setData(DataKey key, Object value){
         if (validateData(key, value)) {
             data.put(key, value);
         } else {
@@ -41,13 +41,13 @@ public class Message implements Serializable {
     private boolean validateData(DataKey key, Object value) {
         switch (key) {
             case TARGET_PLAYER:
-            case CARD_ID:
                 return value instanceof Integer;
+            case CARD_ID:
+                return value instanceof Object;
             case DECK:
                 return value instanceof DeckType;
             case CHOICE:
             case OPTIONS:
-                return value instanceof String;
             case CHEAT_ACTIVATE:
                 return value instanceof String;
             case PLAYER_STATS:
