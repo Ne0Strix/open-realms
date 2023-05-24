@@ -278,7 +278,7 @@ public class PlayArea extends Thread {
      * @throws IllegalArgumentException If the context is not set.
      */
     public boolean isPhoneTurnedOver() {
-        if (context != null) {
+        if (context == null) {
             throw new IllegalArgumentException(
                     "Context not set. Call setContext() before using isPhoneTurnedOver().");
         }
