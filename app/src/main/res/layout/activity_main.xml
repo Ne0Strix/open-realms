@@ -55,6 +55,7 @@
     </at.vunfer.openrealms.view.CardView>
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="80dp"
@@ -129,6 +130,22 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"/>
+
+    <HorizontalScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/player_hand_view"
+        app:layout_constraintEnd_toEndOf="@+id/market_view"
+        app:layout_constraintStart_toStartOf="@+id/market_view"
+        app:layout_constraintTop_toBottomOf="@+id/opponent_hand_view">
+
+        <LinearLayout
+            android:id="@+id/fullscreen_discard_pile"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </HorizontalScrollView>
 
     <ImageView
         android:id="@+id/victory_image"
