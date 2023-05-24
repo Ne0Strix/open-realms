@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
-
 import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -242,10 +240,23 @@ class CardTest {
 
     @Test
     void testEqualsDifferentSynergyEffects() {
-        Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)), List.of(new DamageEffect(1)));
-        Card card2 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)), List.of(new HealingEffect(1)));
+        Card card1 =
+                new Card(
+                        "Name",
+                        1,
+                        CardType.NONE,
+                        List.of(new DamageEffect(1)),
+                        List.of(new DamageEffect(1)));
+        Card card2 =
+                new Card(
+                        "Name",
+                        1,
+                        CardType.NONE,
+                        List.of(new DamageEffect(1)),
+                        List.of(new HealingEffect(1)));
         assertFalse(card1.equals(card2));
     }
+
     @Test
     void testEqualsDifferentType() {
         Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
