@@ -209,33 +209,33 @@ class CardTest {
     @Test
     void testEqualsEqualObject() {
         Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
-        assertTrue(card1.equals(card1));
+        assertEquals(card1, card1);
     }
 
     @Test
     void testEqualsEqualParameter() {
         Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         Card card2 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
-        assertFalse(card1.equals(card2));
+        assertNotEquals(card1, card2);
     }
 
     @Test
     void testEqualsEqualNull() {
         Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
-        assertFalse(card1.equals(null));
+        assertNotEquals(card1, null);
     }
 
     @Test
     void testEqualsDifferentClass() {
         Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
-        assertFalse(card1.equals("Card"));
+        assertNotEquals(card1, "Card");
     }
 
     @Test
     void testEqualsDifferentEffects() {
         Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         Card card2 = new Card("Name", 1, CardType.NONE, List.of(new HealingEffect(1)));
-        assertFalse(card1.equals(card2));
+        assertNotEquals(card1, card2);
     }
 
     @Test
@@ -254,14 +254,14 @@ class CardTest {
                         CardType.NONE,
                         List.of(new DamageEffect(1)),
                         List.of(new HealingEffect(1)));
-        assertFalse(card1.equals(card2));
+        assertNotEquals(card1, card2);
     }
 
     @Test
     void testEqualsDifferentType() {
         Card card1 = new Card("Name", 1, CardType.NONE, List.of(new DamageEffect(1)));
         Card card2 = new Card("Name", 1, CardType.WILD, List.of(new DamageEffect(1)));
-        assertFalse(card1.equals(card2));
+        assertNotEquals(card1, card2);
     }
 
     @Test
