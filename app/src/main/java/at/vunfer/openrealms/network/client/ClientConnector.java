@@ -51,7 +51,7 @@ public class ClientConnector extends Thread {
 
     private void listenForMessages() {
         try {
-            while (true) {
+            while (!socket.isClosed()) {
                 Message msg = (Message) inputStream.readObject();
                 messageHandler.handleMessage(msg);
             }
