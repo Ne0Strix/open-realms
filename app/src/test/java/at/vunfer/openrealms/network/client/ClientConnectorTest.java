@@ -39,7 +39,7 @@ public class ClientConnectorTest {
     }
 
     // @Test
-    //TODO: The Constructor of ObjectInputStream is blocking for some reason
+    // TODO: The Constructor of ObjectInputStream is blocking for some reason
     public void testRun() throws IOException {
         System.out.println("A");
         Socket mockedSocked = mock(Socket.class);
