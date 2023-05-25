@@ -72,7 +72,9 @@ public class DeckGenerator {
             throws XmlPullParserException, IOException {
         String cardName = null;
         int cardCost = -1;
+        CardType cardType = CardType.NONE;
         List<Effect> cardEffects = new ArrayList<>();
+        List<Effect> cardSynergyEffects = new ArrayList<>();
         Log.v(LOGGING_TAG, "Starting with Card");
         int event = 0;
         String name;
@@ -89,10 +91,19 @@ public class DeckGenerator {
                         cardCost = Integer.parseInt(xmlParser.nextText());
                         Log.v(LOGGING_TAG, "Added cost: " + cardCost);
                         break;
+                    case "type":
+                        cardType = getCardTypeFromString(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added type: " + cardCost);
+                        break;
                     case "ability":
                         Effect ability = getCardAbility(xmlParser);
                         cardEffects.add(ability);
                         Log.v(LOGGING_TAG, "Added ability: " + ability);
+                        break;
+                    case "synergy":
+                        Effect synergyAbility = getCardAbility(xmlParser);
+                        cardSynergyEffects.add(synergyAbility);
+                        Log.v(LOGGING_TAG, "Added synergy ability: " + synergyAbility);
                         break;
                     default:
                         throw new IllegalArgumentException("Unrecognized Card-XML tag.");
@@ -100,7 +111,24 @@ public class DeckGenerator {
             }
             if (event == XmlPullParser.END_TAG) break;
         }
-        return new Card(cardName, cardCost, cardEffects);
+        return new Card(cardName, cardCost, cardType, cardEffects, cardSynergyEffects);
+    }
+
+    private static CardType getCardTypeFromString(String s) {
+        switch (s) {
+            case "guild":
+                return CardType.GUILD;
+            case "imperial":
+                return CardType.IMPERIAL;
+            case "necros":
+                return CardType.NECROS;
+            case "wild":
+                return CardType.WILD;
+            case "none":
+                return CardType.NONE;
+            default:
+                throw new IllegalArgumentException("Unrecognized card type \"" + s + "+\".");
+        }
     }
 
     private static Effect getCardAbility(XmlPullParser xmlParser)
@@ -124,7 +152,8 @@ public class DeckGenerator {
                         amount = Integer.parseInt(xmlParser.nextText());
                         break;
                     default:
-                        throw new IllegalArgumentException("Unrecognized Ability-XML tag.");
+                        throw new IllegalArgumentException(
+                                "Unrecognized Ability-XML tag \"" + name + "\"");
                 }
             }
             if (event == XmlPullParser.END_TAG) break;
@@ -145,7 +174,8 @@ public class DeckGenerator {
             case "heal":
                 return new HealingEffect(amount);
             default:
-                throw new IllegalArgumentException("Ability type not recognized");
+                throw new IllegalArgumentException(
+                        "Ability type \"" + nextText + "\" not recognized");
         }
     }
 }
