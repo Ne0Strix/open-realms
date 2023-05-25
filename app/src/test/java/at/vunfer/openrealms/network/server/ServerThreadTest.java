@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.CardType;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.model.Player;
@@ -90,8 +91,8 @@ public class ServerThreadTest {
     @Test
     void testSendRestockDeckFromDiscard() throws IOException {
         Deck<Card> deck = new Deck<>();
-        deck.add(new Card("name", 0, List.of(new DamageEffect(0))));
-        deck.add(new Card("name2", 0, List.of(new DamageEffect(0))));
+        deck.add(new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0))));
+        deck.add(new Card("name2", 0, CardType.NONE, List.of(new DamageEffect(0))));
 
         doNothing().when(serverThread).sendMessageToAllClients(any());
 
@@ -110,8 +111,8 @@ public class ServerThreadTest {
     @Test
     void testSendRestockDeckFromDiscardThrows() throws IOException {
         Deck<Card> deck = new Deck<>();
-        deck.add(new Card("name", 0, List.of(new DamageEffect(0))));
-        deck.add(new Card("name2", 0, List.of(new DamageEffect(0))));
+        deck.add(new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0))));
+        deck.add(new Card("name2", 0, CardType.NONE, List.of(new DamageEffect(0))));
 
         doThrow(new IOException()).when(serverThread).sendMessageToAllClients(any());
 
@@ -123,8 +124,8 @@ public class ServerThreadTest {
     @Test
     void testDealMarketCardToPurchaseAreToAll() throws IOException {
         Deck<Card> deck = new Deck<>();
-        deck.add(new Card("name", 0, List.of(new DamageEffect(0))));
-        deck.add(new Card("name2", 0, List.of(new DamageEffect(0))));
+        deck.add(new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0))));
+        deck.add(new Card("name2", 0, CardType.NONE, List.of(new DamageEffect(0))));
         Market.getInstance().setNewToPurchase(deck);
 
         doNothing().when(serverThread).sendMessageToAllClients(any());
@@ -144,7 +145,7 @@ public class ServerThreadTest {
     @SuppressLint("CheckResult")
     @Test
     void testDealHandCardsBasedOnTurnNumberException() throws IOException {
-        Card c1 = new Card("name", 0, List.of(new DamageEffect(0)));
+        Card c1 = new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0)));
 
         Player player = PlayerFactory.createPlayer("player");
         player.getPlayArea().getPlayerCards().getHandCards().add(c1);
@@ -158,7 +159,7 @@ public class ServerThreadTest {
     @SuppressLint("CheckResult")
     @Test
     void testDealHandCardsBasedOnTurnNumber() throws IOException {
-        Card c1 = new Card("name", 0, List.of(new DamageEffect(0)));
+        Card c1 = new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0)));
 
         Player player = PlayerFactory.createPlayer("player");
         player.getPlayArea().getPlayerCards().getHandCards().add(c1);
@@ -171,8 +172,8 @@ public class ServerThreadTest {
     @SuppressLint("CheckResult")
     @Test
     void testDiscardCardsAfterTurn() throws IOException {
-        Card c1 = new Card("name", 0, List.of(new DamageEffect(0)));
-        Card c2 = (new Card("name2", 0, List.of(new DamageEffect(0))));
+        Card c1 = new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0)));
+        Card c2 = (new Card("name2", 0, CardType.NONE, List.of(new DamageEffect(0))));
 
         Player player = PlayerFactory.createPlayer("player");
         player.getPlayArea().getPlayerCards().getHandCards().add(c1);
@@ -198,7 +199,7 @@ public class ServerThreadTest {
     @SuppressLint("CheckResult")
     @Test
     void testDiscardCardsAfterTurnExceptions() throws IOException {
-        Card c1 = new Card("name", 0, List.of(new DamageEffect(0)));
+        Card c1 = new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0)));
 
         Player player = PlayerFactory.createPlayer("player");
         player.getPlayArea().getPlayerCards().getHandCards().add(c1);
@@ -213,8 +214,8 @@ public class ServerThreadTest {
     @SuppressLint("CheckResult")
     @Test
     void testDealHandCards() {
-        Card c1 = new Card("name", 0, List.of(new DamageEffect(0)));
-        Card c2 = (new Card("name2", 0, List.of(new DamageEffect(0))));
+        Card c1 = new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0)));
+        Card c2 = (new Card("name2", 0, CardType.NONE, List.of(new DamageEffect(0))));
 
         Player player = PlayerFactory.createPlayer("player");
         player.getPlayArea().getPlayerCards().getHandCards().add(c1);
@@ -236,8 +237,8 @@ public class ServerThreadTest {
     @SuppressLint("CheckResult")
     @Test
     void testDealDeckCards() {
-        Card c1 = new Card("name", 0, List.of(new DamageEffect(0)));
-        Card c2 = (new Card("name2", 0, List.of(new DamageEffect(0))));
+        Card c1 = new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0)));
+        Card c2 = (new Card("name2", 0, CardType.NONE, List.of(new DamageEffect(0))));
 
         Player player = PlayerFactory.createPlayer("player");
         player.getPlayArea().getPlayerCards().getDeckCards().add(c1);
@@ -260,8 +261,8 @@ public class ServerThreadTest {
     @Test
     void testDealMarketCardToPurchaseAreToAllException() throws IOException {
         Deck<Card> deck = new Deck<>();
-        deck.add(new Card("name", 0, List.of(new DamageEffect(0))));
-        deck.add(new Card("name2", 0, List.of(new DamageEffect(0))));
+        deck.add(new Card("name", 0, CardType.NONE, List.of(new DamageEffect(0))));
+        deck.add(new Card("name2", 0, CardType.NONE, List.of(new DamageEffect(0))));
         Market.getInstance().setNewToPurchase(deck);
 
         doThrow(new IOException()).when(serverThread).sendMessageToAllClients(any());
