@@ -129,31 +129,37 @@ public class Market {
                 new Card(
                         "Testcard1",
                         3,
+                        CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
         testMarketDeck.add(
                 new Card(
                         "Testcard2",
                         3,
+                        CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
         testMarketDeck.add(
                 new Card(
                         "Testcard3",
                         3,
+                        CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
         testMarketDeck.add(
                 new Card(
                         "Testcard4",
                         3,
+                        CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
         testMarketDeck.add(
                 new Card(
                         "Testcard5",
                         3,
+                        CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
         testMarketDeck.add(
                 new Card(
                         "Testcard6",
                         3,
+                        CardType.NONE,
                         List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
         return testMarketDeck;
     }
