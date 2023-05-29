@@ -120,8 +120,26 @@ public class PlayArea {
      * @param card The card to play.
      */
     public void playCard(Card card) {
-        playedCards.add(playerCards.popFromHand(card));
+        // Synergy effects:
+        int numOfCardsWithSameType = 0;
+        Card cardWithSameType = null;
+        for (Card c : playedCards) {
+            if (card.getType() != CardType.NONE && c.getType() == card.getType()) {
+                numOfCardsWithSameType++;
+                cardWithSameType = c;
+            }
+        }
+        if (numOfCardsWithSameType > 0) {
+            card.applySynergyEffects(this);
+        }
+        if (numOfCardsWithSameType == 1) {
+            cardWithSameType.applySynergyEffects(this);
+        }
+
+        // Default effects:
         card.applyEffects(this);
+
+        playedCards.add(playerCards.popFromHand(card));
         for (Card c : playedCards) {}
     }
 
