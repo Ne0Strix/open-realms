@@ -20,6 +20,7 @@ public class PlayArea {
     private Deck<Card> playedCards;
     private Deck<Card> playedChampions;
     private PlayerCards playerCards;
+    private Card cardDrawnFromSpecialAbility; // from special ability
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -39,6 +40,7 @@ public class PlayArea {
         this.playedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
+        this.cardDrawnFromSpecialAbility = null;
     }
 
     /**
@@ -207,10 +209,10 @@ public class PlayArea {
         turnDamage += damage;
     }
 
-    public void visitDraw(int amount) {
-        for (int i = 0; i < amount; i++) {
-            playerCards.addToHand(playerCards.drawRandomFromDeck());
-        }
+    public void visitDraw() {
+        Card drawnCard = playerCards.drawRandomFromDeck();
+        playerCards.addToHand(drawnCard);
+        cardDrawnFromSpecialAbility = drawnCard;
     }
 
     public void visitHealing(int healing) {

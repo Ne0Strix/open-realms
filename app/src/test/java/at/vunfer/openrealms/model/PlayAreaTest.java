@@ -199,8 +199,8 @@ class PlayAreaTest {
     @Test
     void testVisitDraw() {
         int initialHandSize = playArea.getPlayerCards().getHandCards().size();
-        playArea.visitDraw(5);
-        assertEquals(initialHandSize + 5, playArea.getPlayerCards().getHandCards().size());
+        playArea.visitDraw();
+        assertEquals(initialHandSize + 1, playArea.getPlayerCards().getHandCards().size());
     }
 
     @Test
