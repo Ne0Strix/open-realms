@@ -29,6 +29,10 @@
             <amount>4</amount>
             <type>heal</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
     </card>
     <card amount="1">
         <name>Domination</name>
@@ -41,6 +45,10 @@
         <ability>
             <amount>6</amount>
             <type>heal</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
     </card>
     <card amount="1">
@@ -103,6 +111,10 @@
             <amount>1</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
     </card>
     <card amount="1">
         <name>Deception</name>
@@ -112,6 +124,10 @@
             <amount>2</amount>
             <type>coin</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
     </card>
     <card amount="1">
         <name>Fire Bomb</name>
@@ -120,6 +136,10 @@
         <ability>
             <amount>8</amount>
             <type>attack</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
     </card>
     <card amount="1">
@@ -174,6 +194,10 @@
             <amount>7</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Dark Reward</name>
@@ -222,6 +246,10 @@
             <amount>8</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
     </card>
     <card amount="2">
         <name>The Rot</name>
@@ -256,6 +284,10 @@
         <ability>
             <amount>2</amount>
             <type>coin</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
         <synergy>
             <amount>4</amount>
@@ -301,5 +333,18 @@
             <amount>8</amount>
             <type>attack</type>
         </ability>
+    </card>
+    <card amount="1">
+        <name>Word of Power</name>
+        <cost>6</cost>
+        <type>imperial</type>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
+        <synergy>
+            <amount>5</amount>
+            <type>heal</type>
+        </synergy>
     </card>
 </deck>

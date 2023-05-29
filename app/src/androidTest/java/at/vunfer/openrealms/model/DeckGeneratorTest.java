@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,10 @@ public class DeckGeneratorTest {
                         + "       <amount>5</amount>"
                         + "       <type>heal</type>"
                         + "   </ability>"
+                        + "   <ability>"
+                        + "       <amount>1</amount>"
+                        + "       <type>draw</type>"
+                        + "   </ability>"
                         + "</card>"
                         + "</deck>";
 
@@ -103,7 +108,11 @@ public class DeckGeneratorTest {
                         "otherTestName",
                         16,
                         CardType.NECROS,
-                        new ArrayList<>(List.of(new DamageEffect(2), new HealingEffect(5))),
+                        new ArrayList<>(
+                                List.of(
+                                        new DamageEffect(2),
+                                        new HealingEffect(5),
+                                        new DrawEffect(1))),
                         new ArrayList<>()));
 
         Deck<Card> deck = DeckGenerator.generateDeckFromString(xmlToParse);
