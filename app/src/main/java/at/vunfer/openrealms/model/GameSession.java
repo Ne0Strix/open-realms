@@ -64,6 +64,7 @@ public class GameSession {
         market.restock();
         currentPlayer.getPlayArea().clearPlayedCards();
         currentPlayer.getPlayArea().getPlayerCards().restockHand();
+        currentPlayer.getPlayArea().clearCardDrawnFromSpecialAbility();
         nextPlayer();
     }
 

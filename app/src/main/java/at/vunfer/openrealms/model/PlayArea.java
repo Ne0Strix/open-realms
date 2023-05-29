@@ -258,4 +258,16 @@ public class PlayArea {
     public int getId() {
         return id;
     }
+
+    public void clearCardDrawnFromSpecialAbility() {
+        cardDrawnFromSpecialAbility = null;
+    }
+
+    public Card getCardDrawnFromSpecialAbility() {
+        return cardDrawnFromSpecialAbility;
+    }
+
+    public void resetCardDrawnFromSpecialAbility() {
+        cardDrawnFromSpecialAbility = null;
+    }
 }
