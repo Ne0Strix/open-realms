@@ -12,6 +12,7 @@ import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 
 public class BasicEffectView extends ConstraintLayout {
@@ -52,6 +53,9 @@ public class BasicEffectView extends ConstraintLayout {
             } else if (effect instanceof CoinEffect) {
                 effectIcon.setImageResource(R.drawable.effect_icon_coin);
                 txtAmount.setText(((CoinEffect) effect).getCoin() + "");
+            } else if (effect instanceof DrawEffect) {
+                effectIcon.setImageResource(R.drawable.effect_icon_draw);
+                txtAmount.setText(((DrawEffect) effect).getAmount() + "");
             }
         }
     }
