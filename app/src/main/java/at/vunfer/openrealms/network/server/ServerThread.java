@@ -81,7 +81,6 @@ public class ServerThread extends Thread {
             acceptConnections();
             createGame();
             Log.e(TAG, this.gameSession == null ? "True" : "False");
-            setupClients();
         } catch (IOException ex) {
             Log.e(TAG, "IO Exception on Server!", ex);
         }
