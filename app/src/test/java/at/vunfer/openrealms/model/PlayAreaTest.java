@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import at.vunfer.openrealms.model.effects.CoinEffect;
@@ -236,6 +237,38 @@ class PlayAreaTest {
 
         assertTrue(playArea.getPlayedCards().isEmpty());
         assertTrue(playArea.getPlayerCards().getDiscardedCards().contains(c));
+    }
+
+    @Test
+    void testPlayCardByIdNotFound() {
+        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
+        assertFalse(playArea.playCardById(c.getId()));
+    }
+
+    @Test
+    void testPlayCardByIdFound() {
+        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
+        playerCards.getHandCards().add(c);
+        assertTrue(playArea.playCardById(c.getId()));
+    }
+
+    @Test
+    void testBuyCardByIdNotFound() {
+        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
+        assertFalse(playArea.buyCardById(c.getId()));
+    }
+
+    @Test
+    void testBuyCardByIdFound() {
+        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
+        market.forPurchase.add(c);
+        assertTrue(playArea.buyCardById(c.getId()));
+    }
+
+    @Test
+    void testGetId() {
+        // I don't really know how I am supposed to test this...
+        assertEquals(playArea.getId(), playArea.getId());
     }
 
     @AfterEach

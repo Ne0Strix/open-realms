@@ -160,21 +160,25 @@ public class CardView extends ConstraintLayout {
                 background.setImageResource(R.drawable.card_guild);
                 typeIconResoucrce = R.drawable.guild_icon;
                 typeIcon.setImageResource(typeIconResoucrce);
+                typeIcon.setVisibility(VISIBLE);
                 break;
             case IMPERIAL:
                 background.setImageResource(R.drawable.card_imperial);
                 typeIconResoucrce = R.drawable.imperial_icon;
                 typeIcon.setImageResource(typeIconResoucrce);
+                typeIcon.setVisibility(VISIBLE);
                 break;
             case NECROS:
                 background.setImageResource(R.drawable.card_necros);
                 typeIconResoucrce = R.drawable.necros_icon;
                 typeIcon.setImageResource(typeIconResoucrce);
+                typeIcon.setVisibility(VISIBLE);
                 break;
             case WILD:
                 background.setImageResource(R.drawable.card_wild);
                 typeIconResoucrce = R.drawable.wild_icon;
                 typeIcon.setImageResource(typeIconResoucrce);
+                typeIcon.setVisibility(VISIBLE);
                 break;
             default:
                 background.setImageResource(R.drawable.emptycards);
