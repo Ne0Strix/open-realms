@@ -53,6 +53,7 @@ public class ServerThread extends Thread {
         this.context = context;
         this.port = port;
         instance = this;
+        createGame();
     }
 
     private void createGame() {
