@@ -18,6 +18,7 @@ import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.CardType;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,7 @@ public class CardViewTest {
         cardList.add(new Card("Card1", 1, CardType.NONE, List.of(new CoinEffect(1))));
         cardList.add(new Card("Card2", 2, CardType.NONE, List.of(new DamageEffect(2))));
         cardList.add(new Card("Card3", 3, CardType.NONE, List.of(new HealingEffect(3))));
+        cardList.add(new Card("Card4", 4, CardType.NONE, List.of(new DrawEffect(1))));
 
         List<CardView> cardViewList = CardView.getViewFromCards(targetContext, cardList);
 
