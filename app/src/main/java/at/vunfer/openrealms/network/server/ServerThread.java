@@ -32,6 +32,7 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,15 +55,36 @@ public class ServerThread extends Thread {
         instance = this;
     }
 
+    private void createGame() {
+        Player player1 = PlayerFactory.createPlayer("Player 1");
+        Player player2 = PlayerFactory.createPlayer("Player 2");
+        player1.getPlayArea()
+                .getPlayerCards()
+                .setDeckCards(DeckGenerator.generatePlayerStarterDeck(context));
+        player2.getPlayArea()
+                .getPlayerCards()
+                .setDeckCards(DeckGenerator.generatePlayerStarterDeck(context));
+        Market.getInstance().setMarketDeck(DeckGenerator.generateMarketDeck(context));
+        List<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
+        gameSession = new GameSession(players, player1);
+        Log.i(
+                "DECK TROUBLE",
+                "Size of deck createGame: "
+                        + player1.getPlayArea().getPlayerCards().getDeckCards().size());
+    }
+
     @Override
     public void run() {
+        Log.i(TAG, "ServerThread running...");
         try {
             setupServer();
             acceptConnections();
+            createGame();
+            Log.e(TAG, this.gameSession == null ? "True" : "False");
+            setupClients();
         } catch (IOException ex) {
             Log.e(TAG, "IO Exception on Server!", ex);
         }
-        createGame();
     }
 
     private void setupServer() throws IOException {
@@ -83,6 +105,11 @@ public class ServerThread extends Thread {
     }
 
     public void setupClients() {
+        Log.i(TAG, "Setting up clients...");
+        if (gameSession == null) {
+            Log.e(TAG, "Game session is not initialized!");
+            return;
+        }
         for (ClientHandler client : connections) {
             int playerTurnNumber = getTurnNumber(client);
             Player player = gameSession.getPlayers().get(playerTurnNumber);
@@ -104,24 +131,6 @@ public class ServerThread extends Thread {
         }
         sendTurnNotificationToAllClients(
                 gameSession.getPlayerTurnNumber(gameSession.getCurrentPlayer()));
-    }
-
-    private void createGame() {
-        Player player1 = PlayerFactory.createPlayer("Player 1");
-        Player player2 = PlayerFactory.createPlayer("Player 2");
-        player1.getPlayArea()
-                .getPlayerCards()
-                .setDeckCards(DeckGenerator.generatePlayerStarterDeck(context));
-        player2.getPlayArea()
-                .getPlayerCards()
-                .setDeckCards(DeckGenerator.generatePlayerStarterDeck(context));
-        Market.getInstance().setMarketDeck(DeckGenerator.generateMarketDeck(context));
-        List<Player> players = List.of(player1, player2);
-        gameSession = new GameSession(players, player1);
-        Log.i(
-                "DECK TROUBLE",
-                "Size of deck createGame: "
-                        + player1.getPlayArea().getPlayerCards().getDeckCards().size());
     }
 
     public int getTurnNumber(ClientHandler client) {

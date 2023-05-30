@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
@@ -102,16 +104,20 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         connectionIP = server.getIpAddr();
 
-        button.setVisibility(View.GONE);
-        showIp.setText(
-                "Your IP address is:\n"
-                        + connectionIP
-                        + "\n(Start after Guest\nhas joined and started)");
-        startButton.setVisibility(View.VISIBLE);
+        if (connectionIP != null) {
+            button.setVisibility(View.GONE);
+            showIp.setText(
+                    "Your IP address is:\n"
+                            + connectionIP
+                            + "\n(Start after Guest\nhas joined and started)");
+            startButton.setVisibility(View.VISIBLE);
 
-        connection = new ClientConnector(this);
-        connection.setConnectionTarget(connectionIP, connectionPort);
-        connection.start();
+            connection = new ClientConnector(this);
+            connection.setConnectionTarget(connectionIP, connectionPort);
+            connection.start();
+        }else {
+            Toast.makeText(this, "Failed to retrieve IP address. Please check your network connection.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void connectServer(View view) {

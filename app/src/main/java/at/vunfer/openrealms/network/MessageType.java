@@ -8,6 +8,7 @@ public enum MessageType {
     END_TURN,
     BUY_CARD_CONFIRMATION,
     BUY_CARD_ERROR,
+    CHEAT,
 
     // Server -> Client
     ADD_CARD,
