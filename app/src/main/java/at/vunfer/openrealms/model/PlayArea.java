@@ -8,6 +8,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.client.ClientConnector;
+
 import java.util.List;
 
 /**
@@ -27,6 +29,7 @@ public class PlayArea extends Thread {
     private static Context context;
 
     private boolean cheat;
+    private ClientConnector clientConnector;
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -350,6 +353,7 @@ public class PlayArea extends Thread {
                 if (this != null && this.isPhoneTurnedOver()) {
                     this.cheat = true;
                 }
+                clientConnector.sendCheatMessage();
             } catch (NullPointerException e) {
                 // Log.e("PlayArea", "NullPointerException occurred while checking phone
                 // orientation: " + e.getMessage());

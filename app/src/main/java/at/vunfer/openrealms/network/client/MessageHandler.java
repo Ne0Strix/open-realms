@@ -17,6 +17,8 @@ public class MessageHandler {
                 // TODO instructions for UI
             case BUY_CARD:
                 // TODO: instructions for UI
+            case CHEAT:
+                return true;
             default:
                 return false;
         }

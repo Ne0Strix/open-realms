@@ -5,6 +5,8 @@ import android.util.Log;
 import at.vunfer.openrealms.UIUpdateListener;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,12 +16,13 @@ import java.net.Socket;
 public class ClientConnector extends Thread {
     private static final String TAG = "ClientConnector";
     private final UIUpdateListener uiUpdater;
-    private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
     private MessageHandler messageHandler;
     private InetSocketAddress targetServer;
     private Communication comm;
+
+    private Socket socket = new Socket();
 
     public ClientConnector(UIUpdateListener uiUpdater) {
         this.uiUpdater = uiUpdater;
@@ -27,13 +30,6 @@ public class ClientConnector extends Thread {
 
     public void connectAndSendBuyCardMessage(Message message) {
         try {
-            // Create the socket
-            socket = new Socket();
-            // Set the socket connection target
-            socket.connect(targetServer);
-            // Create the output stream after successful connection
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            inputStream = new ObjectInputStream(socket.getInputStream());
             // Start listening for messages
             new Thread(this::listenForMessages).start();
 
@@ -79,6 +75,7 @@ public class ClientConnector extends Thread {
     @Override
     public void run() {
         try {
+            // Set the socket connection target
             socket.connect(targetServer);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
@@ -107,5 +104,12 @@ public class ClientConnector extends Thread {
 
     public Communication getCommunication() {
         return comm;
+    }
+
+    public void sendCheatMessage() {
+        if (comm != null) {
+            Message cheatMessage = new Message(MessageType.CHEAT);
+            comm.sendMessage(cheatMessage);
+        }
     }
 }
