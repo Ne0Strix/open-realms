@@ -3,7 +3,8 @@
     <card amount="7">
         <name>Gold</name>
         <cost>0</cost>
-        <type>none</type>
+        <card_type>item</card_type>
+        <faction>none</faction>
         <ability>
             <amount>1</amount>
             <type>coin</type>
@@ -12,7 +13,8 @@
     <card amount="1">
         <name>Ruby</name>
         <cost>0</cost>
-        <type>none</type>
+        <card_type>item</card_type>
+        <faction>none</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -21,7 +23,8 @@
     <card amount="1">
         <name>Shortsword</name>
         <cost>0</cost>
-        <type>none</type>
+        <card_type>item</card_type>
+        <faction>none</faction>
         <ability>
             <amount>2</amount>
             <type>attack</type>
@@ -30,7 +33,8 @@
     <card amount="1">
         <name>Dagger</name>
         <cost>0</cost>
-        <type>none</type>
+        <card_type>item</card_type>
+        <faction>none</faction>
         <ability>
             <amount>1</amount>
             <type>attack</type>
