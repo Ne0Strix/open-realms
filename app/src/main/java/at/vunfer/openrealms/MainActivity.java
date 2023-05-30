@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        PlayArea.setContext(this);
         setContentView(R.layout.menu);
     }
 
