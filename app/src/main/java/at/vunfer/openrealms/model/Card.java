@@ -141,14 +141,6 @@ public class Card implements Serializable {
                 && synergyEffects.equals(c.synergyEffects);
     }
 
-    public CardType getType() {
-        return type;
-    }
-
-    public int getId() {
-        return id;
-    }
-
     public static Deck<Card> getFullCardCollection() {
         return fullCardCollection;
     }
