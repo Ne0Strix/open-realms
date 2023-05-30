@@ -100,12 +100,6 @@ public class ClientHandler {
     }
 
     public void sendMessage(Message msg) {
-        try {
-            outputStream.writeObject(msg);
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         comm.sendMessage(msg);
         Log.i(TAG, "Sent message: " + msg.getType());
     }
