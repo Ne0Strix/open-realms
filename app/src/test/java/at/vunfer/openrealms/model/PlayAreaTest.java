@@ -278,6 +278,19 @@ class PlayAreaTest {
         assertEquals(playArea.getId(), playArea.getId());
     }
 
+    @Test
+    void testGetDrawnCard() {
+        playArea.visitDraw();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility() != null);
+    }
+
+    @Test
+    void testResetDrawnCard() {
+        playArea.visitDraw();
+        playArea.resetCardDrawnFromSpecialAbility();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility() == null);
+    }
+
     @AfterEach
     void tearDown() {
         playArea = null;
