@@ -7,40 +7,64 @@ import java.util.List;
 import java.util.Objects;
 
 public class Card implements Serializable {
-    private static int idCounter = 0;
-    private final String name;
-    private final int cost;
-    private final CardType type;
-    private final List<Effect> effects;
-    private final List<Effect> synergyEffects;
-    private final int id;
-    private static final Deck<Card> fullCardCollection = new Deck<>();
+    protected static int idCounter = 0;
+    protected final String name;
+    protected final int cost;
+    protected final CardType type;
+    protected final Faction faction;
+    protected final List<Effect> effects;
+    protected final List<Effect> synergyEffects;
+    protected final int id;
+    protected static final Deck<Card> fullCardCollection = new Deck<>();
 
     public Card(Card c) {
-        this(c.name, c.cost, c.type, new ArrayList<>(c.effects), new ArrayList<>(c.synergyEffects));
+        this(
+                c.name,
+                c.cost,
+                c.type,
+                c.faction,
+                new ArrayList<>(c.effects),
+                new ArrayList<>(c.synergyEffects));
     }
 
-    public Card(String name, int cost, CardType type, List<Effect> effects) {
-        this(name, cost, type, effects, new ArrayList<>());
+    public Card(String name, int cost, Faction faction, List<Effect> effects) {
+        this(name, cost, faction, effects, new ArrayList<>());
     }
 
     public Card(
-            String name, int cost, CardType type, List<Effect> effects, List<Effect> synergyEffects)
+            String name,
+            int cost,
+            Faction faction,
+            List<Effect> effects,
+            List<Effect> synergyEffects) {
+        this(name, cost, null, faction, effects, synergyEffects);
+    }
+
+    public Card(
+            String name,
+            int cost,
+            CardType type,
+            Faction faction,
+            List<Effect> effects,
+            List<Effect> synergyEffects)
             throws IllegalArgumentException {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name must not be null or empty");
         } else if (cost < 0) {
             throw new IllegalArgumentException("Cost must not be negative");
-        } else if (effects == null || effects.isEmpty()) {
-            throw new IllegalArgumentException("Ability must not be empty");
+        } else if (effects == null) {
+            throw new IllegalArgumentException("Ability must not be null");
         } else if (synergyEffects == null) {
             throw new IllegalArgumentException("Synergy Ability must not be null");
+        } else if (type == null) {
+            throw new IllegalArgumentException("Type must not be null");
         }
         this.name = name;
+        this.type = type;
         this.cost = cost;
         this.effects = effects;
         this.synergyEffects = synergyEffects;
-        this.type = type;
+        this.faction = faction;
         this.id = idCounter++;
         fullCardCollection.add(this);
     }
@@ -51,6 +75,18 @@ public class Card implements Serializable {
 
     public int getCost() {
         return cost;
+    }
+
+    public CardType getType() {
+        return type;
+    }
+
+    public Faction getFaction() {
+        return faction;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public List<Effect> getEffects() {
@@ -69,7 +105,7 @@ public class Card implements Serializable {
         applyEffects(visitor, synergyEffects);
     }
 
-    private void applyEffects(PlayArea visitor, List<Effect> effectsToApply) {
+    protected void applyEffects(PlayArea visitor, List<Effect> effectsToApply) {
         for (Effect effect : effectsToApply) {
             effect.applyEffect(visitor);
         }
@@ -85,6 +121,8 @@ public class Card implements Serializable {
                 + cost
                 + ", type="
                 + type
+                + ", faction="
+                + faction
                 + ", effects="
                 + effects
                 + ", synergyEffects="
@@ -97,18 +135,10 @@ public class Card implements Serializable {
     public boolean isIdentical(Card c) {
         if (this == c) return true;
         return cost == c.cost
-                && type == c.type
+                && faction == c.faction
                 && name.equals(c.name)
                 && effects.equals(c.effects)
                 && synergyEffects.equals(c.synergyEffects);
-    }
-
-    public CardType getType() {
-        return type;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public static Deck<Card> getFullCardCollection() {
@@ -130,7 +160,7 @@ public class Card implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
         return cost == card.cost
-                && type == card.type
+                && faction == card.faction
                 && Objects.equals(name, card.name)
                 && Objects.equals(effects, card.effects)
                 && Objects.equals(synergyEffects, card.synergyEffects)
