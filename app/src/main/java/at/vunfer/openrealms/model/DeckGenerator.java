@@ -59,6 +59,13 @@ public class DeckGenerator {
                     Log.v(LOGGING_TAG, "Finished Card: " + c);
                     deck.add(c);
                     for (int i = 1; i < amount; i++) deck.add(new Card(c));
+                } else if (event == XmlPullParser.START_TAG && name.equals("champion")) {
+                    int amount = Integer.parseInt(xmlParser.getAttributeValue(0));
+                    Log.v(LOGGING_TAG, "Adding Champion " + amount + " Times");
+                    Champion c = parseChampion(xmlParser);
+                    Log.v(LOGGING_TAG, "Finished Champion: " + c);
+                    deck.add(c);
+                    for (int i = 1; i < amount; i++) deck.add(new Champion(c));
                 }
             }
         } catch (IOException | XmlPullParserException e) {
@@ -72,7 +79,8 @@ public class DeckGenerator {
             throws XmlPullParserException, IOException {
         String cardName = null;
         int cardCost = -1;
-        CardType cardType = CardType.NONE;
+        CardType cardType = null;
+        Faction faction = Faction.NONE;
         List<Effect> cardEffects = new ArrayList<>();
         List<Effect> cardSynergyEffects = new ArrayList<>();
         Log.v(LOGGING_TAG, "Starting with Card");
@@ -91,8 +99,12 @@ public class DeckGenerator {
                         cardCost = Integer.parseInt(xmlParser.nextText());
                         Log.v(LOGGING_TAG, "Added cost: " + cardCost);
                         break;
-                    case "type":
+                    case "card_type":
                         cardType = getCardTypeFromString(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added type: " + cardCost);
+                        break;
+                    case "faction":
+                        faction = getFactionFromString(xmlParser.nextText());
                         Log.v(LOGGING_TAG, "Added type: " + cardCost);
                         break;
                     case "ability":
@@ -111,21 +123,103 @@ public class DeckGenerator {
             }
             if (event == XmlPullParser.END_TAG) break;
         }
-        return new Card(cardName, cardCost, cardType, cardEffects, cardSynergyEffects);
+        return new Card(cardName, cardCost, cardType, faction, cardEffects, cardSynergyEffects);
     }
 
-    private static CardType getCardTypeFromString(String s) {
+    private static CardType getCardTypeFromString(String nextText) {
+        switch (nextText) {
+            case "champion":
+                return CardType.CHAMPION;
+            case "action":
+                return CardType.ACTION;
+            case "item":
+                return CardType.ITEM;
+            default:
+                throw new IllegalArgumentException("Unrecognized CardType: " + nextText);
+        }
+    }
+
+    private static Champion parseChampion(XmlPullParser xmlParser)
+            throws XmlPullParserException, IOException {
+        String cardName = null;
+        int cardCost = -1;
+        CardType cardType = null;
+        Faction faction = Faction.NONE;
+        List<Effect> cardEffects = new ArrayList<>();
+        List<Effect> cardSynergyEffects = new ArrayList<>();
+        boolean isGuard = false;
+        int health = -1;
+        Log.v(LOGGING_TAG, "Starting with Champion");
+        int event = 0;
+        String name;
+        while (event != XmlPullParser.END_DOCUMENT) {
+            event = xmlParser.next();
+            name = xmlParser.getName();
+            if (event == XmlPullParser.START_TAG) {
+                switch (name) {
+                    case "name":
+                        cardName = xmlParser.nextText();
+                        Log.v(LOGGING_TAG, "Added name: " + cardName);
+                        break;
+                    case "cost":
+                        cardCost = Integer.parseInt(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added cost: " + cardCost);
+                        break;
+                    case "card_type":
+                        cardType = getCardTypeFromString(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added type: " + cardType);
+                        break;
+                    case "faction":
+                        faction = getFactionFromString(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added type: " + faction);
+                        break;
+                    case "ability":
+                        Effect ability = getCardAbility(xmlParser);
+                        cardEffects.add(ability);
+                        Log.v(LOGGING_TAG, "Added ability: " + ability);
+                        break;
+                    case "synergy":
+                        Effect synergyAbility = getCardAbility(xmlParser);
+                        cardSynergyEffects.add(synergyAbility);
+                        Log.v(LOGGING_TAG, "Added synergy ability: " + synergyAbility);
+                        break;
+                    case "isGuard":
+                        isGuard = Boolean.parseBoolean(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added isGuard: " + isGuard);
+                        break;
+                    case "health":
+                        health = Integer.parseInt(xmlParser.nextText());
+                        Log.v(LOGGING_TAG, "Added health: " + health);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unrecognized Card-XML tag.");
+                }
+            }
+            if (event == XmlPullParser.END_TAG) break;
+        }
+        return new Champion(
+                cardName,
+                cardCost,
+                cardType,
+                faction,
+                cardEffects,
+                cardSynergyEffects,
+                isGuard,
+                health);
+    }
+
+    private static Faction getFactionFromString(String s) {
         switch (s) {
             case "guild":
-                return CardType.GUILD;
+                return Faction.GUILD;
             case "imperial":
-                return CardType.IMPERIAL;
+                return Faction.IMPERIAL;
             case "necros":
-                return CardType.NECROS;
+                return Faction.NECROS;
             case "wild":
-                return CardType.WILD;
+                return Faction.WILD;
             case "none":
-                return CardType.NONE;
+                return Faction.NONE;
             default:
                 throw new IllegalArgumentException("Unrecognized card type \"" + s + "+\".");
         }
@@ -173,6 +267,8 @@ public class DeckGenerator {
                 return new DamageEffect(amount);
             case "heal":
                 return new HealingEffect(amount);
+                //            case "draw":
+                //                return new DrawEffect(amount);
             default:
                 throw new IllegalArgumentException(
                         "Ability type \"" + nextText + "\" not recognized");
