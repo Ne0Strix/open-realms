@@ -82,7 +82,7 @@ class PlayAreaTest {
                 new Card(
                         "Test1",
                         0,
-                        CardType.IMPERIAL,
+                        Faction.IMPERIAL,
                         List.of(new CoinEffect(1)),
                         List.of(new DamageEffect(1)));
         Card c2 = new Card(c1);
@@ -90,7 +90,7 @@ class PlayAreaTest {
                 new Card(
                         "Test3",
                         0,
-                        CardType.GUILD,
+                        Faction.GUILD,
                         List.of(new CoinEffect(1)),
                         List.of(new DamageEffect(1)));
 
@@ -117,7 +117,7 @@ class PlayAreaTest {
                 new Card(
                         "Test1",
                         0,
-                        CardType.IMPERIAL,
+                        Faction.IMPERIAL,
                         List.of(new CoinEffect(1)),
                         List.of(new DamageEffect(1)));
         Card c2 = new Card(c1);
@@ -146,7 +146,7 @@ class PlayAreaTest {
                 new Card(
                         "Test1",
                         0,
-                        CardType.NONE,
+                        Faction.NONE,
                         List.of(new CoinEffect(1)),
                         List.of(new DamageEffect(1)));
         Card c2 = new Card(c1);
@@ -229,7 +229,7 @@ class PlayAreaTest {
 
     @Test
     void testClearPlayedCards() {
-        Card c = new Card("Test", 2, CardType.NONE, List.of(new DamageEffect(2)));
+        Card c = new Card("Test", 2, Faction.NONE, List.of(new DamageEffect(2)));
         playArea.getPlayedCards().add(c);
 
         playArea.clearPlayedCards();

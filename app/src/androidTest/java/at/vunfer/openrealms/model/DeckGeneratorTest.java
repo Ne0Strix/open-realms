@@ -79,14 +79,14 @@ public class DeckGeneratorTest {
                 new Card(
                         "testName",
                         5,
-                        CardType.WILD,
+                        Faction.WILD,
                         new ArrayList<>(List.of(new CoinEffect(5))),
                         List.of(new DamageEffect(3))));
         expectedDeck.add(
                 new Card(
                         "testName",
                         5,
-                        CardType.WILD,
+                        Faction.WILD,
                         new ArrayList<>(List.of(new CoinEffect(5))),
                         List.of(new DamageEffect(3))));
 
@@ -94,7 +94,7 @@ public class DeckGeneratorTest {
                 new Card(
                         "testName",
                         5,
-                        CardType.WILD,
+                        Faction.WILD,
                         new ArrayList<>(List.of(new CoinEffect(5))),
                         List.of(new DamageEffect(3))));
 
@@ -102,7 +102,7 @@ public class DeckGeneratorTest {
                 new Card(
                         "otherTestName",
                         16,
-                        CardType.NECROS,
+                        Faction.NECROS,
                         new ArrayList<>(List.of(new DamageEffect(2), new HealingEffect(5))),
                         new ArrayList<>()));
 
@@ -157,7 +157,7 @@ public class DeckGeneratorTest {
                         + "        </ability>";
         Deck<Card> expectedDeck = new Deck<>();
         expectedDeck.add(
-                new Card("Gold", 0, CardType.GUILD, List.of(new CoinEffect(1)), new ArrayList<>()));
+                new Card("Gold", 0, Faction.GUILD, List.of(new CoinEffect(1)), new ArrayList<>()));
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
@@ -182,7 +182,7 @@ public class DeckGeneratorTest {
                 new Card(
                         "Gold",
                         0,
-                        CardType.IMPERIAL,
+                        Faction.IMPERIAL,
                         List.of(new CoinEffect(1)),
                         new ArrayList<>()));
 
