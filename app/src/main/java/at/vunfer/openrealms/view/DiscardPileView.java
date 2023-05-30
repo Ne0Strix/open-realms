@@ -53,6 +53,9 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
                     new LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT));
+
+            lastCard.setHealthSize(8);
+
             cardHolder.addView(lastCard);
         }
     }
