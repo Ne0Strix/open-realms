@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <deck>
     <champion amount="1">
-        <name>Imperial Dragon</name>
+        <name>Arkus, Imperial Dragon</name>
         <cost>8</cost>
         <card_type>champion</card_type>
         <faction>imperial</faction>
@@ -647,7 +647,7 @@
         </ability>
     </card>
     <champion amount="1">
-        <name>Trogen Rocksplitter</name>
+        <name>Torgen Rocksplitter</name>
         <cost>7</cost>
         <card_type>champion</card_type>
         <faction>wild</faction>
