@@ -186,7 +186,6 @@ public class PlayArea {
 
     public boolean expendChampion(Champion champion) {
         if (champion.expend()) {
-            Log.d(TAG, "expendChampion: " + champion.getName());
             champion.applyEffects(this);
             triggerSynergies(champion);
             return true;
@@ -234,7 +233,6 @@ public class PlayArea {
      * @param value The value to decrease the player's health by.
      */
     public void takeDamage(int value) {
-        //        Log.d(TAG, "takeDamage: " + value);
         atTurnEndDiscardedChampions.clear();
         for (int i = playedChampions.size() - 1; i >= 0; i--) {
             Card c = playedChampions.get(i);
@@ -242,14 +240,10 @@ public class PlayArea {
                 break;
             }
             if (((Champion) c).isGuard()) {
-                //                Log.d(TAG, "takeDamage: " + c + " is guard");
                 if (championIsAttacked((Champion) c, value)) {
-                    //                    Log.d(TAG, "takeDamage: " + c + " is killed");
                     atTurnEndDiscardedChampions.add(c);
                     value -= ((Champion) c).getHealth();
-                    //                    Log.d(TAG, "new takeDamage: " + value);
                 } else {
-                    //                    Log.d(TAG, "takeDamage: " + c + " protects the player!");
                     return;
                 }
             }
@@ -286,7 +280,6 @@ public class PlayArea {
 
     public int playCardById(int id) {
         Card card = findCardById(playerCards.getHandCards(), id);
-        // Log.d("PlayArea", "Card,playCardById: " + card);
         if (card == null) {
             return 0;
         }
@@ -307,7 +300,6 @@ public class PlayArea {
 
     public boolean expendChampionById(int id) {
         Card card = findCardById(playedChampions, id);
-        //        Log.d("PlayArea", "expendChampionById: " + card);
         if (card == null) {
             return false;
         }
@@ -326,7 +318,6 @@ public class PlayArea {
         for (Card c : playedChampions) {
             ((Champion) c).reset();
         }
-        //        Log.d("PlayArea", "resetChampions: " + playedChampions.size());
     }
 
     private Card findCardById(List<Card> cards, int id) {
