@@ -184,7 +184,7 @@ public class CardView extends ConstraintLayout {
         // Only lowercase characters a-z, 0-9 and _ are allowed in the names of android resources
         String cardName = card.getName().toLowerCase();
         cardName = cardName.replaceAll("[ -]", "_");
-        cardName = cardName.replaceAll(",", "");
+        cardName = cardName.replaceAll("[,']", "");
 
         resourceName = resourceName + cardName;
         int imageResourceId =
