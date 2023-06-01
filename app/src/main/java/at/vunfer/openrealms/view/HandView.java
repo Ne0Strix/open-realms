@@ -47,6 +47,7 @@ public class HandView extends LinearLayout implements CardPileView {
                             (int) (CARD_SCALE * screenDensity * 77),
                             (int) (CARD_SCALE * screenDensity * 106));
             card.setLayoutParams(params);
+            card.setHealthSize(6);
             addView(card);
         }
         positionCards(cards);

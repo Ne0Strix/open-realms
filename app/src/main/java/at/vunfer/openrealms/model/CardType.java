@@ -2,9 +2,7 @@
 package at.vunfer.openrealms.model;
 
 public enum CardType {
-    GUILD,
-    IMPERIAL,
-    NECROS,
-    WILD,
-    NONE // used for Cards in the starter deck
+    CHAMPION,
+    ACTION,
+    ITEM
 }

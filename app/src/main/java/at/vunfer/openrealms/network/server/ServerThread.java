@@ -6,6 +6,7 @@ import static at.vunfer.openrealms.network.Communication.createAddMarketCardMess
 import static at.vunfer.openrealms.network.Communication.createPlayerStatsMessage;
 import static at.vunfer.openrealms.network.Communication.createRemoveCardMessage;
 import static at.vunfer.openrealms.network.Communication.createRemoveMarketCardMessage;
+import static at.vunfer.openrealms.network.Communication.createResetChampionMessage;
 import static at.vunfer.openrealms.network.Communication.createTurnNotificationMessage;
 
 import android.annotation.SuppressLint;
@@ -16,6 +17,7 @@ import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.Champion;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.DeckGenerator;
 import at.vunfer.openrealms.model.GameSession;
@@ -292,6 +294,21 @@ public class ServerThread extends Thread {
                 sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void resetChampionsAfterTurn(int targetPlayerTurnNumber, Player player) {
+        for (Card card : player.getPlayArea().getPlayedChampions()) {
+            if (((Champion) card).isExpended()) {
+                Message resetChampionMsg =
+                        createResetChampionMessage(targetPlayerTurnNumber, card.getId());
+                try {
+                    sendMessageToAllClients(resetChampionMsg);
+                    Log.d(TAG, "reset Message sent to all clients");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
