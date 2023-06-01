@@ -21,7 +21,7 @@
         android:id="@+id/effect_view_amount"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:autoSizeMaxTextSize="50sp"
+        android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="1sp"
         android:autoSizeTextType="uniform"
         android:gravity="center_horizontal|center_vertical"
