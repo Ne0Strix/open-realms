@@ -37,7 +37,7 @@ public class Card implements Serializable {
             Faction faction,
             List<Effect> effects,
             List<Effect> synergyEffects) {
-        this(name, cost, null, faction, effects, synergyEffects);
+        this(name, cost, CardType.ITEM, faction, effects, synergyEffects);
     }
 
     public Card(

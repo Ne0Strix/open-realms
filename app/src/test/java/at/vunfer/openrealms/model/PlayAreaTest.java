@@ -241,26 +241,26 @@ class PlayAreaTest {
 
     @Test
     void testPlayCardByIdNotFound() {
-        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
-        assertFalse(playArea.playCardById(c.getId()));
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        assertEquals(playArea.playCardById(c.getId()), 0);
     }
 
     @Test
     void testPlayCardByIdFound() {
-        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         playerCards.getHandCards().add(c);
-        assertTrue(playArea.playCardById(c.getId()));
+        assertEquals(playArea.playCardById(c.getId()), 1);
     }
 
     @Test
     void testBuyCardByIdNotFound() {
-        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         assertFalse(playArea.buyCardById(c.getId()));
     }
 
     @Test
     void testBuyCardByIdFound() {
-        Card c = new Card("Card", 0, CardType.NONE, List.of(new DamageEffect(2)));
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         market.forPurchase.add(c);
         assertTrue(playArea.buyCardById(c.getId()));
     }

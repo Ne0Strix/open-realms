@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
 import java.util.List;
 
 public class GameSession {
@@ -60,18 +59,18 @@ public class GameSession {
      */
     public void endTurn() {
         dealDamage(getOpponent(currentPlayer), currentPlayer.getPlayArea().getTurnDamage());
-        Log.d("GameSession", "dealt damage");
+        //        Log.d("GameSession", "dealt damage");
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
         currentPlayer.getPlayArea().resetTurnPool();
         market.restock();
         currentPlayer.getPlayArea().clearPlayedCards();
-        Log.d("GameSession", "reseted turn pool");
+        //        Log.d("GameSession", "reseted turn pool");
         currentPlayer.getPlayArea().getPlayerCards().restockHand();
-        Log.d("GameSession", "restocked hand");
+        //        Log.d("GameSession", "restocked hand");
         currentPlayer.getPlayArea().resetChampions();
-        Log.d("GameSession", "reseted champions");
+        //        Log.d("GameSession", "reseted champions");
         currentPlayer.getPlayArea().clearCardsThatUsedSynergyEffect();
-        Log.d("GameSession", "reseted champions");
+        //        Log.d("GameSession", "reseted champions");
         nextPlayer();
     }
 

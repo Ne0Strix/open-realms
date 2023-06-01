@@ -49,7 +49,8 @@ public class DeckGeneratorTest {
                         + "<card amount=\"3\">"
                         + "   <name>testName</name>"
                         + "   <cost>5</cost>"
-                        + "   <type>wild</type>"
+                        + "   <card_type>item</card_type>"
+                        + "   <faction>wild</faction>"
                         + "   <ability>"
                         + "      <amount>5</amount>"
                         + "      <type>coin</type>"
@@ -62,7 +63,8 @@ public class DeckGeneratorTest {
                         + "<card amount=\"1\">"
                         + "   <name>otherTestName</name>"
                         + "   <cost>16</cost>"
-                        + "   <type>necros</type>"
+                        + "   <card_type>item</card_type>"
+                        + "   <faction>necros</faction>"
                         + "   <ability>"
                         + "       <amount>2</amount>"
                         + "       <type>attack</type>"
@@ -124,7 +126,7 @@ public class DeckGeneratorTest {
     }
 
     @Test
-    public void testInvalidTag() {
+    public void testInvalidTagCard() {
         String xmlToParse =
                 "<deck>"
                         + "    <card amount=\"1\">"
@@ -144,13 +146,34 @@ public class DeckGeneratorTest {
     }
 
     @Test
+    public void testInvalidTagChampion() {
+        String xmlToParse =
+                "<deck>"
+                        + "    <champion amount=\"1\">"
+                        + "        <cardName>Gold</cardName>"
+                        + "        <cardCost>0</cardCost>"
+                        + "        <cardAbility>"
+                        + "            <amount>1</amount>"
+                        + "            <type>coin</type>"
+                        + "        </cardAbility>"
+                        + "    </champion>"
+                        + "</deck>";
+
+        assertThrows(
+                "Unrecognized Card-XML tag.",
+                IllegalArgumentException.class,
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
+    }
+
+    @Test
     public void testFileEndedWhileParsingCard() {
         String xmlToParse =
                 "<deck>"
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
-                        + "        <type>guild</type>"
+                        + "        <card_type>item</card_type>"
+                        + "        <faction>guild</faction>"
                         + "        <ability>"
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>"
@@ -173,7 +196,8 @@ public class DeckGeneratorTest {
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
-                        + "        <type>imperial</type>"
+                        + "        <card_type>item</card_type>"
+                        + "        <faction>imperial</faction>"
                         + "        <ability>"
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>";
@@ -261,7 +285,7 @@ public class DeckGeneratorTest {
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
-                        + "        <type>ERROR</type>"
+                        + "        <card_type>ERROR</card_type>"
                         + "        <ability>"
                         + "            <amount>10</amount>"
                         + "            <type>attack</type>"

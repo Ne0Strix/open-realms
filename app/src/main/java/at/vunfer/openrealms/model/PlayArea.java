@@ -155,7 +155,7 @@ public class PlayArea {
                     card.applySynergyEffects(this);
                     cardsThatUsedSynergies.add(card);
                 }
-                
+
                 if (!cardsThatUsedSynergies.contains(c)) {
                     if (c instanceof Champion && !((Champion) c).isExpended()) {
                         continue;
@@ -234,7 +234,7 @@ public class PlayArea {
      * @param value The value to decrease the player's health by.
      */
     public void takeDamage(int value) {
-        Log.d(TAG, "takeDamage: " + value);
+        //        Log.d(TAG, "takeDamage: " + value);
         atTurnEndDiscardedChampions.clear();
         for (int i = playedChampions.size() - 1; i >= 0; i--) {
             Card c = playedChampions.get(i);
@@ -242,14 +242,14 @@ public class PlayArea {
                 break;
             }
             if (((Champion) c).isGuard()) {
-                Log.d(TAG, "takeDamage: " + c + " is guard");
+                //                Log.d(TAG, "takeDamage: " + c + " is guard");
                 if (championIsAttacked((Champion) c, value)) {
-                    Log.d(TAG, "takeDamage: " + c + " is killed");
+                    //                    Log.d(TAG, "takeDamage: " + c + " is killed");
                     atTurnEndDiscardedChampions.add(c);
                     value -= ((Champion) c).getHealth();
-                    Log.d(TAG, "new takeDamage: " + value);
+                    //                    Log.d(TAG, "new takeDamage: " + value);
                 } else {
-                    Log.d(TAG, "takeDamage: " + c + " protects the player!");
+                    //                    Log.d(TAG, "takeDamage: " + c + " protects the player!");
                     return;
                 }
             }
@@ -286,7 +286,7 @@ public class PlayArea {
 
     public int playCardById(int id) {
         Card card = findCardById(playerCards.getHandCards(), id);
-        Log.d("PlayArea", "Card,playCardById: " + card);
+        // Log.d("PlayArea", "Card,playCardById: " + card);
         if (card == null) {
             return 0;
         }
@@ -307,7 +307,7 @@ public class PlayArea {
 
     public boolean expendChampionById(int id) {
         Card card = findCardById(playedChampions, id);
-        Log.d("PlayArea", "expendChampionById: " + card);
+        //        Log.d("PlayArea", "expendChampionById: " + card);
         if (card == null) {
             return false;
         }
@@ -326,7 +326,7 @@ public class PlayArea {
         for (Card c : playedChampions) {
             ((Champion) c).reset();
         }
-        Log.d("PlayArea", "resetChampions: " + playedChampions.size());
+        //        Log.d("PlayArea", "resetChampions: " + playedChampions.size());
     }
 
     private Card findCardById(List<Card> cards, int id) {
