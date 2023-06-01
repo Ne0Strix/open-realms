@@ -150,13 +150,18 @@ public class PlayArea {
             if (card.getFaction() != Faction.NONE
                     && c.getFaction() == card.getFaction()
                     && c != card) {
-                if (!cardsThatUsedSynergies.contains(c)) {
-                    c.applySynergyEffects(this);
-                    cardsThatUsedSynergies.add(c);
-                }
+
                 if (!cardsThatUsedSynergies.contains(card)) {
                     card.applySynergyEffects(this);
                     cardsThatUsedSynergies.add(card);
+                }
+                
+                if (!cardsThatUsedSynergies.contains(c)) {
+                    if (c instanceof Champion && !((Champion) c).isExpended()) {
+                        continue;
+                    }
+                    c.applySynergyEffects(this);
+                    cardsThatUsedSynergies.add(c);
                 }
             }
         }
