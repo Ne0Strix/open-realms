@@ -154,30 +154,30 @@ public class CardView extends ConstraintLayout {
 
         ImageView typeIcon = findViewById(R.id.card_view_type_icon);
         ImageView background = findViewById(R.id.card_view_background);
-        int typeIconResoucrce = -1;
+        int typeIconResource = -1;
         switch (card.getFaction()) {
             case GUILD:
                 background.setImageResource(R.drawable.card_guild);
-                typeIconResoucrce = R.drawable.guild_icon;
-                typeIcon.setImageResource(typeIconResoucrce);
+                typeIconResource = R.drawable.guild_icon;
+                typeIcon.setImageResource(typeIconResource);
                 typeIcon.setVisibility(VISIBLE);
                 break;
             case IMPERIAL:
                 background.setImageResource(R.drawable.card_imperial);
-                typeIconResoucrce = R.drawable.imperial_icon;
-                typeIcon.setImageResource(typeIconResoucrce);
+                typeIconResource = R.drawable.imperial_icon;
+                typeIcon.setImageResource(typeIconResource);
                 typeIcon.setVisibility(VISIBLE);
                 break;
             case NECROS:
                 background.setImageResource(R.drawable.card_necros);
-                typeIconResoucrce = R.drawable.necros_icon;
-                typeIcon.setImageResource(typeIconResoucrce);
+                typeIconResource = R.drawable.necros_icon;
+                typeIcon.setImageResource(typeIconResource);
                 typeIcon.setVisibility(VISIBLE);
                 break;
             case WILD:
                 background.setImageResource(R.drawable.card_wild);
-                typeIconResoucrce = R.drawable.wild_icon;
-                typeIcon.setImageResource(typeIconResoucrce);
+                typeIconResource = R.drawable.wild_icon;
+                typeIcon.setImageResource(typeIconResource);
                 typeIcon.setVisibility(VISIBLE);
                 break;
             default:
@@ -186,6 +186,24 @@ public class CardView extends ConstraintLayout {
                 break;
         }
 
+        // Parse card name and retrieve an image-resource with a matching name
+        String resourceName = "card_image_";
+        // Only lowercase characters a-z, 0-9 and _ are allowed in the names of android resources
+        String cardName = card.getName().toLowerCase();
+        cardName = cardName.replaceAll("[ -]", "_");
+        cardName = cardName.replaceAll("[,']", "");
+
+        resourceName = resourceName + cardName;
+        int imageResourceId =
+                getResources()
+                        .getIdentifier(resourceName, "drawable", getContext().getPackageName());
+        ImageView cardImage = findViewById(R.id.card_view_image);
+        if (imageResourceId != 0) {
+            cardImage.setImageResource(imageResourceId);
+        } else {
+            Log.e(logTag, "Image Resource \"R.drawable." + resourceName + "\" was not found.");
+            cardImage.setImageResource(R.drawable.playarea);
+        }
         // Default effects
         LinearLayout defaultEffects = new LinearLayout(getContext());
         LinearLayout.LayoutParams paramsMatchParentHighWeight =
@@ -229,7 +247,7 @@ public class CardView extends ConstraintLayout {
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             1);
             ImageView synergyIcon = new ImageView(getContext());
-            synergyIcon.setImageResource(typeIconResoucrce);
+            synergyIcon.setImageResource(typeIconResource);
             synergyIcon.setLayoutParams(paramsMatchParentLowWeight);
             synergyEffects.addView(synergyIcon);
 
