@@ -2,6 +2,8 @@
 package at.vunfer.openrealms;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,8 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -60,13 +64,41 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     private Context context = this;
     private int playerId;
+    private VideoView videoView;
+    private MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.menu);
+        setContentView(R.layout.video_view);
         showToast("Welcome to OpenRealms!");
+
+        // Initialize the VideoView
+        videoView = findViewById(R.id.video_view);
+        mediaController = new MediaController(this);
+        videoView.setMediaController(mediaController);
+
+        // Set the video file path or URL
+        String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.intro_video;
+        videoView.setVideoURI(Uri.parse(videoPath));
+
+        // Set an OnPreparedListener to start playing the video when it's ready
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoView.start();
+            }
+        });
+
+        // Set an OnCompletionListener to transition to the next layout after the video finishes
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                // Transition to the next layout (e.g., menu, game screen)
+                setContentView(R.layout.menu);
+            }
+        });
     }
 
     public void hostGame(View view) {
