@@ -66,14 +66,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.menu);
+        showToast("Welcome to OpenRealms!");
     }
 
     public void hostGame(View view) {
         setContentView(R.layout.host);
+        showToast("Host a game");
     }
 
     public void joinGame(View view) {
         setContentView(R.layout.join);
+        showToast("Join a game");
     }
 
     public void toMainMenu(View view) throws IOException {
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             server.stopServer();
         }
         isHost = false;
+        showToast("Back to main menu");
     }
 
     public void startServer(View view) {
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         showIpButton.setVisibility(View.VISIBLE);
 
         server.start();
+        showToast("Server started");
     }
 
     public void showIp(View view) {
@@ -116,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         connection = new ClientConnector(this);
         connection.setConnectionTarget(connectionIP, connectionPort);
         connection.start();
+        showToast("Your IP address is:\n" + connectionIP + "\n(Start after Guest has joined and started)");
     }
 
     public void connectServer(View view) {
@@ -132,10 +138,12 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         join.setVisibility(View.GONE);
         start.setVisibility(View.VISIBLE);
+        showToast("Connecting to IP: " + connectionIP);
     }
 
     public void startGame(View view) {
         setContentView(R.layout.activity_main);
+        showToast("Game started");
 
         PlayArea.setContext(this);
 
@@ -206,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                         switch (message.getType()) {
                             case ADD_CARD:
                                 addCard(message);
+                                showToast("Card added to deck");
                                 Log.i(
                                         TAG,
                                         "Added card "
@@ -217,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 break;
                             case REMOVE_CARD:
                                 removeCard(message);
+                                showToast("Card removed from deck");
                                 Log.i(
                                         TAG,
                                         "Removed card "
@@ -282,8 +292,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
                                         if (playerId == (Integer) targetPlayer) {
                                             endTurnButton.setVisibility(View.VISIBLE);
+                                            showToast("Your turn");
                                         } else {
                                             endTurnButton.setVisibility(View.INVISIBLE);
+                                            showToast("Opponent's turn");
                                         }
                                     }
                                 }
@@ -388,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void endTurn(View view) throws IOException {
         Message endTurn = new Message(MessageType.END_TURN);
         connection.sendMessage(endTurn);
+        showToast("Turn ended");
     }
 
     @Override
@@ -401,13 +414,15 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         int id = item.getItemId();
 
         if (id == R.id.action_new_game) {
-            Toast.makeText(this, "Neues Spiel gestartet", Toast.LENGTH_SHORT).show();
+            showToast("New game started");
             return true;
         } else if (id == R.id.action_settings) {
-            Toast.makeText(this, "Einstellungen geöffnet", Toast.LENGTH_SHORT).show();
+            showToast("Settings opened");
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

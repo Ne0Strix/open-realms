@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
+
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.DeckGenerator;
