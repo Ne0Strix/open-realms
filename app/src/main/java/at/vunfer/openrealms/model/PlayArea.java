@@ -275,6 +275,22 @@ public class PlayArea {
         turnHealing += healing;
     }
 
+    public void visitDamagePerGuardInPlayEffect(int damagePerGuard) {
+        for (Card c : playedChampions) {
+            if (((Champion) c).isGuard()) {
+                visitDamage(damagePerGuard);
+            }
+        }
+    }
+
+    public void visitDamagePerChampionInPlayEffect(int damagePerChampion) {
+        visitDamage(damagePerChampion * playedChampions.size());
+    }
+
+    public void visitHealingPerChampionInPlay(int healingPerChampion) {
+        visitHealing(healingPerChampion * playedChampions.size());
+    }
+
     public boolean buyCard(Card card) throws IllegalArgumentException {
         if (this.turnCoins < card.getCost()) {
             return false;

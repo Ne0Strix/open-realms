@@ -29,6 +29,10 @@
             <amount>5</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>2</amount>
+            <type>damagePerChampionInPlay</type>
+        </ability>
         <synergy>
             <amount>6</amount>
             <type>heal</type>
@@ -125,7 +129,7 @@
         </ability>
         <synergy>
             <amount>2</amount>
-            <type>heal</type>
+            <type>healingPerChampionInPlay</type>
         </synergy>
         <isGuard>false</isGuard>
         <health>6</health>
@@ -139,6 +143,10 @@
             <amount>2</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>damagePerGuardInPlay</type>
+        </ability>
         <isGuard>true</isGuard>
         <health>4</health>
     </champion>
@@ -150,6 +158,10 @@
         <ability>
             <amount>3</amount>
             <type>attack</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>damagePerChampionInPlay</type>
         </ability>
         <isGuard>true</isGuard>
         <health>4</health>
@@ -178,8 +190,12 @@
             <type>coin</type>
         </ability>
         <ability>
-            <amount>5</amount>
+            <amount>3</amount>
             <type>heal</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>healingPerChampionInPlay</type>
         </ability>
         <synergy>
             <amount>1</amount>
@@ -194,6 +210,10 @@
         <ability>
             <amount>1</amount>
             <type>coin</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>healingPerChampionInPlay</type>
         </ability>
         <isGuard>false</isGuard>
         <health>3</health>
