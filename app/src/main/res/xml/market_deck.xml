@@ -717,7 +717,8 @@
     <card amount="1">
         <name>Word of Power</name>
         <cost>6</cost>
-        <type>imperial</type>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
         <ability>
             <amount>1</amount>
             <type>draw</type>
