@@ -25,7 +25,7 @@ class HealingPerChampionInPlayEffectTest {
     void testGetHealingPerChampion() {
         HealingPerChampionInPlayEffect effect1 = new HealingPerChampionInPlayEffect(1);
 
-        assertEquals(1, effect1.getHealingPerChampion());
+        assertEquals(1, effect1.getAmount());
     }
 
     @Test

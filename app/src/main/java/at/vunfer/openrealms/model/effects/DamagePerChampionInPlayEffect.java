@@ -17,10 +17,6 @@ public class DamagePerChampionInPlayEffect implements Effect, Serializable {
         this.damagePerChampion = damagePerChampion;
     }
 
-    public int getDamagePerChampion() {
-        return damagePerChampion;
-    }
-
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitDamagePerChampionInPlay(damagePerChampion);

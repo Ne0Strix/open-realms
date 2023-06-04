@@ -16,10 +16,6 @@ public class HealingPerChampionInPlayEffect implements Effect, Serializable {
         this.healingPerChampion = healing;
     }
 
-    public int getHealingPerChampion() {
-        return healingPerChampion;
-    }
-
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitHealingPerChampionInPlay(healingPerChampion);

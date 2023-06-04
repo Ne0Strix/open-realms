@@ -17,10 +17,6 @@ public class DamagePerGuardInPlayEffect implements Effect, Serializable {
         this.damagePerGuard = damagePerGuard;
     }
 
-    public int getDamagePerGuard() {
-        return damagePerGuard;
-    }
-
     @Override
     public void applyEffect(PlayArea visitor) {
         visitor.visitDamagePerGuardInPlay(damagePerGuard);

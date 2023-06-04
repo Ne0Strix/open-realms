@@ -25,7 +25,7 @@ class DamagePerGuardInPlayEffectTest {
     void testGetDamagePerGuard() {
         DamagePerGuardInPlayEffect effect1 = new DamagePerGuardInPlayEffect(1);
 
-        assertEquals(1, effect1.getDamagePerGuard());
+        assertEquals(1, effect1.getAmount());
     }
 
     @Test
