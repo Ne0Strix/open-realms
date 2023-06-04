@@ -18,8 +18,11 @@ import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Faction;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DamagePerChampionInPlayEffect;
+import at.vunfer.openrealms.model.effects.DamagePerGuardInPlayEffect;
 import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.model.effects.HealingPerChampionInPlayEffect;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -71,6 +74,12 @@ public class CardViewTest {
         cardList.add(new Card("Card2", 2, Faction.NONE, List.of(new DamageEffect(2))));
         cardList.add(new Card("Card3", 3, Faction.NONE, List.of(new HealingEffect(3))));
         cardList.add(new Card("Card4", 4, Faction.NONE, List.of(new DrawEffect(1))));
+        cardList.add(
+                new Card("Card5", 5, Faction.NONE, List.of(new DamagePerChampionInPlayEffect(1))));
+        cardList.add(
+                new Card("Card6", 6, Faction.NONE, List.of(new DamagePerGuardInPlayEffect(1))));
+        cardList.add(
+                new Card("Card7", 7, Faction.NONE, List.of(new HealingPerChampionInPlayEffect(1))));
 
         List<CardView> cardViewList = CardView.getViewFromCards(targetContext, cardList);
 

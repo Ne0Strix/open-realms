@@ -218,6 +218,56 @@ class PlayAreaTest {
     }
 
     @Test
+    void testVisitDamagePerChampionInPlay() {
+        int initialTurnDamage = playArea.getTurnDamage();
+        Card champ =
+                new Champion(
+                        "Test1",
+                        0,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(),
+                        List.of(),
+                        false,
+                        5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitDamagePerChampionInPlay(5);
+        assertEquals(initialTurnDamage + 5, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testVisitDamagePerGuardInPlay() {
+        int initialTurnDamage = playArea.getTurnDamage();
+        Card champ =
+                new Champion(
+                        "Test1", 0, CardType.CHAMPION, Faction.NONE, List.of(), List.of(), true, 5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitDamagePerGuardInPlay(5);
+        assertEquals(initialTurnDamage + 5, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testVisitHealingPerChampionInPlay() {
+        int initialTurnHealing = playArea.getTurnHealing();
+        Card champ =
+                new Champion(
+                        "Test1",
+                        0,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(),
+                        List.of(),
+                        false,
+                        5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitDamagePerChampionInPlay(5);
+        assertEquals(initialTurnHealing + 5, playArea.getTurnDamage());
+    }
+
+    @Test
     void testBuyCardTooPoor() {
         PlayArea playArea1 = player1.getPlayArea();
         Card toBuy = playArea1.getMarket().getForPurchase().get(0);

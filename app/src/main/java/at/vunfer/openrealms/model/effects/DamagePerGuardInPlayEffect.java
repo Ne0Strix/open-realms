@@ -23,7 +23,7 @@ public class DamagePerGuardInPlayEffect implements Effect, Serializable {
 
     @Override
     public void applyEffect(PlayArea visitor) {
-        visitor.visitDamagePerGuardInPlayEffect(damagePerGuard);
+        visitor.visitDamagePerGuardInPlay(damagePerGuard);
     }
 
     @Override

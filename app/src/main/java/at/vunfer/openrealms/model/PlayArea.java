@@ -275,7 +275,7 @@ public class PlayArea {
         turnHealing += healing;
     }
 
-    public void visitDamagePerGuardInPlayEffect(int damagePerGuard) {
+    public void visitDamagePerGuardInPlay(int damagePerGuard) {
         for (Card c : playedChampions) {
             if (((Champion) c).isGuard()) {
                 visitDamage(damagePerGuard);
@@ -283,7 +283,7 @@ public class PlayArea {
         }
     }
 
-    public void visitDamagePerChampionInPlayEffect(int damagePerChampion) {
+    public void visitDamagePerChampionInPlay(int damagePerChampion) {
         visitDamage(damagePerChampion * playedChampions.size());
     }
 
