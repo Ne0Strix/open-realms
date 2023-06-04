@@ -264,7 +264,7 @@ class PlayAreaTest {
         playArea.getPlayerCards().addToHand(champ);
         playArea.playCardById(champ.getId());
         playArea.visitHealingPerChampionInPlay(5);
-        assertEquals(initialTurnHealing + 5, playArea.getTurnDamage());
+        assertEquals(initialTurnHealing + 5, playArea.getTurnHealing());
     }
 
     @Test
