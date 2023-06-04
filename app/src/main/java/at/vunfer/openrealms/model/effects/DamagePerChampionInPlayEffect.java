@@ -10,11 +10,11 @@ public class DamagePerChampionInPlayEffect implements Effect, Serializable {
 
     private final int damagePerChampion;
 
-    public DamagePerChampionInPlayEffect(int damagePerGuard) {
-        if (damagePerGuard < 0) {
+    public DamagePerChampionInPlayEffect(int damagePerChampion) {
+        if (damagePerChampion < 0) {
             throw new IllegalArgumentException("Damage per champion must not be negative");
         }
-        this.damagePerChampion = damagePerGuard;
+        this.damagePerChampion = damagePerChampion;
     }
 
     public int getDamagePerChampion() {
@@ -28,7 +28,7 @@ public class DamagePerChampionInPlayEffect implements Effect, Serializable {
 
     @Override
     public String toString() {
-        return "DamagePerGuardInPlayEffect{" + "damage_per_guard=" + damagePerChampion + '}';
+        return "DamagePerChampionInPlayEffect{" + "damage_per_champion=" + damagePerChampion + '}';
     }
 
     @Override
