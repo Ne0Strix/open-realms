@@ -9,8 +9,8 @@ import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.CardType;
 import at.vunfer.openrealms.model.Deck;
+import at.vunfer.openrealms.model.Faction;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.DataKey;
@@ -63,7 +63,7 @@ public class MainActivityTest {
                     main.startGame(new View(main));
                 });
 
-        Card testCard = new Card("Test1", 2, CardType.NONE, List.of(new DamageEffect(2)));
+        Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
         Deck<Card> cardList = new Deck<>();
         cardList.add(testCard);
 

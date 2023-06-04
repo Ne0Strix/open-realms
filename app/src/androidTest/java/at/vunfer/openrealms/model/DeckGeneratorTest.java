@@ -50,7 +50,8 @@ public class DeckGeneratorTest {
                         + "<card amount=\"3\">"
                         + "   <name>testName</name>"
                         + "   <cost>5</cost>"
-                        + "   <type>wild</type>"
+                        + "   <card_type>item</card_type>"
+                        + "   <faction>wild</faction>"
                         + "   <ability>"
                         + "      <amount>5</amount>"
                         + "      <type>coin</type>"
@@ -63,7 +64,8 @@ public class DeckGeneratorTest {
                         + "<card amount=\"1\">"
                         + "   <name>otherTestName</name>"
                         + "   <cost>16</cost>"
-                        + "   <type>necros</type>"
+                        + "   <card_type>item</card_type>"
+                        + "   <faction>necros</faction>"
                         + "   <ability>"
                         + "       <amount>2</amount>"
                         + "       <type>attack</type>"
@@ -84,14 +86,14 @@ public class DeckGeneratorTest {
                 new Card(
                         "testName",
                         5,
-                        CardType.WILD,
+                        Faction.WILD,
                         new ArrayList<>(List.of(new CoinEffect(5))),
                         List.of(new DamageEffect(3))));
         expectedDeck.add(
                 new Card(
                         "testName",
                         5,
-                        CardType.WILD,
+                        Faction.WILD,
                         new ArrayList<>(List.of(new CoinEffect(5))),
                         List.of(new DamageEffect(3))));
 
@@ -99,7 +101,7 @@ public class DeckGeneratorTest {
                 new Card(
                         "testName",
                         5,
-                        CardType.WILD,
+                        Faction.WILD,
                         new ArrayList<>(List.of(new CoinEffect(5))),
                         List.of(new DamageEffect(3))));
 
@@ -107,7 +109,7 @@ public class DeckGeneratorTest {
                 new Card(
                         "otherTestName",
                         16,
-                        CardType.NECROS,
+                        Faction.NECROS,
                         new ArrayList<>(
                                 List.of(
                                         new DamageEffect(2),
@@ -133,7 +135,7 @@ public class DeckGeneratorTest {
     }
 
     @Test
-    public void testInvalidTag() {
+    public void testInvalidTagCard() {
         String xmlToParse =
                 "<deck>"
                         + "    <card amount=\"1\">"
@@ -153,20 +155,41 @@ public class DeckGeneratorTest {
     }
 
     @Test
+    public void testInvalidTagChampion() {
+        String xmlToParse =
+                "<deck>"
+                        + "    <champion amount=\"1\">"
+                        + "        <cardName>Gold</cardName>"
+                        + "        <cardCost>0</cardCost>"
+                        + "        <cardAbility>"
+                        + "            <amount>1</amount>"
+                        + "            <type>coin</type>"
+                        + "        </cardAbility>"
+                        + "    </champion>"
+                        + "</deck>";
+
+        assertThrows(
+                "Unrecognized Card-XML tag.",
+                IllegalArgumentException.class,
+                () -> DeckGenerator.generateDeckFromString(xmlToParse));
+    }
+
+    @Test
     public void testFileEndedWhileParsingCard() {
         String xmlToParse =
                 "<deck>"
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
-                        + "        <type>guild</type>"
+                        + "        <card_type>item</card_type>"
+                        + "        <faction>guild</faction>"
                         + "        <ability>"
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>"
                         + "        </ability>";
         Deck<Card> expectedDeck = new Deck<>();
         expectedDeck.add(
-                new Card("Gold", 0, CardType.GUILD, List.of(new CoinEffect(1)), new ArrayList<>()));
+                new Card("Gold", 0, Faction.GUILD, List.of(new CoinEffect(1)), new ArrayList<>()));
 
         Deck<Card> resultDeck = DeckGenerator.generateDeckFromString(xmlToParse);
 
@@ -182,7 +205,8 @@ public class DeckGeneratorTest {
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
-                        + "        <type>imperial</type>"
+                        + "        <card_type>item</card_type>"
+                        + "        <faction>imperial</faction>"
                         + "        <ability>"
                         + "            <amount>1</amount>"
                         + "            <type>coin</type>";
@@ -191,7 +215,7 @@ public class DeckGeneratorTest {
                 new Card(
                         "Gold",
                         0,
-                        CardType.IMPERIAL,
+                        Faction.IMPERIAL,
                         List.of(new CoinEffect(1)),
                         new ArrayList<>()));
 
@@ -270,7 +294,7 @@ public class DeckGeneratorTest {
                         + "    <card amount=\"1\">"
                         + "        <name>Gold</name>"
                         + "        <cost>0</cost>"
-                        + "        <type>ERROR</type>"
+                        + "        <card_type>ERROR</card_type>"
                         + "        <ability>"
                         + "            <amount>10</amount>"
                         + "            <type>attack</type>"

@@ -65,6 +65,8 @@ public class GameSession {
         currentPlayer.getPlayArea().clearPlayedCards();
         currentPlayer.getPlayArea().getPlayerCards().restockHand();
         currentPlayer.getPlayArea().clearCardDrawnFromSpecialAbility();
+        currentPlayer.getPlayArea().resetChampions();
+        currentPlayer.getPlayArea().clearCardsThatUsedSynergyEffect();
         nextPlayer();
     }
 

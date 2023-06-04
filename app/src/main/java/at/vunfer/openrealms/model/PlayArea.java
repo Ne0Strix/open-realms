@@ -21,6 +21,8 @@ public class PlayArea {
     private Deck<Card> playedChampions;
     private PlayerCards playerCards;
     private Card cardDrawnFromSpecialAbility; // from special ability
+    private Deck<Card> cardsThatUsedSynergies;
+    private Deck<Card> atTurnEndDiscardedChampions;
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -38,6 +40,8 @@ public class PlayArea {
         this.turnCoins = 0;
         this.playedCards = new Deck<>();
         this.playedChampions = new Deck<>();
+        this.cardsThatUsedSynergies = new Deck<>();
+        this.atTurnEndDiscardedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
         this.cardDrawnFromSpecialAbility = null;
@@ -115,6 +119,10 @@ public class PlayArea {
         return market;
     }
 
+    public Deck<Card> getAtTurnEndDiscardedChampions() {
+        return atTurnEndDiscardedChampions;
+    }
+
     /**
      * Plays the specified card from the player's hand. Adds the card to the played cards deck and
      * removes it from the player's hand.
@@ -122,27 +130,42 @@ public class PlayArea {
      * @param card The card to play.
      */
     public void playCard(Card card) {
-        // Synergy effects:
-        int numOfCardsWithSameType = 0;
-        Card cardWithSameType = null;
-        for (Card c : playedCards) {
-            if (card.getType() != CardType.NONE && c.getType() == card.getType()) {
-                numOfCardsWithSameType++;
-                cardWithSameType = c;
+        card.applyEffects(this);
+        triggerSynergies(card);
+        if (card instanceof Champion) {
+            ((Champion) card).expend();
+            playedChampions.add(playerCards.popFromHand(card));
+        } else {
+            playedCards.add(playerCards.popFromHand(card));
+        }
+    }
+
+    private void triggerSynergies(Card card) {
+        triggerSynergiesByType(card, playedCards);
+        triggerSynergiesByType(card, playedChampions);
+    }
+
+    private void triggerSynergiesByType(Card card, Deck<Card> deck) {
+
+        for (Card c : deck) {
+            if (card.getFaction() != Faction.NONE
+                    && c.getFaction() == card.getFaction()
+                    && c != card) {
+
+                if (!cardsThatUsedSynergies.contains(card)) {
+                    card.applySynergyEffects(this);
+                    cardsThatUsedSynergies.add(card);
+                }
+
+                if (!cardsThatUsedSynergies.contains(c)) {
+                    if (c instanceof Champion && !((Champion) c).isExpended()) {
+                        continue;
+                    }
+                    c.applySynergyEffects(this);
+                    cardsThatUsedSynergies.add(c);
+                }
             }
         }
-        if (numOfCardsWithSameType > 0) {
-            card.applySynergyEffects(this);
-        }
-        if (numOfCardsWithSameType == 1) {
-            cardWithSameType.applySynergyEffects(this);
-        }
-
-        // Default effects:
-        card.applyEffects(this);
-
-        playedCards.add(playerCards.popFromHand(card));
-        for (Card c : playedCards) {}
     }
 
     public void clearPlayedCards() {
@@ -150,11 +173,10 @@ public class PlayArea {
         playedCards.clear();
     }
 
-    // commented out by since it is not used in first sprint
-    //    public Card useCardAllyEffect(Card card) {
-    //        return null;
-    //    }
-    //
+    public void clearCardsThatUsedSynergyEffect() {
+        cardsThatUsedSynergies.clear();
+    }
+
     //    public Card useCardSacrificeEffect(Card card) {
     //        return null;
     //    }
@@ -162,14 +184,33 @@ public class PlayArea {
     //    public Card useCardExpendEffect() {
     //        return null;
     //    }
-    //
-    //    public Card attackChampion(Champion champion, PlayArea playArea) {
-    //        return null;
-    //    }
-    //
-    //    public Card championIsAttacked(Champion champion) {
-    //        return null;
-    //    }
+
+    public boolean expendChampion(Champion champion) {
+        if (champion.expend()) {
+            champion.applyEffects(this);
+            triggerSynergies(champion);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean attackChampion(Champion champion, PlayArea enemyPlayArea) {
+        if (enemyPlayArea.championIsAttacked(champion, turnDamage)) {
+            turnDamage -= champion.getHealth();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean championIsAttacked(Champion champion, int turnDamage) {
+        if (champion.isKilled(turnDamage)) {
+            playedChampions.remove(champion);
+            playerCards.getDiscardedCards().add(champion);
+            champion.reset();
+            return true;
+        }
+        return false;
+    }
 
     /** Resets the turn damage, healing, and coins to 0. */
     public void resetTurnPool() {
@@ -193,6 +234,21 @@ public class PlayArea {
      * @param value The value to decrease the player's health by.
      */
     public void takeDamage(int value) {
+        atTurnEndDiscardedChampions.clear();
+        for (int i = playedChampions.size() - 1; i >= 0; i--) {
+            Card c = playedChampions.get(i);
+            if (value <= 0) {
+                break;
+            }
+            if (((Champion) c).isGuard()) {
+                if (championIsAttacked((Champion) c, value)) {
+                    atTurnEndDiscardedChampions.add(c);
+                    value -= ((Champion) c).getHealth();
+                } else {
+                    return;
+                }
+            }
+        }
         health -= value;
     }
 
@@ -229,13 +285,16 @@ public class PlayArea {
         return true;
     }
 
-    public boolean playCardById(int id) {
+    public int playCardById(int id) {
         Card card = findCardById(playerCards.getHandCards(), id);
         if (card == null) {
-            return false;
+            return 0;
         }
         playCard(card);
-        return true;
+        if (card instanceof Champion) {
+            return 2;
+        }
+        return 1;
     }
 
     public boolean buyCardById(int id) {
@@ -244,6 +303,28 @@ public class PlayArea {
             return false;
         }
         return buyCard(card);
+    }
+
+    public boolean expendChampionById(int id) {
+        Card card = findCardById(playedChampions, id);
+        if (card == null) {
+            return false;
+        }
+        return expendChampion((Champion) card);
+    }
+
+    public boolean attackChampionById(int id, PlayArea enemyPlayArea) {
+        Card card = findCardById(enemyPlayArea.playedChampions, id);
+        if (card == null) {
+            return false;
+        }
+        return attackChampion((Champion) card, enemyPlayArea);
+    }
+
+    public void resetChampions() {
+        for (Card c : playedChampions) {
+            ((Champion) c).reset();
+        }
     }
 
     private Card findCardById(List<Card> cards, int id) {

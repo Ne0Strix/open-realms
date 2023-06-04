@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <deck>
+    <champion amount="1">
+        <name>Arkus, Imperial Dragon</name>
+        <cost>8</cost>
+        <card_type>champion</card_type>
+        <faction>imperial</faction>
+        <ability>
+            <amount>5</amount>
+            <type>attack</type>
+        </ability>
+        <synergy>
+            <amount>6</amount>
+            <type>heal</type>
+        </synergy>
+        <isGuard>true</isGuard>
+        <health>10</health>
+    </champion>
     <card amount="1">
         <name>Close Ranks</name>
         <cost>3</cost>
-        <type>imperial</type>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
         <ability>
             <amount>5</amount>
             <type>attack</type>
@@ -16,7 +33,8 @@
     <card amount="1">
         <name>Command</name>
         <cost>5</cost>
-        <type>imperial</type>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -34,10 +52,27 @@
             <type>draw</type>
         </ability>
     </card>
+    <champion amount="1">
+        <name>Darian, War Mage</name>
+        <cost>4</cost>
+        <card_type>champion</card_type>
+        <faction>imperial</faction>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+        <ability>
+            <amount>4</amount>
+            <type>heal</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>5</health>
+    </champion>
     <card amount="1">
         <name>Domination</name>
         <cost>7</cost>
-        <type>imperial</type>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
         <ability>
             <amount>6</amount>
             <type>attack</type>
@@ -51,10 +86,67 @@
             <type>draw</type>
         </ability>
     </card>
+    <champion amount="1">
+        <name>Cristov the Just</name>
+        <cost>5</cost>
+        <card_type>champion</card_type>
+        <faction>imperial</faction>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+        <ability>
+            <amount>3</amount>
+            <type>heal</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>5</health>
+    </champion>
+    <champion amount="1">
+        <name>Kraka, High Priest</name>
+        <cost>6</cost>
+        <card_type>champion</card_type>
+        <faction>imperial</faction>
+        <ability>
+            <amount>2</amount>
+            <type>heal</type>
+        </ability>
+        <synergy>
+            <amount>2</amount>
+            <type>heal</type>
+        </synergy>
+        <isGuard>false</isGuard>
+        <health>6</health>
+    </champion>
+    <champion amount="2">
+        <name>Man-at-Arms</name>
+        <cost>3</cost>
+        <card_type>champion</card_type>
+        <faction>imperial</faction>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>4</health>
+    </champion>
+    <champion amount="1">
+        <name>Master Weyan</name>
+        <cost>4</cost>
+        <card_type>champion</card_type>
+        <faction>imperial</faction>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>4</health>
+    </champion>
     <card amount="1">
         <name>Rally the Troops</name>
         <cost>4</cost>
-        <type>imperial</type>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
         <ability>
             <amount>5</amount>
             <type>attack</type>
@@ -67,7 +159,8 @@
     <card amount="3">
         <name>Recruit</name>
         <cost>2</cost>
-        <type>imperial</type>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -81,10 +174,23 @@
             <type>coin</type>
         </synergy>
     </card>
+    <champion amount="2">
+        <name>Tithe Priest</name>
+        <cost>2</cost>
+        <card_type>champion</card_type>
+        <faction>imperial</faction>
+        <ability>
+            <amount>1</amount>
+            <type>coin</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>3</health>
+    </champion>
     <card amount="3">
         <name>Taxation</name>
         <cost>1</cost>
-        <type>imperial</type>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -95,9 +201,32 @@
         </synergy>
     </card>
     <card amount="3">
+        <name>Word of Power</name>
+        <cost>6</cost>
+        <card_type>action</card_type>
+        <faction>imperial</faction>
+        <synergy>
+            <amount>5</amount>
+            <type>heal</type>
+        </synergy>
+    </card>
+    <champion amount="1">
+        <name>Borg, Ogre Mercenary</name>
+        <cost>6</cost>
+        <card_type>champion</card_type>
+        <faction>guild</faction>
+        <ability>
+            <amount>4</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>6</health>
+    </champion>
+    <card amount="3">
         <name>Bribe</name>
         <cost>3</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>3</amount>
             <type>coin</type>
@@ -106,7 +235,8 @@
     <card amount="1">
         <name>Death Threat</name>
         <cost>3</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>1</amount>
             <type>attack</type>
@@ -119,7 +249,8 @@
     <card amount="1">
         <name>Deception</name>
         <cost>5</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -132,7 +263,8 @@
     <card amount="1">
         <name>Fire Bomb</name>
         <cost>8</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>8</amount>
             <type>attack</type>
@@ -145,7 +277,8 @@
     <card amount="1">
         <name>Hit Job</name>
         <cost>4</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>7</amount>
             <type>attack</type>
@@ -154,7 +287,8 @@
     <card amount="2">
         <name>Intimidation</name>
         <cost>2</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>5</amount>
             <type>attack</type>
@@ -164,10 +298,39 @@
             <type>coin</type>
         </synergy>
     </card>
+    <champion amount="1">
+        <name>Myros, Guild Mage</name>
+        <cost>5</cost>
+        <card_type>champion</card_type>
+        <faction>guild</faction>
+        <ability>
+            <amount>3</amount>
+            <type>coin</type>
+        </ability>
+        <synergy>
+            <amount>4</amount>
+            <type>attack</type>
+        </synergy>
+        <isGuard>true</isGuard>
+        <health>3</health>
+    </champion>
+    <champion amount="1">
+        <name>Parov, the Enforcer</name>
+        <cost>5</cost>
+        <card_type>champion</card_type>
+        <faction>guild</faction>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>5</health>
+    </champion>
     <card amount="3">
         <name>Profit</name>
         <cost>1</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -177,19 +340,81 @@
             <type>attack</type>
         </synergy>
     </card>
+    <champion amount="1">
+        <name>Rake, Master Assassin</name>
+        <cost>7</cost>
+        <card_type>champion</card_type>
+        <faction>guild</faction>
+        <ability>
+            <amount>4</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>7</health>
+    </champion>
+    <champion amount="1">
+        <name>Rasmus, the Smuggler</name>
+        <cost>4</cost>
+        <card_type>champion</card_type>
+        <faction>guild</faction>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>5</health>
+    </champion>
     <card amount="1">
         <name>Smash and Grab</name>
         <cost>6</cost>
-        <type>guild</type>
+        <card_type>action</card_type>
+        <faction>guild</faction>
         <ability>
             <amount>6</amount>
             <type>attack</type>
         </ability>
     </card>
+    <champion amount="2">
+        <name>Street Thug</name>
+        <cost>3</cost>
+        <card_type>champion</card_type>
+        <faction>guild</faction>
+        <ability>
+            <amount>1</amount>
+            <type>coin</type>
+        </ability>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>4</health>
+    </champion>
+    <champion amount="2">
+        <name>Cult Priest</name>
+        <cost>3</cost>
+        <card_type>champion</card_type>
+        <faction>necros</faction>
+        <ability>
+            <amount>1</amount>
+            <type>coin</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>attack</type>
+        </ability>
+        <synergy>
+            <amount>4</amount>
+            <type>attack</type>
+        </synergy>
+        <isGuard>false</isGuard>
+        <health>4</health>
+    </champion>
     <card amount="1">
         <name>Dark Energy</name>
         <cost>4</cost>
-        <type>necros</type>
+        <card_type>action</card_type>
+        <faction>necros</faction>
         <ability>
             <amount>7</amount>
             <type>attack</type>
@@ -202,7 +427,8 @@
     <card amount="1">
         <name>Dark Reward</name>
         <cost>5</cost>
-        <type>necros</type>
+        <card_type>action</card_type>
+        <faction>necros</faction>
         <ability>
             <amount>3</amount>
             <type>coin</type>
@@ -212,10 +438,23 @@
             <type>attack</type>
         </synergy>
     </card>
-    <card amount="1">
+    <champion amount="2">
+        <name>Death Cultist</name>
+        <cost>2</cost>
+        <card_type>champion</card_type>
+        <faction>necros</faction>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>3</health>
+    </champion>
+    <card amount="3">
         <name>Death Touch</name>
         <cost>5</cost>
-        <type>necros</type>
+        <card_type>action</card_type>
+        <faction>necros</faction>
         <ability>
             <amount>2</amount>
             <type>attack</type>
@@ -225,10 +464,23 @@
             <type>attack</type>
         </synergy>
     </card>
+    <champion amount="1">
+        <name>Rayla, Endweaver</name>
+        <cost>4</cost>
+        <card_type>champion</card_type>
+        <faction>necros</faction>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>4</health>
+    </champion>
     <card amount="3">
         <name>Influence</name>
         <cost>2</cost>
-        <type>necros</type>
+        <card_type>action</card_type>
+        <faction>necros</faction>
         <ability>
             <amount>3</amount>
             <type>coin</type>
@@ -238,10 +490,23 @@
             <type>attack</type>
         </synergy>
     </card>
+    <champion amount="1">
+        <name>Krythos, Master Vampire</name>
+        <cost>7</cost>
+        <card_type>champion</card_type>
+        <faction>necros</faction>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>6</health>
+    </champion>
     <card amount="1">
         <name>Life Drain</name>
         <cost>6</cost>
-        <type>necros</type>
+        <card_type>action</card_type>
+        <faction>necros</faction>
         <ability>
             <amount>8</amount>
             <type>attack</type>
@@ -251,10 +516,23 @@
             <type>draw</type>
         </ability>
     </card>
+    <champion amount="1">
+        <name>Lys, the Unseen</name>
+        <cost>6</cost>
+        <card_type>champion</card_type>
+        <faction>necros</faction>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>5</health>
+    </champion>
     <card amount="2">
         <name>The Rot</name>
         <cost>3</cost>
-        <type>necros</type>
+        <card_type>action</card_type>
+        <faction>necros</faction>
         <ability>
             <amount>4</amount>
             <type>attack</type>
@@ -264,10 +542,71 @@
             <type>attack</type>
         </synergy>
     </card>
+    <champion amount="1">
+        <name>Tyrannor, the Devourer</name>
+        <cost>8</cost>
+        <card_type>champion</card_type>
+        <faction>necros</faction>
+        <ability>
+            <amount>4</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>6</health>
+    </champion>
+    <champion amount="1">
+        <name>Varrick, the Necromancer</name>
+        <cost>5</cost>
+        <card_type>champion</card_type>
+        <faction>necros</faction>
+        <isGuard>false</isGuard>
+        <health>3</health>
+    </champion>
+    <champion amount="1">
+        <name>Broelyn, Loreweaver</name>
+        <cost>4</cost>
+        <card_type>champion</card_type>
+        <faction>wild</faction>
+        <ability>
+            <amount>2</amount>
+            <type>coin</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>6</health>
+    </champion>
+    <champion amount="1">
+        <name>Cron, the Berserker</name>
+        <cost>6</cost>
+        <card_type>champion</card_type>
+        <faction>wild</faction>
+        <ability>
+            <amount>5</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>false</isGuard>
+        <health>6</health>
+    </champion>
+    <champion amount="1">
+        <name>Dire Wolf</name>
+        <cost>5</cost>
+        <card_type>champion</card_type>
+        <faction>wild</faction>
+        <ability>
+            <amount>3</amount>
+            <type>attack</type>
+        </ability>
+        <synergy>
+            <amount>4</amount>
+            <type>attack</type>
+        </synergy>
+        <isGuard>true</isGuard>
+        <health>5</health>
+    </champion>
     <card amount="2">
         <name>Elven Curse</name>
         <cost>3</cost>
-        <type>wild</type>
+        <card_type>action</card_type>
+        <faction>wild</faction>
         <ability>
             <amount>6</amount>
             <type>attack</type>
@@ -280,7 +619,8 @@
     <card amount="3">
         <name>Elven Gift</name>
         <cost>3</cost>
-        <type>wild</type>
+        <card_type>action</card_type>
+        <faction>wild</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
@@ -294,28 +634,67 @@
             <type>attack</type>
         </synergy>
     </card>
+    <champion amount="1">
+        <name>Grak, Storm Giant</name>
+        <cost>8</cost>
+        <card_type>champion</card_type>
+        <faction>wild</faction>
+        <ability>
+            <amount>6</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>7</health>
+    </champion>
     <card amount="1">
         <name>Nature's Bounty</name>
         <cost>4</cost>
-        <type>wild</type>
+        <card_type>action</card_type>
+        <faction>wild</faction>
         <ability>
             <amount>4</amount>
             <type>coin</type>
         </ability>
     </card>
+    <champion amount="2">
+        <name>Orc Grunt</name>
+        <cost>3</cost>
+        <card_type>champion</card_type>
+        <faction>wild</faction>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>3</health>
+    </champion>
     <card amount="1">
         <name>Rampage</name>
         <cost>6</cost>
-        <type>wild</type>
+        <card_type>action</card_type>
+        <faction>wild</faction>
         <ability>
             <amount>6</amount>
             <type>attack</type>
         </ability>
     </card>
+    <champion amount="1">
+        <name>Torgen Rocksplitter</name>
+        <cost>7</cost>
+        <card_type>champion</card_type>
+        <faction>wild</faction>
+        <ability>
+            <amount>4</amount>
+            <type>attack</type>
+        </ability>
+        <isGuard>true</isGuard>
+        <health>7</health>
+    </champion>
     <card amount="3">
         <name>Spark</name>
         <cost>1</cost>
-        <type>wild</type>
+        <card_type>action</card_type>
+        <faction>wild</faction>
         <ability>
             <amount>3</amount>
             <type>attack</type>
@@ -328,7 +707,8 @@
     <card amount="1">
         <name>Wolf Form</name>
         <cost>5</cost>
-        <type>wild</type>
+        <card_type>action</card_type>
+        <faction>wild</faction>
         <ability>
             <amount>8</amount>
             <type>attack</type>
@@ -347,4 +727,20 @@
             <type>heal</type>
         </synergy>
     </card>
+    <champion amount="1">
+        <name>Wolf Shaman</name>
+        <cost>2</cost>
+        <card_type>champion</card_type>
+        <faction>wild</faction>
+        <ability>
+            <amount>2</amount>
+            <type>attack</type>
+        </ability>
+        <synergy>
+            <amount>4</amount>
+            <type>attack</type>
+        </synergy>
+        <isGuard>true</isGuard>
+        <health>3</health>
+    </champion>
 </deck>
