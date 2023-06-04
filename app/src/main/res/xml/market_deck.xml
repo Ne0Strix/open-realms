@@ -9,6 +9,10 @@
             <amount>5</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
         <synergy>
             <amount>6</amount>
             <type>heal</type>
@@ -99,6 +103,10 @@
             <amount>3</amount>
             <type>heal</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>5</health>
     </champion>
@@ -110,6 +118,10 @@
         <ability>
             <amount>2</amount>
             <type>heal</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
         <synergy>
             <amount>2</amount>
@@ -205,6 +217,10 @@
         <cost>6</cost>
         <card_type>action</card_type>
         <faction>imperial</faction>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
         <synergy>
             <amount>5</amount>
             <type>heal</type>
@@ -323,6 +339,10 @@
             <amount>3</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>5</health>
     </champion>
@@ -473,6 +493,10 @@
             <amount>3</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>false</isGuard>
         <health>4</health>
     </champion>
@@ -511,10 +535,10 @@
             <amount>8</amount>
             <type>attack</type>
         </ability>
-        <ability>
+        <synergy>
             <amount>1</amount>
             <type>draw</type>
-        </ability>
+        </synergy>
     </card>
     <champion amount="1">
         <name>Lys, the Unseen</name>
@@ -551,6 +575,10 @@
             <amount>4</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>6</health>
     </champion>
@@ -560,6 +588,10 @@
         <card_type>champion</card_type>
         <faction>necros</faction>
         <isGuard>false</isGuard>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <health>3</health>
     </champion>
     <champion amount="1">
@@ -583,6 +615,10 @@
             <amount>5</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>false</isGuard>
         <health>6</health>
     </champion>
@@ -643,6 +679,14 @@
             <amount>6</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>7</health>
     </champion>
@@ -665,6 +709,10 @@
             <amount>2</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>3</health>
     </champion>
@@ -676,6 +724,10 @@
         <ability>
             <amount>6</amount>
             <type>attack</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
     </card>
     <champion amount="1">
