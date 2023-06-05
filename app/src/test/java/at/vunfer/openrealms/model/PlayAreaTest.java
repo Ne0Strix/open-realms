@@ -197,6 +197,13 @@ class PlayAreaTest {
     }
 
     @Test
+    void testVisitDraw() {
+        int initialHandSize = playArea.getPlayerCards().getHandCards().size();
+        playArea.visitDraw();
+        assertEquals(initialHandSize + 1, playArea.getPlayerCards().getHandCards().size());
+    }
+
+    @Test
     void testVisitCoin() {
         int initialTurnCoins = playArea.getTurnCoins();
         playArea.visitCoin(5);
@@ -207,6 +214,56 @@ class PlayAreaTest {
     void testVisitHealing() {
         int initialTurnHealing = playArea.getTurnHealing();
         playArea.visitHealing(5);
+        assertEquals(initialTurnHealing + 5, playArea.getTurnHealing());
+    }
+
+    @Test
+    void testVisitDamagePerChampionInPlay() {
+        int initialTurnDamage = playArea.getTurnDamage();
+        Card champ =
+                new Champion(
+                        "Test1",
+                        0,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(),
+                        List.of(),
+                        false,
+                        5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitDamagePerChampionInPlay(5);
+        assertEquals(initialTurnDamage + 5, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testVisitDamagePerGuardInPlay() {
+        int initialTurnDamage = playArea.getTurnDamage();
+        Card champ =
+                new Champion(
+                        "Test1", 0, CardType.CHAMPION, Faction.NONE, List.of(), List.of(), true, 5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitDamagePerGuardInPlay(5);
+        assertEquals(initialTurnDamage + 5, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testVisitHealingPerChampionInPlay() {
+        int initialTurnHealing = playArea.getTurnHealing();
+        Card champ =
+                new Champion(
+                        "Test1",
+                        0,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(),
+                        List.of(),
+                        false,
+                        5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitHealingPerChampionInPlay(5);
         assertEquals(initialTurnHealing + 5, playArea.getTurnHealing());
     }
 
@@ -269,6 +326,19 @@ class PlayAreaTest {
     void testGetId() {
         // I don't really know how I am supposed to test this...
         assertEquals(playArea.getId(), playArea.getId());
+    }
+
+    @Test
+    void testGetDrawnCard() {
+        playArea.visitDraw();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility() != null);
+    }
+
+    @Test
+    void testResetDrawnCard() {
+        playArea.visitDraw();
+        playArea.resetCardDrawnFromSpecialAbility();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility() == null);
     }
 
     @AfterEach

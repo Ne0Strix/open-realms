@@ -20,6 +20,7 @@ public class PlayArea {
     private Deck<Card> playedCards;
     private Deck<Card> playedChampions;
     private PlayerCards playerCards;
+    private Card cardDrawnFromSpecialAbility; // from special ability
     private Deck<Card> cardsThatUsedSynergies;
     private Deck<Card> atTurnEndDiscardedChampions;
 
@@ -43,6 +44,7 @@ public class PlayArea {
         this.atTurnEndDiscardedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
+        this.cardDrawnFromSpecialAbility = null;
     }
 
     /**
@@ -250,6 +252,10 @@ public class PlayArea {
         health -= value;
     }
 
+    public void visitCoin(int coin) {
+        turnCoins += coin;
+    }
+
     /**
      * Adds the specified damage to the total turn damage.
      *
@@ -259,12 +265,30 @@ public class PlayArea {
         turnDamage += damage;
     }
 
-    public void visitCoin(int coin) {
-        turnCoins += coin;
+    public void visitDraw() {
+        Card drawnCard = playerCards.drawRandomFromDeck();
+        playerCards.addToHand(drawnCard);
+        cardDrawnFromSpecialAbility = drawnCard;
     }
 
     public void visitHealing(int healing) {
         turnHealing += healing;
+    }
+
+    public void visitDamagePerGuardInPlay(int damagePerGuard) {
+        for (Card c : playedChampions) {
+            if (((Champion) c).isGuard()) {
+                visitDamage(damagePerGuard);
+            }
+        }
+    }
+
+    public void visitDamagePerChampionInPlay(int damagePerChampion) {
+        visitDamage(damagePerChampion * playedChampions.size());
+    }
+
+    public void visitHealingPerChampionInPlay(int healingPerChampion) {
+        visitHealing(healingPerChampion * playedChampions.size());
     }
 
     public boolean buyCard(Card card) throws IllegalArgumentException {
@@ -330,5 +354,17 @@ public class PlayArea {
 
     public int getId() {
         return id;
+    }
+
+    public void clearCardDrawnFromSpecialAbility() {
+        cardDrawnFromSpecialAbility = null;
+    }
+
+    public Card getCardDrawnFromSpecialAbility() {
+        return cardDrawnFromSpecialAbility;
+    }
+
+    public void resetCardDrawnFromSpecialAbility() {
+        cardDrawnFromSpecialAbility = null;
     }
 }

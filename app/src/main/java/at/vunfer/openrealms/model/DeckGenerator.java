@@ -6,7 +6,11 @@ import android.util.Log;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DamagePerChampionInPlayEffect;
+import at.vunfer.openrealms.model.effects.DamagePerGuardInPlayEffect;
+import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.model.effects.HealingPerChampionInPlayEffect;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -215,8 +219,14 @@ public class DeckGenerator {
                 return new DamageEffect(amount);
             case "heal":
                 return new HealingEffect(amount);
-                //            case "draw":
-                //                return new DrawEffect(amount);
+            case "draw":
+                return new DrawEffect(amount);
+            case "damagePerGuardInPlay":
+                return new DamagePerGuardInPlayEffect(amount);
+            case "damagePerChampionInPlay":
+                return new DamagePerChampionInPlayEffect(amount);
+            case "healingPerChampionInPlay":
+                return new HealingPerChampionInPlayEffect(amount);
             default:
                 throw new IllegalArgumentException(
                         "Ability type \"" + nextText + "\" not recognized");

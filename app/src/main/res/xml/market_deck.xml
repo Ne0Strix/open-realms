@@ -9,12 +9,16 @@
             <amount>5</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
         <synergy>
             <amount>6</amount>
             <type>heal</type>
         </synergy>
         <isGuard>true</isGuard>
-        <health>10</health>
+        <health>6</health>
     </champion>
     <card amount="1">
         <name>Close Ranks</name>
@@ -24,6 +28,10 @@
         <ability>
             <amount>5</amount>
             <type>attack</type>
+        </ability>
+        <ability>
+            <amount>2</amount>
+            <type>damagePerChampionInPlay</type>
         </ability>
         <synergy>
             <amount>6</amount>
@@ -46,6 +54,10 @@
         <ability>
             <amount>4</amount>
             <type>heal</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
     </card>
     <champion amount="1">
@@ -77,6 +89,10 @@
             <amount>6</amount>
             <type>heal</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
     </card>
     <champion amount="1">
         <name>Cristov the Just</name>
@@ -91,6 +107,10 @@
             <amount>3</amount>
             <type>heal</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>5</health>
     </champion>
@@ -103,9 +123,13 @@
             <amount>2</amount>
             <type>heal</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
         <synergy>
             <amount>2</amount>
-            <type>heal</type>
+            <type>healingPerChampionInPlay</type>
         </synergy>
         <isGuard>false</isGuard>
         <health>6</health>
@@ -119,6 +143,10 @@
             <amount>2</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>damagePerGuardInPlay</type>
+        </ability>
         <isGuard>true</isGuard>
         <health>4</health>
     </champion>
@@ -130,6 +158,10 @@
         <ability>
             <amount>3</amount>
             <type>attack</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>damagePerChampionInPlay</type>
         </ability>
         <isGuard>true</isGuard>
         <health>4</health>
@@ -158,8 +190,12 @@
             <type>coin</type>
         </ability>
         <ability>
-            <amount>5</amount>
+            <amount>3</amount>
             <type>heal</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>healingPerChampionInPlay</type>
         </ability>
         <synergy>
             <amount>1</amount>
@@ -174,6 +210,10 @@
         <ability>
             <amount>1</amount>
             <type>coin</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>healingPerChampionInPlay</type>
         </ability>
         <isGuard>false</isGuard>
         <health>3</health>
@@ -192,14 +232,22 @@
             <type>heal</type>
         </synergy>
     </card>
-    <card amount="3">
+    <card amount="1">
         <name>Word of Power</name>
         <cost>6</cost>
         <card_type>action</card_type>
         <faction>imperial</faction>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
         <synergy>
             <amount>5</amount>
             <type>heal</type>
+        </synergy>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
         </synergy>
     </card>
     <champion amount="1">
@@ -233,6 +281,10 @@
             <amount>1</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
     </card>
     <card amount="1">
         <name>Deception</name>
@@ -243,6 +295,10 @@
             <amount>2</amount>
             <type>coin</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
     </card>
     <card amount="1">
         <name>Fire Bomb</name>
@@ -252,6 +308,10 @@
         <ability>
             <amount>8</amount>
             <type>attack</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
     </card>
     <card amount="1">
@@ -303,6 +363,10 @@
             <amount>3</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>5</health>
     </champion>
@@ -399,6 +463,10 @@
             <amount>7</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
     </card>
     <card amount="1">
         <name>Dark Reward</name>
@@ -428,7 +496,7 @@
     </champion>
     <card amount="3">
         <name>Death Touch</name>
-        <cost>5</cost>
+        <cost>1</cost>
         <card_type>action</card_type>
         <faction>necros</faction>
         <ability>
@@ -449,6 +517,10 @@
             <amount>3</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>false</isGuard>
         <health>4</health>
     </champion>
@@ -487,6 +559,10 @@
             <amount>8</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
     </card>
     <champion amount="1">
         <name>Lys, the Unseen</name>
@@ -523,6 +599,10 @@
             <amount>4</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>6</health>
     </champion>
@@ -531,6 +611,14 @@
         <cost>5</cost>
         <card_type>champion</card_type>
         <faction>necros</faction>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>false</isGuard>
         <health>3</health>
     </champion>
@@ -555,6 +643,10 @@
             <amount>5</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>false</isGuard>
         <health>6</health>
     </champion>
@@ -590,12 +682,16 @@
     </card>
     <card amount="3">
         <name>Elven Gift</name>
-        <cost>3</cost>
+        <cost>2</cost>
         <card_type>action</card_type>
         <faction>wild</faction>
         <ability>
             <amount>2</amount>
             <type>coin</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
         <synergy>
             <amount>4</amount>
@@ -611,6 +707,14 @@
             <amount>6</amount>
             <type>attack</type>
         </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
+        </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>7</health>
     </champion>
@@ -633,6 +737,10 @@
             <amount>2</amount>
             <type>attack</type>
         </ability>
+        <synergy>
+            <amount>1</amount>
+            <type>draw</type>
+        </synergy>
         <isGuard>true</isGuard>
         <health>3</health>
     </champion>
@@ -644,6 +752,10 @@
         <ability>
             <amount>6</amount>
             <type>attack</type>
+        </ability>
+        <ability>
+            <amount>1</amount>
+            <type>draw</type>
         </ability>
     </card>
     <champion amount="1">
@@ -682,7 +794,7 @@
             <type>attack</type>
         </ability>
     </card>
-    <champion amount="1">
+    <champion amount="2">
         <name>Wolf Shaman</name>
         <cost>2</cost>
         <card_type>champion</card_type>
@@ -692,10 +804,10 @@
             <type>attack</type>
         </ability>
         <synergy>
-            <amount>4</amount>
+            <amount>1</amount>
             <type>attack</type>
         </synergy>
-        <isGuard>true</isGuard>
-        <health>3</health>
+        <isGuard>false</isGuard>
+        <health>4</health>
     </champion>
 </deck>

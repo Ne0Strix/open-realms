@@ -21,7 +21,11 @@ import at.vunfer.openrealms.model.Champion;
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DamagePerChampionInPlayEffect;
+import at.vunfer.openrealms.model.effects.DamagePerGuardInPlayEffect;
+import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.model.effects.HealingPerChampionInPlayEffect;
 import at.vunfer.openrealms.view.effects.BasicEffectView;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -225,7 +229,11 @@ public class CardView extends ConstraintLayout {
         for (Effect e : card.getEffects()) {
             if (e instanceof DamageEffect
                     || e instanceof HealingEffect
-                    || e instanceof CoinEffect) {
+                    || e instanceof CoinEffect
+                    || e instanceof DrawEffect
+                    || e instanceof DamagePerChampionInPlayEffect
+                    || e instanceof DamagePerGuardInPlayEffect
+                    || e instanceof HealingPerChampionInPlayEffect) {
                 BasicEffectView effectView = new BasicEffectView(getContext(), e);
                 effectView.setLayoutParams(paramsMatchParentHighWeight);
                 defaultEffects.addView(effectView);
@@ -254,7 +262,11 @@ public class CardView extends ConstraintLayout {
             for (Effect e : card.getSynergyEffects()) {
                 if (e instanceof DamageEffect
                         || e instanceof HealingEffect
-                        || e instanceof CoinEffect) {
+                        || e instanceof CoinEffect
+                        || e instanceof DrawEffect
+                        || e instanceof DamagePerChampionInPlayEffect
+                        || e instanceof DamagePerGuardInPlayEffect
+                        || e instanceof HealingPerChampionInPlayEffect) {
                     BasicEffectView effectView = new BasicEffectView(getContext(), e);
                     effectView.setLayoutParams(paramsMatchParentHighWeight);
                     synergyEffects.addView(effectView);

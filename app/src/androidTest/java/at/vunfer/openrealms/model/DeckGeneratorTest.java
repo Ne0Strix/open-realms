@@ -8,7 +8,11 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DamagePerChampionInPlayEffect;
+import at.vunfer.openrealms.model.effects.DamagePerGuardInPlayEffect;
+import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.model.effects.HealingPerChampionInPlayEffect;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -73,6 +77,22 @@ public class DeckGeneratorTest {
                         + "       <amount>5</amount>"
                         + "       <type>heal</type>"
                         + "   </ability>"
+                        + "   <ability>"
+                        + "       <amount>1</amount>"
+                        + "       <type>draw</type>"
+                        + "   </ability>"
+                        + "   <ability>"
+                        + "       <amount>1</amount>"
+                        + "       <type>damagePerChampionInPlay</type>"
+                        + "   </ability>"
+                        + "   <ability>"
+                        + "       <amount>1</amount>"
+                        + "       <type>damagePerGuardInPlay</type>"
+                        + "   </ability>"
+                        + "   <ability>"
+                        + "       <amount>1</amount>"
+                        + "       <type>healingPerChampionInPlay</type>"
+                        + "   </ability>"
                         + "</card>"
                         + "</deck>";
 
@@ -105,7 +125,14 @@ public class DeckGeneratorTest {
                         "otherTestName",
                         16,
                         Faction.NECROS,
-                        new ArrayList<>(List.of(new DamageEffect(2), new HealingEffect(5))),
+                        new ArrayList<>(
+                                List.of(
+                                        new DamageEffect(2),
+                                        new HealingEffect(5),
+                                        new DrawEffect(1),
+                                        new DamagePerChampionInPlayEffect(1),
+                                        new DamagePerGuardInPlayEffect(1),
+                                        new HealingPerChampionInPlayEffect(1))),
                         new ArrayList<>()));
 
         Deck<Card> deck = DeckGenerator.generateDeckFromString(xmlToParse);

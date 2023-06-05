@@ -54,6 +54,21 @@ public class ServerMessageHandler implements IHandleMessage {
                 Log.i(TAG, "Card " + cardId + " played successfully.");
                 sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.PLAYED, cardId);
+                if (gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility()
+                        != null) { // push changes from special ability
+                    Card drawnCard =
+                            gameSession
+                                    .getCurrentPlayer()
+                                    .getPlayArea()
+                                    .getCardDrawnFromSpecialAbility();
+                    sendCardMovementToAllClients(
+                            gameSession,
+                            currentPlayer,
+                            DeckType.DECK,
+                            DeckType.HAND,
+                            drawnCard.getId());
+                    gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
+                }
             } else if (cardType == 2) {
                 Log.i(TAG, "Champion " + cardId + " played successfully.");
                 sendCardMovementToAllClients(

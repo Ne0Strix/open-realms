@@ -102,6 +102,14 @@ public class PlayerCards {
         return handCards.draw(card);
     }
 
+    public Card drawRandomFromDeck() {
+        return deckCards.drawRandom();
+    }
+
+    public void addToHand(Card card) {
+        handCards.add(card);
+    }
+
     /** Restocks the player's hand */
     public void restockHand() {
         for (int i = this.handCards.size() - 1; i >= 0; i--) {

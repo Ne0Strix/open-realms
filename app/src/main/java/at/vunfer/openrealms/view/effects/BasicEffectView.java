@@ -12,7 +12,11 @@ import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.model.Effect;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
+import at.vunfer.openrealms.model.effects.DamagePerChampionInPlayEffect;
+import at.vunfer.openrealms.model.effects.DamagePerGuardInPlayEffect;
+import at.vunfer.openrealms.model.effects.DrawEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
+import at.vunfer.openrealms.model.effects.HealingPerChampionInPlayEffect;
 
 public class BasicEffectView extends ConstraintLayout {
     private Effect effect;
@@ -52,6 +56,18 @@ public class BasicEffectView extends ConstraintLayout {
             } else if (effect instanceof CoinEffect) {
                 effectIcon.setImageResource(R.drawable.effect_icon_coin);
                 txtAmount.setText(((CoinEffect) effect).getCoin() + "");
+            } else if (effect instanceof DrawEffect) {
+                effectIcon.setImageResource(R.drawable.effect_icon_draw);
+                txtAmount.setText(((DrawEffect) effect).getAmount() + "");
+            } else if (effect instanceof DamagePerChampionInPlayEffect) {
+                effectIcon.setImageResource(R.drawable.effect_icon_attack_per_champion);
+                txtAmount.setText(((DamagePerChampionInPlayEffect) effect).getAmount() + "");
+            } else if (effect instanceof DamagePerGuardInPlayEffect) {
+                effectIcon.setImageResource(R.drawable.effect_icon_attack_per_guard);
+                txtAmount.setText(((DamagePerGuardInPlayEffect) effect).getAmount() + "");
+            } else if (effect instanceof HealingPerChampionInPlayEffect) {
+                effectIcon.setImageResource(R.drawable.effect_icon_healing_per_champion);
+                txtAmount.setText(((HealingPerChampionInPlayEffect) effect).getAmount() + "");
             }
         }
     }
