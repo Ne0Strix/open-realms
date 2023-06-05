@@ -6,6 +6,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
+
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.client.ClientConnector;
@@ -248,6 +250,10 @@ public class PlayArea extends Thread {
         return null;
     }
 
+    public void setCheat(boolean cheat) {
+        this.cheat = cheat;
+    }
+
     public void buyCard(Message message) throws IllegalArgumentException {
         int cardId = Integer.parseInt(message.getData(DataKey.CARD_ID).toString());
 
@@ -261,8 +267,9 @@ public class PlayArea extends Thread {
 
         boolean cheatActivated =
                 Boolean.parseBoolean(message.getData(DataKey.CHEAT_ACTIVATE).toString());
-        if (cheatActivated && isPhoneTurnedOver()) {
+        if (cheatActivated && cheat) {
             turnCoins += cardCost;
+            Log.d("PlayArea", "Cheat activated. Added " + cardCost + " coins.");
         } else {
             if (turnCoins < cardCost) {
                 throw new IllegalArgumentException("Not enough coins this turn");
@@ -295,8 +302,8 @@ public class PlayArea extends Thread {
         if (accelerometerSensor == null) {
             throw new NullPointerException("Accelerometer sensor is not available");
         }
-
-        return isTurnedOver(sensorManager, accelerometerSensor);
+        cheat = isTurnedOver(sensorManager, accelerometerSensor);
+        return cheat;
     }
 
     private boolean isTurnedOver(SensorManager sensorManager, Sensor accelerometerSensor) {
@@ -323,6 +330,7 @@ public class PlayArea extends Thread {
                         } else {
                             cheatWrapper.cheat = false;
                         }
+                        Log.d("SensorValues", "x: " + x + ", y: " + y + ", z: " + z);
                     }
 
                     @Override
@@ -352,11 +360,12 @@ public class PlayArea extends Thread {
             try {
                 if (this != null && this.isPhoneTurnedOver()) {
                     this.cheat = true;
+                } else {
+                    this.cheat = false;
                 }
                 clientConnector.sendCheatMessage();
             } catch (NullPointerException e) {
-                // Log.e("PlayArea", "NullPointerException occurred while checking phone
-                // orientation: " + e.getMessage());
+                // Log.e("PlayArea", "NullPointerException occurred while checking phone orientation: " + e.getMessage());
             }
         }
     }
