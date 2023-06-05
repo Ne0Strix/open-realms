@@ -1,3 +1,4 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
 import android.app.Service;
@@ -5,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.provider.Settings;
-
 import androidx.annotation.Nullable;
 
 public class OpenRealmsPlayer extends Service {
@@ -37,21 +36,17 @@ public class OpenRealmsPlayer extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // Save the current position.
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(KEY_POSITION, player.getCurrentPosition());
+        editor.apply();
 
-        if (player != null) {
-            // Save the current position.
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(KEY_POSITION, player.getCurrentPosition());
-            editor.apply();
-
-            player.stop();
-            player.release();
-            player = null;
-        }
+        player.stop();
+        player.release();
+        player = null;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
