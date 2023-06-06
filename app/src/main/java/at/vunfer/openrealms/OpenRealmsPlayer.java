@@ -22,7 +22,13 @@ public class OpenRealmsPlayer extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        player = MediaPlayer.create(this, R.raw.backgound_music);
+        player = MediaPlayer.create(this, R.raw.background_music);
+
+        /*Royalty for the used music:
+        Royalty Free Celtic Fantasy Music - "The Lone Wolf"
+        By Royalty Free Music - Alexander Nakarada
+        YouTube-Link: https://youtu.be/RN1THCKeaNsa*/
+
         player.setLooping(true);
 
         // Retrieve the saved position, if any.
