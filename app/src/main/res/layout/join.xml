@@ -3,20 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/join">
 
     <TextView
         android:id="@+id/enterHostPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Please enter the IP address of the host to join the game."
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/get_text"
-        app:layout_constraintWidth_max="250dp"
-        android:layout_marginBottom="10dp"
         android:textAlignment="center"
-
         />
 
     <EditText
@@ -27,31 +28,38 @@
         android:inputType="text"
         android:textAlignment="center"
         android:hint="IP Address"
+        app:layout_constraintBottom_toTopOf="@id/join"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/enterHostPrompt"
         />
 
     <Button
         android:id="@+id/join"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:onClick="connectServer"
         android:text="Join"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@id/toMainMenu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/get_text" />
 
     <Button
         android:id="@+id/joinGameClient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:onClick="startGame"
         android:text="Start"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@id/toMainMenu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/get_text"
@@ -59,10 +67,14 @@
 
     <Button
         android:id="@+id/toMainMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:onClick="toMainMenu"
         android:text="Back to Main Menu"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:background="@drawable/button_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
