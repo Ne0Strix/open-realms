@@ -17,6 +17,8 @@ import java.util.List;
 
 public class DiscardPileView extends ConstraintLayout implements CardPileView {
     List<CardView> allCards = new ArrayList<>();
+    private static final float CARD_SCALE = 1.1f;
+    private final float screenDensity;
 
     public DiscardPileView(@NonNull Context context) {
         this(context, null);
@@ -30,6 +32,7 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
             @NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         inflate(context, R.layout.discard_pile_view, this);
+        screenDensity = getResources().getDisplayMetrics().density;
 
         TextView outline = findViewById(R.id.discardPileAmountOutline);
         outline.getPaint().setStrokeWidth(5);
@@ -40,21 +43,16 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
         topCard.findViewById(R.id.card_view_background)
                 .setOnClickListener(
                         (view) -> {
-                            // Log.i("DiscardView", "GOT A CLICK! " + allCards.size());
                             LinearLayout fullScreenCards =
                                     getRootView().findViewById(R.id.fullscreen_discard_pile);
-                            if (fullScreenCards.getVisibility() == GONE) {
-                                enableFullscreenView();
-                            } else {
-                                disableFullscreenView();
+                            if (!allCards.isEmpty()) {
+                                if (fullScreenCards.getVisibility() == GONE) {
+                                    enableFullscreenView();
+                                } else if (topCard.getAlpha() != 1f) {
+                                    disableFullscreenView();
+                                }
                             }
                         });
-        /*  FrameLayout cardHolder = findViewById(R.id.discardPileCardHolder);
-                cardHolder.setOnTouchListener((view, motionEvent) -> {
-                    Log.e("DISCRAD PILE", motionEvent.toString());
-                    return false;
-                });
-        */
     }
 
     @Override
@@ -78,6 +76,11 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
             visibleCard.setVisibility(GONE);
             disableFullscreenView();
         }
+
+        LinearLayout fullScreenCards = getRootView().findViewById(R.id.fullscreen_discard_pile);
+        if (fullScreenCards.getVisibility() == VISIBLE) {
+            enableFullscreenView();
+        }
     }
 
     private void enableFullscreenView() {
@@ -90,7 +93,17 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
         fullScreenCards.removeAllViews();
         for (CardView c : allCards) {
             fullScreenCards.addView(c);
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(
+                            (int) (CARD_SCALE * screenDensity * 77),
+                            (int) (CARD_SCALE * screenDensity * 106));
+            params.leftMargin = 20;
+            params.rightMargin = 20;
+            c.setLayoutParams(params);
         }
+
+        CardView discardPileCard = findViewById(R.id.discardPileCardView);
+        discardPileCard.setAlpha(0.5f);
     }
 
     private void disableFullscreenView() {
@@ -100,6 +113,8 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
 
         fullScreenCardsParent.setVisibility(GONE);
         fullScreenCards.setVisibility(GONE);
-        fullScreenCards.removeAllViews();
+
+        CardView discardPileCard = findViewById(R.id.discardPileCardView);
+        discardPileCard.setAlpha(1f);
     }
 }

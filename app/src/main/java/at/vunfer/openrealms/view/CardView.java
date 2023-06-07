@@ -86,9 +86,7 @@ public class CardView extends ConstraintLayout {
     @SuppressLint("ClickableViewAccessibility")
     public void setUpListeners() {
         ImageView cardBackground = findViewById(R.id.card_view_background);
-        cardBackground.setOnTouchListener((view, motionEvent) -> {
-                Log.d(logTag,view.toString());
-                return onClick(motionEvent);});
+        cardBackground.setOnTouchListener((view, motionEvent) -> onClick(motionEvent));
     }
 
     public boolean onClick(MotionEvent motionEvent) {
