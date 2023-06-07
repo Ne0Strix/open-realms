@@ -31,6 +31,13 @@ public class Message implements Serializable {
         return data.get(key);
     }
 
+    /**
+     * Validates data entered into the message's key-value pairs.
+     *
+     * @param key The type of data in the field.
+     * @param value The value of the field.
+     * @return True if a given value is valid for provided DataKey.
+     */
     private boolean validateData(DataKey key, Object value) {
         switch (key) {
             case TARGET_PLAYER:

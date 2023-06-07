@@ -2,6 +2,7 @@
 package at.vunfer.openrealms;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static List<CardView> cardViews;
     private boolean isHost = false;
 
+    private static boolean gameStarted = false;
+    private static boolean myTurn = false;
+
     private Context context = this;
     private int playerId;
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public DeckPresenter playerDeckPresenter;
     public DeckPresenter opponentDeckPresenter;
     public OverlayPresenter overlayViewPresenter;
+    public PlayedChampionsPresenter playerPlayedChampionsPresenter;
+    public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +140,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         DiscardPileView opponentDiscardPileView = findViewById(R.id.opponent_discard_pile_view);
         DeckView playerDeckView = findViewById(R.id.player_deck_view);
         DeckView opponentDeckView = findViewById(R.id.opponent_deck_view);
+        PlayedChampionsView playerPlayedChampionsView = findViewById(R.id.player_champions_view);
+        PlayedChampionsView opponentPlayedChampionsView =
+                findViewById(R.id.opponent_champions_view);
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(marketView);
@@ -144,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentDiscardPilePresenter = new DiscardPilePresenter(opponentDiscardPileView);
         playerDeckPresenter = new DeckPresenter(playerDeckView);
         opponentDeckPresenter = new DeckPresenter(opponentDeckView);
+        playerPlayedChampionsPresenter = new PlayedChampionsPresenter(playerPlayedChampionsView);
+        opponentPlayedChampionsPresenter =
+                new PlayedChampionsPresenter(opponentPlayedChampionsView);
 
         OverlayView overlayView = new OverlayView(this);
         overlayViewPresenter = new OverlayPresenter(overlayView);
@@ -173,6 +185,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         } else {
             this.playerId = 1;
         }
+        // Start game music, that will loop, but stop when app is minimized
+        gameStarted = true;
+        startService(new Intent(this, OpenRealmsPlayer.class));
     }
 
     @Override
@@ -211,6 +226,18 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                                 + message.getData(DataKey.DECK)
                                                 + ".");
 
+                                break;
+                            case EXPEND_CHAMPION:
+                                expendChampion(message);
+                                Log.i(
+                                        TAG,
+                                        "Expended champion "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + ".");
+                                break;
+                            case RESET_CHAMPION:
+                                resetChampion(message);
+                                Log.i(TAG, "Reset champions.");
                                 break;
                             case CHOOSE_OPTION:
                                 // TODO instructions for UI
@@ -268,8 +295,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
                                         if (playerId == (Integer) targetPlayer) {
                                             endTurnButton.setVisibility(View.VISIBLE);
+                                            myTurn = true;
                                         } else {
                                             endTurnButton.setVisibility(View.INVISIBLE);
+                                            myTurn = false;
                                         }
                                     }
                                 }
@@ -313,6 +342,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             case FOR_PURCHASE:
                 marketPresenter.addCardToView(card);
                 break;
+            case CHAMPIONS:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerPlayedChampionsPresenter.addCardToView(card);
+                    playerPlayedChampionsPresenter.expendChampion(card);
+                } else {
+                    opponentPlayedChampionsPresenter.addCardToView(card);
+                    opponentPlayedChampionsPresenter.expendChampion(card);
+                }
         }
     }
 
@@ -348,6 +385,41 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             case FOR_PURCHASE:
                 marketPresenter.removeCardFromView(card);
                 break;
+            case CHAMPIONS:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerPlayedChampionsPresenter.resetChampion(card);
+                    playerPlayedChampionsPresenter.removeCardFromView(card);
+                } else {
+                    opponentPlayedChampionsPresenter.resetChampion(card);
+                    opponentPlayedChampionsPresenter.removeCardFromView(card);
+                }
+        }
+    }
+
+    private void expendChampion(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        if (card == null) {
+            Log.i(TAG, "Card is null");
+        }
+        Log.v(TAG, "Target player: " + (int) message.getData(DataKey.TARGET_PLAYER));
+
+        if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+            playerPlayedChampionsPresenter.expendChampion(card);
+        } else {
+            opponentPlayedChampionsPresenter.expendChampion(card);
+        }
+    }
+
+    private void resetChampion(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+            playerPlayedChampionsPresenter.resetChampion(card);
+            Log.v(TAG, "Resetting player champion");
+        } else {
+            opponentPlayedChampionsPresenter.resetChampion(card);
+            Log.v(TAG, "Resetting opponent champion");
         }
     }
 
@@ -362,7 +434,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public static void sendMessage(Message msg) throws IOException {
-        connection.sendMessage(msg);
+        if (myTurn) {
+            connection.sendMessage(msg);
+        }
     }
 
     public static Message buildTouchMessage(int id) {
@@ -374,5 +448,29 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void endTurn(View view) throws IOException {
         Message endTurn = new Message(MessageType.END_TURN);
         connection.sendMessage(endTurn);
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, OpenRealmsPlayer.class));
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(new Intent(this, OpenRealmsPlayer.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (gameStarted) {
+            startService(new Intent(this, OpenRealmsPlayer.class));
+        }
+    }
+
+    public void setGameStarted(boolean b) {
+        gameStarted = b;
     }
 }

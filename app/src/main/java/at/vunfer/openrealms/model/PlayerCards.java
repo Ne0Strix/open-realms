@@ -11,6 +11,7 @@ public class PlayerCards {
     private final Deck<Card> handCards;
     private Deck<Card> deckCards;
     private final Deck<Card> discardedCards;
+    Deck<Card> restockedFromDiscarded;
 
     /** The maximum size of the hand. */
     private static final int HANDSIZE = 5;
@@ -60,6 +61,9 @@ public class PlayerCards {
         return deckCards;
     }
 
+    public Deck<Card> getRestockedFromDiscarded() {
+        return restockedFromDiscarded;
+    }
     /**
      * Returns the maximum size of the player's hand.
      *
@@ -98,13 +102,20 @@ public class PlayerCards {
         return handCards.draw(card);
     }
 
+    public Card drawRandomFromDeck() {
+        return deckCards.drawRandom();
+    }
+
+    public void addToHand(Card card) {
+        handCards.add(card);
+    }
+
     /** Restocks the player's hand */
-    public Deck<Card> restockHand() {
-        Deck<Card> restockedFromDiscarded = null;
+    public void restockHand() {
         for (int i = this.handCards.size() - 1; i >= 0; i--) {
             discardedCards.add(this.popFromHand(this.getHandCards().get(i)));
         }
-
+        restockedFromDiscarded = null;
         if (deckCards.size() < HANDSIZE) {
             handCards.addAll(deckCards);
             deckCards.clear();
@@ -113,22 +124,22 @@ public class PlayerCards {
 
             restockedFromDiscarded = new Deck<>();
             restockedFromDiscarded.addAll(discardedCards);
+
             discardedCards.clear();
         }
 
         while (handCards.size() < HANDSIZE) {
             handCards.add(deckCards.drawRandom());
         }
-        return restockedFromDiscarded;
     }
 
     public Deck<Card> getOldTestDeck() {
         Deck<Card> testDeck = new Deck<>();
-        testDeck.add(new Card("Dagger", 0, CardType.NONE, List.of(new DamageEffect(1))));
-        testDeck.add(new Card("Shortsword", 0, CardType.NONE, List.of(new HealingEffect(2))));
-        testDeck.add(new Card("Ruby ", 0, CardType.NONE, List.of(new CoinEffect(2))));
+        testDeck.add(new Card("Dagger", 0, Faction.NONE, List.of(new DamageEffect(1))));
+        testDeck.add(new Card("Shortsword", 0, Faction.NONE, List.of(new HealingEffect(2))));
+        testDeck.add(new Card("Ruby ", 0, Faction.NONE, List.of(new CoinEffect(2))));
         for (int i = 0; i < 7; i++) {
-            testDeck.add(new Card("Coin", 0, CardType.NONE, List.of(new CoinEffect(1))));
+            testDeck.add(new Card("Coin", 0, Faction.NONE, List.of(new CoinEffect(1))));
         }
         return testDeck;
     }

@@ -50,7 +50,7 @@ public class MarketView extends LinearLayout implements CardPileView {
             params.leftMargin = 20;
             params.rightMargin = 20;
             card.setLayoutParams(params);
-
+            card.setHealthSize(10);
             addView(card);
         }
     }

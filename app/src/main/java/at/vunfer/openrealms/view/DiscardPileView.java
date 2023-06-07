@@ -73,7 +73,7 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
         CardView visibleCard = findViewById(R.id.discardPileCardView);
         if (!allCards.isEmpty()) {
             CardView lastCard = allCards.get(allCards.size() - 1);
-
+            lastCard.setHealthSize(8);
             visibleCard.setCard(lastCard.getCard());
             visibleCard.setVisibility(VISIBLE);
         } else {

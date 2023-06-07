@@ -26,7 +26,7 @@ class MarketTest {
     @Test
     void testBuyNonexistingCard() {
         assertThrows(IllegalArgumentException.class, () -> market.purchase(null));
-        Card cardToBuy = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
+        Card cardToBuy = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
         assertThrows(IllegalArgumentException.class, () -> market.purchase(cardToBuy));
     }
 
@@ -39,7 +39,7 @@ class MarketTest {
 
     @Test
     void testModifyForPurchase() {
-        Card newCard = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
+        Card newCard = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
 
         market.addCard(newCard);
         assertTrue(market.getForPurchase().contains(newCard));
@@ -50,9 +50,9 @@ class MarketTest {
 
     @Test
     void testSetAndResetForPurchase() {
-        Card c1 = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
-        Card c2 = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
-        Card c3 = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
+        Card c1 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c2 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c3 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
 
         Deck<Card> newForPurchase = new Deck<>();
         newForPurchase.add(c1);
@@ -71,9 +71,9 @@ class MarketTest {
 
     @Test
     void testNewToPurchase() {
-        Card c1 = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
-        Card c2 = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
-        Card c3 = new Card("Test", 5, CardType.NONE, List.of(new CoinEffect(5)));
+        Card c1 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c2 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c3 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
 
         Deck<Card> newToPurchase = new Deck<>();
         newToPurchase.add(c1);
