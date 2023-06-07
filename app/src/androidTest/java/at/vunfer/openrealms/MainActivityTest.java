@@ -5,6 +5,8 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -206,5 +208,69 @@ public class MainActivityTest {
         main.updateUI(removeCardFromPlayArea);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.playAreaPresenter.getListOfDisplayedCards().isEmpty());
+    }
+
+    @Test
+    public void testMusicServiceStartsOnResume() throws Throwable {
+        MainActivity mainActivity = activityRule.getActivity();
+        activityRule.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mainActivity.setGameStarted(true);
+                        mainActivity.onResume();
+                    }
+                });
+
+        assertTrue(isServiceRunning(mainActivity.getApplicationContext(), OpenRealmsPlayer.class));
+
+        activityRule.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mainActivity.onPause();
+                    }
+                });
+
+        assertFalse(isServiceRunning(mainActivity.getApplicationContext(), OpenRealmsPlayer.class));
+    }
+
+    @Test
+    public void testMusicServiceStopsOnPause() throws Throwable {
+        MainActivity mainActivity = activityRule.getActivity();
+        activityRule.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mainActivity.setGameStarted(true);
+                        mainActivity.onResume();
+                    }
+                });
+
+        assertTrue(isServiceRunning(mainActivity.getApplicationContext(), OpenRealmsPlayer.class));
+
+        activityRule.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mainActivity.onPause();
+                    }
+                });
+
+        assertFalse(isServiceRunning(mainActivity.getApplicationContext(), OpenRealmsPlayer.class));
+    }
+
+    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager manager =
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager != null) {
+            for (ActivityManager.RunningServiceInfo service :
+                    manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

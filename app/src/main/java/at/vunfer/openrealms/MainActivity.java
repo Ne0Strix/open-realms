@@ -2,6 +2,7 @@
 package at.vunfer.openrealms;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
     private boolean isHost = false;
+
+    private static boolean gameStarted = false;
     private static boolean myTurn = false;
 
     private Context context = this;
@@ -182,6 +185,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         } else {
             this.playerId = 1;
         }
+        // Start game music, that will loop, but stop when app is minimized
+        gameStarted = true;
+        startService(new Intent(this, OpenRealmsPlayer.class));
     }
 
     @Override
@@ -442,5 +448,29 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void endTurn(View view) throws IOException {
         Message endTurn = new Message(MessageType.END_TURN);
         connection.sendMessage(endTurn);
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, OpenRealmsPlayer.class));
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(new Intent(this, OpenRealmsPlayer.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (gameStarted) {
+            startService(new Intent(this, OpenRealmsPlayer.class));
+        }
+    }
+
+    public void setGameStarted(boolean b) {
+        gameStarted = b;
     }
 }
