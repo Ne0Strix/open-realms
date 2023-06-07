@@ -83,7 +83,7 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
         }
     }
 
-    private void enableFullscreenView() {
+    public void enableFullscreenView() {
         HorizontalScrollView fullScreenCardsParent =
                 getRootView().findViewById(R.id.fullschreen_discard_pile_parent);
         LinearLayout fullScreenCards = getRootView().findViewById(R.id.fullscreen_discard_pile);
@@ -106,7 +106,7 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
         discardPileCard.setAlpha(0.5f);
     }
 
-    private void disableFullscreenView() {
+    public void disableFullscreenView() {
         HorizontalScrollView fullScreenCardsParent =
                 getRootView().findViewById(R.id.fullschreen_discard_pile_parent);
         LinearLayout fullScreenCards = getRootView().findViewById(R.id.fullscreen_discard_pile);
