@@ -30,9 +30,10 @@ public class ClientConnector extends Thread {
 
     public void connectAndSendBuyCardMessage(Message message) {
         try {
+            start();
+
             // Start listening for messages
             new Thread(this::listenForMessages).start();
-
             // send buyCard message
             outputStream.writeObject(message);
         } catch (IOException e) {
@@ -69,6 +70,17 @@ public class ClientConnector extends Thread {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            closeStreamsAndSocket();
+        }
+    }
+
+    private void closeStreamsAndSocket() {
+        try {
+            if (inputStream != null) inputStream.close();
+            if (outputStream != null) outputStream.close();
+            if (socket != null) socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

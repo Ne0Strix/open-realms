@@ -7,6 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
@@ -32,6 +33,9 @@ public class PlayArea extends Thread {
 
     private boolean cheat;
     private ClientConnector clientConnector;
+    private boolean cheatActivated = false;
+    private boolean isRunning;  // Flag to control the loop
+
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -215,13 +219,19 @@ public class PlayArea extends Thread {
     }
 
     public boolean buyCard(Card card) {
-        if (this.turnCoins < card.getCost()) {
-            throw new IllegalArgumentException("Insufficient coins to buy the card");
+        if (isPhoneTurnedOver() && cheatActivated) {
+            market.purchase(card);
+            playerCards.addBoughtCard(card);
+            return true;
+        } else {
+            if (this.turnCoins < card.getCost()) {
+                throw new IllegalArgumentException("Insufficient coins to buy the card");
+            }
+            turnCoins -= card.getCost();
+            market.purchase(card);
+            playerCards.addBoughtCard(card);
+            return true;
         }
-        turnCoins -= card.getCost();
-        market.purchase(card);
-        playerCards.addBoughtCard(card);
-        return true;
     }
 
     public boolean playCardById(int id) {
@@ -258,7 +268,7 @@ public class PlayArea extends Thread {
         int cardId = Integer.parseInt(message.getData(DataKey.CARD_ID).toString());
 
         Card cardToBuy =
-                market.forPurchase.stream()
+                market.getForPurchase().stream()
                         .filter(card -> card.getId() == cardId)
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException("Card does not exist"));
@@ -267,18 +277,22 @@ public class PlayArea extends Thread {
 
         boolean cheatActivated =
                 Boolean.parseBoolean(message.getData(DataKey.CHEAT_ACTIVATE).toString());
-        if (cheatActivated && cheat) {
+        if (cheatActivated && this.cheat) {
             turnCoins += cardCost;
             Log.d("PlayArea", "Cheat activated. Added " + cardCost + " coins.");
         } else {
-            if (turnCoins < cardCost) {
-                throw new IllegalArgumentException("Not enough coins this turn");
-            }
-
-            turnCoins -= cardCost;
-            market.purchase(cardToBuy);
-            playerCards.addBoughtCard(cardToBuy);
+            processCardPurchase(cardToBuy, cardCost);
         }
+    }
+
+    private void processCardPurchase(Card cardToBuy, int cardCost) {
+        if (turnCoins < cardCost) {
+            throw new IllegalArgumentException("Not enough coins this turn");
+        }
+
+        turnCoins -= cardCost;
+        market.purchase(cardToBuy);
+        playerCards.addBoughtCard(cardToBuy);
     }
 
     /**
@@ -302,8 +316,7 @@ public class PlayArea extends Thread {
         if (accelerometerSensor == null) {
             throw new NullPointerException("Accelerometer sensor is not available");
         }
-        cheat = isTurnedOver(sensorManager, accelerometerSensor);
-        return cheat;
+        return isTurnedOver(sensorManager, accelerometerSensor);
     }
 
     private boolean isTurnedOver(SensorManager sensorManager, Sensor accelerometerSensor) {
@@ -320,17 +333,17 @@ public class PlayArea extends Thread {
                         float y = event.values[1];
                         float z = event.values[2];
 
-                        double magnitude = Math.sqrt(x * x + y * y + z * z);
-                        double gravity = SensorManager.GRAVITY_EARTH;
-                        double delta = Math.abs(gravity - magnitude);
+                        double thresholdAngle = 10.0;
 
-                        cheatWrapper.cheat = delta > 2.0;
+                        double tiltAngle = Math.toDegrees(Math.acos(x / Math.sqrt(x * x + y * y + z * z)));
+                        cheatWrapper.cheat = tiltAngle > thresholdAngle;
+
                         Log.d("SensorValues", "x: " + x + ", y: " + y + ", z: " + z);
                     }
 
                     @Override
                     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                        // Handle accuracy changes if needed
+                        // Handles accuracy changes if needed
                     }
                 };
 
@@ -338,7 +351,7 @@ public class PlayArea extends Thread {
                 sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(100); // Sleeps for 100 milliseconds to allow sensor data to be captured
         } catch (InterruptedException e) {
             // Log.e("PlayArea", "InterruptedException occurred: " + e.getMessage());
             Thread.currentThread().interrupt();
@@ -349,15 +362,51 @@ public class PlayArea extends Thread {
         return cheatWrapper.cheat;
     }
 
+    /**
+     * Sets the client connector for sending cheat messages.
+     *
+     * @param clientConnector The client connector to set.
+     */
+    public void setClientConnector(ClientConnector clientConnector) {
+        this.clientConnector = clientConnector;
+    }
+
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager == null) {
+            throw new NullPointerException("Sensor service is null");
+        }
+
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (accelerometerSensor == null) {
+            throw new NullPointerException("Accelerometer sensor is not available");
+        }
+
+        isRunning = true;  // Set the initial state of the loop
+
+        while (isRunning) {
             try {
-                this.cheat = this.isPhoneTurnedOver();
-                clientConnector.sendCheatMessage();
+                boolean isTurnedOver = isPhoneTurnedOver();
+                if (isTurnedOver) {
+                    if(!cheatActivated) {
+                        this.cheatActivated = true;
+                        clientConnector.sendCheatMessage();
+                        showCheatToast();
+                    }
+                    Thread.sleep(3000);
+                    this.cheatActivated = false;
+                    Toast.makeText(context, "Cheat deactivated!", Toast.LENGTH_SHORT).show();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (NullPointerException e) {
                 Log.e("PlayArea", "NullPointerException occurred while checking phone orientation: " + e.getMessage());
             }
         }
+    }
+
+    private void showCheatToast() {
+        Toast.makeText(context, "Cheat activated!", Toast.LENGTH_SHORT).show();
     }
 }
