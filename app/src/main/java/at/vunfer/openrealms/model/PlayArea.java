@@ -313,8 +313,7 @@ public class PlayArea extends Thread {
 
         final CheatWrapper cheatWrapper = new CheatWrapper();
 
-        SensorEventListener sensorEventListener =
-                new SensorEventListener() {
+        SensorEventListener sensorEventListener = new SensorEventListener() {
                     @Override
                     public void onSensorChanged(SensorEvent event) {
                         float x = event.values[0];
@@ -325,11 +324,7 @@ public class PlayArea extends Thread {
                         double gravity = SensorManager.GRAVITY_EARTH;
                         double delta = Math.abs(gravity - magnitude);
 
-                        if (delta > 2.0) {
-                            cheatWrapper.cheat = true;
-                        } else {
-                            cheatWrapper.cheat = false;
-                        }
+                        cheatWrapper.cheat = delta > 2.0;
                         Log.d("SensorValues", "x: " + x + ", y: " + y + ", z: " + z);
                     }
 
@@ -358,14 +353,10 @@ public class PlayArea extends Thread {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                if (this != null && this.isPhoneTurnedOver()) {
-                    this.cheat = true;
-                } else {
-                    this.cheat = false;
-                }
+                this.cheat = this.isPhoneTurnedOver();
                 clientConnector.sendCheatMessage();
             } catch (NullPointerException e) {
-                // Log.e("PlayArea", "NullPointerException occurred while checking phone orientation: " + e.getMessage());
+                Log.e("PlayArea", "NullPointerException occurred while checking phone orientation: " + e.getMessage());
             }
         }
     }
