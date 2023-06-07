@@ -173,8 +173,10 @@
         android:layout_marginStart="15dp"/>
 
     <HorizontalScrollView
+        android:id="@+id/fullschreen_discard_pile_parent"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#CD0404"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/player_hand_view"
         app:layout_constraintEnd_toEndOf="@+id/market_view"
@@ -184,8 +186,10 @@
         <LinearLayout
             android:id="@+id/fullscreen_discard_pile"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical" />
+            android:layout_height="fill_parent"
+            android:background="#533535"
+            android:orientation="horizontal"
+            android:visibility="gone" />
     </HorizontalScrollView>
 
     <ImageView

@@ -4,20 +4,14 @@ package at.vunfer.openrealms.view;
 import android.content.Context;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.view.view_interfaces.CardPileView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,20 +37,24 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
 
         CardView topCard = findViewById(R.id.discardPileCardView);
         topCard.findViewById(R.id.card_view_background).setOnTouchListener(null);
-        topCard.findViewById(R.id.card_view_background).setOnClickListener((view) -> {
-            LinearLayout fullScreenCards = findViewById(R.id.fullscreen_discard_pile);
-            fullScreenCards.setVisibility(VISIBLE);
-            fullScreenCards.removeAllViews();
-            for (CardView c : allCards) {
-                fullScreenCards.addView(c);
-            }
-        });
-      /*  FrameLayout cardHolder = findViewById(R.id.discardPileCardHolder);
-        cardHolder.setOnTouchListener((view, motionEvent) -> {
-            Log.e("DISCRAD PILE", motionEvent.toString());
-            return false;
-        });
-*/
+        topCard.findViewById(R.id.card_view_background)
+                .setOnClickListener(
+                        (view) -> {
+                            // Log.i("DiscardView", "GOT A CLICK! " + allCards.size());
+                            LinearLayout fullScreenCards =
+                                    getRootView().findViewById(R.id.fullscreen_discard_pile);
+                            if (fullScreenCards.getVisibility() == GONE) {
+                                enableFullscreenView();
+                            } else {
+                                disableFullscreenView();
+                            }
+                        });
+        /*  FrameLayout cardHolder = findViewById(R.id.discardPileCardHolder);
+                cardHolder.setOnTouchListener((view, motionEvent) -> {
+                    Log.e("DISCRAD PILE", motionEvent.toString());
+                    return false;
+                });
+        */
     }
 
     @Override
@@ -78,6 +76,30 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
             visibleCard.setVisibility(VISIBLE);
         } else {
             visibleCard.setVisibility(GONE);
+            disableFullscreenView();
         }
+    }
+
+    private void enableFullscreenView() {
+        HorizontalScrollView fullScreenCardsParent =
+                getRootView().findViewById(R.id.fullschreen_discard_pile_parent);
+        LinearLayout fullScreenCards = getRootView().findViewById(R.id.fullscreen_discard_pile);
+
+        fullScreenCardsParent.setVisibility(VISIBLE);
+        fullScreenCards.setVisibility(VISIBLE);
+        fullScreenCards.removeAllViews();
+        for (CardView c : allCards) {
+            fullScreenCards.addView(c);
+        }
+    }
+
+    private void disableFullscreenView() {
+        HorizontalScrollView fullScreenCardsParent =
+                getRootView().findViewById(R.id.fullschreen_discard_pile_parent);
+        LinearLayout fullScreenCards = getRootView().findViewById(R.id.fullscreen_discard_pile);
+
+        fullScreenCardsParent.setVisibility(GONE);
+        fullScreenCards.setVisibility(GONE);
+        fullScreenCards.removeAllViews();
     }
 }

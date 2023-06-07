@@ -75,7 +75,7 @@ public class ServerThread extends Thread {
 
     private void acceptConnections() throws IOException {
         connections.add(acceptClient("Local client connected!"));
-        connections.add(acceptClient("Remote client connected!"));
+        // connections.add(acceptClient("Remote client connected!"));
     }
 
     private ClientHandler acceptClient(String logMessage) throws IOException {
