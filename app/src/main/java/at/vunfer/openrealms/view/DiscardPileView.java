@@ -100,6 +100,8 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
             params.leftMargin = 20;
             params.rightMargin = 20;
             c.setLayoutParams(params);
+            c.setFaceUp();
+            c.setRotation(0);
         }
 
         CardView discardPileCard = findViewById(R.id.discardPileCardView);
