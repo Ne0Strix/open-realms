@@ -4,6 +4,7 @@ package at.vunfer.openrealms;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -19,6 +20,8 @@ import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.MessageType;
+import at.vunfer.openrealms.network.PlayerStats;
+import at.vunfer.openrealms.presenter.OverlayPresenter;
 import java.io.IOException;
 import java.util.List;
 import org.junit.Rule;
@@ -50,6 +53,124 @@ public class MainActivityTest {
         assertNotNull(main.opponentDiscardPilePresenter);
         assertNotNull(main.playerDeckPresenter);
         assertNotNull(main.opponentDeckPresenter);
+    }
+
+    @Test
+    public void testUpdatePlayerStats() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
+
+        Message playerStatsMessage = new Message(MessageType.UPDATE_PLAYER_STATS);
+        PlayerStats stats = new PlayerStats("Name", 10, 1, 2, 3);
+        playerStatsMessage.setData(DataKey.PLAYER_STATS, stats);
+        playerStatsMessage.setData(DataKey.TARGET_PLAYER, 1);
+        main.overlayViewPresenter = mock(OverlayPresenter.class);
+        main.updateUI(playerStatsMessage);
+        getInstrumentation().waitForIdleSync();
+
+        verify(main.overlayViewPresenter).updatePlayerName(stats.getPlayerName());
+        verify(main.overlayViewPresenter).updatePlayerHealth(stats.getPlayerHealth());
+        verify(main.overlayViewPresenter).updateTurnCoin(stats.getTurnCoin());
+        verify(main.overlayViewPresenter).updateTurnDamage(stats.getTurnDamage());
+        verify(main.overlayViewPresenter).updateTurnHealing(stats.getTurnHealing());
+    }
+
+    @Test
+    public void testUpdateOpponentStats() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
+
+        Message playerStatsMessage = new Message(MessageType.UPDATE_PLAYER_STATS);
+        PlayerStats stats = new PlayerStats("Name", 10, 1, 2, 3);
+        playerStatsMessage.setData(DataKey.PLAYER_STATS, stats);
+        playerStatsMessage.setData(DataKey.TARGET_PLAYER, 0);
+        main.overlayViewPresenter = mock(OverlayPresenter.class);
+        main.updateUI(playerStatsMessage);
+        getInstrumentation().waitForIdleSync();
+
+        verify(main.overlayViewPresenter).updateOpponentName(stats.getPlayerName());
+        verify(main.overlayViewPresenter).updateOpponentHealth(stats.getPlayerHealth());
+        verify(main.overlayViewPresenter).updateTurnCoin(stats.getTurnCoin());
+        verify(main.overlayViewPresenter).updateTurnDamage(stats.getTurnDamage());
+        verify(main.overlayViewPresenter).updateTurnHealing(stats.getTurnHealing());
+    }
+
+    @Test
+    public void testVictory() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
+        Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testCard);
+
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
+
+        Message playerStatsMessage = new Message(MessageType.UPDATE_PLAYER_STATS);
+        PlayerStats stats = new PlayerStats("Name", 0, 1, 2, 3);
+        playerStatsMessage.setData(DataKey.PLAYER_STATS, stats);
+        playerStatsMessage.setData(DataKey.TARGET_PLAYER, 1);
+        main.updateUI(playerStatsMessage);
+        getInstrumentation().waitForIdleSync();
+
+        assertEquals(View.VISIBLE, main.findViewById(R.id.defeat_image).getVisibility());
+        assertEquals(View.GONE, main.findViewById(R.id.end_turn_button).getVisibility());
+    }
+
+    @Test
+    public void testDefeat() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
+        Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testCard);
+
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
+
+        Message playerStatsMessage = new Message(MessageType.UPDATE_PLAYER_STATS);
+        PlayerStats stats = new PlayerStats("Name", 0, 1, 2, 3);
+        playerStatsMessage.setData(DataKey.PLAYER_STATS, stats);
+        playerStatsMessage.setData(DataKey.TARGET_PLAYER, 0);
+        main.updateUI(playerStatsMessage);
+        getInstrumentation().waitForIdleSync();
+
+        assertEquals(View.VISIBLE, main.findViewById(R.id.victory_image).getVisibility());
+        assertEquals(View.GONE, main.findViewById(R.id.end_turn_button).getVisibility());
     }
 
     @Test
