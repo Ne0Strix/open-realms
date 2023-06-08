@@ -45,4 +45,8 @@ public class OverlayPresenter implements OverlayPresenterInterface {
     public void updateTurnCoin(int turnCoin) {
         overlayView.setTurnCoin(turnCoin);
     }
+
+    public OverlayViewInterface getOverlayView() {
+        return overlayView;
+    }
 }

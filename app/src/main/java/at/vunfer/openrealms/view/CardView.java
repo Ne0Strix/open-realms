@@ -396,4 +396,8 @@ public class CardView extends ConstraintLayout {
     public int getCardId() {
         return card.getId();
     }
+
+    public boolean isExpended() {
+        return isExpended;
+    }
 }

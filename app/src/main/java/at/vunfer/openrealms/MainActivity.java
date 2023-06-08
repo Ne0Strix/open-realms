@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public PlayedChampionsPresenter playerPlayedChampionsPresenter;
     public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
 
+    ImageView victoryImage;
+    ImageView defeatImage;
+    Button endTurnButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -256,11 +260,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     if (stats.getPlayerHealth() < 1) {
                                         //                                        //this adds the
                                         // defeat screen on top of the game
-                                        ImageView defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage = findViewById(R.id.defeat_image);
                                         defeatImage.setVisibility(View.VISIBLE);
                                         defeatImage.getParent().bringChildToFront(defeatImage);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
+                                        victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.INVISIBLE);
+                                        endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                     }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
@@ -270,11 +276,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        ImageView victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage = findViewById(R.id.victory_image);
                                         victoryImage.setVisibility(View.VISIBLE);
                                         victoryImage.getParent().bringChildToFront(victoryImage);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
+                                        defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage.setVisibility(View.INVISIBLE);
+                                        endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                     }
                                 }
                                 break;
@@ -472,5 +480,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void setGameStarted(boolean b) {
         gameStarted = b;
+    }
+
+    public ImageView getVictoryImage() {
+        return victoryImage;
+    }
+
+    public ImageView getDefeatImage() {
+        return defeatImage;
+    }
+
+    public Button getEndTurnButton() {
+        return endTurnButton;
     }
 }
