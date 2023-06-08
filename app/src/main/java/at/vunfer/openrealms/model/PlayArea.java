@@ -1,6 +1,8 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import static android.content.Context.SENSOR_SERVICE;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,6 +11,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.client.ClientConnector;
@@ -29,13 +32,16 @@ public class PlayArea extends Thread {
     private final Deck<Card> playedCards;
     private final Deck<Card> playedChampions;
     private final PlayerCards playerCards;
+
+    private SensorManager sensorManager;
+    private Sensor accelerometerSensor;
+
     private static Context context;
 
-    private boolean cheat;
+    private boolean cheat = false;
     private ClientConnector clientConnector;
-    private boolean cheatActivated = false;
-    private boolean isRunning;  // Flag to control the loop
-
+    private double accelerationCurrentValue;
+    private double accelerationPreviousValue;
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -55,6 +61,54 @@ public class PlayArea extends Thread {
         this.playedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
+        this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        this.accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    }
+
+    private synchronized void isTurnedOver(SensorManager sensorManager, Sensor accelerometerSensor) {
+        SensorEventListener sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                float x = event.values[0];
+                float y = event.values[1];
+                float z = event.values[2];
+
+                accelerationCurrentValue = Math.sqrt((x * x + y * y + z * z));
+                double changeInAcceleration = Math.abs(accelerationCurrentValue - accelerationPreviousValue);
+
+                if (changeInAcceleration > 10) {
+                    cheat = true;
+                    //((MainActivity) context).runOnUiThread(() -> Toast.makeText(context, "Phone turned over (Cheat activated)", Toast.LENGTH_SHORT).show());
+                    Log.d("SensorValues", "x: " + x + ", y: " + y + ", z: " + z);
+                }
+                accelerationPreviousValue = accelerationCurrentValue;
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                // Handles accuracy changes if needed
+            }
+        };
+
+        sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
+
+        try {
+            Thread.sleep(1000); // Sleeps for 100 milliseconds to allow sensor data to be captured
+        } catch (InterruptedException e) {
+            // Log.e("PlayArea", "InterruptedException occurred: " + e.getMessage());
+            Thread.currentThread().interrupt();
+        } finally {
+            sensorManager.unregisterListener(sensorEventListener);
+        }
+    }
+
+    /**
+     * Sets the client connector for sending cheat messages.
+     *
+     * @param clientConnector The client connector to set.
+     */
+    public void setClientConnector(ClientConnector clientConnector) {
+        this.clientConnector = clientConnector;
     }
 
     /**
@@ -155,6 +209,11 @@ public class PlayArea extends Thread {
         playedCards.clear();
     }
 
+    public void setCheat(boolean cheat) {
+        this.cheat = cheat;
+    }
+
+
     // commented out by since it is not used in first sprint
     //    public Card useCardAllyEffect(Card card) {
     //        return null;
@@ -219,9 +278,10 @@ public class PlayArea extends Thread {
     }
 
     public boolean buyCard(Card card) {
-        if (isPhoneTurnedOver() && cheatActivated) {
+        if (this.cheat) {
             market.purchase(card);
             playerCards.addBoughtCard(card);
+            //((MainActivity) context).runOnUiThread(() -> Toast.makeText(context, "Card bought with cheat (Cheat deactivated)!", Toast.LENGTH_SHORT).show());
             return true;
         } else {
             if (this.turnCoins < card.getCost()) {
@@ -260,10 +320,6 @@ public class PlayArea extends Thread {
         return null;
     }
 
-    public void setCheat(boolean cheat) {
-        this.cheat = cheat;
-    }
-
     public void buyCard(Message message) throws IllegalArgumentException {
         int cardId = Integer.parseInt(message.getData(DataKey.CARD_ID).toString());
 
@@ -289,115 +345,33 @@ public class PlayArea extends Thread {
         if (turnCoins < cardCost) {
             throw new IllegalArgumentException("Not enough coins this turn");
         }
-
         turnCoins -= cardCost;
         market.purchase(cardToBuy);
         playerCards.addBoughtCard(cardToBuy);
     }
 
-    /**
-     * Checks if the phone is turned over.
-     *
-     * @return True if the phone is turned over, false otherwise.
-     * @throws IllegalArgumentException If the context is not set.
-     */
-    public boolean isPhoneTurnedOver() {
-        if (context == null) {
-            throw new IllegalArgumentException(
-                    "Context not set. Call setContext() before using isPhoneTurnedOver().");
-        }
-        SensorManager sensorManager =
-                (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager == null) {
-            throw new NullPointerException("Sensor service is null");
-        }
-
-        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if (accelerometerSensor == null) {
-            throw new NullPointerException("Accelerometer sensor is not available");
-        }
-        return isTurnedOver(sensorManager, accelerometerSensor);
-    }
-
-    private boolean isTurnedOver(SensorManager sensorManager, Sensor accelerometerSensor) {
-        final class CheatWrapper {
-            boolean cheat = false;
-        }
-
-        final CheatWrapper cheatWrapper = new CheatWrapper();
-
-        SensorEventListener sensorEventListener = new SensorEventListener() {
-                    @Override
-                    public void onSensorChanged(SensorEvent event) {
-                        float x = event.values[0];
-                        float y = event.values[1];
-                        float z = event.values[2];
-
-                        double thresholdAngle = 10.0;
-
-                        double tiltAngle = Math.toDegrees(Math.acos(x / Math.sqrt(x * x + y * y + z * z)));
-                        cheatWrapper.cheat = tiltAngle > thresholdAngle;
-
-                        Log.d("SensorValues", "x: " + x + ", y: " + y + ", z: " + z);
-                    }
-
-                    @Override
-                    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                        // Handles accuracy changes if needed
-                    }
-                };
-
-        sensorManager.registerListener(
-                sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-        try {
-            Thread.sleep(100); // Sleeps for 100 milliseconds to allow sensor data to be captured
-        } catch (InterruptedException e) {
-            // Log.e("PlayArea", "InterruptedException occurred: " + e.getMessage());
-            Thread.currentThread().interrupt();
-        }
-
-        sensorManager.unregisterListener(sensorEventListener);
-
-        return cheatWrapper.cheat;
-    }
-
-    /**
-     * Sets the client connector for sending cheat messages.
-     *
-     * @param clientConnector The client connector to set.
-     */
-    public void setClientConnector(ClientConnector clientConnector) {
-        this.clientConnector = clientConnector;
-    }
-
     @Override
     public void run() {
-        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+
+        sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         if (sensorManager == null) {
             throw new NullPointerException("Sensor service is null");
         }
 
-        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometerSensor == null) {
             throw new NullPointerException("Accelerometer sensor is not available");
         }
 
-        isRunning = true;  // Set the initial state of the loop
-
-        while (isRunning) {
+        while (true) {
             try {
-                boolean isTurnedOver = isPhoneTurnedOver();
-                if (isTurnedOver) {
-                    if(!cheatActivated) {
-                        this.cheatActivated = true;
-                        clientConnector.sendCheatMessage();
-                        showCheatToast();
-                    }
-                    Thread.sleep(3000);
-                    this.cheatActivated = false;
-                    Toast.makeText(context, "Cheat deactivated!", Toast.LENGTH_SHORT).show();
+                isTurnedOver(sensorManager, accelerometerSensor);
+                if (!cheat && clientConnector != null) {
+                    clientConnector.sendCheatMessage();
+                } else{
+                    //showCheatToast(true);
                 }
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (NullPointerException e) {
@@ -406,7 +380,7 @@ public class PlayArea extends Thread {
         }
     }
 
-    private void showCheatToast() {
-        Toast.makeText(context, "Cheat activated!", Toast.LENGTH_SHORT).show();
-    }
+    /*private void showCheatToast(boolean isActivated) {
+        ((MainActivity) context).runOnUiThread(() ->Toast.makeText(context, "Cheat " + (isActivated ? "activated (Phone turned over)" : "deactivated"), Toast.LENGTH_SHORT).show());
+    }*/
 }

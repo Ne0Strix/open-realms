@@ -15,7 +15,7 @@ import java.net.Socket;
 
 public class ClientConnector extends Thread {
     private static final String TAG = "ClientConnector";
-    private final UIUpdateListener uiUpdater;
+    public final UIUpdateListener uiUpdater;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
     private MessageHandler messageHandler;
@@ -23,6 +23,7 @@ public class ClientConnector extends Thread {
     private Communication comm;
 
     private Socket socket = new Socket();
+    private boolean cheatActivated;
 
     public ClientConnector(UIUpdateListener uiUpdater) {
         this.uiUpdater = uiUpdater;
@@ -51,25 +52,13 @@ public class ClientConnector extends Thread {
             while (!socket.isClosed()) {
                 Message msg = (Message) inputStream.readObject();
                 messageHandler.handleMessage(msg);
+                if (msg.getType() == MessageType.END_TURN) {
+                    cheatActivated = false;
+                }
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (inputStream != null) inputStream.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                if (outputStream != null) outputStream.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                if (socket != null) socket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
             closeStreamsAndSocket();
         }
     }
