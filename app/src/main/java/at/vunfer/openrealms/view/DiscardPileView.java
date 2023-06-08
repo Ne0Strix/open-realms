@@ -72,14 +72,12 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
             lastCard.setHealthSize(8);
             visibleCard.setCard(lastCard.getCard());
             visibleCard.setVisibility(VISIBLE);
+            if (visibleCard.getAlpha() != 1f) {
+                enableFullscreenView();
+            }
         } else {
             visibleCard.setVisibility(GONE);
             disableFullscreenView();
-        }
-
-        LinearLayout fullScreenCards = getRootView().findViewById(R.id.fullscreen_discard_pile);
-        if (fullScreenCards.getVisibility() == VISIBLE) {
-            enableFullscreenView();
         }
     }
 
