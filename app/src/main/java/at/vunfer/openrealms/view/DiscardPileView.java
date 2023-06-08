@@ -48,6 +48,13 @@ public class DiscardPileView extends ConstraintLayout implements CardPileView {
         topCard.findViewById(R.id.card_view_background)
                 .setOnClickListener(
                         view -> {
+                            if (fullscreenCards == null) {
+                                fullscreenCardsParent =
+                                        getRootView()
+                                                .findViewById(R.id.fullschreen_discard_pile_parent);
+                                fullscreenCards =
+                                        getRootView().findViewById(R.id.fullscreen_discard_pile);
+                            }
                             fullscreenCards.findViewById(R.id.fullscreen_discard_pile);
                             if (!allCards.isEmpty()) {
                                 if (fullscreenCards.getVisibility() == GONE) {
