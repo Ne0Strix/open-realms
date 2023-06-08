@@ -276,30 +276,31 @@ public class CardView extends ConstraintLayout {
         }
 
         // champion details
+        ImageView blackShield = findViewById(R.id.card_view_black_shield_icon);
+        ImageView whiteShield = findViewById(R.id.card_view_white_shield_icon);
+        health = findViewById(R.id.card_view_health);
         if (card instanceof Champion) {
             Log.d("CardView", "applyCardDetail: " + card.getName() + " is a champion");
             ConstraintLayout shieldArea = findViewById(R.id.card_view_shield_area);
             shieldArea.setVisibility(VISIBLE);
-
-            health = findViewById(R.id.card_view_health);
             health.setText(Integer.toString(((Champion) card).getHealth()));
             health.setTextSize(8);
             health.setVisibility(VISIBLE);
 
             if (((Champion) card).isGuard()) {
                 Log.d("CardView", "applyCardDetail: " + card.getName() + " is a guard");
-                ImageView blackShield = findViewById(R.id.card_view_black_shield_icon);
-                ImageView whiteShield = findViewById(R.id.card_view_white_shield_icon);
                 blackShield.setVisibility(VISIBLE);
                 whiteShield.setVisibility(INVISIBLE);
                 health.setTextColor(Color.WHITE);
             } else {
-                ImageView whiteShield = findViewById(R.id.card_view_white_shield_icon);
-                ImageView blackShield = findViewById(R.id.card_view_black_shield_icon);
                 whiteShield.setVisibility(VISIBLE);
                 blackShield.setVisibility(INVISIBLE);
                 health.setTextColor(Color.BLACK);
             }
+        } else {
+            whiteShield.setVisibility(INVISIBLE);
+            blackShield.setVisibility(INVISIBLE);
+            health.setVisibility(INVISIBLE);
         }
     }
 

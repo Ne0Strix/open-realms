@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.presenter.presenter_interfaces;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
@@ -27,10 +26,5 @@ class CardPilePresenterTest {
         verify(c).addCardToView(c1);
         verify(c).addCardToView(c2);
         verify(c).addCardToView(c3);
-    }
-
-    @Test
-    void testFindViewByCardId() {
-        // TODO: implement CardID
     }
 }
