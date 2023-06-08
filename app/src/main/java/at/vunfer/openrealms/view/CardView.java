@@ -33,6 +33,11 @@ import java.util.List;
 
 /** This class is used to represent a CardImageView. */
 public class CardView extends ConstraintLayout {
+
+    private static final int TEXT_SIZE = 8;
+    private static final int MAX_WIDTH = 10;
+    private static final int MAX_HEIGHT = 100;
+
     private Card card;
     private boolean isFaceUp = true;
     private boolean isExpended = false;
@@ -148,48 +153,71 @@ public class CardView extends ConstraintLayout {
     @SuppressLint("SetTextI18n")
     private void applyCardDetail() {
         TextView name = findViewById(R.id.card_view_name);
-        name.setText(card.getName());
-
         TextView cost = findViewById(R.id.card_view_cost);
-        cost.setText(card.getCost() + "");
-
         LinearLayout effectArea = findViewById(R.id.card_view_effectArea);
-        effectArea.removeAllViews();
-
         ImageView typeIcon = findViewById(R.id.card_view_type_icon);
         ImageView background = findViewById(R.id.card_view_background);
+        int typeIconResource = setCardTypeAndBackground(background);
+        LinearLayout.LayoutParams paramsMatchParentHighWeight =
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        0.5f);
+
+        setCardNameAndCost(name, cost);
+        clearEffectArea(effectArea);
+        setTypeIconVisibility(typeIcon, typeIconResource);
+        setCardImage();
+        handleDefaultEffects(effectArea, paramsMatchParentHighWeight);
+        handleSynergyEffects(effectArea, typeIconResource, paramsMatchParentHighWeight);
+        handleChampionDetails(paramsMatchParentHighWeight);
+    }
+
+    private void setCardNameAndCost(TextView name, TextView cost) {
+        name.setText(card.getName());
+        cost.setText(String.valueOf(card.getCost()));
+    }
+
+    private void clearEffectArea(LinearLayout effectArea) {
+        effectArea.removeAllViews();
+    }
+
+    private int setCardTypeAndBackground(ImageView background) {
         int typeIconResource = -1;
         switch (card.getFaction()) {
             case GUILD:
                 background.setImageResource(R.drawable.card_guild);
                 typeIconResource = R.drawable.guild_icon;
-                typeIcon.setImageResource(typeIconResource);
-                typeIcon.setVisibility(VISIBLE);
                 break;
             case IMPERIAL:
                 background.setImageResource(R.drawable.card_imperial);
                 typeIconResource = R.drawable.imperial_icon;
-                typeIcon.setImageResource(typeIconResource);
-                typeIcon.setVisibility(VISIBLE);
                 break;
             case NECROS:
                 background.setImageResource(R.drawable.card_necros);
                 typeIconResource = R.drawable.necros_icon;
-                typeIcon.setImageResource(typeIconResource);
-                typeIcon.setVisibility(VISIBLE);
                 break;
             case WILD:
                 background.setImageResource(R.drawable.card_wild);
                 typeIconResource = R.drawable.wild_icon;
-                typeIcon.setImageResource(typeIconResource);
-                typeIcon.setVisibility(VISIBLE);
                 break;
             default:
                 background.setImageResource(R.drawable.emptycards);
-                typeIcon.setVisibility(INVISIBLE);
                 break;
         }
+        return typeIconResource;
+    }
 
+    private void setTypeIconVisibility(ImageView typeIcon, int typeIconResource) {
+        if (typeIconResource != -1) {
+            typeIcon.setImageResource(typeIconResource);
+            typeIcon.setVisibility(VISIBLE);
+        } else {
+            typeIcon.setVisibility(INVISIBLE);
+        }
+    }
+
+    private void setCardImage() {
         // Parse card name and retrieve an image-resource with a matching name
         String resourceName = "card_image_";
         // Only lowercase characters a-z, 0-9 and _ are allowed in the names of android resources
@@ -198,6 +226,7 @@ public class CardView extends ConstraintLayout {
         cardName = cardName.replaceAll("[,']", "");
 
         resourceName = resourceName + cardName;
+        @SuppressLint("DiscouragedApi")
         int imageResourceId =
                 getResources()
                         .getIdentifier(resourceName, "drawable", getContext().getPackageName());
@@ -208,13 +237,21 @@ public class CardView extends ConstraintLayout {
             Log.e(logTag, "Image Resource \"R.drawable." + resourceName + "\" was not found.");
             cardImage.setImageResource(R.drawable.playarea);
         }
-        // Default effects
+    }
+
+    private boolean isBasicEffect(Effect e) {
+        return e instanceof DamageEffect
+                || e instanceof HealingEffect
+                || e instanceof CoinEffect
+                || e instanceof DrawEffect
+                || e instanceof DamagePerChampionInPlayEffect
+                || e instanceof DamagePerGuardInPlayEffect
+                || e instanceof HealingPerChampionInPlayEffect;
+    }
+
+    private void handleDefaultEffects(
+            LinearLayout effectArea, LinearLayout.LayoutParams paramsMatchParentHighWeight) {
         LinearLayout defaultEffects = new LinearLayout(getContext());
-        LinearLayout.LayoutParams paramsMatchParentHighWeight =
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        0.5f);
         defaultEffects.setOrientation(LinearLayout.HORIZONTAL);
         defaultEffects.setLayoutParams(paramsMatchParentHighWeight);
 
@@ -222,28 +259,20 @@ public class CardView extends ConstraintLayout {
             ImageView expandIcon = new ImageView(getContext());
             expandIcon.setImageResource(R.drawable.expend_icon);
             expandIcon.setLayoutParams(paramsMatchParentHighWeight);
-            expandIcon.setMaxWidth(10);
-            expandIcon.setMaxHeight(100);
+            expandIcon.setMaxWidth(MAX_WIDTH);
+            expandIcon.setMaxHeight(MAX_HEIGHT);
             defaultEffects.addView(expandIcon);
         }
-        for (Effect e : card.getEffects()) {
-            if (e instanceof DamageEffect
-                    || e instanceof HealingEffect
-                    || e instanceof CoinEffect
-                    || e instanceof DrawEffect
-                    || e instanceof DamagePerChampionInPlayEffect
-                    || e instanceof DamagePerGuardInPlayEffect
-                    || e instanceof HealingPerChampionInPlayEffect) {
-                BasicEffectView effectView = new BasicEffectView(getContext(), e);
-                effectView.setLayoutParams(paramsMatchParentHighWeight);
-                defaultEffects.addView(effectView);
-            }
-        }
+
+        addEffects(card.getEffects(), defaultEffects, paramsMatchParentHighWeight);
+
         effectArea.addView(defaultEffects);
+    }
 
-        // sacrifice effects
-
-        // synergy effects
+    private void handleSynergyEffects(
+            LinearLayout effectArea,
+            int typeIconResource,
+            LinearLayout.LayoutParams paramsMatchParentHighWeight) {
         if (!card.getSynergyEffects().isEmpty()) {
             LinearLayout synergyEffects = new LinearLayout(getContext());
             synergyEffects.setOrientation(LinearLayout.HORIZONTAL);
@@ -259,48 +288,51 @@ public class CardView extends ConstraintLayout {
             synergyIcon.setLayoutParams(paramsMatchParentLowWeight);
             synergyEffects.addView(synergyIcon);
 
-            for (Effect e : card.getSynergyEffects()) {
-                if (e instanceof DamageEffect
-                        || e instanceof HealingEffect
-                        || e instanceof CoinEffect
-                        || e instanceof DrawEffect
-                        || e instanceof DamagePerChampionInPlayEffect
-                        || e instanceof DamagePerGuardInPlayEffect
-                        || e instanceof HealingPerChampionInPlayEffect) {
-                    BasicEffectView effectView = new BasicEffectView(getContext(), e);
-                    effectView.setLayoutParams(paramsMatchParentHighWeight);
-                    synergyEffects.addView(effectView);
-                }
-            }
+            addEffects(card.getSynergyEffects(), synergyEffects, paramsMatchParentHighWeight);
+
             effectArea.addView(synergyEffects);
         }
+    }
 
-        // champion details
+    private void addEffects(
+            List<Effect> effects, LinearLayout effectsLayout, LinearLayout.LayoutParams params) {
+        for (Effect e : effects) {
+            if (isBasicEffect(e)) {
+                BasicEffectView effectView = new BasicEffectView(getContext(), e);
+                effectView.setLayoutParams(params);
+                effectsLayout.addView(effectView);
+            }
+        }
+    }
+
+    private void handleChampionDetails(LinearLayout.LayoutParams paramsMatchParentHighWeight) {
         ImageView blackShield = findViewById(R.id.card_view_black_shield_icon);
         ImageView whiteShield = findViewById(R.id.card_view_white_shield_icon);
-        health = findViewById(R.id.card_view_health);
-        if (card instanceof Champion) {
-            Log.d("CardView", "applyCardDetail: " + card.getName() + " is a champion");
-            ConstraintLayout shieldArea = findViewById(R.id.card_view_shield_area);
-            shieldArea.setVisibility(VISIBLE);
-            health.setText(Integer.toString(((Champion) card).getHealth()));
-            health.setTextSize(8);
-            health.setVisibility(VISIBLE);
+        TextView health = findViewById(R.id.card_view_health);
 
-            if (((Champion) card).isGuard()) {
-                Log.d("CardView", "applyCardDetail: " + card.getName() + " is a guard");
-                blackShield.setVisibility(VISIBLE);
-                whiteShield.setVisibility(INVISIBLE);
-                health.setTextColor(Color.WHITE);
-            } else {
-                whiteShield.setVisibility(VISIBLE);
-                blackShield.setVisibility(INVISIBLE);
-                health.setTextColor(Color.BLACK);
-            }
-        } else {
+        if (!(card instanceof Champion)) {
             whiteShield.setVisibility(INVISIBLE);
             blackShield.setVisibility(INVISIBLE);
             health.setVisibility(INVISIBLE);
+            return;
+        }
+
+        Log.d("CardView", "applyCardDetail: " + card.getName() + " is a champion");
+        ConstraintLayout shieldArea = findViewById(R.id.card_view_shield_area);
+        shieldArea.setVisibility(VISIBLE);
+        health.setText(Integer.toString(((Champion) card).getHealth()));
+        health.setTextSize(TEXT_SIZE);
+        health.setVisibility(VISIBLE);
+
+        if (((Champion) card).isGuard()) {
+            Log.d("CardView", "applyCardDetail: " + card.getName() + " is a guard");
+            blackShield.setVisibility(VISIBLE);
+            whiteShield.setVisibility(INVISIBLE);
+            health.setTextColor(Color.WHITE);
+        } else {
+            whiteShield.setVisibility(VISIBLE);
+            blackShield.setVisibility(INVISIBLE);
+            health.setTextColor(Color.BLACK);
         }
     }
 
