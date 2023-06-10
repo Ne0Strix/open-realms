@@ -170,7 +170,7 @@ public class CardView extends ConstraintLayout {
         setCardImage();
         handleDefaultEffects(effectArea, paramsMatchParentHighWeight);
         handleSynergyEffects(effectArea, typeIconResource, paramsMatchParentHighWeight);
-        handleChampionDetails(paramsMatchParentHighWeight);
+        handleChampionDetails();
     }
 
     private void setCardNameAndCost(TextView name, TextView cost) {
@@ -305,10 +305,10 @@ public class CardView extends ConstraintLayout {
         }
     }
 
-    private void handleChampionDetails(LinearLayout.LayoutParams paramsMatchParentHighWeight) {
+    private void handleChampionDetails() {
         ImageView blackShield = findViewById(R.id.card_view_black_shield_icon);
         ImageView whiteShield = findViewById(R.id.card_view_white_shield_icon);
-        TextView health = findViewById(R.id.card_view_health);
+        health = findViewById(R.id.card_view_health);
 
         if (!(card instanceof Champion)) {
             whiteShield.setVisibility(INVISIBLE);

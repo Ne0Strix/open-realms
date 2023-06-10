@@ -487,9 +487,9 @@ public class MainActivityTest {
         updatePlayerStats.setData(DataKey.PLAYER_STATS, playerStats);
         main.updateUI(updatePlayerStats);
         getInstrumentation().waitForIdleSync();
-        assertEquals(main.getVictoryImage().getVisibility(), View.VISIBLE);
-        assertEquals(main.getDefeatImage().getVisibility(), View.INVISIBLE);
-        assertEquals(main.getEndTurnButton().getVisibility(), View.INVISIBLE);
+        assertEquals(View.VISIBLE, main.getVictoryImage().getVisibility());
+        assertEquals(View.INVISIBLE, main.getDefeatImage().getVisibility());
+        assertEquals(View.INVISIBLE, main.getEndTurnButton().getVisibility());
 
         // test handling update opponent stats for defeat
         updateOpponentStats = new Message(MessageType.UPDATE_PLAYER_STATS);
@@ -498,9 +498,9 @@ public class MainActivityTest {
         updateOpponentStats.setData(DataKey.PLAYER_STATS, opponentStats);
         main.updateUI(updateOpponentStats);
         getInstrumentation().waitForIdleSync();
-        assertEquals(main.getVictoryImage().getVisibility(), View.INVISIBLE);
-        assertEquals(main.getDefeatImage().getVisibility(), View.VISIBLE);
-        assertEquals(main.getEndTurnButton().getVisibility(), View.INVISIBLE);
+        assertEquals(View.INVISIBLE, main.getVictoryImage().getVisibility());
+        assertEquals(View.VISIBLE, main.getDefeatImage().getVisibility());
+        assertEquals(View.INVISIBLE, main.getEndTurnButton().getVisibility());
     }
 
     @Test
