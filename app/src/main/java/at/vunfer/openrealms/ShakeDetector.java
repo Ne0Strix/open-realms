@@ -11,11 +11,9 @@ public class ShakeDetector implements SensorEventListener {
 
     private static final float SHAKE_THRESHOLD_GRAVITY = 2.7F;
     private static final int SHAKE_SLOP_TIME_MS = 500;
-    private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
 
     private OnShakeListener mListener;
     private long mShakeTimestamp;
-    private int mShakeCount;
 
     public interface OnShakeListener {
         void onShake() throws IOException;
@@ -53,18 +51,20 @@ public class ShakeDetector implements SensorEventListener {
 
                 // Run shake event on a separate thread
                 new Thread(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            mListener.onShake();
-                                        } catch (IOException e) {
-                                            throw new RuntimeException(e);
-                                        }
+                                () -> {
+                                    try {
+                                        mListener.onShake();
+                                    } catch (IOException e) {
+                                        throw new ShakeException(
+                                                "Error while handling shake event", e);
                                     }
                                 })
                         .start();
             }
         }
+    }
+
+    private class ShakeException extends RuntimeException {
+        public ShakeException(String error_while_handling_shake_event, IOException e) {}
     }
 }

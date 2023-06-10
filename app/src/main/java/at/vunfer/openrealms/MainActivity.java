@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static boolean gameStarted = false;
     private static boolean myTurn = false;
 
-    private Context context = this;
+    private final Context context = this;
     private int playerId;
 
     public PlayAreaPresenter playAreaPresenter;
@@ -56,16 +56,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public OverlayPresenter overlayViewPresenter;
     public PlayedChampionsPresenter playerPlayedChampionsPresenter;
     public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
-    private SensorManager mSensorManager;
-    private ShakeDetector mShakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
 
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mShakeDetector = new ShakeDetector();
+        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        ShakeDetector mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(
                 new ShakeDetector.OnShakeListener() {
 
