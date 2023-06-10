@@ -66,15 +66,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mShakeDetector = new ShakeDetector();
-        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+        mShakeDetector.setOnShakeListener(
+                new ShakeDetector.OnShakeListener() {
 
-            @Override
-            public void onShake() throws IOException {
-                sendCheatMessage();
-            }
-        });
+                    @Override
+                    public void onShake() throws IOException {
+                        sendCheatMessage();
+                    }
+                });
 
-        mSensorManager.registerListener(mShakeDetector,
+        mSensorManager.registerListener(
+                mShakeDetector,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_UI);
     }
@@ -312,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                             case TURN_NOTIFICATION:
                                 if (findViewById(R.id.defeat_image).getVisibility() != View.VISIBLE
                                         && findViewById(R.id.victory_image).getVisibility()
-                                        != View.VISIBLE) {
+                                                != View.VISIBLE) {
                                     Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                     if (targetPlayer != null) {
                                         Button endTurnButton = findViewById(R.id.end_turn_button);

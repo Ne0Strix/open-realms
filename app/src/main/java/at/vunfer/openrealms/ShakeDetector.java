@@ -1,11 +1,10 @@
+/* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms;
 
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
 import java.io.IOException;
 
 public class ShakeDetector implements SensorEventListener {
@@ -20,7 +19,6 @@ public class ShakeDetector implements SensorEventListener {
 
     public interface OnShakeListener {
         void onShake() throws IOException;
-
     }
 
     public void setOnShakeListener(OnShakeListener listener) {
@@ -54,18 +52,19 @@ public class ShakeDetector implements SensorEventListener {
                 }
 
                 // Run shake event on a separate thread
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            mListener.onShake();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }).start();
+                new Thread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            mListener.onShake();
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                })
+                        .start();
             }
         }
     }
 }
-

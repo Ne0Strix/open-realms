@@ -41,9 +41,8 @@ public class Message implements Serializable {
     private boolean validateData(DataKey key, Object value) {
         switch (key) {
             case TARGET_PLAYER:
-                return value instanceof Integer;
             case CARD_ID:
-                return value instanceof Object;
+                return value instanceof Integer;
             case DECK:
                 return value instanceof DeckType;
             case CHOICE:

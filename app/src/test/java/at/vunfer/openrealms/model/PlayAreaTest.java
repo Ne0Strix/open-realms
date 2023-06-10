@@ -2,18 +2,13 @@
 package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
-import at.vunfer.openrealms.network.DataKey;
-import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.MessageType;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -275,7 +270,7 @@ class PlayAreaTest {
     void testBuyCardTooPoor() {
         PlayArea playArea1 = player1.getPlayArea();
         Card toBuy = playArea1.getMarket().getForPurchase().get(0);
-        assertThrows(IllegalArgumentException.class, () -> playArea1.buyCard(toBuy));
+        assertFalse(playArea1.buyCard(toBuy));
     }
 
     @Test
