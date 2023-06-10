@@ -1,47 +1,29 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import static android.content.Context.SENSOR_SERVICE;
-
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.util.Log;
-import android.widget.Toast;
-
-import at.vunfer.openrealms.MainActivity;
-import at.vunfer.openrealms.network.DataKey;
-import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.client.ClientConnector;
-
 import java.util.List;
 
 /**
  * Represents the play area in the game. Stores the current state of the game and provides methods
  * for manipulating it.
  */
-public class PlayArea extends Thread {
+public class PlayArea {
+    private static int idCounter = 0;
     private int health;
     private int turnDamage;
     private int turnHealing;
     private int turnCoins;
+    private int id;
+    private static final String TAG = "PlayArea";
 
-    private final Market market;
-    private final Deck<Card> playedCards;
-    private final Deck<Card> playedChampions;
-    private final PlayerCards playerCards;
-
-    private SensorManager sensorManager;
-    private Sensor accelerometerSensor;
-
-    private static Context context;
-
+    private Market market;
+    private Deck<Card> playedCards;
+    private Deck<Card> playedChampions;
+    private PlayerCards playerCards;
+    private Card cardDrawnFromSpecialAbility; // from special ability
+    private Deck<Card> cardsThatUsedSynergies;
+    private Deck<Card> atTurnEndDiscardedChampions;
     private boolean cheat = false;
-    private ClientConnector clientConnector;
-    private double accelerationCurrentValue;
-    private double accelerationPreviousValue;
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -59,65 +41,11 @@ public class PlayArea extends Thread {
         this.turnCoins = 0;
         this.playedCards = new Deck<>();
         this.playedChampions = new Deck<>();
+        this.cardsThatUsedSynergies = new Deck<>();
+        this.atTurnEndDiscardedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
-        this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        this.accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    }
-
-    private synchronized void isTurnedOver(SensorManager sensorManager, Sensor accelerometerSensor) {
-        SensorEventListener sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
-
-                accelerationCurrentValue = Math.sqrt((x * x + y * y + z * z));
-                double changeInAcceleration = Math.abs(accelerationCurrentValue - accelerationPreviousValue);
-
-                if (changeInAcceleration > 10) {
-                    cheat = true;
-                    //((MainActivity) context).runOnUiThread(() -> Toast.makeText(context, "Phone turned over (Cheat activated)", Toast.LENGTH_SHORT).show());
-                    Log.d("SensorValues", "x: " + x + ", y: " + y + ", z: " + z);
-                }
-                accelerationPreviousValue = accelerationCurrentValue;
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                // Handles accuracy changes if needed
-            }
-        };
-
-        sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
-
-        try {
-            Thread.sleep(1000); // Sleeps for 100 milliseconds to allow sensor data to be captured
-        } catch (InterruptedException e) {
-            // Log.e("PlayArea", "InterruptedException occurred: " + e.getMessage());
-            Thread.currentThread().interrupt();
-        } finally {
-            sensorManager.unregisterListener(sensorEventListener);
-        }
-    }
-
-    /**
-     * Sets the client connector for sending cheat messages.
-     *
-     * @param clientConnector The client connector to set.
-     */
-    public void setClientConnector(ClientConnector clientConnector) {
-        this.clientConnector = clientConnector;
-    }
-
-    /**
-     * Sets the context for the PlayArea.
-     *
-     * @param context The context to set.
-     */
-    public static void setContext(Context context) {
-        PlayArea.context = context;
+        this.cardDrawnFromSpecialAbility = null;
     }
 
     /**
@@ -192,6 +120,10 @@ public class PlayArea extends Thread {
         return market;
     }
 
+    public Deck<Card> getAtTurnEndDiscardedChampions() {
+        return atTurnEndDiscardedChampions;
+    }
+
     /**
      * Plays the specified card from the player's hand. Adds the card to the played cards deck and
      * removes it from the player's hand.
@@ -199,9 +131,42 @@ public class PlayArea extends Thread {
      * @param card The card to play.
      */
     public void playCard(Card card) {
-        playedCards.add(playerCards.popFromHand(card));
         card.applyEffects(this);
-        for (Card c : playedCards) {}
+        triggerSynergies(card);
+        if (card instanceof Champion) {
+            ((Champion) card).expend();
+            playedChampions.add(playerCards.popFromHand(card));
+        } else {
+            playedCards.add(playerCards.popFromHand(card));
+        }
+    }
+
+    private void triggerSynergies(Card card) {
+        triggerSynergiesByType(card, playedCards);
+        triggerSynergiesByType(card, playedChampions);
+    }
+
+    private void triggerSynergiesByType(Card card, Deck<Card> deck) {
+
+        for (Card c : deck) {
+            if (card.getFaction() != Faction.NONE
+                    && c.getFaction() == card.getFaction()
+                    && c != card) {
+
+                if (!cardsThatUsedSynergies.contains(card)) {
+                    card.applySynergyEffects(this);
+                    cardsThatUsedSynergies.add(card);
+                }
+
+                if (!cardsThatUsedSynergies.contains(c)) {
+                    if (c instanceof Champion && !((Champion) c).isExpended()) {
+                        continue;
+                    }
+                    c.applySynergyEffects(this);
+                    cardsThatUsedSynergies.add(c);
+                }
+            }
+        }
     }
 
     public void clearPlayedCards() {
@@ -209,16 +174,10 @@ public class PlayArea extends Thread {
         playedCards.clear();
     }
 
-    public void setCheat(boolean cheat) {
-        this.cheat = cheat;
+    public void clearCardsThatUsedSynergyEffect() {
+        cardsThatUsedSynergies.clear();
     }
 
-
-    // commented out by since it is not used in first sprint
-    //    public Card useCardAllyEffect(Card card) {
-    //        return null;
-    //    }
-    //
     //    public Card useCardSacrificeEffect(Card card) {
     //        return null;
     //    }
@@ -226,14 +185,33 @@ public class PlayArea extends Thread {
     //    public Card useCardExpendEffect() {
     //        return null;
     //    }
-    //
-    //    public Card attackChampion(Champion champion, PlayArea playArea) {
-    //        return null;
-    //    }
-    //
-    //    public Card championIsAttacked(Champion champion) {
-    //        return null;
-    //    }
+
+    public boolean expendChampion(Champion champion) {
+        if (champion.expend()) {
+            champion.applyEffects(this);
+            triggerSynergies(champion);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean attackChampion(Champion champion, PlayArea enemyPlayArea) {
+        if (enemyPlayArea.championIsAttacked(champion, turnDamage)) {
+            turnDamage -= champion.getHealth();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean championIsAttacked(Champion champion, int turnDamage) {
+        if (champion.isKilled(turnDamage)) {
+            playedChampions.remove(champion);
+            playerCards.getDiscardedCards().add(champion);
+            champion.reset();
+            return true;
+        }
+        return false;
+    }
 
     /** Resets the turn damage, healing, and coins to 0. */
     public void resetTurnPool() {
@@ -257,7 +235,26 @@ public class PlayArea extends Thread {
      * @param value The value to decrease the player's health by.
      */
     public void takeDamage(int value) {
+        atTurnEndDiscardedChampions.clear();
+        for (int i = playedChampions.size() - 1; i >= 0; i--) {
+            Card c = playedChampions.get(i);
+            if (value <= 0) {
+                break;
+            }
+            if (((Champion) c).isGuard()) {
+                if (championIsAttacked((Champion) c, value)) {
+                    atTurnEndDiscardedChampions.add(c);
+                    value -= ((Champion) c).getHealth();
+                } else {
+                    return;
+                }
+            }
+        }
         health -= value;
+    }
+
+    public void visitCoin(int coin) {
+        turnCoins += coin;
     }
 
     /**
@@ -269,38 +266,52 @@ public class PlayArea extends Thread {
         turnDamage += damage;
     }
 
-    public void visitCoin(int coin) {
-        turnCoins += coin;
+    public void visitDraw() {
+        Card drawnCard = playerCards.drawRandomFromDeck();
+        playerCards.addToHand(drawnCard);
+        cardDrawnFromSpecialAbility = drawnCard;
     }
 
     public void visitHealing(int healing) {
         turnHealing += healing;
     }
 
-    public boolean buyCard(Card card) {
-        if (this.cheat) {
-            market.purchase(card);
-            playerCards.addBoughtCard(card);
-            //((MainActivity) context).runOnUiThread(() -> Toast.makeText(context, "Card bought with cheat (Cheat deactivated)!", Toast.LENGTH_SHORT).show());
-            return true;
-        } else {
-            if (this.turnCoins < card.getCost()) {
-                throw new IllegalArgumentException("Insufficient coins to buy the card");
+    public void visitDamagePerGuardInPlay(int damagePerGuard) {
+        for (Card c : playedChampions) {
+            if (((Champion) c).isGuard()) {
+                visitDamage(damagePerGuard);
             }
-            turnCoins -= card.getCost();
-            market.purchase(card);
-            playerCards.addBoughtCard(card);
-            return true;
         }
     }
 
-    public boolean playCardById(int id) {
-        Card card = findCardById(playerCards.getHandCards(), id);
-        if (card == null) {
+    public void visitDamagePerChampionInPlay(int damagePerChampion) {
+        visitDamage(damagePerChampion * playedChampions.size());
+    }
+
+    public void visitHealingPerChampionInPlay(int healingPerChampion) {
+        visitHealing(healingPerChampion * playedChampions.size());
+    }
+
+    public boolean buyCard(Card card) throws IllegalArgumentException {
+        if (!cheat && this.turnCoins < card.getCost()) {
             return false;
         }
-        playCard(card);
+        turnCoins -= card.getCost();
+        market.purchase(card);
+        playerCards.addBoughtCard(card);
         return true;
+    }
+
+    public int playCardById(int id) {
+        Card card = findCardById(playerCards.getHandCards(), id);
+        if (card == null) {
+            return 0;
+        }
+        playCard(card);
+        if (card instanceof Champion) {
+            return 2;
+        }
+        return 1;
     }
 
     public boolean buyCardById(int id) {
@@ -309,6 +320,28 @@ public class PlayArea extends Thread {
             return false;
         }
         return buyCard(card);
+    }
+
+    public boolean expendChampionById(int id) {
+        Card card = findCardById(playedChampions, id);
+        if (card == null) {
+            return false;
+        }
+        return expendChampion((Champion) card);
+    }
+
+    public boolean attackChampionById(int id, PlayArea enemyPlayArea) {
+        Card card = findCardById(enemyPlayArea.playedChampions, id);
+        if (card == null) {
+            return false;
+        }
+        return attackChampion((Champion) card, enemyPlayArea);
+    }
+
+    public void resetChampions() {
+        for (Card c : playedChampions) {
+            ((Champion) c).reset();
+        }
     }
 
     private Card findCardById(List<Card> cards, int id) {
@@ -320,67 +353,23 @@ public class PlayArea extends Thread {
         return null;
     }
 
-    public void buyCard(Message message) throws IllegalArgumentException {
-        int cardId = Integer.parseInt(message.getData(DataKey.CARD_ID).toString());
-
-        Card cardToBuy =
-                market.getForPurchase().stream()
-                        .filter(card -> card.getId() == cardId)
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("Card does not exist"));
-
-        int cardCost = cardToBuy.getCost();
-
-        boolean cheatActivated =
-                Boolean.parseBoolean(message.getData(DataKey.CHEAT_ACTIVATE).toString());
-        if (cheatActivated && this.cheat) {
-            turnCoins += cardCost;
-            Log.d("PlayArea", "Cheat activated. Added " + cardCost + " coins.");
-        } else {
-            processCardPurchase(cardToBuy, cardCost);
-        }
+    public int getId() {
+        return id;
     }
 
-    private void processCardPurchase(Card cardToBuy, int cardCost) {
-        if (turnCoins < cardCost) {
-            throw new IllegalArgumentException("Not enough coins this turn");
-        }
-        turnCoins -= cardCost;
-        market.purchase(cardToBuy);
-        playerCards.addBoughtCard(cardToBuy);
+    public void clearCardDrawnFromSpecialAbility() {
+        cardDrawnFromSpecialAbility = null;
     }
 
-    @Override
-    public void run() {
-
-        sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        if (sensorManager == null) {
-            throw new NullPointerException("Sensor service is null");
-        }
-
-        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if (accelerometerSensor == null) {
-            throw new NullPointerException("Accelerometer sensor is not available");
-        }
-
-        while (true) {
-            try {
-                isTurnedOver(sensorManager, accelerometerSensor);
-                if (!cheat && clientConnector != null) {
-                    clientConnector.sendCheatMessage();
-                } else{
-                    //showCheatToast(true);
-                }
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            } catch (NullPointerException e) {
-                Log.e("PlayArea", "NullPointerException occurred while checking phone orientation: " + e.getMessage());
-            }
-        }
+    public Card getCardDrawnFromSpecialAbility() {
+        return cardDrawnFromSpecialAbility;
     }
 
-    /*private void showCheatToast(boolean isActivated) {
-        ((MainActivity) context).runOnUiThread(() ->Toast.makeText(context, "Cheat " + (isActivated ? "activated (Phone turned over)" : "deactivated"), Toast.LENGTH_SHORT).show());
-    }*/
+    public void resetCardDrawnFromSpecialAbility() {
+        cardDrawnFromSpecialAbility = null;
+    }
+
+    public void setCheat(boolean cheat) {
+        this.cheat = cheat;
+    }
 }

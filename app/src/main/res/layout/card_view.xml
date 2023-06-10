@@ -32,7 +32,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="10" />
+            android:layout_weight="8" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -78,7 +78,7 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/card_view_synergy_icon"
+                    android:id="@+id/card_view_type_icon"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
@@ -94,26 +94,77 @@
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/playarea" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
             <LinearLayout
                 android:id="@+id/card_view_effectArea"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="25"
+                android:layout_weight="20"
                 android:orientation="vertical" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3" />
+                android:layout_weight="4" />
 
         </LinearLayout>
 
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="8" />
+            android:layout_weight="7" />
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_view_shield_area"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:visibility="invisible"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintWidth_percent="0.2"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintVertical_bias="0.98">
+
+        <ImageView
+            android:id="@+id/card_view_white_shield_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/shield_white"/>
+        <ImageView
+            android:id="@+id/card_view_black_shield_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/shield_black"/>
+
+        <TextView
+            android:id="@+id/card_view_health"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="1dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="6" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <ImageView
         android:id="@+id/card_view_back_of_card"
@@ -127,6 +178,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/card_view_background"
         app:srcCompat="@drawable/cardback" />
+
+    <ImageView
+        android:id="@+id/card_view_expended"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/card_view_background"
+        app:srcCompat="@drawable/card_crossed" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,5 +18,7 @@ public enum MessageType {
     UPDATE_PLAYER_STATS, // used to update the player stats of a player
     SENSOR_ACTIVATION, // New message type for sensor activation
     FULL_CARD_DECK, // used to send the full card deck to the client
-    TURN_NOTIFICATION // used to notify the client that it is his turn
+    TURN_NOTIFICATION, // used to notify the client that it is his turn
+    EXPEND_CHAMPION, // used to notify the client that a champion has been expended
+    RESET_CHAMPION // used to notify the client that all champions have been reset
 }

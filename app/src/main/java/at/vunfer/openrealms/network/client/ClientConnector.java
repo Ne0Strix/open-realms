@@ -5,8 +5,6 @@ import android.util.Log;
 import at.vunfer.openrealms.UIUpdateListener;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.MessageType;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,68 +13,19 @@ import java.net.Socket;
 
 public class ClientConnector extends Thread {
     private static final String TAG = "ClientConnector";
-    public final UIUpdateListener uiUpdater;
-    private ObjectOutputStream outputStream;
-    private ObjectInputStream inputStream;
-    private MessageHandler messageHandler;
+    private final UIUpdateListener uiUpdater;
+    private Socket socket;
     private InetSocketAddress targetServer;
     private Communication comm;
 
-    private Socket socket = new Socket();
-    private boolean cheatActivated;
-
     public ClientConnector(UIUpdateListener uiUpdater) {
+        this.socket = new Socket();
         this.uiUpdater = uiUpdater;
-    }
-
-    public void connectAndSendBuyCardMessage(Message message) {
-        try {
-            start();
-
-            // Start listening for messages
-            new Thread(this::listenForMessages).start();
-            // send buyCard message
-            outputStream.writeObject(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Error handling for send errors
-        }
-    }
-
-    public void setMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
-    }
-
-    private void listenForMessages() {
-        try {
-            while (!socket.isClosed()) {
-                Message msg = (Message) inputStream.readObject();
-                messageHandler.handleMessage(msg);
-                if (msg.getType() == MessageType.END_TURN) {
-                    cheatActivated = false;
-                }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            closeStreamsAndSocket();
-        }
-    }
-
-    private void closeStreamsAndSocket() {
-        try {
-            if (inputStream != null) inputStream.close();
-            if (outputStream != null) outputStream.close();
-            if (socket != null) socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void run() {
         try {
-            // Set the socket connection target
             socket.connect(targetServer);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
@@ -107,10 +56,8 @@ public class ClientConnector extends Thread {
         return comm;
     }
 
-    public void sendCheatMessage() {
-        if (comm != null) {
-            Message cheatMessage = new Message(MessageType.CHEAT);
-            comm.sendMessage(cheatMessage);
-        }
+    public void setSocket(Socket socket) {
+        // This was added to enable easier Mocking of private fields
+        this.socket = socket;
     }
 }

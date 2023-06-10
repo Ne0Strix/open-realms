@@ -102,6 +102,14 @@ public class PlayerCards {
         return handCards.draw(card);
     }
 
+    public Card drawRandomFromDeck() {
+        return deckCards.drawRandom();
+    }
+
+    public void addToHand(Card card) {
+        handCards.add(card);
+    }
+
     /** Restocks the player's hand */
     public void restockHand() {
         for (int i = this.handCards.size() - 1; i >= 0; i--) {
@@ -127,11 +135,11 @@ public class PlayerCards {
 
     public Deck<Card> getOldTestDeck() {
         Deck<Card> testDeck = new Deck<>();
-        testDeck.add(new Card("Dagger", 0, List.of(new DamageEffect(1))));
-        testDeck.add(new Card("Shortsword", 0, List.of(new HealingEffect(2))));
-        testDeck.add(new Card("Ruby ", 0, List.of(new CoinEffect(2))));
+        testDeck.add(new Card("Dagger", 0, Faction.NONE, List.of(new DamageEffect(1))));
+        testDeck.add(new Card("Shortsword", 0, Faction.NONE, List.of(new HealingEffect(2))));
+        testDeck.add(new Card("Ruby ", 0, Faction.NONE, List.of(new CoinEffect(2))));
         for (int i = 0; i < 7; i++) {
-            testDeck.add(new Card("Coin", 0, List.of(new CoinEffect(1))));
+            testDeck.add(new Card("Coin", 0, Faction.NONE, List.of(new CoinEffect(1))));
         }
         return testDeck;
     }

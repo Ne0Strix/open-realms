@@ -2,22 +2,19 @@
 package at.vunfer.openrealms;
 
 import android.content.Context;
+import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
-import at.vunfer.openrealms.model.Market;
-import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
@@ -42,14 +39,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static List<CardView> cardViews;
     private boolean isHost = false;
 
-    private MarketView marketView;
-    private PlayAreaView playAreaView;
-    private PlayAreaPresenter playAreaPresenter;
-    private MarketPresenter marketPresenter;
-    private Market market;
-    private HandView handView;
-    private HandPresenter handPresenter;
-    private PlayArea playArea;
+    private static boolean gameStarted = false;
+    private static boolean myTurn = false;
+
+    private Context context = this;
+    private int playerId;
+
+    public PlayAreaPresenter playAreaPresenter;
+    public MarketPresenter marketPresenter;
     public HandPresenter playerHandPresenter;
     public HandPresenter opponentHandPresenter;
     public DiscardPilePresenter playerDiscardPilePresenter;
@@ -57,15 +54,29 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public DeckPresenter playerDeckPresenter;
     public DeckPresenter opponentDeckPresenter;
     public OverlayPresenter overlayViewPresenter;
-
-    private Context context = this;
-    private int playerId;
+    public PlayedChampionsPresenter playerPlayedChampionsPresenter;
+    public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
+    private SensorManager mSensorManager;
+    private ShakeDetector mShakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PlayArea.setContext(this);
         setContentView(R.layout.menu);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+            @Override
+            public void onShake() throws IOException {
+                sendCheatMessage();
+            }
+        });
+
+        mSensorManager.registerListener(mShakeDetector,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI);
     }
 
     public void hostGame(View view) {
@@ -106,20 +117,16 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         connectionIP = server.getIpAddr();
 
-        if (connectionIP != null) {
-            button.setVisibility(View.GONE);
-            showIp.setText(
-                    "Your IP address is:\n"
-                            + connectionIP
-                            + "\n(Start after Guest\nhas joined and started)");
-            startButton.setVisibility(View.VISIBLE);
+        button.setVisibility(View.GONE);
+        showIp.setText(
+                "Your IP address is:\n"
+                        + connectionIP
+                        + "\n(Start after Guest\nhas joined and started)");
+        startButton.setVisibility(View.VISIBLE);
 
-            connection = new ClientConnector(this);
-            connection.setConnectionTarget(connectionIP, connectionPort);
-            connection.start();
-        }else {
-            Toast.makeText(this, "Failed to retrieve IP address. Please check your network connection.", Toast.LENGTH_SHORT).show();
-        }
+        connection = new ClientConnector(this);
+        connection.setConnectionTarget(connectionIP, connectionPort);
+        connection.start();
     }
 
     public void connectServer(View view) {
@@ -141,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void startGame(View view) {
         setContentView(R.layout.activity_main);
 
-        PlayArea.setContext(this);
-
         // Initialize views
         MarketView marketView = findViewById(R.id.market_view);
         PlayAreaView playAreaView = findViewById(R.id.play_area_view);
@@ -152,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         DiscardPileView opponentDiscardPileView = findViewById(R.id.opponent_discard_pile_view);
         DeckView playerDeckView = findViewById(R.id.player_deck_view);
         DeckView opponentDeckView = findViewById(R.id.opponent_deck_view);
+        PlayedChampionsView playerPlayedChampionsView = findViewById(R.id.player_champions_view);
+        PlayedChampionsView opponentPlayedChampionsView =
+                findViewById(R.id.opponent_champions_view);
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(marketView);
@@ -162,6 +170,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentDiscardPilePresenter = new DiscardPilePresenter(opponentDiscardPileView);
         playerDeckPresenter = new DeckPresenter(playerDeckView);
         opponentDeckPresenter = new DeckPresenter(opponentDeckView);
+        playerPlayedChampionsPresenter = new PlayedChampionsPresenter(playerPlayedChampionsView);
+        opponentPlayedChampionsPresenter =
+                new PlayedChampionsPresenter(opponentPlayedChampionsView);
 
         OverlayView overlayView = new OverlayView(this);
         overlayViewPresenter = new OverlayPresenter(overlayView);
@@ -191,6 +202,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         } else {
             this.playerId = 1;
         }
+        // Start game music, that will loop, but stop when app is minimized
+        gameStarted = true;
+        startService(new Intent(this, OpenRealmsPlayer.class));
     }
 
     @Override
@@ -230,6 +244,18 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                                 + ".");
 
                                 break;
+                            case EXPEND_CHAMPION:
+                                expendChampion(message);
+                                Log.i(
+                                        TAG,
+                                        "Expended champion "
+                                                + (int) message.getData(DataKey.CARD_ID)
+                                                + ".");
+                                break;
+                            case RESET_CHAMPION:
+                                resetChampion(message);
+                                Log.i(TAG, "Reset champions.");
+                                break;
                             case CHOOSE_OPTION:
                                 // TODO instructions for UI
                             case UPDATE_PLAYER_STATS:
@@ -252,6 +278,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         defeatImage.getParent().bringChildToFront(defeatImage);
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
                                         endTurnButton.setVisibility(View.GONE);
+                                        for (CardView c : cardViews) {
+                                            c.setFaceDown();
+                                        }
                                     }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
@@ -266,6 +295,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         victoryImage.getParent().bringChildToFront(victoryImage);
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
                                         endTurnButton.setVisibility(View.GONE);
+                                        for (CardView c : cardViews) {
+                                            c.setFaceDown();
+                                        }
                                     }
                                 }
                                 break;
@@ -280,14 +312,16 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                             case TURN_NOTIFICATION:
                                 if (findViewById(R.id.defeat_image).getVisibility() != View.VISIBLE
                                         && findViewById(R.id.victory_image).getVisibility()
-                                                != View.VISIBLE) {
+                                        != View.VISIBLE) {
                                     Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                     if (targetPlayer != null) {
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
                                         if (playerId == (Integer) targetPlayer) {
                                             endTurnButton.setVisibility(View.VISIBLE);
+                                            myTurn = true;
                                         } else {
                                             endTurnButton.setVisibility(View.INVISIBLE);
+                                            myTurn = false;
                                         }
                                     }
                                 }
@@ -331,6 +365,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             case FOR_PURCHASE:
                 marketPresenter.addCardToView(card);
                 break;
+            case CHAMPIONS:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerPlayedChampionsPresenter.addCardToView(card);
+                    playerPlayedChampionsPresenter.expendChampion(card);
+                } else {
+                    opponentPlayedChampionsPresenter.addCardToView(card);
+                    opponentPlayedChampionsPresenter.expendChampion(card);
+                }
         }
     }
 
@@ -366,6 +408,41 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             case FOR_PURCHASE:
                 marketPresenter.removeCardFromView(card);
                 break;
+            case CHAMPIONS:
+                if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+                    playerPlayedChampionsPresenter.resetChampion(card);
+                    playerPlayedChampionsPresenter.removeCardFromView(card);
+                } else {
+                    opponentPlayedChampionsPresenter.resetChampion(card);
+                    opponentPlayedChampionsPresenter.removeCardFromView(card);
+                }
+        }
+    }
+
+    private void expendChampion(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        if (card == null) {
+            Log.i(TAG, "Card is null");
+        }
+        Log.v(TAG, "Target player: " + (int) message.getData(DataKey.TARGET_PLAYER));
+
+        if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+            playerPlayedChampionsPresenter.expendChampion(card);
+        } else {
+            opponentPlayedChampionsPresenter.expendChampion(card);
+        }
+    }
+
+    private void resetChampion(Message message) {
+        CardView card = getCardViewFromCard((int) message.getData(DataKey.CARD_ID));
+
+        if (playerId == (int) message.getData(DataKey.TARGET_PLAYER)) {
+            playerPlayedChampionsPresenter.resetChampion(card);
+            Log.v(TAG, "Resetting player champion");
+        } else {
+            opponentPlayedChampionsPresenter.resetChampion(card);
+            Log.v(TAG, "Resetting opponent champion");
         }
     }
 
@@ -380,7 +457,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public static void sendMessage(Message msg) throws IOException {
-        connection.sendMessage(msg);
+        if (myTurn) {
+            connection.sendMessage(msg);
+        }
     }
 
     public static Message buildTouchMessage(int id) {
@@ -395,23 +474,32 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    protected void onDestroy() {
+        stopService(new Intent(this, OpenRealmsPlayer.class));
+        super.onDestroy();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    protected void onPause() {
+        super.onPause();
+        stopService(new Intent(this, OpenRealmsPlayer.class));
+    }
 
-        if (id == R.id.action_new_game) {
-            Toast.makeText(this, "Neues Spiel gestartet", Toast.LENGTH_SHORT).show();
-            return true;
-        } else if (id == R.id.action_settings) {
-            Toast.makeText(this, "Einstellungen geöffnet", Toast.LENGTH_SHORT).show();
-            return true;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (gameStarted) {
+            startService(new Intent(this, OpenRealmsPlayer.class));
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    public void setGameStarted(boolean b) {
+        gameStarted = b;
+    }
+
+    public void sendCheatMessage() throws IOException {
+        Message cheatMessage = new Message(MessageType.CHEAT);
+        cheatMessage.setData(DataKey.CHEAT_ACTIVE, true);
+        connection.sendMessage(cheatMessage);
     }
 }

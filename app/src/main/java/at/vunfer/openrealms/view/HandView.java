@@ -3,7 +3,6 @@ package at.vunfer.openrealms.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.LinearLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.view.view_interfaces.CardPileView;
@@ -47,6 +46,7 @@ public class HandView extends LinearLayout implements CardPileView {
                             (int) (CARD_SCALE * screenDensity * 77),
                             (int) (CARD_SCALE * screenDensity * 106));
             card.setLayoutParams(params);
+            card.setHealthSize(6);
             addView(card);
         }
         positionCards(cards);
@@ -58,7 +58,6 @@ public class HandView extends LinearLayout implements CardPileView {
 
         // Calculate the angle between cards
         float cardAngle = originalCardAngle / (numCards - 1);
-        Log.d("Position Hand", "Setting card Angle: " + cardAngle);
 
         // Position the cards along the arc
         for (int i = 0; i < numCards; i++) {
@@ -72,17 +71,6 @@ public class HandView extends LinearLayout implements CardPileView {
             card.setRotation(angle);
             LinearLayout.LayoutParams params = (LayoutParams) card.getLayoutParams();
             params.setMargins(-20, 0, -20, (int) (2 * (originalCardAngle / 2 - Math.abs(angle))));
-
-            Log.d(
-                    "HandView",
-                    "Setting "
-                            + card.getCard().getName()
-                            + " X:"
-                            + card.getX()
-                            + " Y:"
-                            + card.getY()
-                            + " Rotation:"
-                            + card.getRotation());
         }
     }
 }

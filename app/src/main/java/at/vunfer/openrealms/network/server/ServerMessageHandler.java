@@ -2,6 +2,7 @@
 package at.vunfer.openrealms.network.server;
 
 import static at.vunfer.openrealms.network.Communication.createAddCardMessage;
+import static at.vunfer.openrealms.network.Communication.createExpendChampionMessage;
 import static at.vunfer.openrealms.network.Communication.createPlayerStatsMessage;
 import static at.vunfer.openrealms.network.Communication.createRemoveCardMessage;
 
@@ -48,18 +49,47 @@ public class ServerMessageHandler implements IHandleMessage {
         int cardId = (int) message.getData(DataKey.CARD_ID);
 
         try {
-            if (currentPlayer.getPlayArea().playCardById(cardId)) {
+            int cardType = currentPlayer.getPlayArea().playCardById(cardId);
+            if (cardType == 1) {
                 Log.i(TAG, "Card " + cardId + " played successfully.");
-                sendCardChangeToAllClients(
+                sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.PLAYED, cardId);
+                if (gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility()
+                        != null) { // push changes from special ability
+                    Card drawnCard =
+                            gameSession
+                                    .getCurrentPlayer()
+                                    .getPlayArea()
+                                    .getCardDrawnFromSpecialAbility();
+                    sendCardMovementToAllClients(
+                            gameSession,
+                            currentPlayer,
+                            DeckType.DECK,
+                            DeckType.HAND,
+                            drawnCard.getId());
+                    gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
+                }
+            } else if (cardType == 2) {
+                Log.i(TAG, "Champion " + cardId + " played successfully.");
+                sendCardMovementToAllClients(
+                        gameSession, currentPlayer, DeckType.HAND, DeckType.CHAMPIONS, cardId);
             } else if (currentPlayer.getPlayArea().buyCardById(cardId)) {
                 Log.i(TAG, "Card " + cardId + " bought successfully.");
-                sendCardChangeToAllClients(
+                sendCardMovementToAllClients(
                         gameSession,
                         currentPlayer,
                         DeckType.FOR_PURCHASE,
                         DeckType.DISCARD,
                         cardId);
+            } else if (currentPlayer.getPlayArea().expendChampionById(cardId)) {
+                Log.i(TAG, "Champion " + cardId + " expended successfully.");
+                sendChampionExpendedToAllClients(gameSession, currentPlayer, cardId);
+            } else if (currentPlayer
+                    .getPlayArea()
+                    .attackChampionById(
+                            cardId, gameSession.getOpponent(currentPlayer).getPlayArea())) {
+                Log.i(TAG, "Champion " + cardId + " attacked successfully.");
+                sendChampionKilledToAllClients(gameSession, currentPlayer, cardId);
             } else {
                 Log.i(TAG, "Card cannot be played/bought by this player.");
             }
@@ -70,7 +100,24 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void sendCardChangeToAllClients(
+    private void sendChampionKilledToAllClients(
+            GameSession gameSession, Player currentPlayer, int cardId) throws IOException {
+        serverThread.sendMessageToAllClients(
+                createRemoveCardMessage(
+                        gameSession.getPlayerTurnNumber(gameSession.getOpponent(currentPlayer)),
+                        DeckType.CHAMPIONS,
+                        cardId));
+        serverThread.sendMessageToAllClients(
+                createAddCardMessage(
+                        gameSession.getPlayerTurnNumber(gameSession.getOpponent(currentPlayer)),
+                        DeckType.DISCARD,
+                        cardId));
+        serverThread.sendMessageToAllClients(
+                createPlayerStatsMessage(
+                        gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+    }
+
+    private void sendCardMovementToAllClients(
             GameSession gameSession,
             Player currentPlayer,
             DeckType deckTypeRemove,
@@ -88,6 +135,16 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
     }
 
+    private void sendChampionExpendedToAllClients(
+            GameSession gameSession, Player currentPlayer, int cardId) throws IOException {
+        serverThread.sendMessageToAllClients(
+                createExpendChampionMessage(
+                        gameSession.getPlayerTurnNumber(currentPlayer), cardId));
+        serverThread.sendMessageToAllClients(
+                createPlayerStatsMessage(
+                        gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+    }
+
     private void handleEndTurn(GameSession gameSession, Player currentPlayer) {
         currentPlayer.getPlayArea().setCheat(false);
         Log.i(
@@ -96,11 +153,16 @@ public class ServerMessageHandler implements IHandleMessage {
                         + currentPlayer.getPlayArea().getPlayerCards().getHandCards().size());
         serverThread.discardCardsAfterTurn(
                 gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
+        serverThread.resetChampionsAfterTurn(
+                gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
+        Log.d(TAG, "Champions resetted.");
 
         printCardsFromPlayer(currentPlayer);
         gameSession.endTurn();
         Deck<Card> restockedFromDiscarded =
                 currentPlayer.getPlayArea().getPlayerCards().getRestockedFromDiscarded();
+
+        handleKilledChampionsAtTurnEnd(gameSession, currentPlayer);
 
         serverThread.dealMarketCardsToPurchaseAreaToAll();
 
@@ -131,6 +193,19 @@ public class ServerMessageHandler implements IHandleMessage {
             Log.i(TAG, "sendTurnNotificationToAllClients called.");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void handleKilledChampionsAtTurnEnd(GameSession gameSession, Player currentPlayer) {
+        Player opponent = gameSession.getOpponent(currentPlayer);
+        Deck<Card> discardedChampions = opponent.getPlayArea().getAtTurnEndDiscardedChampions();
+        Log.d(TAG, "Discarded champions: " + discardedChampions.size());
+        for (Card c : discardedChampions) {
+            try {
+                sendChampionKilledToAllClients(gameSession, currentPlayer, c.getId());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
