@@ -142,7 +142,7 @@ public class MainActivityTest {
         getInstrumentation().waitForIdleSync();
 
         assertEquals(View.VISIBLE, main.findViewById(R.id.defeat_image).getVisibility());
-        assertEquals(View.GONE, main.findViewById(R.id.end_turn_button).getVisibility());
+        assertEquals(View.INVISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
     }
 
     @Test
@@ -173,7 +173,7 @@ public class MainActivityTest {
         getInstrumentation().waitForIdleSync();
 
         assertEquals(View.VISIBLE, main.findViewById(R.id.victory_image).getVisibility());
-        assertEquals(View.GONE, main.findViewById(R.id.end_turn_button).getVisibility());
+        assertEquals(View.INVISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
     }
 
     @Test

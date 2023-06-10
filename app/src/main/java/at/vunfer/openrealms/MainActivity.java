@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         endTurnButton = findViewById(R.id.end_turn_button);
                                         endTurnButton.setVisibility(View.INVISIBLE);
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                         for (CardView c : cardViews) {
                                             c.setFaceDown();
                                         }
@@ -284,8 +284,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         victoryImage = findViewById(R.id.victory_image);
                                         victoryImage.setVisibility(View.VISIBLE);
                                         victoryImage.getParent().bringChildToFront(victoryImage);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
+                                        endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                         for (CardView c : cardViews) {
                                             c.setFaceDown();
                                         }
