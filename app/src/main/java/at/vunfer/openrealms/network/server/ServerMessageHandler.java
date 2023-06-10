@@ -40,9 +40,18 @@ public class ServerMessageHandler implements IHandleMessage {
             case END_TURN:
                 handleEndTurn(gameSession, currentPlayer);
                 break;
+            case CHEAT:
+                handleCheat(message, gameSession, currentPlayer);
+                break;
             default:
                 Log.i(TAG, "Received message of unknown type.");
         }
+    }
+
+    private void handleCheat(Message message, GameSession gameSession, Player currentPlayer) {
+        boolean cheatActive = (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
+        currentPlayer.getPlayArea().setCheat(cheatActive);
+        Log.i(TAG, "Cheat mode set to " + cheatActive);
     }
 
     private void handleTouchedCard(Message message, GameSession gameSession, Player currentPlayer) {

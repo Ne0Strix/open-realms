@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void sendCheatMessage() throws IOException {
         Message cheatMessage = new Message(MessageType.CHEAT);
-        cheatMessage.setData(DataKey.CHEAT_ACTIVE, true);
+        cheatMessage.setData(DataKey.CHEAT_ACTIVATE, true);
         connection.sendMessage(cheatMessage);
     }
 }

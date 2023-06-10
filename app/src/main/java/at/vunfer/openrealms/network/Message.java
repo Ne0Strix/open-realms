@@ -48,11 +48,11 @@ public class Message implements Serializable {
                 return value instanceof DeckType;
             case CHOICE:
             case OPTIONS:
-            case CHEAT_ACTIVATE:
                 return value instanceof String;
             case PLAYER_STATS:
                 return value instanceof PlayerStats;
             case YOUR_TURN:
+            case CHEAT_ACTIVATE:
                 return value instanceof Boolean;
             case COLLECTION:
                 return value instanceof Deck;
