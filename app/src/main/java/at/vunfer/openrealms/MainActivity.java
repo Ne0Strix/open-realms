@@ -267,6 +267,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         victoryImage.setVisibility(View.INVISIBLE);
                                         endTurnButton = findViewById(R.id.end_turn_button);
                                         endTurnButton.setVisibility(View.INVISIBLE);
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.GONE);
+                                        for (CardView c : cardViews) {
+                                            c.setFaceDown();
+                                        }
                                     }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
@@ -279,6 +284,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         victoryImage = findViewById(R.id.victory_image);
                                         victoryImage.setVisibility(View.VISIBLE);
                                         victoryImage.getParent().bringChildToFront(victoryImage);
+                                        Button endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.GONE);
+                                        for (CardView c : cardViews) {
+                                            c.setFaceDown();
+                                        }
                                         defeatImage = findViewById(R.id.defeat_image);
                                         defeatImage.setVisibility(View.INVISIBLE);
                                         endTurnButton = findViewById(R.id.end_turn_button);
