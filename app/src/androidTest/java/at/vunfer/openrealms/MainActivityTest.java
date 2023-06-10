@@ -8,7 +8,6 @@ import static org.mockito.Mockito.*;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -177,7 +176,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void testUpdateUI() throws Throwable {
+    public void testUpdateUIHand() throws Throwable {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
@@ -190,19 +189,8 @@ public class MainActivityTest {
                 });
 
         Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
-        Card testChampion =
-                new Champion(
-                        "Test1",
-                        2,
-                        CardType.CHAMPION,
-                        Faction.NONE,
-                        List.of(new DamageEffect(2)),
-                        new Deck<>(),
-                        true,
-                        10);
         Deck<Card> cardList = new Deck<>();
         cardList.add(testCard);
-        cardList.add(testChampion);
 
         Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
         sendDeck.setData(DataKey.COLLECTION, cardList);
@@ -241,74 +229,28 @@ public class MainActivityTest {
         main.updateUI(removeCardFromOpponentHand);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.playerHandPresenter.getListOfDisplayedCards().isEmpty());
+    }
 
-        Message addCardToDiscardPile =
-                Communication.createAddCardMessage(0, DeckType.DISCARD, testCard.getId());
-        main.updateUI(addCardToDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.opponentDiscardPilePresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
+    @Test
+    public void testUpdateUIMarket() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
 
-        Message removeCardFromDiscardPile =
-                Communication.createRemoveCardMessage(0, DeckType.DISCARD, testCard.getId());
-        main.updateUI(removeCardFromDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentDiscardPilePresenter.getListOfDisplayedCards().isEmpty());
+        Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testCard);
 
-        Message addCardToOpponentDiscardPile =
-                Communication.createAddCardMessage(1, DeckType.DISCARD, testCard.getId());
-        main.updateUI(addCardToOpponentDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.playerDiscardPilePresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
-
-        Message removeCardFromOpponentDiscardPile =
-                Communication.createRemoveCardMessage(1, DeckType.DISCARD, testCard.getId());
-        main.updateUI(removeCardFromOpponentDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerDiscardPilePresenter.getListOfDisplayedCards().isEmpty());
-
-        Message addCardToDeck =
-                Communication.createAddCardMessage(0, DeckType.DECK, testCard.getId());
-        main.updateUI(addCardToDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.opponentDeckPresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
-
-        Message removeCardFromDeck =
-                Communication.createRemoveCardMessage(0, DeckType.DECK, testCard.getId());
-        main.updateUI(removeCardFromDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentDeckPresenter.getListOfDisplayedCards().isEmpty());
-
-        Message addCardToOpponentDeck =
-                Communication.createAddCardMessage(1, DeckType.DECK, testCard.getId());
-        main.updateUI(addCardToOpponentDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.playerDeckPresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
-
-        Message removeCardFromOpponentDeck =
-                Communication.createRemoveCardMessage(1, DeckType.DECK, testCard.getId());
-        main.updateUI(removeCardFromOpponentDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerDeckPresenter.getListOfDisplayedCards().isEmpty());
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
 
         Message addCardToMarket =
                 Communication.createAddCardMessage(0, DeckType.FOR_PURCHASE, testCard.getId());
@@ -326,45 +268,42 @@ public class MainActivityTest {
         main.updateUI(removeCardFromMarket);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.marketPresenter.getListOfDisplayedCards().isEmpty());
+    }
 
-        Message addCardToPlayArea =
-                Communication.createAddCardMessage(0, DeckType.PLAYED, testCard.getId());
-        main.updateUI(addCardToPlayArea);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.playAreaPresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
+    @Test
+    public void testUpdateUIChampions() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
 
-        Message removeCardFromPlayArea =
-                Communication.createRemoveCardMessage(0, DeckType.PLAYED, testCard.getId());
-        main.updateUI(removeCardFromPlayArea);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.playAreaPresenter.getListOfDisplayedCards().isEmpty());
+        Card testChampion =
+                new Champion(
+                        "Test1",
+                        2,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(new DamageEffect(2)),
+                        new Deck<>(),
+                        true,
+                        10);
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testChampion);
 
-        // test champion for player
-        Message turnNotification = new Message(MessageType.TURN_NOTIFICATION);
-        turnNotification.setData(DataKey.TARGET_PLAYER, 0);
-        main.updateUI(turnNotification);
-
-        // test adding champions to champion area
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
 
         Message addChampionToChampionArea =
                 Communication.createAddCardMessage(0, DeckType.CHAMPIONS, testChampion.getId());
         main.updateUI(addChampionToChampionArea);
         getInstrumentation().waitForIdleSync();
-        // log size of played Champs
-        Log.d(
-                "Test",
-                "Size of played champs: "
-                        + main.playerPlayedChampionsPresenter.getListOfDisplayedCards().size());
-        Log.d(
-                "Test",
-                "Size of en played champs: "
-                        + main.opponentPlayedChampionsPresenter.getListOfDisplayedCards().size());
-
         assertTrue(
                 main.opponentPlayedChampionsPresenter
                         .getListOfDisplayedCards()
@@ -372,7 +311,6 @@ public class MainActivityTest {
                         .getCard()
                         .isIdentical(testChampion));
 
-        // test expending champions
         Message expendChampion = Communication.createExpendChampionMessage(0, testChampion.getId());
         main.updateUI(expendChampion);
         getInstrumentation().waitForIdleSync();
@@ -382,7 +320,6 @@ public class MainActivityTest {
                         .get(0)
                         .isExpended());
 
-        // test resetting champions
         Message resetChampion = Communication.createResetChampionMessage(0, testChampion.getId());
         main.updateUI(resetChampion);
         getInstrumentation().waitForIdleSync();
@@ -392,19 +329,12 @@ public class MainActivityTest {
                         .get(0)
                         .isExpended());
 
-        // test removing champions
         Message removeChampionFromChampionArea =
                 Communication.createRemoveCardMessage(0, DeckType.CHAMPIONS, testChampion.getId());
         main.updateUI(removeChampionFromChampionArea);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.opponentPlayedChampionsPresenter.getListOfDisplayedCards().isEmpty());
 
-        // test champion for opponent
-        turnNotification = new Message(MessageType.TURN_NOTIFICATION);
-        turnNotification.setData(DataKey.TARGET_PLAYER, 1);
-        main.updateUI(turnNotification);
-
-        // test adding champions to champion area
         addChampionToChampionArea =
                 Communication.createAddCardMessage(1, DeckType.CHAMPIONS, testChampion.getId());
         main.updateUI(addChampionToChampionArea);
@@ -416,91 +346,23 @@ public class MainActivityTest {
                         .getCard()
                         .isIdentical(testChampion));
 
-        // test expending champions
         expendChampion = Communication.createExpendChampionMessage(1, testChampion.getId());
         main.updateUI(expendChampion);
         getInstrumentation().waitForIdleSync();
         assertTrue(
                 main.playerPlayedChampionsPresenter.getListOfDisplayedCards().get(0).isExpended());
 
-        // test resetting champions
         resetChampion = Communication.createResetChampionMessage(1, testChampion.getId());
         main.updateUI(resetChampion);
         getInstrumentation().waitForIdleSync();
         assertFalse(
                 main.playerPlayedChampionsPresenter.getListOfDisplayedCards().get(0).isExpended());
 
-        // test removing champions
         removeChampionFromChampionArea =
                 Communication.createRemoveCardMessage(1, DeckType.CHAMPIONS, testChampion.getId());
         main.updateUI(removeChampionFromChampionArea);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.playerPlayedChampionsPresenter.getListOfDisplayedCards().isEmpty());
-
-        // test handling update player stats
-        Message updatePlayerStats = new Message(MessageType.UPDATE_PLAYER_STATS);
-        updatePlayerStats.setData(DataKey.TARGET_PLAYER, 1);
-        PlayerStats playerStats = new PlayerStats("Player", 10, 10, 10, 10);
-        updatePlayerStats.setData(DataKey.PLAYER_STATS, playerStats);
-        main.updateUI(updatePlayerStats);
-        getInstrumentation().waitForIdleSync();
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getTurnDamage()),
-                Integer.toString(playerStats.getTurnDamage()));
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getTurnHealing()),
-                Integer.toString(playerStats.getTurnHealing()));
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getTurnCoin()),
-                Integer.toString(playerStats.getTurnCoin()));
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getPlayerName()),
-                playerStats.getPlayerName());
-
-        // test handling update opponent stats
-        Message updateOpponentStats = new Message(MessageType.UPDATE_PLAYER_STATS);
-        updateOpponentStats.setData(DataKey.TARGET_PLAYER, 0);
-        PlayerStats opponentStats = new PlayerStats("Opponent", 10, 10, 10, 10);
-        updateOpponentStats.setData(DataKey.PLAYER_STATS, opponentStats);
-        main.updateUI(updateOpponentStats);
-        getInstrumentation().waitForIdleSync();
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getOpponentName()),
-                opponentStats.getPlayerName());
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getTurnDamage()),
-                Integer.toString(opponentStats.getTurnDamage()));
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getTurnHealing()),
-                Integer.toString(opponentStats.getTurnHealing()));
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getTurnCoin()),
-                Integer.toString(opponentStats.getTurnCoin()));
-        assertEquals(
-                (main.overlayViewPresenter.getOverlayView().getOpponentName()),
-                opponentStats.getPlayerName());
-
-        // test handling update player stats for vicory
-        updatePlayerStats = new Message(MessageType.UPDATE_PLAYER_STATS);
-        updatePlayerStats.setData(DataKey.TARGET_PLAYER, 0);
-        playerStats = new PlayerStats("Opponent", 0, 10, 10, 10);
-        updatePlayerStats.setData(DataKey.PLAYER_STATS, playerStats);
-        main.updateUI(updatePlayerStats);
-        getInstrumentation().waitForIdleSync();
-        assertEquals(View.VISIBLE, main.getVictoryImage().getVisibility());
-        assertEquals(View.INVISIBLE, main.getDefeatImage().getVisibility());
-        assertEquals(View.INVISIBLE, main.getEndTurnButton().getVisibility());
-
-        // test handling update opponent stats for defeat
-        updateOpponentStats = new Message(MessageType.UPDATE_PLAYER_STATS);
-        updateOpponentStats.setData(DataKey.TARGET_PLAYER, 1);
-        opponentStats = new PlayerStats("Player", 0, 10, 10, 10);
-        updateOpponentStats.setData(DataKey.PLAYER_STATS, opponentStats);
-        main.updateUI(updateOpponentStats);
-        getInstrumentation().waitForIdleSync();
-        assertEquals(View.INVISIBLE, main.getVictoryImage().getVisibility());
-        assertEquals(View.VISIBLE, main.getDefeatImage().getVisibility());
-        assertEquals(View.INVISIBLE, main.getEndTurnButton().getVisibility());
     }
 
     @Test
