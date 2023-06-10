@@ -305,7 +305,6 @@ public class ServerThread extends Thread {
                         createResetChampionMessage(targetPlayerTurnNumber, card.getId());
                 try {
                     sendMessageToAllClients(resetChampionMsg);
-                    Log.d(TAG, "reset Message sent to all clients");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
