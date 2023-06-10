@@ -163,7 +163,7 @@ class PlayAreaChampionsTest {
             }
         }
         if (champion != null) {
-            assertSame("Champion 1", champion.getName());
+            assertSame(champion.getName(), "Champion 1");
             playArea.playCard(champion);
             playArea.takeDamage(champion.getHealth());
             assertTrue(playArea.getAtTurnEndDiscardedChampions().contains(champion));
@@ -187,7 +187,7 @@ class PlayAreaChampionsTest {
         assert champion != null;
         playArea.playCard(guard);
         playArea.playCard(champion);
-        assertEquals(playArea.getPlayedChampions().size(), 2);
+        assertEquals(2, playArea.getPlayedChampions().size());
         playArea.takeDamage(guard.getHealth() + 1);
         assertTrue(playArea.getAtTurnEndDiscardedChampions().contains(guard));
         assertFalse(playArea.getAtTurnEndDiscardedChampions().contains(champion));
@@ -201,7 +201,7 @@ class PlayAreaChampionsTest {
         int health = playArea.getHealth();
         Champion guard = null;
         Champion champion = null;
-        assertEquals(playerCards.getHandCards().size(), 5);
+        assertEquals(5, playerCards.getHandCards().size());
         for (Card c : playerCards.getHandCards()) {
             if (Objects.equals(c.getName(), "Champion 1")) {
                 guard = (Champion) c;
@@ -215,7 +215,7 @@ class PlayAreaChampionsTest {
         assert champion != null;
         playArea.playCard(guard);
         playArea.playCard(champion);
-        assertEquals(playArea.getPlayedChampions().size(), 2);
+        assertEquals(2, playArea.getPlayedChampions().size());
         playArea.takeDamage(guard.getHealth() - 1);
         assertFalse(playArea.getAtTurnEndDiscardedChampions().contains(guard));
         assertFalse(playArea.getAtTurnEndDiscardedChampions().contains(champion));
@@ -229,7 +229,7 @@ class PlayAreaChampionsTest {
         int health = playArea.getHealth();
         Champion guard = null;
         Champion champion = null;
-        assertEquals(playerCards.getHandCards().size(), 5);
+        assertEquals(5, playerCards.getHandCards().size());
         for (Card c : playerCards.getHandCards()) {
             if (Objects.equals(c.getName(), "Champion 1")) {
                 guard = (Champion) c;
@@ -243,7 +243,7 @@ class PlayAreaChampionsTest {
         assert champion != null;
         playArea.playCard(guard);
         playArea.playCard(champion);
-        assertEquals(playArea.getPlayedChampions().size(), 2);
+        assertEquals(2, playArea.getPlayedChampions().size());
         playArea.takeDamage(0);
         assertFalse(playArea.getAtTurnEndDiscardedChampions().contains(guard));
         assertFalse(playArea.getAtTurnEndDiscardedChampions().contains(champion));
@@ -256,7 +256,7 @@ class PlayAreaChampionsTest {
     void testChampionSynergyWhenNotExpended() {
         Champion guard = null;
         Card card = null;
-        assertEquals(playerCards.getHandCards().size(), 5);
+        assertEquals(5, playerCards.getHandCards().size());
         for (Card c : playerCards.getHandCards()) {
             if (Objects.equals(c.getName(), "Champion 1")) {
                 guard = (Champion) c;

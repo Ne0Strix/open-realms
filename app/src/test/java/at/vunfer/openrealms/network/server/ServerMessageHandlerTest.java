@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-public class ServerMessageHandlerTest {
+class ServerMessageHandlerTest {
     private ServerThread serverThread;
     private MockedStatic<Communication> communication;
     private MockedStatic<ServerThread> mockedServerThread;
