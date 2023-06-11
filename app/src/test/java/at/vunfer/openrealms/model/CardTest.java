@@ -72,6 +72,20 @@ class CardTest {
     }
 
     @Test
+    void testTypeConstraints() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
+                        new Card(
+                                "test",
+                                1,
+                                null,
+                                Faction.NONE,
+                                oneCoinTwoDamage,
+                                twoCoinThreeHealing));
+    }
+
+    @Test
     void testGetters() {
         assertEquals("Card 1", card1.getName());
         assertEquals(1, card1.getCost());

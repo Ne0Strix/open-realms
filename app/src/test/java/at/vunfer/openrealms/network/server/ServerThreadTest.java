@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
@@ -9,6 +10,8 @@ import static org.mockito.Mockito.*;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.CardType;
+import at.vunfer.openrealms.model.Champion;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.Faction;
 import at.vunfer.openrealms.model.Market;
@@ -232,6 +235,98 @@ public class ServerThreadTest {
         communication.verify(
                 () -> Communication.createAddCardMessage(eq(1), eq(DeckType.HAND), anyInt()),
                 times(2));
+    }
+
+    @SuppressLint("CheckResult")
+    @Test
+    void testResetChampionsAfterTurn() throws IOException {
+        Champion champion1 =
+                new Champion(
+                        "Champion 1",
+                        1,
+                        CardType.CHAMPION,
+                        Faction.GUILD,
+                        List.of(),
+                        List.of(),
+                        true,
+                        1);
+        Champion champion2 =
+                new Champion(
+                        "Champion 2",
+                        2,
+                        CardType.CHAMPION,
+                        Faction.GUILD,
+                        List.of(),
+                        List.of(),
+                        false,
+                        2);
+
+        doNothing().when(serverThread).sendMessageToAllClients(any());
+
+        Player player = PlayerFactory.createPlayer("player");
+        player.getPlayArea().getPlayerCards().getHandCards().add(champion1);
+        player.getPlayArea().getPlayerCards().getHandCards().add(champion2);
+
+        player.getPlayArea().playCard(champion1);
+        player.getPlayArea().playCard(champion2);
+
+        assertEquals(2, player.getPlayArea().getPlayedChampions().size());
+        assertTrue(champion1.isExpended());
+        assertTrue(champion2.isExpended());
+
+        serverThread.resetChampionsAfterTurn(1, player);
+
+        verify(serverThread, times(2)).sendMessageToAllClients(any());
+
+        communication.verify(
+                () -> Communication.createResetChampionMessage(anyInt(), anyInt()), times(2));
+    }
+
+    @SuppressLint("CheckResult")
+    @Test
+    void testResetChampionsAfterTurnExceptions() throws IOException {
+        Champion champion1 =
+                new Champion(
+                        "Champion 1",
+                        1,
+                        CardType.CHAMPION,
+                        Faction.GUILD,
+                        List.of(),
+                        List.of(),
+                        true,
+                        1);
+        Champion champion2 =
+                new Champion(
+                        "Champion 2",
+                        2,
+                        CardType.CHAMPION,
+                        Faction.GUILD,
+                        List.of(),
+                        List.of(),
+                        false,
+                        2);
+        Champion champion3 =
+                new Champion(
+                        "Champion 3",
+                        3,
+                        CardType.CHAMPION,
+                        Faction.GUILD,
+                        List.of(),
+                        List.of(),
+                        false,
+                        3);
+
+        doThrow(new IOException()).when(serverThread).sendMessageToAllClients(any());
+
+        Player player = PlayerFactory.createPlayer("player");
+        player.getPlayArea().getPlayerCards().getHandCards().add(champion1);
+        player.getPlayArea().getPlayerCards().getHandCards().add(champion2);
+
+        player.getPlayArea().playCard(champion1);
+        player.getPlayArea().playCard(champion2);
+        player.getPlayArea().getPlayedChampions().add(champion3);
+
+        assertThrows(RuntimeException.class, () -> serverThread.resetChampionsAfterTurn(1, player));
     }
 
     @SuppressLint("CheckResult")
