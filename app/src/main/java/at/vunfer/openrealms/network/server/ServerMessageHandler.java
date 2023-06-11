@@ -235,6 +235,7 @@ public class ServerMessageHandler implements IHandleMessage {
             serverThread.sendTurnNotificationToAllClients(
                     gameSession.getPlayerTurnNumber(gameSession.getCurrentPlayer()));
             Log.i(TAG, "sendTurnNotificationToAllClients called.");
+            serverThread.sendCheatStatusToAll(false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
