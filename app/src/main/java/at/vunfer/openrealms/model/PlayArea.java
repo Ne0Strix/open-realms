@@ -24,6 +24,8 @@ public class PlayArea {
     private Card cardDrawnFromSpecialAbility; // from special ability
     private Deck<Card> cardsThatUsedSynergies;
     private Deck<Card> atTurnEndDiscardedChampions;
+    private Deck<Card> drawnByCheat = new Deck<Card>();
+    private boolean cheat = false;
 
     /**
      * Constructs a new PlayArea object with the specified health and player cards. Initializes the
@@ -57,6 +59,14 @@ public class PlayArea {
         return health;
     }
 
+    /**
+     * Sets the health of the player.
+     *
+     * @param health The health of the player.
+     */
+    public void setHealth(int health) {
+        this.health = health;
+    }
     /**
      * Returns the total turn damage.
      *
@@ -291,10 +301,14 @@ public class PlayArea {
     }
 
     public boolean buyCard(Card card) throws IllegalArgumentException {
-        if (this.turnCoins < card.getCost()) {
+        if (!cheat && this.turnCoins < card.getCost()) {
             return false;
         }
-        turnCoins -= card.getCost();
+        if (cheat) {
+            addToDrawnByCheat(card);
+        } else {
+            turnCoins -= card.getCost();
+        }
         market.purchase(card);
         playerCards.addBoughtCard(card);
         return true;
@@ -366,5 +380,31 @@ public class PlayArea {
 
     public void resetCardDrawnFromSpecialAbility() {
         cardDrawnFromSpecialAbility = null;
+    }
+
+    public void setCheat(boolean cheat) {
+        this.cheat = cheat;
+    }
+
+    public void addToDrawnByCheat(Card card) {
+        drawnByCheat.add(card);
+    }
+
+    public void clearDrawnByCheat() {
+        drawnByCheat.clear();
+    }
+
+    public Deck<Card> getDrawnByCheat() {
+        return drawnByCheat;
+    }
+
+    public void destroyDrawnByCheat() {
+        for (Card c : drawnByCheat) {
+            playerCards.getDiscardedCards().remove(c);
+        }
+    }
+
+    public boolean getCheat() {
+        return cheat;
     }
 }

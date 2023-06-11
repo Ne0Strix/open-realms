@@ -15,4 +15,6 @@ public interface OverlayPresenterInterface {
     void updateTurnHealing(int turnHealing);
 
     void updateTurnCoin(int turnCoin);
+
+    void cheatingEnabled(boolean enabled);
 }

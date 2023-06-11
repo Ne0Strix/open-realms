@@ -24,7 +24,7 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    public void handleMessage(Message message) {
+    public void handleMessage(Message message) throws IOException {
         ensureServerThreadInitialized();
 
         GameSession gameSession = serverThread.getGameSession();
@@ -40,9 +40,53 @@ public class ServerMessageHandler implements IHandleMessage {
             case END_TURN:
                 handleEndTurn(gameSession, currentPlayer);
                 break;
+            case CHEAT:
+                handleCheat(message, currentPlayer);
+                break;
+            case UNCOVER_CHEAT:
+                handleUncoverCheat(message, gameSession, currentPlayer);
+                break;
             default:
                 Log.i(TAG, "Received message of unknown type.");
         }
+    }
+
+    private void handleUncoverCheat(Message message, GameSession gameSession, Player currentPlayer)
+            throws IOException {
+        boolean isCheatActive = currentPlayer.getPlayArea().getCheat();
+        if (isCheatActive) {
+            Deck<Card> cards = currentPlayer.getPlayArea().getDrawnByCheat();
+            currentPlayer.getPlayArea().destroyDrawnByCheat();
+            for (Card card : cards) {
+                serverThread.sendMessageToAllClients(
+                        createRemoveCardMessage(
+                                gameSession.getPlayerTurnNumber(currentPlayer),
+                                DeckType.DISCARD,
+                                card.getId()));
+            }
+            currentPlayer.getPlayArea().clearDrawnByCheat();
+            currentPlayer.getPlayArea().setHealth(currentPlayer.getPlayArea().getHealth() - 10);
+            serverThread.sendMessageToAllClients(
+                    createPlayerStatsMessage(
+                            gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+            currentPlayer.getPlayArea().setCheat(false);
+            serverThread.sendCheatStatusToAll(false);
+        } else {
+            Player opponent = gameSession.getOpponent(currentPlayer);
+            opponent.getPlayArea().setHealth(opponent.getPlayArea().getHealth() - 5);
+            serverThread.sendMessageToAllClients(
+                    createPlayerStatsMessage(gameSession.getPlayerTurnNumber(opponent), opponent));
+            serverThread.sendMessageToAllClients(
+                    createPlayerStatsMessage(
+                            gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+        }
+    }
+
+    private void handleCheat(Message message, Player currentPlayer) {
+        boolean cheatActive = (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
+        currentPlayer.getPlayArea().setCheat(cheatActive);
+        serverThread.sendCheatStatusToAll(cheatActive);
+        Log.i(TAG, "Cheat mode set to " + cheatActive);
     }
 
     private void handleTouchedCard(Message message, GameSession gameSession, Player currentPlayer) {
@@ -145,6 +189,7 @@ public class ServerMessageHandler implements IHandleMessage {
     }
 
     private void handleEndTurn(GameSession gameSession, Player currentPlayer) {
+        currentPlayer.getPlayArea().setCheat(false);
         Log.i(
                 TAG,
                 "Size remaining deck: "
@@ -189,6 +234,7 @@ public class ServerMessageHandler implements IHandleMessage {
             serverThread.sendTurnNotificationToAllClients(
                     gameSession.getPlayerTurnNumber(gameSession.getCurrentPlayer()));
             Log.i(TAG, "sendTurnNotificationToAllClients called.");
+            serverThread.sendCheatStatusToAll(false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

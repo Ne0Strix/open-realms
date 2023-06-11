@@ -3,6 +3,8 @@ package at.vunfer.openrealms;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static boolean gameStarted = false;
     private static boolean myTurn = false;
 
-    private Context context = this;
+    private final Context context = this;
     private int playerId;
 
     public PlayAreaPresenter playAreaPresenter;
@@ -58,8 +60,23 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.menu);
+
+        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        ShakeDetector mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(
+                new ShakeDetector.OnShakeListener() {
+
+                    @Override
+                    public void onShake() throws IOException {
+                        sendCheatMessage();
+                    }
+                });
+
+        mSensorManager.registerListener(
+                mShakeDetector,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI);
     }
 
     public void hostGame(View view) {
@@ -246,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 PlayerStats stats =
                                         (PlayerStats) message.getData(DataKey.PLAYER_STATS);
                                 if (playerId == target) {
-
                                     overlayViewPresenter.updatePlayerName(stats.getPlayerName());
                                     overlayViewPresenter.updatePlayerHealth(
                                             stats.getPlayerHealth());
@@ -308,6 +324,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         }
                                     }
                                 }
+                                break;
+                            case CHEAT:
+                                boolean cheatActive =
+                                        (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
+                                overlayViewPresenter.cheatingEnabled(cheatActive);
                                 break;
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
@@ -478,5 +499,21 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void setGameStarted(boolean b) {
         gameStarted = b;
+    }
+
+    public void sendCheatMessage() throws IOException {
+        Message cheatMessage = new Message(MessageType.CHEAT);
+        cheatMessage.setData(DataKey.CHEAT_ACTIVATE, true);
+        if (myTurn) {
+            connection.sendMessage(cheatMessage);
+        }
+    }
+
+    public void uncoverCheat(View view) throws IOException {
+        Log.i(TAG, "Uncovering cheat.");
+        Message uncoverMessage = new Message(MessageType.UNCOVER_CHEAT);
+        if (!myTurn) {
+            connection.sendMessage(uncoverMessage);
+        }
     }
 }
