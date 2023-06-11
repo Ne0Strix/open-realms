@@ -19,7 +19,7 @@ class DeckTest {
     @Test
     void drawCardNotInDeck() {
         Deck<Card> deck = new Deck<>();
-        Card card = new Card("Test Card", 2, List.of(new DamageEffect(1)));
+        Card card = new Card("Test Card", 2, Faction.NONE, List.of(new DamageEffect(1)));
         assertThrows(IllegalArgumentException.class, () -> deck.draw(card), "Item not in deck.");
     }
 }

@@ -55,4 +55,9 @@ public class ClientConnector extends Thread {
     public Communication getCommunication() {
         return comm;
     }
+
+    public void setSocket(Socket socket) {
+        // This was added to enable easier Mocking of private fields
+        this.socket = socket;
+    }
 }

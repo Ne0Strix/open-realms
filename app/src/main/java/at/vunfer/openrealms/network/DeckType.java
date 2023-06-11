@@ -8,4 +8,5 @@ public enum DeckType {
     PLAYED,
     MARKET,
     FOR_PURCHASE,
+    CHAMPIONS
 }

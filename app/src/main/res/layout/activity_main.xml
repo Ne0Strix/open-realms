@@ -55,6 +55,7 @@
     </at.vunfer.openrealms.view.CardView>
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="80dp"
@@ -72,6 +73,47 @@
             android:orientation="vertical" />
 
     </ScrollView>
+
+    <HorizontalScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="670dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.70"
+        app:layout_constraintHorizontal_bias="0.2">
+
+
+        <at.vunfer.openrealms.view.PlayedChampionsView
+            android:id="@+id/player_champions_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="670dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.30"
+        app:layout_constraintHorizontal_bias="0.2">
+
+
+        <at.vunfer.openrealms.view.PlayedChampionsView
+            android:id="@+id/opponent_champions_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+
+    </HorizontalScrollView>
 
     <at.vunfer.openrealms.view.DiscardPileView
         android:id="@+id/opponent_discard_pile_view"
@@ -129,6 +171,26 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"/>
+
+    <HorizontalScrollView
+        android:id="@+id/fullschreen_discard_pile_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/background_discard"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/player_hand_view"
+        app:layout_constraintEnd_toEndOf="@+id/market_view"
+        app:layout_constraintStart_toStartOf="@+id/market_view"
+        app:layout_constraintTop_toBottomOf="@+id/opponent_hand_view">
+
+        <LinearLayout
+            android:id="@+id/fullscreen_discard_pile"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone" />
+    </HorizontalScrollView>
 
     <ImageView
         android:id="@+id/victory_image"

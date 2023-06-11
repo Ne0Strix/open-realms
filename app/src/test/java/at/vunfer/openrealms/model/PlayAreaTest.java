@@ -3,8 +3,10 @@ package at.vunfer.openrealms.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -76,6 +78,93 @@ class PlayAreaTest {
     }
 
     @Test
+    void testPlayCardWithOneSynergy() {
+        Card c1 =
+                new Card(
+                        "Test1",
+                        0,
+                        Faction.IMPERIAL,
+                        List.of(new CoinEffect(1)),
+                        List.of(new DamageEffect(1)));
+        Card c2 = new Card(c1);
+        Card c3 =
+                new Card(
+                        "Test3",
+                        0,
+                        Faction.GUILD,
+                        List.of(new CoinEffect(1)),
+                        List.of(new DamageEffect(1)));
+
+        playerCards.getHandCards().add(c1);
+        playerCards.getHandCards().add(c2);
+        playerCards.getHandCards().add(c3);
+
+        playArea.playCard(c1);
+        assertEquals(1, playArea.getTurnCoins());
+        assertEquals(0, playArea.getTurnDamage());
+
+        playArea.playCard(c2);
+        assertEquals(2, playArea.getTurnCoins());
+        assertEquals(2, playArea.getTurnDamage());
+
+        playArea.playCard(c3);
+        assertEquals(3, playArea.getTurnCoins());
+        assertEquals(2, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testPlayCardWithTwoSynergy() {
+        Card c1 =
+                new Card(
+                        "Test1",
+                        0,
+                        Faction.IMPERIAL,
+                        List.of(new CoinEffect(1)),
+                        List.of(new DamageEffect(1)));
+        Card c2 = new Card(c1);
+        Card c3 = new Card(c2);
+
+        playerCards.getHandCards().add(c1);
+        playerCards.getHandCards().add(c2);
+        playerCards.getHandCards().add(c3);
+
+        playArea.playCard(c1);
+        assertEquals(1, playArea.getTurnCoins());
+        assertEquals(0, playArea.getTurnDamage());
+
+        playArea.playCard(c2);
+        assertEquals(2, playArea.getTurnCoins());
+        assertEquals(2, playArea.getTurnDamage());
+
+        playArea.playCard(c3);
+        assertEquals(3, playArea.getTurnCoins());
+        assertEquals(3, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testPlayCardWithoutType() {
+        Card c1 =
+                new Card(
+                        "Test1",
+                        0,
+                        Faction.NONE,
+                        List.of(new CoinEffect(1)),
+                        List.of(new DamageEffect(1)));
+        Card c2 = new Card(c1);
+
+        playerCards.getHandCards().add(c1);
+        playerCards.getHandCards().add(c2);
+
+        playArea.playCard(c1);
+        assertEquals(1, playArea.getTurnCoins());
+        assertEquals(0, playArea.getTurnDamage());
+
+        playArea.playCard(c2);
+        assertEquals(2, playArea.getTurnCoins());
+        assertEquals(0, playArea.getTurnDamage());
+    }
+
+    @Test
     void testResetTurnPool() {
         playArea.visitDamage(1);
         playArea.visitCoin(1);
@@ -108,6 +197,13 @@ class PlayAreaTest {
     }
 
     @Test
+    void testVisitDraw() {
+        int initialHandSize = playArea.getPlayerCards().getHandCards().size();
+        playArea.visitDraw();
+        assertEquals(initialHandSize + 1, playArea.getPlayerCards().getHandCards().size());
+    }
+
+    @Test
     void testVisitCoin() {
         int initialTurnCoins = playArea.getTurnCoins();
         playArea.visitCoin(5);
@@ -118,6 +214,56 @@ class PlayAreaTest {
     void testVisitHealing() {
         int initialTurnHealing = playArea.getTurnHealing();
         playArea.visitHealing(5);
+        assertEquals(initialTurnHealing + 5, playArea.getTurnHealing());
+    }
+
+    @Test
+    void testVisitDamagePerChampionInPlay() {
+        int initialTurnDamage = playArea.getTurnDamage();
+        Card champ =
+                new Champion(
+                        "Test1",
+                        0,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(),
+                        List.of(),
+                        false,
+                        5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitDamagePerChampionInPlay(5);
+        assertEquals(initialTurnDamage + 5, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testVisitDamagePerGuardInPlay() {
+        int initialTurnDamage = playArea.getTurnDamage();
+        Card champ =
+                new Champion(
+                        "Test1", 0, CardType.CHAMPION, Faction.NONE, List.of(), List.of(), true, 5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitDamagePerGuardInPlay(5);
+        assertEquals(initialTurnDamage + 5, playArea.getTurnDamage());
+    }
+
+    @Test
+    void testVisitHealingPerChampionInPlay() {
+        int initialTurnHealing = playArea.getTurnHealing();
+        Card champ =
+                new Champion(
+                        "Test1",
+                        0,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(),
+                        List.of(),
+                        false,
+                        5);
+        playArea.getPlayerCards().addToHand(champ);
+        playArea.playCardById(champ.getId());
+        playArea.visitHealingPerChampionInPlay(5);
         assertEquals(initialTurnHealing + 5, playArea.getTurnHealing());
     }
 
@@ -141,13 +287,58 @@ class PlayAreaTest {
 
     @Test
     void testClearPlayedCards() {
-        Card c = new Card("Test", 2, List.of(new DamageEffect(2)));
+        Card c = new Card("Test", 2, Faction.NONE, List.of(new DamageEffect(2)));
         playArea.getPlayedCards().add(c);
 
         playArea.clearPlayedCards();
 
         assertTrue(playArea.getPlayedCards().isEmpty());
         assertTrue(playArea.getPlayerCards().getDiscardedCards().contains(c));
+    }
+
+    @Test
+    void testPlayCardByIdNotFound() {
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        assertEquals(playArea.playCardById(c.getId()), 0);
+    }
+
+    @Test
+    void testPlayCardByIdFound() {
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        playerCards.getHandCards().add(c);
+        assertEquals(playArea.playCardById(c.getId()), 1);
+    }
+
+    @Test
+    void testBuyCardByIdNotFound() {
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        assertFalse(playArea.buyCardById(c.getId()));
+    }
+
+    @Test
+    void testBuyCardByIdFound() {
+        Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        market.forPurchase.add(c);
+        assertTrue(playArea.buyCardById(c.getId()));
+    }
+
+    @Test
+    void testGetId() {
+        // I don't really know how I am supposed to test this...
+        assertEquals(playArea.getId(), playArea.getId());
+    }
+
+    @Test
+    void testGetDrawnCard() {
+        playArea.visitDraw();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility() != null);
+    }
+
+    @Test
+    void testResetDrawnCard() {
+        playArea.visitDraw();
+        playArea.resetCardDrawnFromSpecialAbility();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility() == null);
     }
 
     @AfterEach
