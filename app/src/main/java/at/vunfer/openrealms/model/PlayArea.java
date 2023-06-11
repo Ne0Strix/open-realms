@@ -47,7 +47,7 @@ public class PlayArea {
         this.atTurnEndDiscardedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
-        this.cardDrawnFromSpecialAbility = null;
+        this.cardDrawnFromSpecialAbility = new Deck<Card>();
     }
 
     /**
@@ -381,7 +381,7 @@ public class PlayArea {
     }
 
     public void resetCardDrawnFromSpecialAbility() {
-        cardDrawnFromSpecialAbility = null;
+        cardDrawnFromSpecialAbility.clear();
     }
 
     public void setCheat(boolean cheat) {
