@@ -187,8 +187,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         setContentView(R.layout.activity_main);
         showToast("Game started");
 
-        PlayArea.setContext(this);
-
         // Initialize views
         MarketView marketView = findViewById(R.id.market_view);
         PlayAreaView playAreaView = findViewById(R.id.play_area_view);
