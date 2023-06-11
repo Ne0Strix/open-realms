@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
 import java.util.List;
 
 /**
@@ -65,7 +64,6 @@ public class PlayArea {
      * @param health The health of the player.
      */
     public void setHealth(int health) {
-        Log.i(TAG, "setHealth: " + health);
         this.health = health;
     }
     /**

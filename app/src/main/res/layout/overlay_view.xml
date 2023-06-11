@@ -183,7 +183,9 @@
                 android:text="15"
                 android:textColor="@color/CoinGold"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="uncoverCheat"
+                />
 
 
         </RelativeLayout>
