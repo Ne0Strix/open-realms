@@ -70,6 +70,7 @@ public class ServerMessageHandler implements IHandleMessage {
                     createPlayerStatsMessage(
                             gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
             currentPlayer.getPlayArea().setCheat(false);
+            serverThread.sendCheatStatusToAll(false);
         } else {
             Player opponent = gameSession.getOpponent(currentPlayer);
             opponent.getPlayArea().setHealth(opponent.getPlayArea().getHealth() - 5);
@@ -84,6 +85,7 @@ public class ServerMessageHandler implements IHandleMessage {
     private void handleCheat(Message message, Player currentPlayer) {
         boolean cheatActive = (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
         currentPlayer.getPlayArea().setCheat(cheatActive);
+        serverThread.sendCheatStatusToAll(cheatActive);
         Log.i(TAG, "Cheat mode set to " + cheatActive);
     }
 

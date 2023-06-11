@@ -325,6 +325,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     }
                                 }
                                 break;
+                            case CHEAT:
+                                boolean cheatActive =
+                                        (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
+                                overlayViewPresenter.cheatingEnabled(cheatActive);
+                                break;
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
                         }
