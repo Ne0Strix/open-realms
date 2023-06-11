@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,11 +103,13 @@ public class Card implements Serializable {
     }
 
     public void applySynergyEffects(PlayArea visitor) {
+        Log.i("Card", "Applying synergy effects: " + synergyEffects.size() + " effects");
         applyEffects(visitor, synergyEffects);
     }
 
     protected void applyEffects(PlayArea visitor, List<Effect> effectsToApply) {
         for (Effect effect : effectsToApply) {
+            Log.i("Card", "Applying effect: " + effect.toString());
             effect.applyEffect(visitor);
         }
     }

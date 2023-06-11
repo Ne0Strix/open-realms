@@ -54,25 +54,12 @@ public class ServerMessageHandler implements IHandleMessage {
                 Log.i(TAG, "Card " + cardId + " played successfully.");
                 sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.PLAYED, cardId);
-                if (gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility()
-                        != null) { // push changes from special ability
-                    Card drawnCard =
-                            gameSession
-                                    .getCurrentPlayer()
-                                    .getPlayArea()
-                                    .getCardDrawnFromSpecialAbility();
-                    sendCardMovementToAllClients(
-                            gameSession,
-                            currentPlayer,
-                            DeckType.DECK,
-                            DeckType.HAND,
-                            drawnCard.getId());
-                    gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
-                }
+                checkDrawnCard(gameSession, currentPlayer);
             } else if (cardType == 2) {
                 Log.i(TAG, "Champion " + cardId + " played successfully.");
                 sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.CHAMPIONS, cardId);
+                checkDrawnCard(gameSession, currentPlayer);
             } else if (currentPlayer.getPlayArea().buyCardById(cardId)) {
                 Log.i(TAG, "Card " + cardId + " bought successfully.");
                 sendCardMovementToAllClients(
@@ -84,6 +71,7 @@ public class ServerMessageHandler implements IHandleMessage {
             } else if (currentPlayer.getPlayArea().expendChampionById(cardId)) {
                 Log.i(TAG, "Champion " + cardId + " expended successfully.");
                 sendChampionExpendedToAllClients(gameSession, currentPlayer, cardId);
+                checkDrawnCard(gameSession, currentPlayer);
             } else if (currentPlayer
                     .getPlayArea()
                     .attackChampionById(
@@ -97,6 +85,17 @@ public class ServerMessageHandler implements IHandleMessage {
             Log.i(TAG, "Card ID could not be resolved");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void checkDrawnCard(GameSession gameSession, Player currentPlayer) throws IOException {
+        if (gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility()
+                != null) { // push changes from special ability
+            Card drawnCard =
+                    gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility();
+            sendCardMovementToAllClients(
+                    gameSession, currentPlayer, DeckType.DECK, DeckType.HAND, drawnCard.getId());
+            gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
         }
     }
 

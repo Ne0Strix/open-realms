@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import android.util.Log;
 import java.util.List;
 
 /**
@@ -131,6 +132,7 @@ public class PlayArea {
      */
     public void playCard(Card card) {
         card.applyEffects(this);
+        Log.i(TAG, "Played Card: " + card.getName());
         triggerSynergies(card);
         if (card instanceof Champion) {
             ((Champion) card).expend();
@@ -141,6 +143,7 @@ public class PlayArea {
     }
 
     private void triggerSynergies(Card card) {
+        Log.i(TAG, "Triggering Synergies");
         triggerSynergiesByType(card, playedCards);
         triggerSynergiesByType(card, playedChampions);
     }
@@ -148,6 +151,7 @@ public class PlayArea {
     private void triggerSynergiesByType(Card card, Deck<Card> deck) {
 
         for (Card c : deck) {
+            Log.i(TAG, "Checking Synergy for " + c.getName());
             if (card.getFaction() != Faction.NONE
                     && c.getFaction() == card.getFaction()
                     && c != card) {
@@ -169,6 +173,7 @@ public class PlayArea {
     }
 
     public void clearPlayedCards() {
+
         playerCards.getDiscardedCards().addAll(playedCards);
         playedCards.clear();
     }
@@ -177,15 +182,8 @@ public class PlayArea {
         cardsThatUsedSynergies.clear();
     }
 
-    //    public Card useCardSacrificeEffect(Card card) {
-    //        return null;
-    //    }
-    //
-    //    public Card useCardExpendEffect() {
-    //        return null;
-    //    }
-
     public boolean expendChampion(Champion champion) {
+        Log.i(TAG, "expendChampion: " + champion.getName());
         if (champion.expend()) {
             champion.applyEffects(this);
             triggerSynergies(champion);
@@ -253,6 +251,7 @@ public class PlayArea {
     }
 
     public void visitCoin(int coin) {
+
         turnCoins += coin;
     }
 
@@ -323,6 +322,7 @@ public class PlayArea {
 
     public boolean expendChampionById(int id) {
         Card card = findCardById(playedChampions, id);
+        Log.i(TAG, "expendChampionById: " + card.getName());
         if (card == null) {
             return false;
         }
