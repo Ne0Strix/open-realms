@@ -14,9 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
@@ -76,29 +74,30 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         // Initialize the VideoView
         videoView = findViewById(R.id.video_view);
-        mediaController = new MediaController(this);
-        videoView.setMediaController(mediaController);
+        videoView.setOnClickListener(view -> setContentView(R.layout.menu));
 
         // Set the video file path or URL
         String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.intro_video;
         videoView.setVideoURI(Uri.parse(videoPath));
 
         // Set an OnPreparedListener to start playing the video when it's ready
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                videoView.start();
-            }
-        });
+        videoView.setOnPreparedListener(
+                new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        videoView.start();
+                    }
+                });
 
         // Set an OnCompletionListener to transition to the next layout after the video finishes
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                // Transition to the next layout (e.g., menu, game screen)
-                setContentView(R.layout.menu);
-            }
-        });
+        videoView.setOnCompletionListener(
+                new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        // Transition to the next layout (e.g., menu, game screen)
+                        setContentView(R.layout.menu);
+                    }
+                });
     }
 
     public void hostGame(View view) {
@@ -153,7 +152,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         connection = new ClientConnector(this);
         connection.setConnectionTarget(connectionIP, connectionPort);
         connection.start();
-        showToast("Your IP address is:\n" + connectionIP + "\n(Start after Guest has joined and started)");
+        showToast(
+                "Your IP address is:\n"
+                        + connectionIP
+                        + "\n(Start after Guest has joined and started)");
     }
 
     public void connectServer(View view) {
@@ -454,7 +456,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
