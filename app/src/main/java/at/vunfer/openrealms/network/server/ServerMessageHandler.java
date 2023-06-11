@@ -18,7 +18,7 @@ public class ServerMessageHandler implements IHandleMessage {
     private static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
 
-    private void ensureServerThreadInitialized() {
+    public void ensureServerThreadInitialized() {
         if (serverThread == null) {
             serverThread = ServerThread.getInstance();
         }
@@ -144,7 +144,7 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void sendChampionKilledToAllClients(
+    public void sendChampionKilledToAllClients(
             GameSession gameSession, Player currentPlayer, int cardId) throws IOException {
         serverThread.sendMessageToAllClients(
                 createRemoveCardMessage(
@@ -179,7 +179,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
     }
 
-    private void sendChampionExpendedToAllClients(
+    public void sendChampionExpendedToAllClients(
             GameSession gameSession, Player currentPlayer, int cardId) throws IOException {
         serverThread.sendMessageToAllClients(
                 createExpendChampionMessage(
@@ -241,10 +241,9 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void handleKilledChampionsAtTurnEnd(GameSession gameSession, Player currentPlayer) {
+    public void handleKilledChampionsAtTurnEnd(GameSession gameSession, Player currentPlayer) {
         Player opponent = gameSession.getOpponent(currentPlayer);
         Deck<Card> discardedChampions = opponent.getPlayArea().getAtTurnEndDiscardedChampions();
-        Log.d(TAG, "Discarded champions: " + discardedChampions.size());
         for (Card c : discardedChampions) {
             try {
                 sendChampionKilledToAllClients(gameSession, currentPlayer, c.getId());

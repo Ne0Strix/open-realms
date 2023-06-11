@@ -12,6 +12,8 @@ import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import at.vunfer.openrealms.model.Card;
+import at.vunfer.openrealms.model.CardType;
+import at.vunfer.openrealms.model.Champion;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.Faction;
 import at.vunfer.openrealms.model.effects.DamageEffect;
@@ -139,7 +141,7 @@ public class MainActivityTest {
         getInstrumentation().waitForIdleSync();
 
         assertEquals(View.VISIBLE, main.findViewById(R.id.defeat_image).getVisibility());
-        assertEquals(View.GONE, main.findViewById(R.id.end_turn_button).getVisibility());
+        assertEquals(View.INVISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
     }
 
     @Test
@@ -170,11 +172,11 @@ public class MainActivityTest {
         getInstrumentation().waitForIdleSync();
 
         assertEquals(View.VISIBLE, main.findViewById(R.id.victory_image).getVisibility());
-        assertEquals(View.GONE, main.findViewById(R.id.end_turn_button).getVisibility());
+        assertEquals(View.INVISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
     }
 
     @Test
-    public void testUpdateUI() throws Throwable {
+    public void testUpdateUIHand() throws Throwable {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
@@ -227,74 +229,28 @@ public class MainActivityTest {
         main.updateUI(removeCardFromOpponentHand);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.playerHandPresenter.getListOfDisplayedCards().isEmpty());
+    }
 
-        Message addCardToDiscardPile =
-                Communication.createAddCardMessage(0, DeckType.DISCARD, testCard.getId());
-        main.updateUI(addCardToDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.opponentDiscardPilePresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
+    @Test
+    public void testUpdateUIMarket() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
 
-        Message removeCardFromDiscardPile =
-                Communication.createRemoveCardMessage(0, DeckType.DISCARD, testCard.getId());
-        main.updateUI(removeCardFromDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentDiscardPilePresenter.getListOfDisplayedCards().isEmpty());
+        Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testCard);
 
-        Message addCardToOpponentDiscardPile =
-                Communication.createAddCardMessage(1, DeckType.DISCARD, testCard.getId());
-        main.updateUI(addCardToOpponentDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.playerDiscardPilePresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
-
-        Message removeCardFromOpponentDiscardPile =
-                Communication.createRemoveCardMessage(1, DeckType.DISCARD, testCard.getId());
-        main.updateUI(removeCardFromOpponentDiscardPile);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerDiscardPilePresenter.getListOfDisplayedCards().isEmpty());
-
-        Message addCardToDeck =
-                Communication.createAddCardMessage(0, DeckType.DECK, testCard.getId());
-        main.updateUI(addCardToDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.opponentDeckPresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
-
-        Message removeCardFromDeck =
-                Communication.createRemoveCardMessage(0, DeckType.DECK, testCard.getId());
-        main.updateUI(removeCardFromDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentDeckPresenter.getListOfDisplayedCards().isEmpty());
-
-        Message addCardToOpponentDeck =
-                Communication.createAddCardMessage(1, DeckType.DECK, testCard.getId());
-        main.updateUI(addCardToOpponentDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(
-                main.playerDeckPresenter
-                        .getListOfDisplayedCards()
-                        .get(0)
-                        .getCard()
-                        .isIdentical(testCard));
-
-        Message removeCardFromOpponentDeck =
-                Communication.createRemoveCardMessage(1, DeckType.DECK, testCard.getId());
-        main.updateUI(removeCardFromOpponentDeck);
-        getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerDeckPresenter.getListOfDisplayedCards().isEmpty());
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
 
         Message addCardToMarket =
                 Communication.createAddCardMessage(0, DeckType.FOR_PURCHASE, testCard.getId());
@@ -312,23 +268,101 @@ public class MainActivityTest {
         main.updateUI(removeCardFromMarket);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.marketPresenter.getListOfDisplayedCards().isEmpty());
+    }
 
-        Message addCardToPlayArea =
-                Communication.createAddCardMessage(0, DeckType.PLAYED, testCard.getId());
-        main.updateUI(addCardToPlayArea);
+    @Test
+    public void testUpdateUIChampions() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    try {
+                        main.toMainMenu(new View(main));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    main.startGame(new View(main));
+                });
+
+        Card testChampion =
+                new Champion(
+                        "Test1",
+                        2,
+                        CardType.CHAMPION,
+                        Faction.NONE,
+                        List.of(new DamageEffect(2)),
+                        new Deck<>(),
+                        true,
+                        10);
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testChampion);
+
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
+
+        Message addChampionToChampionArea =
+                Communication.createAddCardMessage(0, DeckType.CHAMPIONS, testChampion.getId());
+        main.updateUI(addChampionToChampionArea);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.playAreaPresenter
+                main.opponentPlayedChampionsPresenter
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
-                        .isIdentical(testCard));
+                        .isIdentical(testChampion));
 
-        Message removeCardFromPlayArea =
-                Communication.createRemoveCardMessage(0, DeckType.PLAYED, testCard.getId());
-        main.updateUI(removeCardFromPlayArea);
+        Message expendChampion = Communication.createExpendChampionMessage(0, testChampion.getId());
+        main.updateUI(expendChampion);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.playAreaPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(
+                main.opponentPlayedChampionsPresenter
+                        .getListOfDisplayedCards()
+                        .get(0)
+                        .isExpended());
+
+        Message resetChampion = Communication.createResetChampionMessage(0, testChampion.getId());
+        main.updateUI(resetChampion);
+        getInstrumentation().waitForIdleSync();
+        assertFalse(
+                main.opponentPlayedChampionsPresenter
+                        .getListOfDisplayedCards()
+                        .get(0)
+                        .isExpended());
+
+        Message removeChampionFromChampionArea =
+                Communication.createRemoveCardMessage(0, DeckType.CHAMPIONS, testChampion.getId());
+        main.updateUI(removeChampionFromChampionArea);
+        getInstrumentation().waitForIdleSync();
+        assertTrue(main.opponentPlayedChampionsPresenter.getListOfDisplayedCards().isEmpty());
+
+        addChampionToChampionArea =
+                Communication.createAddCardMessage(1, DeckType.CHAMPIONS, testChampion.getId());
+        main.updateUI(addChampionToChampionArea);
+        getInstrumentation().waitForIdleSync();
+        assertTrue(
+                main.playerPlayedChampionsPresenter
+                        .getListOfDisplayedCards()
+                        .get(0)
+                        .getCard()
+                        .isIdentical(testChampion));
+
+        expendChampion = Communication.createExpendChampionMessage(1, testChampion.getId());
+        main.updateUI(expendChampion);
+        getInstrumentation().waitForIdleSync();
+        assertTrue(
+                main.playerPlayedChampionsPresenter.getListOfDisplayedCards().get(0).isExpended());
+
+        resetChampion = Communication.createResetChampionMessage(1, testChampion.getId());
+        main.updateUI(resetChampion);
+        getInstrumentation().waitForIdleSync();
+        assertFalse(
+                main.playerPlayedChampionsPresenter.getListOfDisplayedCards().get(0).isExpended());
+
+        removeChampionFromChampionArea =
+                Communication.createRemoveCardMessage(1, DeckType.CHAMPIONS, testChampion.getId());
+        main.updateUI(removeChampionFromChampionArea);
+        getInstrumentation().waitForIdleSync();
+        assertTrue(main.playerPlayedChampionsPresenter.getListOfDisplayedCards().isEmpty());
     }
 
     @Test

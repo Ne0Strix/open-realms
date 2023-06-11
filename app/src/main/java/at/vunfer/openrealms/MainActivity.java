@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public PlayedChampionsPresenter playerPlayedChampionsPresenter;
     public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
 
+    ImageView victoryImage;
+    ImageView defeatImage;
+    Button endTurnButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -270,16 +274,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        //                                        //this adds the
-                                        // defeat screen on top of the game
-                                        ImageView defeatImage = findViewById(R.id.defeat_image);
-                                        defeatImage.setVisibility(View.VISIBLE);
-                                        defeatImage.getParent().bringChildToFront(defeatImage);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
                                         for (CardView c : cardViews) {
                                             c.setFaceDown();
                                         }
+                                        // this adds the defeat screen on top of the game
+                                        defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage.setVisibility(View.VISIBLE);
+                                        defeatImage.getParent().bringChildToFront(defeatImage);
+                                        victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.INVISIBLE);
+                                        endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                     }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
@@ -289,14 +294,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        ImageView victoryImage = findViewById(R.id.victory_image);
-                                        victoryImage.setVisibility(View.VISIBLE);
-                                        victoryImage.getParent().bringChildToFront(victoryImage);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
                                         for (CardView c : cardViews) {
                                             c.setFaceDown();
                                         }
+                                        // this adds the victory screen on top of the game
+                                        victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.VISIBLE);
+                                        victoryImage.getParent().bringChildToFront(victoryImage);
+                                        defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage.setVisibility(View.INVISIBLE);
+                                        endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                     }
                                 }
                                 break;
@@ -499,6 +507,18 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void setGameStarted(boolean b) {
         gameStarted = b;
+    }
+
+    public ImageView getVictoryImage() {
+        return victoryImage;
+    }
+
+    public ImageView getDefeatImage() {
+        return defeatImage;
+    }
+
+    public Button getEndTurnButton() {
+        return endTurnButton;
     }
 
     public void sendCheatMessage() throws IOException {
