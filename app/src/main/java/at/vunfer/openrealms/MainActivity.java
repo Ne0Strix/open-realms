@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void joinGame(View view) {
         setContentView(R.layout.join);
+        TextView outline = findViewById(R.id.enterHostPromptOutline);
+        outline.getPaint().setStrokeWidth(5);
+        outline.getPaint().setStyle(Paint.Style.STROKE);
         showToast("Join a game");
     }
 
@@ -535,5 +538,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void setGameStarted(boolean b) {
         gameStarted = b;
+    }
+
+    private void showToast(String message) {
+        // Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
