@@ -258,8 +258,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        //                                        //this adds the
-                                        // defeat screen on top of the game
+                                        for (CardView c : cardViews) {
+                                            c.setFaceDown();
+                                        }
+                                        // this adds the defeat screen on top of the game
                                         defeatImage = findViewById(R.id.defeat_image);
                                         defeatImage.setVisibility(View.VISIBLE);
                                         defeatImage.getParent().bringChildToFront(defeatImage);
@@ -267,11 +269,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         victoryImage.setVisibility(View.INVISIBLE);
                                         endTurnButton = findViewById(R.id.end_turn_button);
                                         endTurnButton.setVisibility(View.INVISIBLE);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.INVISIBLE);
-                                        for (CardView c : cardViews) {
-                                            c.setFaceDown();
-                                        }
                                     }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
@@ -281,14 +278,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        victoryImage = findViewById(R.id.victory_image);
-                                        victoryImage.setVisibility(View.VISIBLE);
-                                        victoryImage.getParent().bringChildToFront(victoryImage);
-                                        endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.INVISIBLE);
                                         for (CardView c : cardViews) {
                                             c.setFaceDown();
                                         }
+                                        // this adds the victory screen on top of the game
+                                        victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.VISIBLE);
+                                        victoryImage.getParent().bringChildToFront(victoryImage);
                                         defeatImage = findViewById(R.id.defeat_image);
                                         defeatImage.setVisibility(View.INVISIBLE);
                                         endTurnButton = findViewById(R.id.end_turn_button);
