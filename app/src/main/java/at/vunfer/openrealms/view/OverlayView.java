@@ -4,6 +4,7 @@ package at.vunfer.openrealms.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
@@ -18,6 +19,7 @@ public class OverlayView implements OverlayViewInterface {
     private TextView turnDamage;
     private TextView turnHealing;
     private TextView turnCoin;
+    private ImageView cheatingRing;
 
     @SuppressLint("InflateParams")
     public OverlayView(Context context) {
@@ -38,6 +40,7 @@ public class OverlayView implements OverlayViewInterface {
         turnDamage = overlayViewLayout.findViewById(R.id.turnDamage);
         turnHealing = overlayViewLayout.findViewById(R.id.turnHealing);
         turnCoin = overlayViewLayout.findViewById(R.id.turnCoin);
+        cheatingRing = overlayViewLayout.findViewById(R.id.turnCoinIcon);
     }
 
     @Override
@@ -113,5 +116,14 @@ public class OverlayView implements OverlayViewInterface {
     @Override
     public ConstraintLayout getOverlayView() {
         return overlayViewLayout;
+    }
+
+    @Override
+    public void setCheatingEnabled(boolean enabled) {
+        if (enabled) {
+            cheatingRing.setImageResource(R.drawable.circle_outline_white_48);
+        } else {
+            cheatingRing.setImageResource(R.drawable.circle_outline_gold_48);
+        }
     }
 }

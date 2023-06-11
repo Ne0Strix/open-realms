@@ -49,4 +49,9 @@ public class OverlayPresenter implements OverlayPresenterInterface {
     public OverlayViewInterface getOverlayView() {
         return overlayView;
     }
+
+    @Override
+    public void cheatingEnabled(boolean enabled) {
+        overlayView.setCheatingEnabled(enabled);
+    }
 }
