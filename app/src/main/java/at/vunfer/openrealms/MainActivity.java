@@ -263,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 PlayerStats stats =
                                         (PlayerStats) message.getData(DataKey.PLAYER_STATS);
                                 if (playerId == target) {
-
                                     overlayViewPresenter.updatePlayerName(stats.getPlayerName());
                                     overlayViewPresenter.updatePlayerHealth(
                                             stats.getPlayerHealth());
@@ -325,6 +324,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         }
                                     }
                                 }
+                                break;
+                            case CHEAT:
+                                boolean cheatActive =
+                                        (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
+                                overlayViewPresenter.cheatingEnabled(cheatActive);
                                 break;
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
@@ -500,6 +504,16 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void sendCheatMessage() throws IOException {
         Message cheatMessage = new Message(MessageType.CHEAT);
         cheatMessage.setData(DataKey.CHEAT_ACTIVATE, true);
-        connection.sendMessage(cheatMessage);
+        if (myTurn) {
+            connection.sendMessage(cheatMessage);
+        }
+    }
+
+    public void uncoverCheat(View view) throws IOException {
+        Log.i(TAG, "Uncovering cheat.");
+        Message uncoverMessage = new Message(MessageType.UNCOVER_CHEAT);
+        if (!myTurn) {
+            connection.sendMessage(uncoverMessage);
+        }
     }
 }

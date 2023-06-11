@@ -3,6 +3,7 @@ package at.vunfer.openrealms.network.server;
 
 import static at.vunfer.openrealms.network.Communication.createAddCardMessage;
 import static at.vunfer.openrealms.network.Communication.createAddMarketCardMessage;
+import static at.vunfer.openrealms.network.Communication.createCheatStatusMessage;
 import static at.vunfer.openrealms.network.Communication.createPlayerStatsMessage;
 import static at.vunfer.openrealms.network.Communication.createRemoveCardMessage;
 import static at.vunfer.openrealms.network.Communication.createRemoveMarketCardMessage;
@@ -369,6 +370,15 @@ public class ServerThread extends Thread {
             throw new IllegalStateException("ServerThread not initialized!");
         }
         return instance;
+    }
+
+    public void sendCheatStatusToAll(boolean isCheating) {
+        Message cheatStatusMsg = createCheatStatusMessage(isCheating);
+        try {
+            sendMessageToAllClients(cheatStatusMsg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public GameSession getGameSession() {

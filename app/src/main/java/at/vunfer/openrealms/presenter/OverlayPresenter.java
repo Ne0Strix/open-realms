@@ -45,4 +45,9 @@ public class OverlayPresenter implements OverlayPresenterInterface {
     public void updateTurnCoin(int turnCoin) {
         overlayView.setTurnCoin(turnCoin);
     }
+
+    @Override
+    public void cheatingEnabled(boolean enabled) {
+        overlayView.setCheatingEnabled(enabled);
+    }
 }
