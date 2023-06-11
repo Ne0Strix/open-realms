@@ -133,12 +133,12 @@ public class ServerMessageHandler implements IHandleMessage {
     }
 
     private void checkDrawnCard(GameSession gameSession, Player currentPlayer) throws IOException {
-        if (gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility()
-                != null) { // push changes from special ability
-            Card drawnCard =
-                    gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility();
-            sendCardMovementToAllClients(
-                    gameSession, currentPlayer, DeckType.DECK, DeckType.HAND, drawnCard.getId());
+        Deck<Card> drawnCards = currentPlayer.getPlayArea().getCardDrawnFromSpecialAbility();
+        if (!drawnCards.isEmpty()) { // push changes from special ability
+            for (Card c : drawnCards) {
+                sendCardMovementToAllClients(
+                        gameSession, currentPlayer, DeckType.DECK, DeckType.HAND, c.getId());
+            }
             gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
         }
     }

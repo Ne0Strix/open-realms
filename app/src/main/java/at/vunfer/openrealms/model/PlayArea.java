@@ -21,7 +21,7 @@ public class PlayArea {
     private Deck<Card> playedCards;
     private Deck<Card> playedChampions;
     private PlayerCards playerCards;
-    private Card cardDrawnFromSpecialAbility; // from special ability
+    private Deck<Card> cardDrawnFromSpecialAbility;
     private Deck<Card> cardsThatUsedSynergies;
     private Deck<Card> atTurnEndDiscardedChampions;
     private Deck<Card> drawnByCheat = new Deck<Card>();
@@ -274,10 +274,12 @@ public class PlayArea {
         turnDamage += damage;
     }
 
-    public void visitDraw() {
-        Card drawnCard = playerCards.drawRandomFromDeck();
-        playerCards.addToHand(drawnCard);
-        cardDrawnFromSpecialAbility = drawnCard;
+    public void visitDraw(int amount) {
+        for (int i = 0; i < amount; i++) {
+            Card drawnCard = playerCards.drawRandomFromDeck();
+            playerCards.addToHand(drawnCard);
+            cardDrawnFromSpecialAbility.add(drawnCard);
+        }
     }
 
     public void visitHealing(int healing) {
@@ -371,10 +373,10 @@ public class PlayArea {
     }
 
     public void clearCardDrawnFromSpecialAbility() {
-        cardDrawnFromSpecialAbility = null;
+        cardDrawnFromSpecialAbility.clear();
     }
 
-    public Card getCardDrawnFromSpecialAbility() {
+    public Deck<Card> getCardDrawnFromSpecialAbility() {
         return cardDrawnFromSpecialAbility;
     }
 
