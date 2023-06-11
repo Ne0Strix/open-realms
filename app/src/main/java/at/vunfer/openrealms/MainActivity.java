@@ -2,6 +2,7 @@
 package at.vunfer.openrealms;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         // Initialize the VideoView
         videoView = findViewById(R.id.video_view);
-        videoView.setOnClickListener(view -> setContentView(R.layout.menu));
+        videoView.setOnClickListener(view -> toMainMenu(new View(context)));
 
         // Set the video file path or URL
         String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.intro_video;
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
                         // Transition to the next layout (e.g., menu, game screen)
-                        setContentView(R.layout.menu);
+                        toMainMenu(new View(context));
                     }
                 });
     }
@@ -110,11 +111,18 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         showToast("Join a game");
     }
 
-    public void toMainMenu(View view) throws IOException {
+    public void toMainMenu(View view) {
         setContentView(R.layout.menu);
         if (server != null) {
-            server.stopServer();
+            try {
+                server.stopServer();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        TextView outline = findViewById(R.id.startGamePromptOutline);
+        outline.getPaint().setStrokeWidth(5);
+        outline.getPaint().setStyle(Paint.Style.STROKE);
         isHost = false;
         showToast("Back to main menu");
     }
