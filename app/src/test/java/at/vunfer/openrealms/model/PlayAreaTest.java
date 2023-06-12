@@ -375,5 +375,4 @@ class PlayAreaTest {
         playArea.getMarket().forPurchase.add(card);
         assertTrue(playArea.buyCardById(card.getId()));
     }
-
 }

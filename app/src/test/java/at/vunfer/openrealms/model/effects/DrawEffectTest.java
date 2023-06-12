@@ -5,12 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import at.vunfer.openrealms.model.PlayArea;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-
-import at.vunfer.openrealms.model.PlayArea;
 
 class DrawEffectTest {
     private PlayArea playArea;
