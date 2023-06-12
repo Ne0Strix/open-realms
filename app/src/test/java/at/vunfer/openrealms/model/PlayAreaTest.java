@@ -371,7 +371,7 @@ class PlayAreaTest {
     }
 
     @Test
-    public void testSetHealth() {
+    void testSetHealth() {
         int initialHealth = 100;
         int newHealth = 80;
         PlayerCards playerCards = new PlayerCards();
@@ -384,20 +384,20 @@ class PlayAreaTest {
     }
 
     @Test
-    public void testSetCheat() {
+    void testSetCheat() {
         playArea.setCheat(true);
         Assert.assertTrue(playArea.getCheat());
     }
 
     @Test
-    public void testAddToDrawnByCheat() {
+    void testAddToDrawnByCheat() {
         Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         playArea.addToDrawnByCheat(card);
         Assert.assertTrue(playArea.getDrawnByCheat().contains(card));
     }
 
     @Test
-    public void testClearDrawnByCheat() {
+    void testClearDrawnByCheat() {
         Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         playArea.addToDrawnByCheat(card);
         playArea.clearDrawnByCheat();
@@ -405,7 +405,7 @@ class PlayAreaTest {
     }
 
     @Test
-    public void testDestroyDrawnByCheat() {
+    void testDestroyDrawnByCheat() {
         Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         PlayerCards playerCards = playArea.getPlayerCards();
         playerCards.getDiscardedCards().add(card);
