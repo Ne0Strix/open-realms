@@ -179,7 +179,6 @@ public class PlayArea {
     }
 
     public void clearPlayedCards() {
-
         playerCards.getDiscardedCards().addAll(playedCards);
         playedCards.clear();
     }
@@ -256,7 +255,6 @@ public class PlayArea {
     }
 
     public void visitCoin(int coin) {
-
         turnCoins += coin;
     }
 
@@ -333,7 +331,6 @@ public class PlayArea {
 
     public boolean expendChampionById(int id) {
         Card card = findCardById(playedChampions, id);
-        Log.i(TAG, "expendChampionById: " + card.getName());
         if (card == null) {
             return false;
         }
