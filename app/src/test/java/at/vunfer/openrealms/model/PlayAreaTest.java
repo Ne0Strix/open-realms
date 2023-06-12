@@ -8,6 +8,8 @@ import static org.testng.Assert.assertTrue;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import java.util.List;
+
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -342,13 +344,6 @@ class PlayAreaTest {
         assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
     }
 
-    @AfterEach
-    void tearDown() {
-        playArea = null;
-        playerCards = null;
-        player1 = null;
-    }
-
     @Test
     void testGetCardDrawnFromSpecialAbility() {
         assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
@@ -374,5 +369,55 @@ class PlayAreaTest {
         Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         playArea.getMarket().forPurchase.add(card);
         assertTrue(playArea.buyCardById(card.getId()));
+    }
+
+    @Test
+    public void testSetHealth() {
+        int initialHealth = 100;
+        int newHealth = 80;
+        PlayerCards playerCards = new PlayerCards();
+        PlayArea playArea = new PlayArea(initialHealth, playerCards);
+
+        playArea.setHealth(newHealth);
+        int updatedHealth = playArea.getHealth();
+
+        Assert.assertEquals(newHealth, updatedHealth);
+    }
+    @Test
+    public void testSetCheat() {
+        playArea.setCheat(true);
+        Assert.assertTrue(playArea.getCheat());
+    }
+
+    @Test
+    public void testAddToDrawnByCheat() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        playArea.addToDrawnByCheat(card);
+        Assert.assertTrue(playArea.getDrawnByCheat().contains(card));
+    }
+
+    @Test
+    public void testClearDrawnByCheat() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        playArea.addToDrawnByCheat(card);
+        playArea.clearDrawnByCheat();
+        Assert.assertTrue(playArea.getDrawnByCheat().isEmpty());
+    }
+
+    @Test
+    public void testDestroyDrawnByCheat() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        PlayerCards playerCards = playArea.getPlayerCards();
+        playerCards.getDiscardedCards().add(card);
+        playArea.addToDrawnByCheat(card);
+        playArea.destroyDrawnByCheat();
+        Assert.assertFalse(playerCards.getDiscardedCards().contains(card));
+    }
+
+    @AfterEach
+    void tearDown() {
+        playArea = null;
+        playerCards = null;
+        player1 = null;
     }
 }
