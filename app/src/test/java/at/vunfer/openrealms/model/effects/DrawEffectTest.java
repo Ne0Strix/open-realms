@@ -32,6 +32,8 @@ class DrawEffectTest {
         long executionTime = endTime - startTime;
 
         System.out.println("Execution time: " + executionTime + " ns");
+
+        assertTrue(executionTime < 1000000000, "Execution time should be less than 1 second");
     }
 
     @Test
