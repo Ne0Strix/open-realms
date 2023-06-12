@@ -55,7 +55,7 @@ public class Market {
     public int restock() {
         int restocked = 0;
         newToPurchase = new Deck<>();
-        while (forPurchase.size() < TOTAL_PURCHASABLE) {
+        while (forPurchase.size() < TOTAL_PURCHASABLE && !marketDeck.isEmpty()) {
             Card card = marketDeck.drawRandom();
             if (card != null) {
                 forPurchase.add(card);

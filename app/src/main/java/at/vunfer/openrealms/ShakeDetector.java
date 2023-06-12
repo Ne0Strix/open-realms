@@ -65,6 +65,6 @@ public class ShakeDetector implements SensorEventListener {
     }
 
     private class ShakeException extends RuntimeException {
-        public ShakeException(String error_while_handling_shake_event, IOException e) {}
+        public ShakeException(String errorWhileHandlingShakeEvent, IOException e) {}
     }
 }
