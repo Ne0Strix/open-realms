@@ -33,9 +33,13 @@ public class CommunicationTest {
         communication = new Communication(input, output, messageHandler);
     }
 
+    @BeforeAll
+    static void setUpAll() {
+        mockStatic(Log.class);
+    }
+
     @Test
     void sendMessageTest() throws IOException, InterruptedException {
-        mockStatic(Log.class);
         Message msg = new Message(MessageType.TOUCHED);
         communication.sendMessage(msg);
         Thread.sleep(200); // Make sure the executor has time to run

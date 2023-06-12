@@ -23,6 +23,7 @@ import at.vunfer.openrealms.network.MessageType;
 import java.io.IOException;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -153,7 +154,7 @@ class ServerMessageHandlerTest {
 
     @Test
     void testHandleCheat() {
-        mockStatic(Log.class);
+        //mockStatic(Log.class);
 
         serverMessageHandler.ensureServerThreadInitialized();
 
