@@ -67,7 +67,11 @@ public class ServerThread extends Thread {
         } catch (IOException ex) {
             Log.e(TAG, "IO Exception on Server!", ex);
         }
-        createGame();
+        if (!serverSocket.isClosed()) {
+            createGame();
+            ((MainActivity) context)
+                    .runOnUiThread(() -> ((MainActivity) context).startGame(new View(context)));
+        }
     }
 
     private void setupServer() throws IOException {

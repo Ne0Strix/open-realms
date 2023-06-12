@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
@@ -193,10 +192,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         TextView outline = findViewById(R.id.waiting_for_server_label_outline);
         outline.getPaint().setStrokeWidth(5);
         outline.getPaint().setStyle(Paint.Style.STROKE);
-        if (isHost) {
-            outline.setText("Loading...");
-            ((TextView) findViewById(R.id.waiting_for_server_label)).setText("Loading...");
-        }
 
         // Initialize views
         MarketView marketView = findViewById(R.id.market_view);
@@ -225,12 +220,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         opponentPlayedChampionsPresenter =
                 new PlayedChampionsPresenter(opponentPlayedChampionsView);
         overlayViewPresenter = new OverlayPresenter(overlayView);
-
-        // Add views to layout
-        ConstraintLayout layout = findViewById(R.id.game_area);
-
-        Button endTurnButton = findViewById(R.id.end_turn_button);
-        endTurnButton.setVisibility(View.INVISIBLE);
 
         // Flip the Text on opponent DiscardPile and Deck, to always be right-side up
         opponentDiscardPileView.findViewById(R.id.discardPileAmount).setScaleY(-1);
