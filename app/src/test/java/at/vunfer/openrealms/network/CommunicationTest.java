@@ -25,11 +25,6 @@ public class CommunicationTest {
 
     Communication communication;
 
-    @BeforeAll
-    static void setUpAll() {
-        Mockito.mockStatic(Log.class);
-    }
-
     @BeforeEach
     void setUp() {
         input = Mockito.mock(ObjectInputStream.class);
@@ -40,6 +35,7 @@ public class CommunicationTest {
 
     @Test
     void sendMessageTest() throws IOException, InterruptedException {
+        mockStatic(Log.class);
         Message msg = new Message(MessageType.TOUCHED);
         communication.sendMessage(msg);
         Thread.sleep(200); // Make sure the executor has time to run
