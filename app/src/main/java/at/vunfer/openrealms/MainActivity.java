@@ -3,6 +3,7 @@ package at.vunfer.openrealms;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
     private boolean isHost = false;
+    private static final String PREF_NAME = "OpenRealmsPlayerPrefs";
+    private static final String KEY_POSITION = "position";
 
     private static boolean gameStarted = false;
     private static boolean myTurn = false;
@@ -150,6 +153,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void startGame(View view) {
+        // Start game music, that will loop, but stop when app is minimized
+        gameStarted = true;
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(KEY_POSITION, 0);
+        editor.apply();
+        startService(new Intent(this, OpenRealmsPlayer.class));
+
         setContentView(R.layout.activity_main);
 
         // Initialize views
@@ -206,9 +217,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         } else {
             this.playerId = 1;
         }
-        // Start game music, that will loop, but stop when app is minimized
-        gameStarted = true;
-        startService(new Intent(this, OpenRealmsPlayer.class));
     }
 
     @Override
