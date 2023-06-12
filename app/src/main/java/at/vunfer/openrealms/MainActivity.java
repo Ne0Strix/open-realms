@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -65,11 +64,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public PlayedChampionsPresenter playerPlayedChampionsPresenter;
     public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
 
-    ImageView victoryImage;
-    ImageView defeatImage;
+    ImageView endscreenImage;
     Button endTurnButton;
     private VideoView videoView;
-    private MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -329,43 +326,20 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updatePlayerName(stats.getPlayerName());
                                     overlayViewPresenter.updatePlayerHealth(
                                             stats.getPlayerHealth());
-                                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
-                                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
-                                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        for (CardView c : cardViews) {
-                                            c.setFaceDown();
-                                        }
-                                        // this adds the defeat screen on top of the game
-                                        defeatImage = findViewById(R.id.defeat_image);
-                                        defeatImage.setVisibility(View.VISIBLE);
-                                        defeatImage.getParent().bringChildToFront(defeatImage);
-                                        victoryImage = findViewById(R.id.victory_image);
-                                        victoryImage.setVisibility(View.INVISIBLE);
-                                        endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.INVISIBLE);
+                                        endGame(false);
                                     }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
                                     overlayViewPresenter.updateOpponentHealth(
                                             stats.getPlayerHealth());
-                                    overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
-                                    overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
-                                    overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        for (CardView c : cardViews) {
-                                            c.setFaceDown();
-                                        }
-                                        // this adds the victory screen on top of the game
-                                        victoryImage = findViewById(R.id.victory_image);
-                                        victoryImage.setVisibility(View.VISIBLE);
-                                        victoryImage.getParent().bringChildToFront(victoryImage);
-                                        defeatImage = findViewById(R.id.defeat_image);
-                                        defeatImage.setVisibility(View.INVISIBLE);
-                                        endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.INVISIBLE);
+                                        endGame(true);
                                     }
                                 }
+                                overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                                overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                                overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                 break;
                             case FULL_CARD_DECK:
                                 Log.i(TAG, "Received full card deck.");
@@ -530,6 +504,19 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         return null;
     }
 
+    private void endGame(boolean victory) {
+        for (CardView c : cardViews) {
+            c.setFaceDown();
+        }
+        if (victory) endscreenImage = findViewById(R.id.victory_image);
+        else endscreenImage = findViewById(R.id.defeat_image);
+
+        endscreenImage.setVisibility(View.VISIBLE);
+        endscreenImage.getParent().bringChildToFront(endscreenImage);
+        endTurnButton = findViewById(R.id.end_turn_button);
+        endTurnButton.setVisibility(View.INVISIBLE);
+    }
+
     public static void sendMessage(Message msg) throws IOException {
         if (myTurn) {
             connection.sendMessage(msg);
@@ -575,12 +562,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    public ImageView getVictoryImage() {
-        return victoryImage;
-    }
-
-    public ImageView getDefeatImage() {
-        return defeatImage;
+    public ImageView getEndscreenImage() {
+        return endscreenImage;
     }
 
     public Button getEndTurnButton() {

@@ -137,8 +137,6 @@ public class CardView extends ConstraintLayout {
         fullScreenCard.setCard(card);
         fullScreenCard.setVisibility(VISIBLE);
         fullScreenCard.setHealthSize(35);
-        // Make sure that the the Fullscreen_Card Object is drawn in front of everything
-        fullScreenCard.getParent().bringChildToFront(fullScreenCard);
     }
 
     /** Disables the FullscreenPreview */
