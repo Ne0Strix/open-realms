@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void hostGame(View view) {
         setContentView(R.layout.host);
-        showToast("Host a game");
+        startServer(view);
     }
 
     public void joinGame(View view) {
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         TextView outline = findViewById(R.id.enterHostPromptOutline);
         outline.getPaint().setStrokeWidth(5);
         outline.getPaint().setStyle(Paint.Style.STROKE);
-        showToast("Join a game");
     }
 
     public void toMainMenu(View view) {
@@ -120,51 +119,43 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            server = null;
         }
         TextView outline = findViewById(R.id.startGamePromptOutline);
         outline.getPaint().setStrokeWidth(5);
         outline.getPaint().setStyle(Paint.Style.STROKE);
         isHost = false;
-        showToast("Back to main menu");
     }
 
     public void startServer(View view) {
         isHost = true;
         server = new ServerThread(this, connectionPort);
-        TextView showIpPrompt = (TextView) findViewById(R.id.prompt_text);
-        Button openLobbyButton = (Button) findViewById(R.id.openLobby);
-        Button showIpButton = (Button) findViewById(R.id.showIp);
 
-        showIpPrompt.setText("Tap the button below to get your IP address.");
-
-        openLobbyButton.setVisibility(View.GONE);
-        showIpButton.setVisibility(View.VISIBLE);
+        TextView showIpOutline = (TextView) findViewById(R.id.ip_label_outline);
+        TextView promptOutline = findViewById(R.id.server_prompt_outline);
+        showIpOutline.getPaint().setStrokeWidth(5);
+        showIpOutline.getPaint().setStyle(Paint.Style.STROKE);
+        promptOutline.getPaint().setStrokeWidth(5);
+        promptOutline.getPaint().setStyle(Paint.Style.STROKE);
 
         server.start();
-        showToast("Server started");
     }
 
     public void showIp(View view) {
-        TextView showIp = (TextView) findViewById(R.id.prompt_text);
-        Button button = (Button) findViewById(R.id.showIp);
-        Button startButton = (Button) findViewById(R.id.startGame);
+        runOnUiThread(
+                () -> {
+                    TextView showIp = (TextView) findViewById(R.id.ip_label);
+                    TextView showIpOutline = (TextView) findViewById(R.id.ip_label_outline);
 
-        connectionIP = server.getIpAddr();
+                    connectionIP = server.getIpAddr();
 
-        button.setVisibility(View.GONE);
-        showIp.setText(
-                "Your IP address is:\n"
-                        + connectionIP
-                        + "\n(Start after Guest\nhas joined and started)");
-        startButton.setVisibility(View.VISIBLE);
+                    showIp.setText(connectionIP);
+                    showIpOutline.setText(connectionIP);
 
-        connection = new ClientConnector(this);
-        connection.setConnectionTarget(connectionIP, connectionPort);
-        connection.start();
-        showToast(
-                "Your IP address is:\n"
-                        + connectionIP
-                        + "\n(Start after Guest has joined and started)");
+                    connection = new ClientConnector(this);
+                    connection.setConnectionTarget(connectionIP, connectionPort);
+                    connection.start();
+                });
     }
 
     public void connectServer(View view) {
@@ -280,7 +271,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                         switch (message.getType()) {
                             case ADD_CARD:
                                 addCard(message);
-                                showToast("Card added to deck");
                                 Log.i(
                                         TAG,
                                         "Added card "
@@ -292,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 break;
                             case REMOVE_CARD:
                                 removeCard(message);
-                                showToast("Card removed from deck");
                                 Log.i(
                                         TAG,
                                         "Removed card "

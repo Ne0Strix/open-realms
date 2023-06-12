@@ -16,6 +16,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.View;
+import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Champion;
 import at.vunfer.openrealms.model.Deck;
@@ -60,6 +62,7 @@ public class ServerThread extends Thread {
     public void run() {
         try {
             setupServer();
+            ((MainActivity) context).showIp(new View(context));
             acceptConnections();
         } catch (IOException ex) {
             Log.e(TAG, "IO Exception on Server!", ex);
