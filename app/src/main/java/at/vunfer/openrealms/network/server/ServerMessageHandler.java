@@ -15,7 +15,7 @@ import at.vunfer.openrealms.network.Message;
 import java.io.IOException;
 
 public class ServerMessageHandler implements IHandleMessage {
-    private static final String TAG = "ServerMessageHandler";
+    public static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
 
     public void ensureServerThreadInitialized() {
@@ -51,7 +51,7 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void handleUncoverCheat(Message message, GameSession gameSession, Player currentPlayer)
+    public void handleUncoverCheat(Message message, GameSession gameSession, Player currentPlayer)
             throws IOException {
         boolean isCheatActive = currentPlayer.getPlayArea().getCheat();
         if (isCheatActive) {
@@ -82,14 +82,14 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void handleCheat(Message message, Player currentPlayer) {
+    public void handleCheat(Message message, Player currentPlayer) {
         boolean cheatActive = (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
         currentPlayer.getPlayArea().setCheat(cheatActive);
         serverThread.sendCheatStatusToAll(cheatActive);
         Log.i(TAG, "Cheat mode set to " + cheatActive);
     }
 
-    private void handleTouchedCard(Message message, GameSession gameSession, Player currentPlayer) {
+    public void handleTouchedCard(Message message, GameSession gameSession, Player currentPlayer) {
         int cardId = (int) message.getData(DataKey.CARD_ID);
 
         try {
@@ -132,7 +132,7 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void checkDrawnCard(GameSession gameSession, Player currentPlayer) throws IOException {
+    public void checkDrawnCard(GameSession gameSession, Player currentPlayer) throws IOException {
         Deck<Card> drawnCards = currentPlayer.getPlayArea().getCardDrawnFromSpecialAbility();
         if (!drawnCards.isEmpty()) { // push changes from special ability
             for (Card c : drawnCards) {
@@ -143,7 +143,7 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void sendChampionKilledToAllClients(
+    public void sendChampionKilledToAllClients(
             GameSession gameSession, Player currentPlayer, int cardId) throws IOException {
         serverThread.sendMessageToAllClients(
                 createRemoveCardMessage(

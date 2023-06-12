@@ -198,7 +198,7 @@ class PlayAreaTest {
     @Test
     void testVisitDraw() {
         int initialHandSize = playArea.getPlayerCards().getHandCards().size();
-        playArea.visitDraw();
+        playArea.visitDraw(1);
         assertEquals(initialHandSize + 1, playArea.getPlayerCards().getHandCards().size());
     }
 
@@ -284,29 +284,6 @@ class PlayAreaTest {
         assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
     }
 
-    /*@Test
-    void testBuyCardNotEnoughCoins() {
-        Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
-        Message message = new Message(MessageType.BUY_CARD);
-        message.setData(DataKey.CARD_ID, Integer.toString(toBuy.getId()));
-        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(false));
-
-        int initialCoins = player1.getPlayArea().getTurnCoins();
-        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
-        Assertions.assertFalse(
-                player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
-        assertEquals(initialCoins, player1.getPlayArea().getTurnCoins());
-    }
-
-    @Test
-    void testBuyCardInvalidCard() {
-        Message message = new Message(MessageType.BUY_CARD);
-        message.setData(DataKey.CARD_ID, "-1");
-        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(true));
-
-        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
-    }*/
-
     @Test
     void testClearPlayedCards() {
         Card c = new Card("Test", 2, Faction.NONE, List.of(new DamageEffect(2)));
@@ -352,15 +329,17 @@ class PlayAreaTest {
 
     @Test
     void testGetDrawnCard() {
-        playArea.visitDraw();
+        playArea.visitDraw(1);
         assertTrue(playArea.getCardDrawnFromSpecialAbility() != null);
     }
 
     @Test
     void testResetDrawnCard() {
-        playArea.visitDraw();
+        playArea.visitDraw(1);
+        System.out.println("Before reset: " + playArea.getCardDrawnFromSpecialAbility());
         playArea.resetCardDrawnFromSpecialAbility();
-        assertTrue(playArea.getCardDrawnFromSpecialAbility() == null);
+        System.out.println("After reset: " + playArea.getCardDrawnFromSpecialAbility());
+        assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
     }
 
     @AfterEach
@@ -369,4 +348,32 @@ class PlayAreaTest {
         playerCards = null;
         player1 = null;
     }
+
+    @Test
+    void testGetCardDrawnFromSpecialAbility() {
+        assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
+        playArea.visitDraw(1);
+        assertFalse(playArea.getCardDrawnFromSpecialAbility().isEmpty());
+    }
+
+    @Test
+    void testResetCardDrawnFromSpecialAbility() {
+        playArea.visitDraw(1);
+        playArea.resetCardDrawnFromSpecialAbility();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
+    }
+
+    @Test
+    void testBuyCardByIdNotFoundInMarket() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        assertFalse(playArea.buyCardById(card.getId()));
+    }
+
+    @Test
+    void testBuyCardByIdFoundInMarket() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        playArea.getMarket().forPurchase.add(card);
+        assertTrue(playArea.buyCardById(card.getId()));
+    }
+
 }

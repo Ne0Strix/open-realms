@@ -2,10 +2,39 @@
 package at.vunfer.openrealms.model.effects;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+
+import at.vunfer.openrealms.model.PlayArea;
 
 class DrawEffectTest {
+    private PlayArea playArea;
+    private DrawEffect effect;
+
+    @BeforeEach
+    void setUp(TestInfo testInfo) {
+        playArea = mock(PlayArea.class);
+        effect = new DrawEffect(1);
+        System.out.println("Running test: " + testInfo.getDisplayName());
+    }
+
+    @RepeatedTest(1000)
+    void testApplyEffectPerformance() {
+        long startTime = System.nanoTime();
+
+        effect.applyEffect(playArea);
+
+        long endTime = System.nanoTime();
+        long executionTime = endTime - startTime;
+
+        System.out.println("Execution time: " + executionTime + " ns");
+    }
+
     @Test
     void testInvalidConstructor() {
         assertThrows(
@@ -57,5 +86,25 @@ class DrawEffectTest {
         DrawEffect effect2 = new DrawEffect(1);
 
         assertEquals(effect1.hashCode(), effect2.hashCode());
+    }
+
+    @Test
+    void testApplyEffect() {
+        PlayArea playArea = mock(PlayArea.class);
+        DrawEffect effect = new DrawEffect(3);
+
+        effect.applyEffect(playArea);
+
+        verify(playArea).visitDraw(3);
+    }
+
+    @Test
+    void testApplyEffectWithLargeAmount() {
+        PlayArea playArea = mock(PlayArea.class);
+        DrawEffect effect = new DrawEffect(1000000);
+
+        effect.applyEffect(playArea);
+
+        verify(playArea).visitDraw(1000000);
     }
 }

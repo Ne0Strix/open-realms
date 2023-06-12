@@ -373,6 +373,7 @@ public class PlayArea {
     }
 
     public void resetCardDrawnFromSpecialAbility() {
+
         cardDrawnFromSpecialAbility.clear();
     }
 

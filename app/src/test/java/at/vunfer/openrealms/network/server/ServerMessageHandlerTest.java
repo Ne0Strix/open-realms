@@ -1,20 +1,27 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import android.content.Context;
+import android.util.Log;
+
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.network.Communication;
+import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
+
 import java.io.IOException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -142,5 +149,25 @@ class ServerMessageHandlerTest {
         assertThrows(
                 RuntimeException.class,
                 () -> serverMessageHandler.handleKilledChampionsAtTurnEnd(gameSession, player));
+    }
+
+    @Test
+    void testHandleCheat() {
+        mockStatic(Log.class);
+
+        serverMessageHandler.ensureServerThreadInitialized();
+
+        Message message = Mockito.mock(Message.class);
+        when(message.getData(DataKey.CHEAT_ACTIVATE)).thenReturn(true);
+
+        GameSession gameSession = serverThread.getGameSession();
+        Player currentPlayer = gameSession.getCurrentPlayer();
+        PlayArea playArea = currentPlayer.getPlayArea();
+
+        serverMessageHandler.handleCheat(message, currentPlayer);
+
+        verify(playArea, times(1)).setCheat(true);
+        verify(serverThread, times(1)).sendCheatStatusToAll(true);
+        Log.i(eq(ServerMessageHandler.TAG), anyString());
     }
 }
