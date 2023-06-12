@@ -6,15 +6,16 @@ public enum MessageType {
     TOUCHED,
     CHOICE,
     END_TURN,
+    CHEAT,
 
     // Server -> Client
     ADD_CARD,
     REMOVE_CARD,
-    BUY_CARD,
     CHOOSE_OPTION,
     UPDATE_PLAYER_STATS, // used to update the player stats of a player
     FULL_CARD_DECK, // used to send the full card deck to the client
     TURN_NOTIFICATION, // used to notify the client that it is his turn
     EXPEND_CHAMPION, // used to notify the client that a champion has been expended
+    UNCOVER_CHEAT,
     RESET_CHAMPION // used to notify the client that all champions have been reset
 }

@@ -3,7 +3,10 @@ package at.vunfer.openrealms;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,11 +44,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
     private boolean isHost = false;
+    private static final String PREF_NAME = "OpenRealmsPlayerPrefs";
+    private static final String KEY_POSITION = "position";
 
     private static boolean gameStarted = false;
     private static boolean myTurn = false;
 
-    private Context context = this;
+    private final Context context = this;
     private int playerId;
 
     public PlayAreaPresenter playAreaPresenter;
@@ -60,13 +65,15 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public PlayedChampionsPresenter playerPlayedChampionsPresenter;
     public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
 
+    ImageView victoryImage;
+    ImageView defeatImage;
+    Button endTurnButton;
     private VideoView videoView;
     private MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.video_view);
 
         // Initialize the VideoView
@@ -95,6 +102,22 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                         toMainMenu(new View(context));
                     }
                 });
+
+        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        ShakeDetector mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(
+                new ShakeDetector.OnShakeListener() {
+
+                    @Override
+                    public void onShake() throws IOException {
+                        sendCheatMessage();
+                    }
+                });
+
+        mSensorManager.registerListener(
+                mShakeDetector,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI);
     }
 
     public void hostGame(View view) {
@@ -186,7 +209,16 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void startGame(View view) {
+        // Start game music, that will loop, but stop when app is minimized
+        gameStarted = true;
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(KEY_POSITION, 0);
+        editor.apply();
+        startService(new Intent(this, OpenRealmsPlayer.class));
+
         setContentView(R.layout.activity_main);
+
         TextView outline = findViewById(R.id.waiting_for_server_label_outline);
         outline.getPaint().setStrokeWidth(5);
         outline.getPaint().setStyle(Paint.Style.STROKE);
@@ -236,9 +268,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         } else {
             this.playerId = 1;
         }
-        // Start game music, that will loop, but stop when app is minimized
-        gameStarted = true;
-        startService(new Intent(this, OpenRealmsPlayer.class));
     }
 
     @Override
@@ -297,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 PlayerStats stats =
                                         (PlayerStats) message.getData(DataKey.PLAYER_STATS);
                                 if (playerId == target) {
-
                                     overlayViewPresenter.updatePlayerName(stats.getPlayerName());
                                     overlayViewPresenter.updatePlayerHealth(
                                             stats.getPlayerHealth());
@@ -305,16 +333,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        //                                        //this adds the
-                                        // defeat screen on top of the game
-                                        ImageView defeatImage = findViewById(R.id.defeat_image);
-                                        defeatImage.setVisibility(View.VISIBLE);
-                                        defeatImage.getParent().bringChildToFront(defeatImage);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
                                         for (CardView c : cardViews) {
                                             c.setFaceDown();
                                         }
+                                        // this adds the defeat screen on top of the game
+                                        defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage.setVisibility(View.VISIBLE);
+                                        defeatImage.getParent().bringChildToFront(defeatImage);
+                                        victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.INVISIBLE);
+                                        endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                     }
                                 } else {
                                     overlayViewPresenter.updateOpponentName(stats.getPlayerName());
@@ -324,14 +353,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                     overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
                                     overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
                                     if (stats.getPlayerHealth() < 1) {
-                                        ImageView victoryImage = findViewById(R.id.victory_image);
-                                        victoryImage.setVisibility(View.VISIBLE);
-                                        victoryImage.getParent().bringChildToFront(victoryImage);
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        endTurnButton.setVisibility(View.GONE);
                                         for (CardView c : cardViews) {
                                             c.setFaceDown();
                                         }
+                                        // this adds the victory screen on top of the game
+                                        victoryImage = findViewById(R.id.victory_image);
+                                        victoryImage.setVisibility(View.VISIBLE);
+                                        victoryImage.getParent().bringChildToFront(victoryImage);
+                                        defeatImage = findViewById(R.id.defeat_image);
+                                        defeatImage.setVisibility(View.INVISIBLE);
+                                        endTurnButton = findViewById(R.id.end_turn_button);
+                                        endTurnButton.setVisibility(View.INVISIBLE);
                                     }
                                 }
                                 break;
@@ -362,6 +394,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         }
                                     }
                                 }
+                                break;
+                            case CHEAT:
+                                boolean cheatActive =
+                                        (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
+                                overlayViewPresenter.cheatingEnabled(cheatActive);
                                 break;
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
@@ -536,5 +573,33 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public ImageView getVictoryImage() {
+        return victoryImage;
+    }
+
+    public ImageView getDefeatImage() {
+        return defeatImage;
+    }
+
+    public Button getEndTurnButton() {
+        return endTurnButton;
+    }
+
+    public void sendCheatMessage() throws IOException {
+        Message cheatMessage = new Message(MessageType.CHEAT);
+        cheatMessage.setData(DataKey.CHEAT_ACTIVATE, true);
+        if (myTurn) {
+            connection.sendMessage(cheatMessage);
+        }
+    }
+
+    public void uncoverCheat(View view) throws IOException {
+        Log.i(TAG, "Uncovering cheat.");
+        Message uncoverMessage = new Message(MessageType.UNCOVER_CHEAT);
+        if (!myTurn) {
+            connection.sendMessage(uncoverMessage);
+        }
     }
 }

@@ -124,4 +124,10 @@ public class Communication {
                         player.getPlayArea().getTurnCoins()));
         return playerStatsMsg;
     }
+
+    public static Message createCheatStatusMessage(boolean isCheating) {
+        Message cheatStatusMsg = new Message(MessageType.CHEAT);
+        cheatStatusMsg.setData(DataKey.CHEAT_ACTIVATE, isCheating);
+        return cheatStatusMsg;
+    }
 }
