@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.video_view);
-        showToast("Welcome to OpenRealms!");
 
         // Initialize the VideoView
         videoView = findViewById(R.id.video_view);
@@ -188,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void startGame(View view) {
         setContentView(R.layout.activity_main);
-        showToast("Game started");
         TextView outline = findViewById(R.id.waiting_for_server_label_outline);
         outline.getPaint().setStrokeWidth(5);
         outline.getPaint().setStyle(Paint.Style.STROKE);
