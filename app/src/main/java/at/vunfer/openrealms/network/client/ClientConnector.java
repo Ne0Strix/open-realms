@@ -17,6 +17,8 @@ public class ClientConnector extends Thread {
     private Socket socket;
     private InetSocketAddress targetServer;
     private Communication comm;
+    private String ipAddress;
+    private int port;
 
     public ClientConnector(UIUpdateListener uiUpdater) {
         this.socket = new Socket();
@@ -26,21 +28,24 @@ public class ClientConnector extends Thread {
     @Override
     public void run() {
         try {
+            targetServer = new InetSocketAddress(ipAddress, port);
             socket.connect(targetServer);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             Log.i("Info", "Client was connected to " + targetServer.toString());
+            uiUpdater.clientCallback(true);
 
             comm =
                     new Communication(
                             inputStream, outputStream, new ClientMessageHandler(uiUpdater));
         } catch (IOException e) {
-            throw new RuntimeException("Unable to create client connection.", e);
+            uiUpdater.clientCallback(false);
         }
     }
 
     public void setConnectionTarget(String ipAddr, int port) {
-        targetServer = new InetSocketAddress(ipAddr, port);
+        this.ipAddress = ipAddr;
+        this.port = port;
     }
 
     public void sendMessage(Message msg) throws IOException {

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -169,23 +170,42 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void connectServer(View view) {
         EditText getIp = (EditText) findViewById(R.id.get_text);
         Button join = (Button) findViewById(R.id.join);
-        Button start = (Button) findViewById(R.id.joinGameClient);
 
+        join.setVisibility(View.INVISIBLE);
         connectionIP = getIp.getText().toString();
         Log.i(TAG, "Connecting to IP: " + connectionIP);
         connection = new ClientConnector(this);
 
         connection.setConnectionTarget(connectionIP, connectionPort);
         connection.start();
+    }
 
-        join.setVisibility(View.GONE);
-        start.setVisibility(View.VISIBLE);
-        showToast("Connecting to IP: " + connectionIP);
+    public void clientCallback(boolean success) {
+        runOnUiThread(
+                () -> {
+                    if (!isHost) {
+                        Button join = (Button) findViewById(R.id.join);
+                        join.setVisibility(View.VISIBLE);
+
+                        if (!success) {
+                            showToast("Unable to make Connection. Please recheck IP-Address.");
+                            return;
+                        }
+                        startGame(new View(this));
+                    }
+                });
     }
 
     public void startGame(View view) {
         setContentView(R.layout.activity_main);
         showToast("Game started");
+        TextView outline = findViewById(R.id.waiting_for_server_label_outline);
+        outline.getPaint().setStrokeWidth(5);
+        outline.getPaint().setStyle(Paint.Style.STROKE);
+        if (isHost) {
+            outline.setText("Loading...");
+            ((TextView) findViewById(R.id.waiting_for_server_label)).setText("Loading...");
+        }
 
         // Initialize views
         MarketView marketView = findViewById(R.id.market_view);
@@ -199,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         PlayedChampionsView playerPlayedChampionsView = findViewById(R.id.player_champions_view);
         PlayedChampionsView opponentPlayedChampionsView =
                 findViewById(R.id.opponent_champions_view);
+        OverlayView overlayView = findViewById(R.id.overlay_view);
 
         // Initialize presenter
         marketPresenter = new MarketPresenter(marketView);
@@ -212,8 +233,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         playerPlayedChampionsPresenter = new PlayedChampionsPresenter(playerPlayedChampionsView);
         opponentPlayedChampionsPresenter =
                 new PlayedChampionsPresenter(opponentPlayedChampionsView);
-
-        OverlayView overlayView = new OverlayView(this);
         overlayViewPresenter = new OverlayPresenter(overlayView);
 
         // Add views to layout
@@ -221,8 +240,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         Button endTurnButton = findViewById(R.id.end_turn_button);
         endTurnButton.setVisibility(View.INVISIBLE);
-
-        layout.addView(overlayView.getOverlayView());
 
         // Flip the Text on opponent DiscardPile and Deck, to always be right-side up
         opponentDiscardPileView.findViewById(R.id.discardPileAmount).setScaleY(-1);
@@ -348,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         CardView.getViewFromCards(
                                                 context,
                                                 (List<Card>) message.getData(DataKey.COLLECTION));
+                                findViewById(R.id.loading_screen).setVisibility(View.GONE);
                                 Log.i(TAG, "Created CardViews from Cards.");
                                 break;
                             case TURN_NOTIFICATION:
@@ -541,6 +559,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     private void showToast(String message) {
-        // Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

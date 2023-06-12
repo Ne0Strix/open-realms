@@ -1,16 +1,16 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.util.AttributeSet;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.view.view_interfaces.OverlayViewInterface;
 
-public class OverlayView implements OverlayViewInterface {
-    private ConstraintLayout overlayViewLayout;
+public class OverlayView extends ConstraintLayout implements OverlayViewInterface {
     private TextView playerName;
     private TextView playerHealth;
     private TextView opponentName;
@@ -19,25 +19,25 @@ public class OverlayView implements OverlayViewInterface {
     private TextView turnHealing;
     private TextView turnCoin;
 
-    @SuppressLint("InflateParams")
-    public OverlayView(Context context) {
-        overlayViewLayout =
-                (ConstraintLayout)
-                        LayoutInflater.from(context).inflate(R.layout.overlay_view, null);
+    public OverlayView(@NonNull Context context) {
+        this(context, null);
+    }
 
-        ConstraintLayout.LayoutParams layoutParams =
-                new ConstraintLayout.LayoutParams(
-                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-                        android.view.ViewGroup.LayoutParams.MATCH_PARENT);
-        overlayViewLayout.setLayoutParams(layoutParams);
+    public OverlayView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-        playerName = overlayViewLayout.findViewById(R.id.playerName);
-        playerHealth = overlayViewLayout.findViewById(R.id.playerHealth);
-        opponentName = overlayViewLayout.findViewById(R.id.opponentName);
-        opponentHealth = overlayViewLayout.findViewById(R.id.opponentHealth);
-        turnDamage = overlayViewLayout.findViewById(R.id.turnDamage);
-        turnHealing = overlayViewLayout.findViewById(R.id.turnHealing);
-        turnCoin = overlayViewLayout.findViewById(R.id.turnCoin);
+    public OverlayView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        inflate(context, R.layout.overlay_view, this);
+
+        playerName = findViewById(R.id.playerName);
+        playerHealth = findViewById(R.id.playerHealth);
+        opponentName = findViewById(R.id.opponentName);
+        opponentHealth = findViewById(R.id.opponentHealth);
+        turnDamage = findViewById(R.id.turnDamage);
+        turnHealing = findViewById(R.id.turnHealing);
+        turnCoin = findViewById(R.id.turnCoin);
     }
 
     @Override
@@ -112,6 +112,6 @@ public class OverlayView implements OverlayViewInterface {
 
     @Override
     public ConstraintLayout getOverlayView() {
-        return overlayViewLayout;
+        return this;
     }
 }
