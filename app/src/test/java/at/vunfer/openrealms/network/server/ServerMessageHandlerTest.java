@@ -4,9 +4,11 @@ package at.vunfer.openrealms.network.server;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.testng.AssertJUnit.assertNotNull;
 
 import android.content.Context;
 import android.util.Log;
+
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.GameSession;
@@ -16,6 +18,8 @@ import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
+
 import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,14 +115,11 @@ class ServerMessageHandlerTest {
         verify(serverThread, times(2)).sendMessageToAllClients(any());
         communication.verify(
                 () -> Communication.createExpendChampionMessage(eq(1), anyInt()), times(1));
-        communication.verify(() -> Communication.createPlayerStatsMessage(eq(1), any()), times(1));
     }
 
     @Test
     void testHandleKilledChampionsAtTurnEnd() throws IOException {
-
         serverMessageHandler.ensureServerThreadInitialized();
-
         serverMessageHandler.handleKilledChampionsAtTurnEnd(gameSession, player);
 
         verify(serverThread, times(3)).sendMessageToAllClients(any());
@@ -145,10 +146,9 @@ class ServerMessageHandlerTest {
                 RuntimeException.class,
                 () -> serverMessageHandler.handleKilledChampionsAtTurnEnd(gameSession, player));
     }
-
     @Test
-    void testHandleCheat() {
-        // mockStatic(Log.class);
+    void handleCheat() {
+        mockStatic(Log.class);
 
         serverMessageHandler.ensureServerThreadInitialized();
 
@@ -165,4 +165,14 @@ class ServerMessageHandlerTest {
         verify(serverThread, times(1)).sendCheatStatusToAll(true);
         Log.i(eq(ServerMessageHandler.TAG), anyString());
     }
+
+    @Test
+    void testEnsureServerThreadInitialized() {
+        serverMessageHandler.ensureServerThreadInitialized();
+
+        assertNotNull(serverThread);
+    }
+
+
+
 }

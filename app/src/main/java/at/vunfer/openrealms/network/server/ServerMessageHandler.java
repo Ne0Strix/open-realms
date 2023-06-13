@@ -160,7 +160,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
     }
 
-    private void sendCardMovementToAllClients(
+    public void sendCardMovementToAllClients(
             GameSession gameSession,
             Player currentPlayer,
             DeckType deckTypeRemove,
@@ -188,7 +188,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
     }
 
-    private void handleEndTurn(GameSession gameSession, Player currentPlayer) {
+    public void handleEndTurn(GameSession gameSession, Player currentPlayer) {
         currentPlayer.getPlayArea().setCheat(false);
         Log.i(
                 TAG,
