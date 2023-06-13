@@ -45,9 +45,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static List<CardView> cardViews;
     private boolean isHost = false;
     private static final String PREF_NAME = "OpenRealmsPlayerPrefs";
-    private static final String KEY_POSITION = "position";
+    private static final String KEY_INGAME_POSITION = "ingame_position";
+    private static final String KEY_MENU_POSITION = "menu_position";
 
-    private static boolean gameStarted = false;
+    private static boolean ingameMusicPlaying = false;
+    private static boolean menuMusicPlaying = false;
     private static boolean myTurn = false;
 
     private final Context context = this;
@@ -144,9 +146,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         outline.getPaint().setStrokeWidth(5);
         outline.getPaint().setStyle(Paint.Style.STROKE);
         isHost = false;
-        if (gameStarted) {
+        if (ingameMusicPlaying) {
             stopService(new Intent(this, OpenRealmsPlayer.class));
-            gameStarted = false;
+            ingameMusicPlaying = false;
+        }
+        if (!menuMusicPlaying) {
+            startMenuMusic(true);
+            menuMusicPlaying = true;
         }
     }
 
@@ -216,14 +222,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void startGame(View view) {
         // Start game music, that will loop, but stop when app is minimized
-        if (!gameStarted) {
-            SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(KEY_POSITION, 0);
-            editor.apply();
-            startService(new Intent(this, OpenRealmsPlayer.class));
+        if (menuMusicPlaying) {
+            stopService(new Intent(this, OpenRealmsPlayer.class));
+            menuMusicPlaying = false;
         }
-        gameStarted = true;
+        if (!ingameMusicPlaying) {
+            startIngameMusic(true);
+        }
+        ingameMusicPlaying = true;
 
         setContentView(R.layout.activity_main);
 
@@ -585,13 +591,40 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     @Override
     protected void onResume() {
         super.onResume();
-        if (gameStarted) {
-            startService(new Intent(this, OpenRealmsPlayer.class));
+        if (ingameMusicPlaying) {
+            startIngameMusic(false);
+        }
+        if (menuMusicPlaying) {
+            startMenuMusic(false);
         }
     }
 
+    public void startIngameMusic(boolean resetPosition) {
+        if (resetPosition) {
+            SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(KEY_INGAME_POSITION, 0);
+            editor.apply();
+        }
+        Intent i = new Intent(this, OpenRealmsPlayer.class);
+        i.putExtra("track", "ingame");
+        startService(i);
+    }
+
+    public void startMenuMusic(boolean resetPosition) {
+        if (resetPosition) {
+            SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(KEY_MENU_POSITION, 0);
+            editor.apply();
+        }
+        Intent i = new Intent(this, OpenRealmsPlayer.class);
+        i.putExtra("track", "menu");
+        startService(i);
+    }
+
     public void setGameStarted(boolean b) {
-        gameStarted = b;
+        ingameMusicPlaying = b;
     }
 
     public ImageView getEndscreenImage() {
