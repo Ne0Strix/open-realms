@@ -144,6 +144,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         outline.getPaint().setStrokeWidth(5);
         outline.getPaint().setStyle(Paint.Style.STROKE);
         isHost = false;
+        if (gameStarted) {
+            stopService(new Intent(this, OpenRealmsPlayer.class));
+            gameStarted = false;
+        }
     }
 
     public void startServer(View view) {
@@ -212,12 +216,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void startGame(View view) {
         // Start game music, that will loop, but stop when app is minimized
+        if (!gameStarted) {
+            SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(KEY_POSITION, 0);
+            editor.apply();
+            startService(new Intent(this, OpenRealmsPlayer.class));
+        }
         gameStarted = true;
-        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(KEY_POSITION, 0);
-        editor.apply();
-        startService(new Intent(this, OpenRealmsPlayer.class));
 
         setContentView(R.layout.activity_main);
 
