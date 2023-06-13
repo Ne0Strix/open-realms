@@ -39,7 +39,9 @@
         app:layout_constraintBottom_toTopOf="@+id/player_hand_view"
         app:layout_constraintEnd_toEndOf="@+id/player_deck_view"
         app:layout_constraintStart_toStartOf="@+id/player_discard_pile_view"
-        app:layout_constraintTop_toBottomOf="@+id/opponent_hand_view" />
+        app:layout_constraintTop_toBottomOf="@+id/opponent_hand_view" >
+
+    </at.vunfer.openrealms.view.MarketView>
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -200,29 +202,60 @@
         app:layout_constraintTop_toTopOf="parent">
     </at.vunfer.openrealms.view.CardView>
 
-    <ImageView
-        android:id="@+id/victory_image"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/end_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/victory_image"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/defeat_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/defeat_image"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/defeat_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/defeat_image"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/victory_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/victory_image"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_menu"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_states"
+            android:onClick="toMainMenu"
+            android:text="Back to Main Menu"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_rematch" />
+
+        <Button
+            android:id="@+id/btn_rematch"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_states"
+            android:onClick="sendRematchRequest"
+            android:text="Rematch"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

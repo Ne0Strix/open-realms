@@ -22,7 +22,9 @@ public class Market {
     }
 
     public void setMarketDeck(Deck<Card> marketDeck) {
+        this.marketDeck.clear();
         this.marketDeck.addAll(marketDeck);
+        forPurchase.clear();
         restock();
     }
 

@@ -46,9 +46,16 @@ public class ServerMessageHandler implements IHandleMessage {
             case UNCOVER_CHEAT:
                 handleUncoverCheat(message, gameSession, currentPlayer);
                 break;
+            case REMATCH_REQUEST:
+                handleRematch();
+                break;
             default:
                 Log.i(TAG, "Received message of unknown type.");
         }
+    }
+
+    private void handleRematch() throws IOException {
+        serverThread.sendRematchToAll();
     }
 
     private void handleUncoverCheat(Message message, GameSession gameSession, Player currentPlayer)

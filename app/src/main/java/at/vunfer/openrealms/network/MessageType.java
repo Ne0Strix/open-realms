@@ -7,6 +7,7 @@ public enum MessageType {
     CHOICE,
     END_TURN,
     CHEAT,
+    REMATCH_REQUEST,
 
     // Server -> Client
     ADD_CARD,
@@ -17,5 +18,6 @@ public enum MessageType {
     TURN_NOTIFICATION, // used to notify the client that it is his turn
     EXPEND_CHAMPION, // used to notify the client that a champion has been expended
     UNCOVER_CHEAT,
-    RESET_CHAMPION // used to notify the client that all champions have been reset
+    RESET_CHAMPION, // used to notify the client that all champions have been reset
+    REMATCH
 }

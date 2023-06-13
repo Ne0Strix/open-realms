@@ -374,6 +374,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
                                 overlayViewPresenter.cheatingEnabled(cheatActive);
                                 break;
+                            case REMATCH:
+                                startGame(new View(context));
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
                         }
@@ -512,9 +514,16 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         else endscreenImage = findViewById(R.id.defeat_image);
 
         endscreenImage.setVisibility(View.VISIBLE);
-        endscreenImage.getParent().bringChildToFront(endscreenImage);
         endTurnButton = findViewById(R.id.end_turn_button);
         endTurnButton.setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.end_screen).setVisibility(View.VISIBLE);
+    }
+
+    public void sendRematchRequest(View v) throws IOException {
+        Message rematchRequest = new Message(MessageType.REMATCH_REQUEST);
+        connection.sendMessage(rematchRequest);
+        findViewById(R.id.btn_rematch).setVisibility(View.GONE);
     }
 
     public static void sendMessage(Message msg) throws IOException {

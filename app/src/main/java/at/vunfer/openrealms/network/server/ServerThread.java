@@ -221,7 +221,10 @@ public class ServerThread extends Thread {
 
     private void sendFullDeck(ClientHandler client) {
         Message fullDeckMsg = new Message(MessageType.FULL_CARD_DECK);
-        fullDeckMsg.setData(DataKey.COLLECTION, Card.getFullCardCollection());
+        // I truly do not understand why making a copy is scenery, but for the rematch, it is.
+        Deck<Card> copyOfAllCards = new Deck<>();
+        copyOfAllCards.addAll(Card.getFullCardCollection());
+        fullDeckMsg.setData(DataKey.COLLECTION, copyOfAllCards);
         client.sendMessage(fullDeckMsg);
     }
 
@@ -384,6 +387,21 @@ public class ServerThread extends Thread {
             sendMessageToAllClients(cheatStatusMsg);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private int numOfRematchRequests;
+
+    public void sendRematchToAll() throws IOException {
+        numOfRematchRequests++;
+        Log.d(TAG, "Processing REMATCH_REQUEST, numOfRequests= " + numOfRematchRequests);
+        if (numOfRematchRequests == gameSession.getPlayers().size()) {
+            Log.d(TAG, "Requirements for rematch met, sending command.");
+            numOfRematchRequests = 0;
+            Card.resetIdsAndCollection();
+            Message rematch = new Message(MessageType.REMATCH);
+            createGame();
+            sendMessageToAllClients(rematch);
         }
     }
 
