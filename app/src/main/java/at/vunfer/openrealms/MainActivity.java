@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
     private boolean isHost = false;
-    private static final String PREF_NAME = "OpenRealmsPlayerPrefs";
-    private static final String KEY_INGAME_POSITION = "ingame_position";
-    private static final String KEY_MENU_POSITION = "menu_position";
 
     private static boolean ingameMusicPlaying = false;
     private static boolean menuMusicPlaying = false;
@@ -600,26 +597,23 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void startIngameMusic(boolean resetPosition) {
-        if (resetPosition) {
-            SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(KEY_INGAME_POSITION, 0);
-            editor.apply();
-        }
-        Intent i = new Intent(this, OpenRealmsPlayer.class);
-        i.putExtra("track", "ingame");
-        startService(i);
+        startMusic(R.raw.background_music, resetPosition);
     }
 
     public void startMenuMusic(boolean resetPosition) {
+        startMusic(R.raw.menu_music, resetPosition);
+    }
+
+    public void startMusic(int track, boolean resetPosition) {
         if (resetPosition) {
-            SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+            SharedPreferences prefs =
+                    getSharedPreferences(OpenRealmsPlayer.PREF_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(KEY_MENU_POSITION, 0);
+            editor.putInt(OpenRealmsPlayer.KEY_POSITION + track, 0);
             editor.apply();
         }
         Intent i = new Intent(this, OpenRealmsPlayer.class);
-        i.putExtra("track", "menu");
+        i.putExtra("track", track);
         startService(i);
     }
 

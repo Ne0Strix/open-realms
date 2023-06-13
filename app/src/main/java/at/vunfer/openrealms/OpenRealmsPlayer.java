@@ -13,12 +13,9 @@ import androidx.annotation.Nullable;
 public class OpenRealmsPlayer extends Service {
     private MediaPlayer player;
     private SharedPreferences prefs;
-    private static final String PREF_NAME = "OpenRealmsPlayerPrefs";
-    private static final String KEY_INGAME_POSITION = "ingame_position";
-    private static final String KEY_MENU_POSITION = "menu_position";
-    private static final String MENU_MUSIC_EXTRA = "menu";
-    private static final String INGAME_MUSIC_EXTRA = "ingame";
-    private String trackPlaying;
+    public static final String PREF_NAME = "OpenRealmsPlayerPrefs";
+    public static final String KEY_POSITION = "position_";
+    private int trackPlaying;
     private static final String TAG = OpenRealmsPlayer.class.getSimpleName();
 
     @Override
@@ -37,23 +34,18 @@ public class OpenRealmsPlayer extends Service {
     Royalty Free Celtic Fantasy Music - "The Lone Wolf"
     By Royalty Free Music - Alexander Nakarada
     YouTube-Link: https://youtu.be/RN1THCKeaNsa*/
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
-        if (extras == null || (trackPlaying = extras.getString("track")) == null) {
+        if (extras == null) {
             Log.e(TAG, "No track was selected!");
             return Service.START_STICKY;
         }
-        int track;
-        int position;
-        if (trackPlaying.equals(MENU_MUSIC_EXTRA)) {
-            track = R.raw.menu_music;
-            position = prefs.getInt(KEY_MENU_POSITION, 0);
-        } else {
-            track = R.raw.background_music;
-            position = prefs.getInt(KEY_INGAME_POSITION, 0);
-        }
-        player = MediaPlayer.create(this, track);
+        trackPlaying = extras.getInt("track");
+        int position = prefs.getInt(KEY_POSITION + trackPlaying, 0);
+
+        player = MediaPlayer.create(this, trackPlaying);
         player.setLooping(true);
         player.seekTo(position);
         player.start();
@@ -68,17 +60,13 @@ public class OpenRealmsPlayer extends Service {
         super.onDestroy();
         // Save the current position.
         SharedPreferences.Editor editor = prefs.edit();
-        if (trackPlaying.equals(MENU_MUSIC_EXTRA)) {
-            editor.putInt(KEY_MENU_POSITION, player.getCurrentPosition());
-        } else {
-            editor.putInt(KEY_INGAME_POSITION, player.getCurrentPosition());
-        }
+        editor.putInt(KEY_POSITION + trackPlaying, player.getCurrentPosition());
         editor.apply();
 
         player.stop();
         player.release();
         player = null;
-        Log.i(TAG, "Stopping " + trackPlaying);
+        Log.i(TAG, "Stopping " + getResources().getResourceName(trackPlaying));
     }
 
     @Nullable @Override
