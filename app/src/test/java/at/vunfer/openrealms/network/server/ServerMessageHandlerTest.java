@@ -8,7 +8,6 @@ import static org.testng.AssertJUnit.assertNotNull;
 
 import android.content.Context;
 import android.util.Log;
-
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.GameSession;
@@ -18,8 +17,6 @@ import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.MessageType;
-
 import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -146,6 +143,7 @@ class ServerMessageHandlerTest {
                 RuntimeException.class,
                 () -> serverMessageHandler.handleKilledChampionsAtTurnEnd(gameSession, player));
     }
+
     @Test
     void handleCheat() {
         mockStatic(Log.class);
@@ -172,7 +170,4 @@ class ServerMessageHandlerTest {
 
         assertNotNull(serverThread);
     }
-
-
-
 }
