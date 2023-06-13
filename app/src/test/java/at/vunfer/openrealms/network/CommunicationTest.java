@@ -9,13 +9,18 @@ import at.vunfer.openrealms.model.PlayerFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 public class CommunicationTest {
+    private MockedStatic<CommunicationTest> mockedStatic;
+
 
     ObjectInputStream input;
 
@@ -27,6 +32,7 @@ public class CommunicationTest {
 
     @BeforeEach
     void setUp() {
+        mockedStatic = mockStatic(CommunicationTest.class);
         input = Mockito.mock(ObjectInputStream.class);
         output = Mockito.mock(ObjectOutputStream.class);
         messageHandler = Mockito.mock(IHandleMessage.class);
@@ -102,4 +108,10 @@ public class CommunicationTest {
     }
     // TODO listen for message test; cannot verify(messageHandler).handleMessage(msg) easily because
     // of the executor service
+
+
+    @AfterEach
+    public void cleanup() {
+        mockedStatic.close();
+    }
 }

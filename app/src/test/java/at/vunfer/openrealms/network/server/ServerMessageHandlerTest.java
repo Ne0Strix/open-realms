@@ -18,6 +18,8 @@ import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
 import java.io.IOException;
+
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,9 +37,11 @@ class ServerMessageHandlerTest {
     private Message message;
     private Card card;
     private Deck<Card> discardedChampions;
+    private MockedStatic<ServerMessageHandlerTest> mockedStatic;
 
     @BeforeEach
     void setUp() throws IOException {
+        mockedStatic = mockStatic(ServerMessageHandlerTest.class);
         ServerThread normalThread = new ServerThread(mock(Context.class), 69);
         serverThread = Mockito.spy(normalThread);
 
@@ -146,22 +150,22 @@ class ServerMessageHandlerTest {
 
     @Test
     void handleCheat() {
-        mockStatic(Log.class);
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            serverMessageHandler.ensureServerThreadInitialized();
 
-        serverMessageHandler.ensureServerThreadInitialized();
+            Message message = Mockito.mock(Message.class);
+            when(message.getData(DataKey.CHEAT_ACTIVATE)).thenReturn(true);
 
-        Message message = Mockito.mock(Message.class);
-        when(message.getData(DataKey.CHEAT_ACTIVATE)).thenReturn(true);
+            GameSession gameSession = serverThread.getGameSession();
+            Player currentPlayer = gameSession.getCurrentPlayer();
+            PlayArea playArea = currentPlayer.getPlayArea();
 
-        GameSession gameSession = serverThread.getGameSession();
-        Player currentPlayer = gameSession.getCurrentPlayer();
-        PlayArea playArea = currentPlayer.getPlayArea();
+            serverMessageHandler.handleCheat(message, currentPlayer);
 
-        serverMessageHandler.handleCheat(message, currentPlayer);
-
-        verify(playArea, times(1)).setCheat(true);
-        verify(serverThread, times(1)).sendCheatStatusToAll(true);
-        Log.i(eq(ServerMessageHandler.TAG), anyString());
+            verify(playArea, times(1)).setCheat(true);
+            verify(serverThread, times(1)).sendCheatStatusToAll(true);
+            Log.i(eq(ServerMessageHandler.TAG), anyString());
+        }
     }
 
     @Test
@@ -169,5 +173,10 @@ class ServerMessageHandlerTest {
         serverMessageHandler.ensureServerThreadInitialized();
 
         assertNotNull(serverThread);
+    }
+
+    @AfterEach
+    public void cleanup() {
+        mockedStatic.close();
     }
 }
