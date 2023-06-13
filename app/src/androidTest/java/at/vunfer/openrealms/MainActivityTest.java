@@ -24,7 +24,6 @@ import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.MessageType;
 import at.vunfer.openrealms.network.PlayerStats;
 import at.vunfer.openrealms.presenter.OverlayPresenter;
-import java.io.IOException;
 import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
@@ -62,11 +61,7 @@ public class MainActivityTest {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
-                    try {
-                        main.toMainMenu(new View(main));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    main.toMainMenu(new View(main));
                     main.startGame(new View(main));
                 });
 
@@ -90,11 +85,7 @@ public class MainActivityTest {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
-                    try {
-                        main.toMainMenu(new View(main));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    main.toMainMenu(new View(main));
                     main.startGame(new View(main));
                 });
 
@@ -118,11 +109,7 @@ public class MainActivityTest {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
-                    try {
-                        main.toMainMenu(new View(main));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    main.toMainMenu(new View(main));
                     main.startGame(new View(main));
                 });
         Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
@@ -149,11 +136,7 @@ public class MainActivityTest {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
-                    try {
-                        main.toMainMenu(new View(main));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    main.toMainMenu(new View(main));
                     main.startGame(new View(main));
                 });
         Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
@@ -180,11 +163,7 @@ public class MainActivityTest {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
-                    try {
-                        main.toMainMenu(new View(main));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    main.toMainMenu(new View(main));
                     main.startGame(new View(main));
                 });
 
@@ -236,11 +215,7 @@ public class MainActivityTest {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
-                    try {
-                        main.toMainMenu(new View(main));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    main.toMainMenu(new View(main));
                     main.startGame(new View(main));
                 });
 
@@ -275,11 +250,7 @@ public class MainActivityTest {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
                 () -> {
-                    try {
-                        main.toMainMenu(new View(main));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    main.toMainMenu(new View(main));
                     main.startGame(new View(main));
                 });
 
