@@ -395,7 +395,7 @@ public class ServerThread extends Thread {
     public void sendRematchToAll() throws IOException {
         numOfRematchRequests++;
         Log.d(TAG, "Processing REMATCH_REQUEST, numOfRequests= " + numOfRematchRequests);
-        if (numOfRematchRequests == gameSession.getPlayers().size()) {
+        if (numOfRematchRequests == connections.size()) {
             Log.d(TAG, "Requirements for rematch met, sending command.");
             numOfRematchRequests = 0;
             Card.resetIdsAndCollection();
