@@ -23,7 +23,7 @@ public class PlayArea {
     private Deck<Card> cardDrawnFromSpecialAbility;
     private Deck<Card> cardsThatUsedSynergies;
     private Deck<Card> atTurnEndDiscardedChampions;
-    private Deck<Card> drawnByCheat = new Deck<Card>();
+    private Deck<Card> drawnByCheat = new Deck<>();
     private boolean cheat = false;
 
     /**
