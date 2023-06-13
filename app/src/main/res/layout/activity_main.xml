@@ -228,6 +228,33 @@
             android:src="@drawable/victory_image"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/endGameLabelOutline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VICTORY"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toBottomOf="@+id/endGameLabel"
+            app:layout_constraintEnd_toEndOf="@+id/endGameLabel"
+            app:layout_constraintStart_toStartOf="@+id/endGameLabel"
+            app:layout_constraintTop_toTopOf="@+id/endGameLabel" />
+
+        <TextView
+            android:id="@+id/endGameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VICTORY"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_rematch"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.75" />
+
         <Button
             android:id="@+id/btn_menu"
             android:layout_width="250dp"
@@ -242,6 +269,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_rematch" />
 
+
+        <ImageView
+            android:id="@+id/waitingRematchLabel2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/waitingRematchLabel"
+            app:layout_constraintEnd_toEndOf="@+id/waitingRematchLabel"
+            app:layout_constraintStart_toStartOf="@+id/waitingRematchLabel"
+            app:layout_constraintTop_toTopOf="@+id/waitingRematchLabel"
+            app:srcCompat="@android:drawable/screen_background_dark_transparent" />
+
+        <TextView
+            android:id="@+id/waitingRematchLabel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="Waiting for opponent to rematch..."
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_rematch"
+            app:layout_constraintEnd_toEndOf="@+id/btn_rematch"
+            app:layout_constraintStart_toStartOf="@+id/btn_rematch"
+            app:layout_constraintTop_toTopOf="@+id/btn_rematch" />
+
         <Button
             android:id="@+id/btn_rematch"
             android:layout_width="250dp"
@@ -254,7 +306,7 @@
             app:layout_constraintBottom_toTopOf="@id/btn_menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/endGameLabelOutline" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -4,6 +4,7 @@ package at.vunfer.openrealms;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -197,7 +198,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                         join.setVisibility(View.VISIBLE);
 
                         if (!success) {
-                            showToast("Unable to make Connection. Please recheck IP-Address.");
+                            Toast.makeText(
+                                            this,
+                                            "Unable to make Connection. Please recheck IP-Address.",
+                                            Toast.LENGTH_SHORT)
+                                    .show();
                             return;
                         }
                         startGame(new View(this));
@@ -360,11 +365,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                         if (playerId == (Integer) targetPlayer) {
                                             endTurnButton.setVisibility(View.VISIBLE);
                                             myTurn = true;
-                                            showToast("Your turn");
                                         } else {
                                             endTurnButton.setVisibility(View.INVISIBLE);
                                             myTurn = false;
-                                            showToast("Opponent's turn");
                                         }
                                     }
                                 }
@@ -510,12 +513,30 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         for (CardView c : cardViews) {
             c.setFaceDown();
         }
-        if (victory) endscreenImage = findViewById(R.id.victory_image);
-        else endscreenImage = findViewById(R.id.defeat_image);
+
+        String endGameText;
+        int endGameTextColor;
+        if (victory) {
+            endscreenImage = findViewById(R.id.victory_image);
+            endGameText = "VICTORY!";
+            endGameTextColor = Color.GREEN;
+        } else {
+            endscreenImage = findViewById(R.id.defeat_image);
+            endGameText = "DEFEAT!";
+            endGameTextColor = Color.RED;
+        }
 
         endscreenImage.setVisibility(View.VISIBLE);
         endTurnButton = findViewById(R.id.end_turn_button);
         endTurnButton.setVisibility(View.INVISIBLE);
+
+        TextView outline = findViewById(R.id.endGameLabelOutline);
+        outline.getPaint().setStrokeWidth(5);
+        outline.getPaint().setStyle(Paint.Style.STROKE);
+        outline.setText(endGameText);
+        TextView label = findViewById(R.id.endGameLabel);
+        label.setText(endGameText);
+        label.setTextColor(endGameTextColor);
 
         findViewById(R.id.end_screen).setVisibility(View.VISIBLE);
     }
@@ -523,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void sendRematchRequest(View v) throws IOException {
         Message rematchRequest = new Message(MessageType.REMATCH_REQUEST);
         connection.sendMessage(rematchRequest);
-        findViewById(R.id.btn_rematch).setVisibility(View.GONE);
+        findViewById(R.id.btn_rematch).setVisibility(View.INVISIBLE);
     }
 
     public static void sendMessage(Message msg) throws IOException {
@@ -565,10 +586,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void setGameStarted(boolean b) {
         gameStarted = b;
-    }
-
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     public ImageView getEndscreenImage() {
