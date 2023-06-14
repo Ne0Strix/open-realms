@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -62,6 +63,19 @@ public class MainActivityTest {
                     assertEquals(
                             "NAME",
                             ((TextView) main.findViewById(R.id.name_chooser)).getText().toString());
+                });
+    }
+
+    @Test
+    public void testSendName() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    main.toMainMenu(new View(main));
+                    ((TextView) main.findViewById(R.id.name_chooser)).setText("NAME");
+                    main.joinGame(new View(main));
+                    assertEquals("NAME", main.playerName);
+                    assertThrows(NullPointerException.class, () -> main.startGame(new View(main)));
                 });
     }
 
@@ -189,6 +203,58 @@ public class MainActivityTest {
     }
 
     @Test
+    public void testTurnNotification() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    main.toMainMenu(new View(main));
+                    main.startGame(new View(main));
+                });
+
+        Message turnNotification = new Message(MessageType.TURN_NOTIFICATION);
+        turnNotification.setData(DataKey.TARGET_PLAYER, 0);
+        main.updateUI(turnNotification);
+        getInstrumentation().waitForIdleSync();
+        assertEquals(View.INVISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
+
+        Message turnNotification2 = new Message(MessageType.TURN_NOTIFICATION);
+        turnNotification2.setData(DataKey.TARGET_PLAYER, 1);
+        main.updateUI(turnNotification2);
+        getInstrumentation().waitForIdleSync();
+        assertEquals(View.VISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
+    }
+
+    @Test
+    public void testUselessNotification() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    main.toMainMenu(new View(main));
+                    main.startGame(new View(main));
+                });
+
+        Message turnNotification = new Message(MessageType.TURN_NOTIFICATION);
+        main.updateUI(turnNotification);
+        getInstrumentation().waitForIdleSync();
+        assertEquals(View.INVISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
+
+        Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testCard);
+
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
+        runOnUiThread(
+                () -> {
+                    main.endGame(true);
+                });
+        main.updateUI(turnNotification);
+        getInstrumentation().waitForIdleSync();
+        assertEquals(View.INVISIBLE, main.findViewById(R.id.end_turn_button).getVisibility());
+    }
+
+    @Test
     public void testUpdateUIHand() throws Throwable {
         MainActivity main = activityRule.getActivity();
         runOnUiThread(
@@ -238,6 +304,48 @@ public class MainActivityTest {
         main.updateUI(removeCardFromOpponentHand);
         getInstrumentation().waitForIdleSync();
         assertTrue(main.playerHandPresenter.getListOfDisplayedCards().isEmpty());
+    }
+
+    @Test
+    public void testSendCheat() throws Throwable {
+        MainActivity main = activityRule.getActivity();
+        runOnUiThread(
+                () -> {
+                    main.toMainMenu(new View(main));
+                    main.startGame(new View(main));
+                });
+
+        Card testCard = new Card("Test1", 2, Faction.NONE, List.of(new DamageEffect(2)));
+        Deck<Card> cardList = new Deck<>();
+        cardList.add(testCard);
+
+        Message sendDeck = new Message(MessageType.FULL_CARD_DECK);
+        sendDeck.setData(DataKey.COLLECTION, cardList);
+        main.updateUI(sendDeck);
+
+        Message cheatActive = new Message(MessageType.CHEAT);
+        cheatActive.setData(DataKey.CHEAT_ACTIVATE, Boolean.TRUE);
+        main.updateUI(cheatActive);
+        getInstrumentation().waitForIdleSync();
+        assertEquals(
+                main.getResources()
+                        .getDrawable(R.drawable.circle_outline_white_48)
+                        .getConstantState(),
+                ((ImageView) main.findViewById(R.id.turnCoinIcon))
+                        .getDrawable()
+                        .getConstantState());
+
+        Message cheatDeactivate = new Message(MessageType.CHEAT);
+        cheatDeactivate.setData(DataKey.CHEAT_ACTIVATE, Boolean.FALSE);
+        main.updateUI(cheatDeactivate);
+        getInstrumentation().waitForIdleSync();
+        assertEquals(
+                main.getResources()
+                        .getDrawable(R.drawable.circle_outline_gold_48)
+                        .getConstantState(),
+                ((ImageView) main.findViewById(R.id.turnCoinIcon))
+                        .getDrawable()
+                        .getConstantState());
     }
 
     @Test

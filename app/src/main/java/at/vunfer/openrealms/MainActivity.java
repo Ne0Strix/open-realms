@@ -373,9 +373,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 Log.i(TAG, "Created CardViews from Cards.");
                                 break;
                             case TURN_NOTIFICATION:
-                                if (findViewById(R.id.defeat_image).getVisibility() != View.VISIBLE
-                                        && findViewById(R.id.victory_image).getVisibility()
-                                                != View.VISIBLE) {
+                                if (findViewById(R.id.end_screen).getVisibility() != View.VISIBLE) {
                                     Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                     if (targetPlayer != null) {
                                         Button endTurnButton = findViewById(R.id.end_turn_button);
@@ -527,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         return null;
     }
 
-    private void endGame(boolean victory) {
+    public void endGame(boolean victory) {
         for (CardView c : cardViews) {
             c.setFaceDown();
         }
