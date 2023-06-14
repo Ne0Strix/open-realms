@@ -8,6 +8,7 @@ import static org.testng.Assert.assertTrue;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -198,7 +199,7 @@ class PlayAreaTest {
     @Test
     void testVisitDraw() {
         int initialHandSize = playArea.getPlayerCards().getHandCards().size();
-        playArea.visitDraw();
+        playArea.visitDraw(1);
         assertEquals(initialHandSize + 1, playArea.getPlayerCards().getHandCards().size());
     }
 
@@ -284,29 +285,6 @@ class PlayAreaTest {
         assertTrue(player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
     }
 
-    /*@Test
-    void testBuyCardNotEnoughCoins() {
-        Card toBuy = player1.getPlayArea().getMarket().getForPurchase().get(0);
-        Message message = new Message(MessageType.BUY_CARD);
-        message.setData(DataKey.CARD_ID, Integer.toString(toBuy.getId()));
-        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(false));
-
-        int initialCoins = player1.getPlayArea().getTurnCoins();
-        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
-        Assertions.assertFalse(
-                player1.getPlayArea().getPlayerCards().getDiscardedCards().contains(toBuy));
-        assertEquals(initialCoins, player1.getPlayArea().getTurnCoins());
-    }
-
-    @Test
-    void testBuyCardInvalidCard() {
-        Message message = new Message(MessageType.BUY_CARD);
-        message.setData(DataKey.CARD_ID, "-1");
-        message.setData(DataKey.CHEAT_ACTIVATE, Boolean.toString(true));
-
-        assertThrows(IllegalArgumentException.class, () -> player1.getPlayArea().buyCard(message));
-    }*/
-
     @Test
     void testClearPlayedCards() {
         Card c = new Card("Test", 2, Faction.NONE, List.of(new DamageEffect(2)));
@@ -352,15 +330,88 @@ class PlayAreaTest {
 
     @Test
     void testGetDrawnCard() {
-        playArea.visitDraw();
+        playArea.visitDraw(1);
         assertTrue(playArea.getCardDrawnFromSpecialAbility() != null);
     }
 
     @Test
     void testResetDrawnCard() {
-        playArea.visitDraw();
+        playArea.visitDraw(1);
+        System.out.println("Before reset: " + playArea.getCardDrawnFromSpecialAbility());
         playArea.resetCardDrawnFromSpecialAbility();
-        assertTrue(playArea.getCardDrawnFromSpecialAbility() == null);
+        System.out.println("After reset: " + playArea.getCardDrawnFromSpecialAbility());
+        assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
+    }
+
+    @Test
+    void testGetCardDrawnFromSpecialAbility() {
+        assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
+        playArea.visitDraw(1);
+        assertFalse(playArea.getCardDrawnFromSpecialAbility().isEmpty());
+    }
+
+    @Test
+    void testResetCardDrawnFromSpecialAbility() {
+        playArea.visitDraw(1);
+        playArea.resetCardDrawnFromSpecialAbility();
+        assertTrue(playArea.getCardDrawnFromSpecialAbility().isEmpty());
+    }
+
+    @Test
+    void testBuyCardByIdNotFoundInMarket() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        assertFalse(playArea.buyCardById(card.getId()));
+    }
+
+    @Test
+    void testBuyCardByIdFoundInMarket() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        playArea.getMarket().forPurchase.add(card);
+        assertTrue(playArea.buyCardById(card.getId()));
+    }
+
+    @Test
+    void testSetHealth() {
+        int initialHealth = 100;
+        int newHealth = 80;
+        PlayerCards playerCards = new PlayerCards();
+        PlayArea playArea = new PlayArea(initialHealth, playerCards);
+
+        playArea.setHealth(newHealth);
+        int updatedHealth = playArea.getHealth();
+
+        Assert.assertEquals(newHealth, updatedHealth);
+    }
+
+    @Test
+    void testSetCheat() {
+        playArea.setCheat(true);
+        Assert.assertTrue(playArea.getCheat());
+    }
+
+    @Test
+    void testAddToDrawnByCheat() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        playArea.addToDrawnByCheat(card);
+        Assert.assertTrue(playArea.getDrawnByCheat().contains(card));
+    }
+
+    @Test
+    void testClearDrawnByCheat() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        playArea.addToDrawnByCheat(card);
+        playArea.clearDrawnByCheat();
+        Assert.assertTrue(playArea.getDrawnByCheat().isEmpty());
+    }
+
+    @Test
+    void testDestroyDrawnByCheat() {
+        Card card = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
+        PlayerCards playerCards = playArea.getPlayerCards();
+        playerCards.getDiscardedCards().add(card);
+        playArea.addToDrawnByCheat(card);
+        playArea.destroyDrawnByCheat();
+        Assert.assertFalse(playerCards.getDiscardedCards().contains(card));
     }
 
     @AfterEach

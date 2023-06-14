@@ -15,7 +15,7 @@ import at.vunfer.openrealms.network.Message;
 import java.io.IOException;
 
 public class ServerMessageHandler implements IHandleMessage {
-    private static final String TAG = "ServerMessageHandler";
+    public static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
 
     public void ensureServerThreadInitialized() {
@@ -98,14 +98,14 @@ public class ServerMessageHandler implements IHandleMessage {
         }
     }
 
-    private void handleCheat(Message message, Player currentPlayer) {
+    public void handleCheat(Message message, Player currentPlayer) {
         boolean cheatActive = (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
         currentPlayer.getPlayArea().setCheat(cheatActive);
         serverThread.sendCheatStatusToAll(cheatActive);
         Log.i(TAG, "Cheat mode set to " + cheatActive);
     }
 
-    private void handleTouchedCard(Message message, GameSession gameSession, Player currentPlayer) {
+    public void handleTouchedCard(Message message, GameSession gameSession, Player currentPlayer) {
         int cardId = (int) message.getData(DataKey.CARD_ID);
 
         try {
@@ -114,25 +114,12 @@ public class ServerMessageHandler implements IHandleMessage {
                 Log.i(TAG, "Card " + cardId + " played successfully.");
                 sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.PLAYED, cardId);
-                if (gameSession.getCurrentPlayer().getPlayArea().getCardDrawnFromSpecialAbility()
-                        != null) { // push changes from special ability
-                    Card drawnCard =
-                            gameSession
-                                    .getCurrentPlayer()
-                                    .getPlayArea()
-                                    .getCardDrawnFromSpecialAbility();
-                    sendCardMovementToAllClients(
-                            gameSession,
-                            currentPlayer,
-                            DeckType.DECK,
-                            DeckType.HAND,
-                            drawnCard.getId());
-                    gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
-                }
+                checkDrawnCard(gameSession, currentPlayer);
             } else if (cardType == 2) {
                 Log.i(TAG, "Champion " + cardId + " played successfully.");
                 sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.CHAMPIONS, cardId);
+                checkDrawnCard(gameSession, currentPlayer);
             } else if (currentPlayer.getPlayArea().buyCardById(cardId)) {
                 Log.i(TAG, "Card " + cardId + " bought successfully.");
                 sendCardMovementToAllClients(
@@ -144,6 +131,7 @@ public class ServerMessageHandler implements IHandleMessage {
             } else if (currentPlayer.getPlayArea().expendChampionById(cardId)) {
                 Log.i(TAG, "Champion " + cardId + " expended successfully.");
                 sendChampionExpendedToAllClients(gameSession, currentPlayer, cardId);
+                checkDrawnCard(gameSession, currentPlayer);
             } else if (currentPlayer
                     .getPlayArea()
                     .attackChampionById(
@@ -157,6 +145,21 @@ public class ServerMessageHandler implements IHandleMessage {
             Log.i(TAG, "Card ID could not be resolved");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void checkDrawnCard(GameSession gameSession, Player currentPlayer) throws IOException {
+        Deck<Card> drawnCards = currentPlayer.getPlayArea().getCardDrawnFromSpecialAbility();
+        if (!drawnCards.isEmpty()) { // push changes from special ability
+            for (Card c : drawnCards) {
+                if (c.getName().equals("PLACEHOLDER")) {
+                    sendRestockUpdate(gameSession, currentPlayer);
+                    continue;
+                }
+                sendCardMovementToAllClients(
+                        gameSession, currentPlayer, DeckType.DECK, DeckType.HAND, c.getId());
+            }
+            gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
         }
     }
 
@@ -177,7 +180,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
     }
 
-    private void sendCardMovementToAllClients(
+    public void sendCardMovementToAllClients(
             GameSession gameSession,
             Player currentPlayer,
             DeckType deckTypeRemove,
@@ -205,7 +208,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
     }
 
-    private void handleEndTurn(GameSession gameSession, Player currentPlayer) {
+    public void handleEndTurn(GameSession gameSession, Player currentPlayer) {
         currentPlayer.getPlayArea().setCheat(false);
         Log.i(
                 TAG,
@@ -219,19 +222,15 @@ public class ServerMessageHandler implements IHandleMessage {
 
         printCardsFromPlayer(currentPlayer);
         gameSession.endTurn();
-        Deck<Card> restockedFromDiscarded =
-                currentPlayer.getPlayArea().getPlayerCards().getRestockedFromDiscarded();
 
         handleKilledChampionsAtTurnEnd(gameSession, currentPlayer);
 
         serverThread.dealMarketCardsToPurchaseAreaToAll();
 
         printCardsFromPlayer(currentPlayer);
-        if (restockedFromDiscarded != null) {
-            serverThread.sendRestockDeckFromDiscard(
-                    gameSession.getPlayerTurnNumber(currentPlayer), restockedFromDiscarded);
-            Log.i(TAG, "sendRestockDeckFromDiscard called.");
-        }
+
+        sendRestockUpdate(gameSession, currentPlayer);
+
         Log.i(
                 TAG,
                 "Size deck after restock: "
@@ -272,6 +271,17 @@ public class ServerMessageHandler implements IHandleMessage {
     public void printCardsFromPlayer(Player player) {
         for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
             Log.i(TAG, "Card in player Hand: " + card.getId());
+        }
+    }
+
+    public void sendRestockUpdate(GameSession gameSession, Player currentPlayer) {
+        Deck<Card> restockedFromDiscarded =
+                currentPlayer.getPlayArea().getPlayerCards().getRestockedFromDiscarded();
+        if (restockedFromDiscarded != null) {
+            serverThread.sendRestockDeckFromDiscard(
+                    gameSession.getPlayerTurnNumber(currentPlayer), restockedFromDiscarded);
+            Log.i(TAG, "sendRestockDeckFromDiscard called.");
+            restockedFromDiscarded.clear();
         }
     }
 }
