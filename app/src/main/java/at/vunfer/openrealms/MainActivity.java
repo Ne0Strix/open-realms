@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     private final Context context = this;
     private int playerId;
-
+    private String playerName = "";
     public PlayAreaPresenter playAreaPresenter;
     public MarketPresenter marketPresenter;
     public HandPresenter playerHandPresenter;
@@ -117,11 +117,13 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void hostGame(View view) {
+        setupName();
         setContentView(R.layout.host);
         startServer(view);
     }
 
     public void joinGame(View view) {
+        setupName();
         setContentView(R.layout.join);
         TextView outline = findViewById(R.id.enterHostPromptOutline);
         outline.getPaint().setStrokeWidth(5);
@@ -130,6 +132,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void toMainMenu(View view) {
         setContentView(R.layout.menu);
+        if (!playerName.isEmpty()) {
+            TextView nameInput = findViewById(R.id.name_chooser);
+            nameInput.setText(playerName);
+            playerName = "";
+        }
         if (server != null) {
             try {
                 server.stopServer();
@@ -149,6 +156,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         if (!menuMusicPlaying) {
             startMenuMusic(true);
             menuMusicPlaying = true;
+        }
+    }
+
+    public void setupName() {
+        TextView nameBox = findViewById(R.id.name_chooser);
+        String enteredName = nameBox.getText().toString();
+        if (!enteredName.isEmpty()) {
+            playerName = enteredName;
         }
     }
 
@@ -277,6 +292,17 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             this.playerId = 0;
         } else {
             this.playerId = 1;
+        }
+
+        if (!playerName.isEmpty()) {
+            Message nameChange = new Message(MessageType.NAME);
+            nameChange.setData(DataKey.NAME, playerName);
+            nameChange.setData(DataKey.TARGET_PLAYER, playerId);
+            try {
+                connection.sendMessage(nameChange);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

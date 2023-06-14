@@ -49,9 +49,18 @@ public class ServerMessageHandler implements IHandleMessage {
             case REMATCH_REQUEST:
                 handleRematch();
                 break;
+            case NAME:
+                handleName(message);
+                break;
             default:
-                Log.i(TAG, "Received message of unknown type.");
+                Log.e(TAG, "Received message of unknown type.");
         }
+    }
+
+    private void handleName(Message message) throws IOException {
+        serverThread.sendNameChangeToAll(
+                (String) message.getData(DataKey.NAME),
+                (int) message.getData(DataKey.TARGET_PLAYER));
     }
 
     private void handleRematch() throws IOException {

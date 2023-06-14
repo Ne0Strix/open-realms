@@ -27,6 +27,7 @@ import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.model.PlayerFactory;
+import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
@@ -407,5 +408,13 @@ public class ServerThread extends Thread {
 
     public GameSession getGameSession() {
         return gameSession;
+    }
+
+    public void sendNameChangeToAll(String name, int targetPlayer) throws IOException {
+        gameSession.getPlayers().get(targetPlayer).setPlayerName(name);
+        Message updatedName =
+                Communication.createPlayerStatsMessage(
+                        targetPlayer, gameSession.getPlayers().get(targetPlayer));
+        sendMessageToAllClients(updatedName);
     }
 }

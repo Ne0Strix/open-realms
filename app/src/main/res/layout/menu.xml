@@ -61,4 +61,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/hostButton" />
 
+    <ImageView
+        android:id="@+id/name_chooser2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/name_chooser"
+        app:layout_constraintEnd_toEndOf="@+id/name_chooser"
+        app:layout_constraintStart_toStartOf="@+id/name_chooser"
+        app:layout_constraintTop_toTopOf="@+id/name_chooser"
+        app:srcCompat="@android:drawable/screen_background_dark_transparent" />
+
+    <EditText
+        android:id="@+id/name_chooser"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:hint="Choose a name:"
+        android:inputType="text"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

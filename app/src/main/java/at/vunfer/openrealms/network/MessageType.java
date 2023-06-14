@@ -8,6 +8,7 @@ public enum MessageType {
     END_TURN,
     CHEAT,
     REMATCH_REQUEST,
+    NAME,
 
     // Server -> Client
     ADD_CARD,
