@@ -364,10 +364,6 @@ public class PlayArea {
         return id;
     }
 
-    public void clearCardDrawnFromSpecialAbility() {
-        cardDrawnFromSpecialAbility.clear();
-    }
-
     public Deck<Card> getCardDrawnFromSpecialAbility() {
         return cardDrawnFromSpecialAbility;
     }
