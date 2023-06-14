@@ -103,6 +103,10 @@ public class PlayerCards {
     }
 
     public Card drawRandomFromDeck() {
+        if (deckCards.isEmpty()) {
+            deckCards.addAll(discardedCards);
+            discardedCards.clear();
+        }
         return deckCards.drawRandom();
     }
 
