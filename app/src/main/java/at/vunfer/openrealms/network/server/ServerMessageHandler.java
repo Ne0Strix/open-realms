@@ -12,11 +12,11 @@ import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
-import at.vunfer.openrealms.network.server.cardActions.AttackChampion;
-import at.vunfer.openrealms.network.server.cardActions.BuyCard;
-import at.vunfer.openrealms.network.server.cardActions.CardAction;
-import at.vunfer.openrealms.network.server.cardActions.ExpendChampion;
-import at.vunfer.openrealms.network.server.cardActions.PlayCard;
+import at.vunfer.openrealms.network.server.card_actions.AttackChampion;
+import at.vunfer.openrealms.network.server.card_actions.BuyCard;
+import at.vunfer.openrealms.network.server.card_actions.CardAction;
+import at.vunfer.openrealms.network.server.card_actions.ExpendChampion;
+import at.vunfer.openrealms.network.server.card_actions.PlayCard;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -197,64 +197,71 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
     }
 
-    public void handleEndTurn(GameSession gameSession, Player currentPlayer) {
-        resetPlayAreaForNewTurn(currentPlayer);
+    public void handleEndTurn(GameSession gameSession, Player currentPlayerBeforeNewTurn) {
+        resetCheatForNewTurn(currentPlayerBeforeNewTurn);
 
-        prepareCardsForNewTurn(gameSession, currentPlayer);
+        resetCardsAtTurnEnd(gameSession, currentPlayerBeforeNewTurn);
 
         gameSession.endTurn();
 
-        cleanupAfterTurn(gameSession, currentPlayer);
+        cleanupAfterEndTurn(gameSession, currentPlayerBeforeNewTurn);
 
-        prepareBoardForNextPlayer(gameSession, currentPlayer);
+        correctCardPiles(gameSession, currentPlayerBeforeNewTurn);
 
-        dealNewHandForNextPlayer(gameSession, currentPlayer);
+        dealNewHandAndUpdateStats(gameSession, currentPlayerBeforeNewTurn);
     }
 
-    private void resetPlayAreaForNewTurn(Player currentPlayer) {
-        currentPlayer.getPlayArea().setCheat(false);
+    private void resetCheatForNewTurn(Player currentPlayerBeforeNewTurn) {
+        currentPlayerBeforeNewTurn.getPlayArea().setCheat(false);
         Log.i(
                 TAG,
                 "Size remaining deck: "
-                        + currentPlayer.getPlayArea().getPlayerCards().getHandCards().size());
+                        + currentPlayerBeforeNewTurn
+                                .getPlayArea()
+                                .getPlayerCards()
+                                .getHandCards()
+                                .size());
     }
 
-    private void prepareCardsForNewTurn(GameSession gameSession, Player currentPlayer) {
+    private void resetCardsAtTurnEnd(GameSession gameSession, Player currentPlayerBeforeNewTurn) {
         serverThread.discardCardsAfterTurn(
-                gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
+                gameSession.getPlayerTurnNumber(currentPlayerBeforeNewTurn),
+                currentPlayerBeforeNewTurn);
         serverThread.resetChampionsAfterTurn(
-                gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
-        Log.d(TAG, "Champions resetted.");
+                gameSession.getPlayerTurnNumber(currentPlayerBeforeNewTurn),
+                currentPlayerBeforeNewTurn);
+        Log.d(TAG, "Champions reset.");
     }
 
-    private void cleanupAfterTurn(GameSession gameSession, Player currentPlayer) {
-        printCardsFromPlayer(currentPlayer);
-        handleKilledChampionsAtTurnEnd(gameSession, currentPlayer);
+    private void cleanupAfterEndTurn(GameSession gameSession, Player opponentInNewTurn) {
+        printCardsFromPlayer(opponentInNewTurn);
+        handleKilledChampionsAtTurnEnd(gameSession, opponentInNewTurn);
         serverThread.dealMarketCardsToPurchaseAreaToAll();
-        printCardsFromPlayer(currentPlayer);
+        printCardsFromPlayer(opponentInNewTurn);
     }
 
-    private void prepareBoardForNextPlayer(GameSession gameSession, Player currentPlayer) {
-        sendRestockUpdate(gameSession, currentPlayer);
+    private void correctCardPiles(GameSession gameSession, Player opponentInNewTurn) {
+        sendRestockUpdate(gameSession, opponentInNewTurn);
         Log.i(
                 TAG,
                 "Size deck after restock: "
-                        + currentPlayer.getPlayArea().getPlayerCards().getHandCards().size());
+                        + opponentInNewTurn.getPlayArea().getPlayerCards().getHandCards().size());
     }
 
-    private void dealNewHandForNextPlayer(GameSession gameSession, Player currentPlayer) {
+    private void dealNewHandAndUpdateStats(GameSession gameSession, Player opponentInNewTurn) {
         try {
             serverThread.dealHandCardsBasedOnTurnNumber(
-                    gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
+                    gameSession.getPlayerTurnNumber(opponentInNewTurn), opponentInNewTurn);
             Log.i(TAG, "dealHandCardsBasedOnTurnNumber called.");
 
             serverThread.sendMessageToAllClients(
                     createPlayerStatsMessage(
-                            gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
+                            gameSession.getPlayerTurnNumber(opponentInNewTurn), opponentInNewTurn));
             serverThread.sendMessageToAllClients(
                     createPlayerStatsMessage(
-                            gameSession.getPlayerTurnNumber(gameSession.getOpponent(currentPlayer)),
-                            gameSession.getOpponent(currentPlayer)));
+                            gameSession.getPlayerTurnNumber(
+                                    gameSession.getOpponent(opponentInNewTurn)),
+                            gameSession.getOpponent(opponentInNewTurn)));
 
             Log.i(TAG, "createPlayerStatsMessage called.");
 

@@ -1,27 +1,27 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
-package at.vunfer.openrealms.network.server.cardActions;
+package at.vunfer.openrealms.network.server.card_actions;
 
 import android.util.Log;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Player;
+import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.server.ServerMessageHandler;
 import java.io.IOException;
 
-public class AttackChampion implements CardAction {
+public class BuyCard implements CardAction {
     private final ServerMessageHandler serverMessageHandler;
 
-    public AttackChampion(ServerMessageHandler serverMessageHandler) {
+    public BuyCard(ServerMessageHandler serverMessageHandler) {
         this.serverMessageHandler = serverMessageHandler;
     }
 
     @Override
     public boolean handleAction(int cardId, GameSession gameSession, Player currentPlayer)
             throws IOException {
-        if (currentPlayer
-                .getPlayArea()
-                .attackChampionById(cardId, gameSession.getOpponent(currentPlayer).getPlayArea())) {
-            Log.i(ServerMessageHandler.TAG, "Champion " + cardId + " attacked successfully.");
-            serverMessageHandler.sendChampionKilledToAllClients(gameSession, currentPlayer, cardId);
+        if (currentPlayer.getPlayArea().buyCardById(cardId)) {
+            Log.i(ServerMessageHandler.TAG, "Card " + cardId + " bought successfully.");
+            serverMessageHandler.sendCardMovementToAllClients(
+                    gameSession, currentPlayer, DeckType.FOR_PURCHASE, DeckType.DISCARD, cardId);
             return true;
         }
         return false;
