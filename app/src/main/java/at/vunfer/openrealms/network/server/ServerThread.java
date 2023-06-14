@@ -17,6 +17,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.View;
+import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Champion;
 import at.vunfer.openrealms.model.Deck;
@@ -25,6 +27,7 @@ import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Market;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.model.PlayerFactory;
+import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
@@ -61,11 +64,16 @@ public class ServerThread extends Thread {
     public void run() {
         try {
             setupServer();
+            ((MainActivity) context).showIp(new View(context));
             acceptConnections();
         } catch (IOException ex) {
             Log.e(TAG, "IO Exception on Server!", ex);
         }
-        createGame();
+        if (!serverSocket.isClosed()) {
+            createGame();
+            ((MainActivity) context)
+                    .runOnUiThread(() -> ((MainActivity) context).startGame(new View(context)));
+        }
     }
 
     private void setupServer() throws IOException {
@@ -214,7 +222,10 @@ public class ServerThread extends Thread {
 
     private void sendFullDeck(ClientHandler client) {
         Message fullDeckMsg = new Message(MessageType.FULL_CARD_DECK);
-        fullDeckMsg.setData(DataKey.COLLECTION, Card.getFullCardCollection());
+        // I truly do not understand why making a copy is scenery, but for the rematch, it is.
+        Deck<Card> copyOfAllCards = new Deck<>();
+        copyOfAllCards.addAll(Card.getFullCardCollection());
+        fullDeckMsg.setData(DataKey.COLLECTION, copyOfAllCards);
         client.sendMessage(fullDeckMsg);
     }
 
@@ -380,7 +391,30 @@ public class ServerThread extends Thread {
         }
     }
 
+    private int numOfRematchRequests;
+
+    public void sendRematchToAll() throws IOException {
+        numOfRematchRequests++;
+        Log.d(TAG, "Processing REMATCH_REQUEST, numOfRequests= " + numOfRematchRequests);
+        if (numOfRematchRequests == connections.size()) {
+            Log.d(TAG, "Requirements for rematch met, sending command.");
+            numOfRematchRequests = 0;
+            Card.resetIdsAndCollection();
+            Message rematch = new Message(MessageType.REMATCH);
+            createGame();
+            sendMessageToAllClients(rematch);
+        }
+    }
+
     public GameSession getGameSession() {
         return gameSession;
+    }
+
+    public void sendNameChangeToAll(String name, int targetPlayer) throws IOException {
+        gameSession.getPlayers().get(targetPlayer).setPlayerName(name);
+        Message updatedName =
+                Communication.createPlayerStatsMessage(
+                        targetPlayer, gameSession.getPlayers().get(targetPlayer));
+        sendMessageToAllClients(updatedName);
     }
 }

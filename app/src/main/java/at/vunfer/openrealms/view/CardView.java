@@ -137,8 +137,6 @@ public class CardView extends ConstraintLayout {
         fullScreenCard.setCard(card);
         fullScreenCard.setVisibility(VISIBLE);
         fullScreenCard.setHealthSize(35);
-        // Make sure that the the Fullscreen_Card Object is drawn in front of everything
-        fullScreenCard.getParent().bringChildToFront(fullScreenCard);
     }
 
     /** Disables the FullscreenPreview */
@@ -317,7 +315,7 @@ public class CardView extends ConstraintLayout {
             return;
         }
 
-        Log.d("CardView", "applyCardDetail: " + card.getName() + " is a champion");
+        Log.v(logTag, "applyCardDetail: " + card.getName() + " is a champion");
         ConstraintLayout shieldArea = findViewById(R.id.card_view_shield_area);
         shieldArea.setVisibility(VISIBLE);
         health.setText(Integer.toString(((Champion) card).getHealth()));
@@ -325,7 +323,7 @@ public class CardView extends ConstraintLayout {
         health.setVisibility(VISIBLE);
 
         if (((Champion) card).isGuard()) {
-            Log.d("CardView", "applyCardDetail: " + card.getName() + " is a guard");
+            Log.v(logTag, "applyCardDetail: " + card.getName() + " is a guard");
             blackShield.setVisibility(VISIBLE);
             whiteShield.setVisibility(INVISIBLE);
             health.setTextColor(Color.WHITE);

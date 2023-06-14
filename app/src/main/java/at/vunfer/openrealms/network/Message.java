@@ -47,6 +47,7 @@ public class Message implements Serializable {
                 return value instanceof DeckType;
             case CHOICE:
             case OPTIONS:
+            case NAME:
                 return value instanceof String;
             case PLAYER_STATS:
                 return value instanceof PlayerStats;
