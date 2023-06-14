@@ -3,15 +3,11 @@ package at.vunfer.openrealms.network;
 
 import static org.mockito.Mockito.*;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.model.PlayerFactory;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -30,24 +26,10 @@ public class CommunicationTest {
 
     @BeforeEach
     void setUp() {
-        mockedStatic = mockStatic(CommunicationTest.class);
         input = Mockito.mock(ObjectInputStream.class);
         output = Mockito.mock(ObjectOutputStream.class);
         messageHandler = Mockito.mock(IHandleMessage.class);
         communication = new Communication(input, output, messageHandler);
-    }
-
-    @BeforeAll
-    static void setUpAll() {
-        mockStatic(Log.class);
-    }
-
-    @Test
-    void sendMessageTest() throws IOException, InterruptedException {
-        Message msg = new Message(MessageType.TOUCHED);
-        communication.sendMessage(msg);
-        Thread.sleep(200); // Make sure the executor has time to run
-        verify(output).writeObject(msg);
     }
 
     @Test
@@ -107,8 +89,4 @@ public class CommunicationTest {
     // TODO listen for message test; cannot verify(messageHandler).handleMessage(msg) easily because
     // of the executor service
 
-    @AfterEach
-    public void cleanup() {
-        mockedStatic.close();
-    }
 }

@@ -235,13 +235,6 @@ class ServerMessageHandlerTest {
     }
 
     @Test
-    void testEnsureServerThreadInitialized() {
-        serverMessageHandler.ensureServerThreadInitialized();
-
-        assertNotNull(serverThread);
-    }
-
-    @Test
     void testHandleTouchedCardCheatAlreadyActivated() throws IOException {
         try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
             serverMessageHandler.ensureServerThreadInitialized();
@@ -307,8 +300,16 @@ class ServerMessageHandlerTest {
                 () -> serverMessageHandler.checkDrawnCard(gameSession, player));
     }
 
+    @Test
+    void testEnsureServerThreadInitialized() {
+        serverMessageHandler.ensureServerThreadInitialized();
+
+        assertNotNull(serverThread);
+    }
+
     @AfterEach
     public void cleanup() {
         mockedStatic.close();
+        mockedStatic = null;
     }
 }
