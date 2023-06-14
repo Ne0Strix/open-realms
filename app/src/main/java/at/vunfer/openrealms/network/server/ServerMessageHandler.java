@@ -12,7 +12,14 @@ import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.server.cardActions.AttackChampion;
+import at.vunfer.openrealms.network.server.cardActions.BuyCard;
+import at.vunfer.openrealms.network.server.cardActions.CardAction;
+import at.vunfer.openrealms.network.server.cardActions.ExpendChampion;
+import at.vunfer.openrealms.network.server.cardActions.PlayCard;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class ServerMessageHandler implements IHandleMessage {
     public static final String TAG = "ServerMessageHandler";
@@ -108,39 +115,21 @@ public class ServerMessageHandler implements IHandleMessage {
     public void handleTouchedCard(Message message, GameSession gameSession, Player currentPlayer) {
         int cardId = (int) message.getData(DataKey.CARD_ID);
 
+        List<CardAction> cardActions =
+                Arrays.asList(
+                        new PlayCard(this),
+                        new BuyCard(this),
+                        new ExpendChampion(this),
+                        new AttackChampion(this));
+
         try {
-            int cardType = currentPlayer.getPlayArea().playCardById(cardId);
-            if (cardType == 1) {
-                Log.i(TAG, "Card " + cardId + " played successfully.");
-                sendCardMovementToAllClients(
-                        gameSession, currentPlayer, DeckType.HAND, DeckType.PLAYED, cardId);
-                checkDrawnCard(gameSession, currentPlayer);
-            } else if (cardType == 2) {
-                Log.i(TAG, "Champion " + cardId + " played successfully.");
-                sendCardMovementToAllClients(
-                        gameSession, currentPlayer, DeckType.HAND, DeckType.CHAMPIONS, cardId);
-                checkDrawnCard(gameSession, currentPlayer);
-            } else if (currentPlayer.getPlayArea().buyCardById(cardId)) {
-                Log.i(TAG, "Card " + cardId + " bought successfully.");
-                sendCardMovementToAllClients(
-                        gameSession,
-                        currentPlayer,
-                        DeckType.FOR_PURCHASE,
-                        DeckType.DISCARD,
-                        cardId);
-            } else if (currentPlayer.getPlayArea().expendChampionById(cardId)) {
-                Log.i(TAG, "Champion " + cardId + " expended successfully.");
-                sendChampionExpendedToAllClients(gameSession, currentPlayer, cardId);
-                checkDrawnCard(gameSession, currentPlayer);
-            } else if (currentPlayer
-                    .getPlayArea()
-                    .attackChampionById(
-                            cardId, gameSession.getOpponent(currentPlayer).getPlayArea())) {
-                Log.i(TAG, "Champion " + cardId + " attacked successfully.");
-                sendChampionKilledToAllClients(gameSession, currentPlayer, cardId);
-            } else {
-                Log.i(TAG, "Card cannot be played/bought by this player.");
+            for (CardAction action : cardActions) {
+                if (action.handleAction(cardId, gameSession, currentPlayer)) {
+                    return;
+                }
             }
+
+            Log.i(TAG, "Card cannot be played/bought by this player.");
         } catch (IllegalArgumentException e) {
             Log.i(TAG, "Card ID could not be resolved");
         } catch (IOException e) {
