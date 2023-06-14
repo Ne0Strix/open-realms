@@ -66,14 +66,9 @@
     <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="670dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.70">
+        app:layout_constraintBottom_toTopOf="@+id/player_hand_view"
+        app:layout_constraintEnd_toStartOf="@+id/market_view"
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <at.vunfer.openrealms.view.PlayedChampionsView
@@ -87,13 +82,10 @@
     <HorizontalScrollView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="670dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/market_view"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.30">
+        app:layout_constraintTop_toBottomOf="@+id/opponent_hand_view">
 
 
         <at.vunfer.openrealms.view.PlayedChampionsView
@@ -108,9 +100,8 @@
         android:id="@+id/opponent_discard_pile_view"
         android:layout_width="62dp"
         android:layout_height="85dp"
-        android:layout_marginEnd="175dp"
         android:scaleY="-1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/player_deck_view"
         app:layout_constraintStart_toEndOf="@+id/opponent_hand_view"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -120,7 +111,7 @@
         android:id="@+id/player_discard_pile_view"
         android:layout_width="62dp"
         android:layout_height="85dp"
-        android:layout_marginStart="120dp"
+        android:layout_marginStart="190dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/player_hand_view"
         app:layout_constraintHorizontal_bias="1.0"
@@ -132,7 +123,7 @@
         android:id="@+id/player_deck_view"
         android:layout_width="62dp"
         android:layout_height="85dp"
-        android:layout_marginEnd="175dp"
+        android:layout_marginEnd="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -144,10 +135,9 @@
         android:id="@+id/opponent_deck_view"
         android:layout_width="62dp"
         android:layout_height="85dp"
-        android:layout_marginStart="120dp"
         android:scaleY="-1"
         app:layout_constraintEnd_toStartOf="@+id/opponent_hand_view"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/player_discard_pile_view"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -317,7 +307,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="invisible">
 
         <ImageView
             android:id="@+id/imageView2"
