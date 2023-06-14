@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private static List<CardView> cardViews;
     private boolean isHost = false;
 
-    private static boolean ingameMusicPlaying = false;
-    private static boolean menuMusicPlaying = false;
+    private boolean ingameMusicPlaying = false;
+    private boolean menuMusicPlaying = false;
     private static boolean myTurn = false;
 
     private final Context context = this;
@@ -81,23 +80,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         videoView.setVideoURI(Uri.parse(videoPath));
 
         // Set an OnPreparedListener to start playing the video when it's ready
-        videoView.setOnPreparedListener(
-                new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        videoView.start();
-                    }
-                });
+        videoView.setOnPreparedListener(mediaPlayer -> videoView.start());
 
         // Set an OnCompletionListener to transition to the next layout after the video finishes
-        videoView.setOnCompletionListener(
-                new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        // Transition to the next layout (e.g., menu, game screen)
-                        toMainMenu(new View(context));
-                    }
-                });
+        videoView.setOnCompletionListener(mediaPlayer -> toMainMenu(new View(context)));
 
         SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         ShakeDetector mShakeDetector = new ShakeDetector();
@@ -141,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             try {
                 server.stopServer();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
             server = null;
         }
@@ -301,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             try {
                 connection.sendMessage(nameChange);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
         }
     }
@@ -413,6 +399,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                                 break;
                             case REMATCH:
                                 startGame(new View(context));
+                                break;
                             default:
                                 Log.i(TAG, "Received message of unknown type.");
                         }

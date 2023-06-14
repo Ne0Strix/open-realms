@@ -315,7 +315,7 @@ public class CardView extends ConstraintLayout {
             return;
         }
 
-        Log.v("CardView", "applyCardDetail: " + card.getName() + " is a champion");
+        Log.v(logTag, "applyCardDetail: " + card.getName() + " is a champion");
         ConstraintLayout shieldArea = findViewById(R.id.card_view_shield_area);
         shieldArea.setVisibility(VISIBLE);
         health.setText(Integer.toString(((Champion) card).getHealth()));
@@ -323,7 +323,7 @@ public class CardView extends ConstraintLayout {
         health.setVisibility(VISIBLE);
 
         if (((Champion) card).isGuard()) {
-            Log.v("CardView", "applyCardDetail: " + card.getName() + " is a guard");
+            Log.v(logTag, "applyCardDetail: " + card.getName() + " is a guard");
             blackShield.setVisibility(VISIBLE);
             whiteShield.setVisibility(INVISIBLE);
             health.setTextColor(Color.WHITE);
