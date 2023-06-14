@@ -212,7 +212,7 @@ class ServerMessageHandlerTest {
 
             serverMessageHandler.handleTouchedCard(message, gameSession, player);
 
-            verify(player.getPlayArea(), times(1)).playCardById(eq(1));
+            verify(player.getPlayArea(), times(1)).playCardById(1);
         }
     }
 
@@ -229,7 +229,7 @@ class ServerMessageHandlerTest {
 
             serverMessageHandler.handleTouchedCard(message, gameSession, player);
 
-            verify(player.getPlayArea(), times(1)).playCardById(eq(2));
+            verify(player.getPlayArea(), times(1)).playCardById(2);
             Log.i(eq(ServerMessageHandler.TAG), eq("Cheat mode set to true"));
         }
     }
@@ -250,7 +250,7 @@ class ServerMessageHandlerTest {
 
             serverMessageHandler.handleTouchedCard(message, gameSession, player);
 
-            verify(player.getPlayArea(), times(1)).playCardById(eq(2));
+            verify(player.getPlayArea(), times(1)).playCardById(2);
             mockedLog.verify(
                     () -> Log.i(eq(ServerMessageHandler.TAG), eq("Cheat mode set to true")),
                     never());
@@ -268,7 +268,7 @@ class ServerMessageHandlerTest {
         PlayArea playArea = Mockito.mock(PlayArea.class);
         when(player.getPlayArea()).thenReturn(playArea);
 
-        doThrow(new NullPointerException()).when(playArea).playCardById(eq(1));
+        doThrow(new NullPointerException()).when(playArea).playCardById(1);
 
         assertThrows(
                 NullPointerException.class,

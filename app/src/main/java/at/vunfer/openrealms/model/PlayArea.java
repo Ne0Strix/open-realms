@@ -46,7 +46,7 @@ public class PlayArea {
         this.atTurnEndDiscardedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
-        this.cardDrawnFromSpecialAbility = new Deck<Card>();
+        this.cardDrawnFromSpecialAbility = new Deck<>();
     }
 
     /**
