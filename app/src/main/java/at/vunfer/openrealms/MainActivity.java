@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     private final Context context = this;
     private int playerId;
-    private String playerName = "";
+    protected String playerName = "";
     public PlayAreaPresenter playAreaPresenter;
     public MarketPresenter marketPresenter;
     public HandPresenter playerHandPresenter;
@@ -147,10 +147,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void setupName() {
         TextView nameBox = findViewById(R.id.name_chooser);
-        String enteredName = nameBox.getText().toString();
-        if (!enteredName.isEmpty()) {
-            playerName = enteredName;
-        }
+        playerName = nameBox.getText().toString();
     }
 
     public void startServer(View view) {
