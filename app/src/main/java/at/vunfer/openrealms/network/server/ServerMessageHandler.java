@@ -140,6 +140,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession, currentPlayer, DeckType.DECK, DeckType.HAND, c.getId());
             }
             gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
+            sendRestockUpdate(gameSession, currentPlayer);
         }
     }
 
@@ -202,19 +203,15 @@ public class ServerMessageHandler implements IHandleMessage {
 
         printCardsFromPlayer(currentPlayer);
         gameSession.endTurn();
-        Deck<Card> restockedFromDiscarded =
-                currentPlayer.getPlayArea().getPlayerCards().getRestockedFromDiscarded();
 
         handleKilledChampionsAtTurnEnd(gameSession, currentPlayer);
 
         serverThread.dealMarketCardsToPurchaseAreaToAll();
 
         printCardsFromPlayer(currentPlayer);
-        if (restockedFromDiscarded != null) {
-            serverThread.sendRestockDeckFromDiscard(
-                    gameSession.getPlayerTurnNumber(currentPlayer), restockedFromDiscarded);
-            Log.i(TAG, "sendRestockDeckFromDiscard called.");
-        }
+
+        sendRestockUpdate(gameSession, currentPlayer);
+
         Log.i(
                 TAG,
                 "Size deck after restock: "
@@ -255,6 +252,16 @@ public class ServerMessageHandler implements IHandleMessage {
     public void printCardsFromPlayer(Player player) {
         for (Card card : player.getPlayArea().getPlayerCards().getHandCards()) {
             Log.i(TAG, "Card in player Hand: " + card.getId());
+        }
+    }
+
+    public void sendRestockUpdate(GameSession gameSession, Player currentPlayer) {
+        Deck<Card> restockedFromDiscarded =
+                currentPlayer.getPlayArea().getPlayerCards().getRestockedFromDiscarded();
+        if (restockedFromDiscarded != null) {
+            serverThread.sendRestockDeckFromDiscard(
+                    gameSession.getPlayerTurnNumber(currentPlayer), restockedFromDiscarded);
+            Log.i(TAG, "sendRestockDeckFromDiscard called.");
         }
     }
 }
