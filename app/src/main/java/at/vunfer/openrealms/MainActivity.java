@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
         // Initialize the VideoView
         videoView = findViewById(R.id.video_view);
-        videoView.setOnClickListener(view -> toMainMenu(new View(context)));
 
         // Set the video file path or URL
         String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.intro_video;
