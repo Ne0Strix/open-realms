@@ -1,5 +1,7 @@
 # open-realms: an open-deckbuilding game
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Ne0Strix_open-realms&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Ne0Strix_open-realms) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Ne0Strix_open-realms&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Ne0Strix_open-realms) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Ne0Strix_open-realms&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Ne0Strix_open-realms) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Ne0Strix_open-realms&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Ne0Strix_open-realms) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Ne0Strix_open-realms&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Ne0Strix_open-realms) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Ne0Strix_open-realms&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Ne0Strix_open-realms)
+
 ## Communication
 
 Communication is handled within the `Communication` class. All classes that want to communicate in any way can use a `Communication` object to do so. Once instantiated, it listens for messages and sends them to a `MessageHandler`. Client and Server each have their own message-handler. The client-messagehandler only forwards the message into the UI-thread as UI updates have to be done there. The server-messagehandler handles the message and sends a response back to the client.
@@ -9,13 +11,17 @@ Communication is handled within the `Communication` class. All classes that want
 Messages are identified using the `MessageType` enum, the data inside is stored in key-value pairs. All keys are defined in the `DataKey` enum.
 
 When adding a new Message/Datatype bear the following things in mind:
-* **only communicate the bare minimum of information**: e.g. it's sufficient to only communicate the id of a card to be played, as the server knows where the card is and who sent the message anyway. We do this to avoid communicating inconsistent data.
-* **reusable `DataKeys`**: make keys reusable and give them a clear purpose. Validate the integrity of the key in the `Message` class.
+
+- **only communicate the bare minimum of information**: e.g. it's sufficient to only communicate the id of a card to be played, as the server knows where the card is and who sent the message anyway. We do this to avoid communicating inconsistent data.
+- **reusable `DataKeys`**: make keys reusable and give them a clear purpose. Validate the integrity of the key in the `Message` class.
+
 ### Player Stats
-This class is used to communicate the current state of a player. It *always* contains the variables declared in the class. We use the DataKey `TARGET_PLAYER` to specify the player the stats are for.
+
+This class is used to communicate the current state of a player. It _always_ contains the variables declared in the class. We use the DataKey `TARGET_PLAYER` to specify the player the stats are for.
 
 ### DataKeys
-Please comment the specific usage of a key in the `DataKey` enum. If you need a new key, please add it to the bottom of the enum and make sure to add a comment. Also verify the integrity of the key in the `Message` class and add corresponding tests. 
+
+Please comment the specific usage of a key in the `DataKey` enum. If you need a new key, please add it to the bottom of the enum and make sure to add a comment. Also verify the integrity of the key in the `Message` class and add corresponding tests.
 
 ## Project Setup
 
