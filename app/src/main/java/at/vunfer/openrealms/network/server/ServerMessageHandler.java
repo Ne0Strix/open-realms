@@ -136,11 +136,14 @@ public class ServerMessageHandler implements IHandleMessage {
         Deck<Card> drawnCards = currentPlayer.getPlayArea().getCardDrawnFromSpecialAbility();
         if (!drawnCards.isEmpty()) { // push changes from special ability
             for (Card c : drawnCards) {
+                if (c.getName().equals("PLACEHOLDER")) {
+                    sendRestockUpdate(gameSession, currentPlayer);
+                    continue;
+                }
                 sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.DECK, DeckType.HAND, c.getId());
             }
             gameSession.getCurrentPlayer().getPlayArea().resetCardDrawnFromSpecialAbility();
-            sendRestockUpdate(gameSession, currentPlayer);
         }
     }
 
@@ -262,6 +265,7 @@ public class ServerMessageHandler implements IHandleMessage {
             serverThread.sendRestockDeckFromDiscard(
                     gameSession.getPlayerTurnNumber(currentPlayer), restockedFromDiscarded);
             Log.i(TAG, "sendRestockDeckFromDiscard called.");
+            restockedFromDiscarded.clear();
         }
     }
 }
