@@ -198,36 +198,56 @@ public class ServerMessageHandler implements IHandleMessage {
     }
 
     public void handleEndTurn(GameSession gameSession, Player currentPlayer) {
+        resetPlayAreaForNewTurn(currentPlayer);
+
+        prepareCardsForNewTurn(gameSession, currentPlayer);
+
+        gameSession.endTurn();
+
+        cleanupAfterTurn(gameSession, currentPlayer);
+
+        prepareBoardForNextPlayer(gameSession, currentPlayer);
+
+        dealNewHandForNextPlayer(gameSession, currentPlayer);
+    }
+
+    private void resetPlayAreaForNewTurn(Player currentPlayer) {
         currentPlayer.getPlayArea().setCheat(false);
         Log.i(
                 TAG,
                 "Size remaining deck: "
                         + currentPlayer.getPlayArea().getPlayerCards().getHandCards().size());
+    }
+
+    private void prepareCardsForNewTurn(GameSession gameSession, Player currentPlayer) {
         serverThread.discardCardsAfterTurn(
                 gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
         serverThread.resetChampionsAfterTurn(
                 gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
         Log.d(TAG, "Champions resetted.");
+    }
 
+    private void cleanupAfterTurn(GameSession gameSession, Player currentPlayer) {
         printCardsFromPlayer(currentPlayer);
-        gameSession.endTurn();
-
         handleKilledChampionsAtTurnEnd(gameSession, currentPlayer);
-
         serverThread.dealMarketCardsToPurchaseAreaToAll();
-
         printCardsFromPlayer(currentPlayer);
+    }
 
+    private void prepareBoardForNextPlayer(GameSession gameSession, Player currentPlayer) {
         sendRestockUpdate(gameSession, currentPlayer);
-
         Log.i(
                 TAG,
                 "Size deck after restock: "
                         + currentPlayer.getPlayArea().getPlayerCards().getHandCards().size());
+    }
+
+    private void dealNewHandForNextPlayer(GameSession gameSession, Player currentPlayer) {
         try {
             serverThread.dealHandCardsBasedOnTurnNumber(
                     gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer);
             Log.i(TAG, "dealHandCardsBasedOnTurnNumber called.");
+
             serverThread.sendMessageToAllClients(
                     createPlayerStatsMessage(
                             gameSession.getPlayerTurnNumber(currentPlayer), currentPlayer));
@@ -235,10 +255,14 @@ public class ServerMessageHandler implements IHandleMessage {
                     createPlayerStatsMessage(
                             gameSession.getPlayerTurnNumber(gameSession.getOpponent(currentPlayer)),
                             gameSession.getOpponent(currentPlayer)));
+
             Log.i(TAG, "createPlayerStatsMessage called.");
+
             serverThread.sendTurnNotificationToAllClients(
                     gameSession.getPlayerTurnNumber(gameSession.getCurrentPlayer()));
+
             Log.i(TAG, "sendTurnNotificationToAllClients called.");
+
             serverThread.sendCheatStatusToAll(false);
         } catch (IOException e) {
             throw new RuntimeException(e);
