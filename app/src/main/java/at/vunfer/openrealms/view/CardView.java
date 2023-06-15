@@ -43,8 +43,8 @@ public class CardView extends ConstraintLayout {
     private boolean isExpended = false;
     public boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
-    private static final long holdTime = 250L;
-    private static final String logTag = "CardView";
+    private static final long Hold_Time = 250L;
+    private static final String LOG_TAG = "CardView";
     TextView health;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable setFullscreen =
@@ -99,9 +99,9 @@ public class CardView extends ConstraintLayout {
         // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_UP:
-                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= holdTime
+                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= Hold_Time
                         && (!isExpended)) {
-                    Log.i(logTag, "Sending: " + card);
+                    Log.i(LOG_TAG, "Sending: " + card);
                     sendTouchMessage();
                 }
                 isBeingHeld = false;
@@ -115,7 +115,7 @@ public class CardView extends ConstraintLayout {
                 break;
             case MotionEvent.ACTION_DOWN:
                 isBeingHeld = true;
-                handler.postDelayed(setFullscreen, holdTime);
+                handler.postDelayed(setFullscreen, Hold_Time);
                 break;
         }
         return false;
@@ -234,7 +234,7 @@ public class CardView extends ConstraintLayout {
         if (imageResourceId != 0) {
             cardImage.setImageResource(imageResourceId);
         } else {
-            Log.e(logTag, "Image Resource \"R.drawable." + resourceName + "\" was not found.");
+            Log.e(LOG_TAG, "Image Resource \"R.drawable." + resourceName + "\" was not found.");
             cardImage.setImageResource(R.drawable.playarea);
         }
     }
