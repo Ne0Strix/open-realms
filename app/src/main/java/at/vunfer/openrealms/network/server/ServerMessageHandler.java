@@ -7,13 +7,11 @@ import static at.vunfer.openrealms.network.Communication.createPlayerStatsMessag
 import static at.vunfer.openrealms.network.Communication.createRemoveCardMessage;
 
 import android.util.Log;
-
 import at.vunfer.openrealms.model.*;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
-
 import java.io.IOException;
 
 public class ServerMessageHandler implements IHandleMessage {
