@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class ClientMessageHandlerTest {
+class ClientMessageHandlerTest {
 
     @Mock private UIUpdateListener mockUIUpdater;
 

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-public class CommunicationTest {
+class CommunicationTest {
     private MockedStatic<CommunicationTest> mockedStatic;
 
     ObjectInputStream input;

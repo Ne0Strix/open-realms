@@ -36,7 +36,6 @@ public class ServerMessageHandler implements IHandleMessage {
                 handleTouchedCard(message, gameSession, currentPlayer);
                 break;
             case CHOICE:
-                // TODO instructions for backend
                 break;
             case END_TURN:
                 handleEndTurn(gameSession, currentPlayer);
