@@ -11,7 +11,7 @@ import java.net.Socket;
 
 public class ClientHandler {
 
-    private final String TAG = "ClientHandler";
+    private static final String TAG = "ClientHandler";
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
