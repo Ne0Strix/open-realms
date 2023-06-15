@@ -50,7 +50,11 @@ public class CardView extends ConstraintLayout {
     private final Runnable setFullscreen =
             () -> {
                 if (isBeingHeld) {
-                    setFullscreen();
+                    CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
+
+                    fullScreenCard.setCard(card);
+                    fullScreenCard.setVisibility(VISIBLE);
+                    fullScreenCard.setHealthSize(35);
                 }
             };
 
@@ -129,16 +133,6 @@ public class CardView extends ConstraintLayout {
         } catch (IOException e) {
             throw new CardViewException("Error in CardView.java", e);
         }
-    }
-
-    /** Enables the FullscreenPreview */
-    private void setFullscreen() {
-        // Get the view for the Fullscreen_Card Object from RootView
-        CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
-
-        fullScreenCard.setCard(card);
-        fullScreenCard.setVisibility(VISIBLE);
-        fullScreenCard.setHealthSize(35);
     }
 
     /** Disables the FullscreenPreview */
