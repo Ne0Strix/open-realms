@@ -90,14 +90,14 @@ public class MainActivityTest {
                     }
                 });
 
-        assertNotNull(main.marketPresenter);
-        assertNotNull(main.playerHandPresenter);
-        assertNotNull(main.opponentHandPresenter);
-        assertNotNull(main.playAreaPresenter);
-        assertNotNull(main.playerDiscardPilePresenter);
-        assertNotNull(main.opponentDiscardPilePresenter);
-        assertNotNull(main.playerDeckPresenter);
-        assertNotNull(main.opponentDeckPresenter);
+        assertNotNull(main.getMarketPresenter());
+        assertNotNull(main.getPlayerHandPresenter());
+        assertNotNull(main.getOpponentHandPresenter());
+        assertNotNull(main.getPlayAreaPresenter());
+        assertNotNull(main.getPlayerDiscardPilePresenter());
+        assertNotNull(main.getOpponentDiscardPilePresenter());
+        assertNotNull(main.getPlayerDeckPresenter());
+        assertNotNull(main.getOpponentDeckPresenter());
     }
 
     @Test
@@ -113,15 +113,15 @@ public class MainActivityTest {
         PlayerStats stats = new PlayerStats("Name", 10, 1, 2, 3);
         playerStatsMessage.setData(DataKey.PLAYER_STATS, stats);
         playerStatsMessage.setData(DataKey.TARGET_PLAYER, 1);
-        main.overlayViewPresenter = mock(OverlayPresenter.class);
+        main.setOverlayViewPresenter(mock(OverlayPresenter.class));
         main.updateUI(playerStatsMessage);
         getInstrumentation().waitForIdleSync();
 
-        verify(main.overlayViewPresenter).updatePlayerName(stats.getPlayerName());
-        verify(main.overlayViewPresenter).updatePlayerHealth(stats.getPlayerHealth());
-        verify(main.overlayViewPresenter).updateTurnCoin(stats.getTurnCoin());
-        verify(main.overlayViewPresenter).updateTurnDamage(stats.getTurnDamage());
-        verify(main.overlayViewPresenter).updateTurnHealing(stats.getTurnHealing());
+        verify(main.getOverlayViewPresenter()).updatePlayerName(stats.getPlayerName());
+        verify(main.getOverlayViewPresenter()).updatePlayerHealth(stats.getPlayerHealth());
+        verify(main.getOverlayViewPresenter()).updateTurnCoin(stats.getTurnCoin());
+        verify(main.getOverlayViewPresenter()).updateTurnDamage(stats.getTurnDamage());
+        verify(main.getOverlayViewPresenter()).updateTurnHealing(stats.getTurnHealing());
     }
 
     @Test
@@ -137,15 +137,15 @@ public class MainActivityTest {
         PlayerStats stats = new PlayerStats("Name", 10, 1, 2, 3);
         playerStatsMessage.setData(DataKey.PLAYER_STATS, stats);
         playerStatsMessage.setData(DataKey.TARGET_PLAYER, 0);
-        main.overlayViewPresenter = mock(OverlayPresenter.class);
+        main.setOverlayViewPresenter(mock(OverlayPresenter.class));
         main.updateUI(playerStatsMessage);
         getInstrumentation().waitForIdleSync();
 
-        verify(main.overlayViewPresenter).updateOpponentName(stats.getPlayerName());
-        verify(main.overlayViewPresenter).updateOpponentHealth(stats.getPlayerHealth());
-        verify(main.overlayViewPresenter).updateTurnCoin(stats.getTurnCoin());
-        verify(main.overlayViewPresenter).updateTurnDamage(stats.getTurnDamage());
-        verify(main.overlayViewPresenter).updateTurnHealing(stats.getTurnHealing());
+        verify(main.getOverlayViewPresenter()).updateOpponentName(stats.getPlayerName());
+        verify(main.getOverlayViewPresenter()).updateOpponentHealth(stats.getPlayerHealth());
+        verify(main.getOverlayViewPresenter()).updateTurnCoin(stats.getTurnCoin());
+        verify(main.getOverlayViewPresenter()).updateTurnDamage(stats.getTurnDamage());
+        verify(main.getOverlayViewPresenter()).updateTurnHealing(stats.getTurnHealing());
     }
 
     @Test
@@ -276,7 +276,7 @@ public class MainActivityTest {
         main.updateUI(addCardToHand);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.opponentHandPresenter
+                main.getOpponentHandPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -286,14 +286,14 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(0, DeckType.HAND, testCard.getId());
         main.updateUI(removeCardFromHand);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentHandPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getOpponentHandPresenter().getListOfDisplayedCards().isEmpty());
 
         Message addCardToOpponentHand =
                 Communication.createAddCardMessage(1, DeckType.HAND, testCard.getId());
         main.updateUI(addCardToOpponentHand);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.playerHandPresenter
+                main.getPlayerHandPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -303,7 +303,7 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(1, DeckType.HAND, testCard.getId());
         main.updateUI(removeCardFromOpponentHand);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerHandPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getPlayerHandPresenter().getListOfDisplayedCards().isEmpty());
     }
 
     @Test
@@ -370,7 +370,7 @@ public class MainActivityTest {
         main.updateUI(addCardToDeck);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.opponentDeckPresenter
+                main.getOpponentDeckPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -380,14 +380,14 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(0, DeckType.DECK, testCard.getId());
         main.updateUI(removeCardFromDeck);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentDeckPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getOpponentDeckPresenter().getListOfDisplayedCards().isEmpty());
 
         Message addCardToOpponentDeck =
                 Communication.createAddCardMessage(1, DeckType.DECK, testCard.getId());
         main.updateUI(addCardToOpponentDeck);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.playerDeckPresenter
+                main.getPlayerDeckPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -397,7 +397,7 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(1, DeckType.DECK, testCard.getId());
         main.updateUI(removeCardFromOpponentDeck);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerDeckPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getPlayerDeckPresenter().getListOfDisplayedCards().isEmpty());
     }
 
     @Test
@@ -422,7 +422,7 @@ public class MainActivityTest {
         main.updateUI(addCardToDiscard);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.opponentDiscardPilePresenter
+                main.getOpponentDiscardPilePresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -432,14 +432,14 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(0, DeckType.DISCARD, testCard.getId());
         main.updateUI(removeCardFromDiscard);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentDiscardPilePresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getOpponentDiscardPilePresenter().getListOfDisplayedCards().isEmpty());
 
         Message addCardToOpponentDiscard =
                 Communication.createAddCardMessage(1, DeckType.DISCARD, testCard.getId());
         main.updateUI(addCardToOpponentDiscard);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.playerDiscardPilePresenter
+                main.getPlayerDiscardPilePresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -449,7 +449,7 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(1, DeckType.DISCARD, testCard.getId());
         main.updateUI(removeCardFromOpponentDiscard);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerDiscardPilePresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getPlayerDiscardPilePresenter().getListOfDisplayedCards().isEmpty());
     }
 
     @Test
@@ -474,7 +474,7 @@ public class MainActivityTest {
         main.updateUI(addCardToPlayArea);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.playAreaPresenter
+                main.getPlayAreaPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -484,7 +484,7 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(0, DeckType.PLAYED, testCard.getId());
         main.updateUI(removeCardFromPlayArea);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.playAreaPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getPlayAreaPresenter().getListOfDisplayedCards().isEmpty());
     }
 
     @Test
@@ -509,7 +509,7 @@ public class MainActivityTest {
         main.updateUI(addCardToMarket);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.marketPresenter
+                main.getMarketPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -519,7 +519,7 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(0, DeckType.FOR_PURCHASE, testCard.getId());
         main.updateUI(removeCardFromMarket);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.marketPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getMarketPresenter().getListOfDisplayedCards().isEmpty());
     }
 
     @Test
@@ -553,7 +553,7 @@ public class MainActivityTest {
         main.updateUI(addChampionToChampionArea);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.opponentPlayedChampionsPresenter
+                main.getOpponentPlayedChampionsPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -563,7 +563,7 @@ public class MainActivityTest {
         main.updateUI(expendChampion);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.opponentPlayedChampionsPresenter
+                main.getOpponentPlayedChampionsPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .isExpended());
@@ -572,7 +572,7 @@ public class MainActivityTest {
         main.updateUI(resetChampion);
         getInstrumentation().waitForIdleSync();
         assertFalse(
-                main.opponentPlayedChampionsPresenter
+                main.getOpponentPlayedChampionsPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .isExpended());
@@ -581,14 +581,14 @@ public class MainActivityTest {
                 Communication.createRemoveCardMessage(0, DeckType.CHAMPIONS, testChampion.getId());
         main.updateUI(removeChampionFromChampionArea);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.opponentPlayedChampionsPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getOpponentPlayedChampionsPresenter().getListOfDisplayedCards().isEmpty());
 
         addChampionToChampionArea =
                 Communication.createAddCardMessage(1, DeckType.CHAMPIONS, testChampion.getId());
         main.updateUI(addChampionToChampionArea);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.playerPlayedChampionsPresenter
+                main.getPlayerPlayedChampionsPresenter()
                         .getListOfDisplayedCards()
                         .get(0)
                         .getCard()
@@ -598,19 +598,25 @@ public class MainActivityTest {
         main.updateUI(expendChampion);
         getInstrumentation().waitForIdleSync();
         assertTrue(
-                main.playerPlayedChampionsPresenter.getListOfDisplayedCards().get(0).isExpended());
+                main.getPlayerPlayedChampionsPresenter()
+                        .getListOfDisplayedCards()
+                        .get(0)
+                        .isExpended());
 
         resetChampion = Communication.createResetChampionMessage(1, testChampion.getId());
         main.updateUI(resetChampion);
         getInstrumentation().waitForIdleSync();
         assertFalse(
-                main.playerPlayedChampionsPresenter.getListOfDisplayedCards().get(0).isExpended());
+                main.getPlayerPlayedChampionsPresenter()
+                        .getListOfDisplayedCards()
+                        .get(0)
+                        .isExpended());
 
         removeChampionFromChampionArea =
                 Communication.createRemoveCardMessage(1, DeckType.CHAMPIONS, testChampion.getId());
         main.updateUI(removeChampionFromChampionArea);
         getInstrumentation().waitForIdleSync();
-        assertTrue(main.playerPlayedChampionsPresenter.getListOfDisplayedCards().isEmpty());
+        assertTrue(main.getPlayerPlayedChampionsPresenter().getListOfDisplayedCards().isEmpty());
     }
 
     @Test

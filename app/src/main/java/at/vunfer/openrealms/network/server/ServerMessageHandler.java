@@ -24,6 +24,7 @@ import java.util.List;
 public class ServerMessageHandler implements IHandleMessage {
     public static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
+    private final String CHAMPION_STRING = "Champion ";
 
     public void ensureServerThreadInitialized() {
         if (serverThread == null) {
@@ -245,7 +246,7 @@ public class ServerMessageHandler implements IHandleMessage {
                     gameSession.getPlayerTurnNumber(gameSession.getCurrentPlayer()));
             serverThread.sendCheatStatusToAll(false);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerMessageHandlerException("Error while handling Server Message", e);
         }
     }
 
@@ -256,7 +257,7 @@ public class ServerMessageHandler implements IHandleMessage {
             try {
                 sendChampionKilledToAllClients(gameSession, currentPlayer, c.getId());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerMessageHandlerException("Error while handling Server Message", e);
             }
         }
     }
@@ -269,5 +270,10 @@ public class ServerMessageHandler implements IHandleMessage {
                     gameSession.getPlayerTurnNumber(currentPlayer), restockedFromDiscarded);
             restockedFromDiscarded.clear();
         }
+    }
+
+    private class ServerMessageHandlerException extends RuntimeException {
+        public ServerMessageHandlerException(
+                String errorWhileHandlingServerMessagesThread, IOException e) {}
     }
 }
