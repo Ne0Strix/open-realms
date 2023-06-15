@@ -7,7 +7,6 @@ import at.vunfer.openrealms.model.effects.HealingEffect;
 import java.util.List;
 
 public class PlayerCards {
-    private static final String TAG = "PlayerCards";
     private final Deck<Card> handCards;
     private Deck<Card> deckCards;
     private final Deck<Card> discardedCards;

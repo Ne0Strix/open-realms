@@ -14,7 +14,6 @@ public class PlayArea {
     private int turnHealing;
     private int turnCoins;
     private int id;
-    private static final String TAG = "PlayArea";
 
     private Market market;
     private Deck<Card> playedCards;
