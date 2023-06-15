@@ -60,7 +60,7 @@ jobs:
       - name: List all files
         run: echo "ls"
       - name: List all files 2
-        run: ls > echp
+        run: ls > echo
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
