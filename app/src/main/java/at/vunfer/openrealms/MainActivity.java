@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity implements UIUpdateListener {
-    private static final int connectionPort = 1337;
+    private static final int Connection_Port = 1337;
     private String connectionIP;
     private ServerThread server;
     private static ClientConnector connection;
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void startServer(View view) {
         isHost = true;
-        server = new ServerThread(this, connectionPort);
+        server = new ServerThread(this, Connection_Port);
 
         TextView showIpOutline = (TextView) findViewById(R.id.ip_label_outline);
         TextView promptOutline = findViewById(R.id.server_prompt_outline);
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     showIpOutline.setText(connectionIP);
 
                     connection = new ClientConnector(this);
-                    connection.setConnectionTarget(connectionIP, connectionPort);
+                    connection.setConnectionTarget(connectionIP, Connection_Port);
                     connection.start();
                 });
     }
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         Log.i(TAG, "Connecting to IP: " + connectionIP);
         connection = new ClientConnector(this);
 
-        connection.setConnectionTarget(connectionIP, connectionPort);
+        connection.setConnectionTarget(connectionIP, Connection_Port);
         connection.start();
     }
 
