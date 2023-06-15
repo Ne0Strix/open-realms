@@ -96,7 +96,6 @@ public class CardView extends ConstraintLayout {
 
     public boolean onClick(MotionEvent motionEvent) {
         if (!isFaceUp) return false;
-        // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_UP:
                 if (motionEvent.getEventTime() - motionEvent.getDownTime() <= Hold_Time
