@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity implements UIUpdateListener {
-    private static final int Connection_Port = 1337;
+    private static final int CONNECTION_PORT = 1337;
     private String connectionIP;
     private ServerThread server;
     private static ClientConnector connection;
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     ImageView endscreenImage;
     Button endTurnButton;
+    private String unknownTypeMessage = "Received message of unknown type.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void startServer(View view) {
         isHost = true;
-        server = new ServerThread(this, Connection_Port);
+        server = new ServerThread(this, CONNECTION_PORT);
 
         TextView showIpOutline = (TextView) findViewById(R.id.ip_label_outline);
         TextView promptOutline = findViewById(R.id.server_prompt_outline);
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     showIpOutline.setText(connectionIP);
 
                     connection = new ClientConnector(this);
-                    connection.setConnectionTarget(connectionIP, Connection_Port);
+                    connection.setConnectionTarget(connectionIP, CONNECTION_PORT);
                     connection.start();
                 });
     }
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         Log.i(TAG, "Connecting to IP: " + connectionIP);
         connection = new ClientConnector(this);
 
-        connection.setConnectionTarget(connectionIP, Connection_Port);
+        connection.setConnectionTarget(connectionIP, CONNECTION_PORT);
         connection.start();
     }
 
@@ -436,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                             startGame(new View(context));
                             break;
                         default:
-                            Log.i(TAG, "Received message of unknown type.");
+                            Log.i(TAG, unknownTypeMessage);
                     }
                 });
     }
@@ -483,7 +484,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                 }
                 break;
             default:
-                Log.i(TAG, "Received message of unknown type.");
+                Log.i(TAG, unknownTypeMessage);
         }
     }
 
@@ -529,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                 }
                 break;
             default:
-                Log.i(TAG, "Received message of unknown type.");
+                Log.i(TAG, unknownTypeMessage);
         }
     }
 

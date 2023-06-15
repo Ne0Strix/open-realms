@@ -50,7 +50,7 @@ public class ServerMessageHandler implements IHandleMessage {
                 handleCheat(message, currentPlayer);
                 break;
             case UNCOVER_CHEAT:
-                handleUncoverCheat(message, gameSession, currentPlayer);
+                handleUncoverCheat(gameSession, currentPlayer);
                 break;
             case REMATCH_REQUEST:
                 handleRematch();
@@ -73,7 +73,7 @@ public class ServerMessageHandler implements IHandleMessage {
         serverThread.sendRematchToAll();
     }
 
-    private void handleUncoverCheat(Message message, GameSession gameSession, Player currentPlayer)
+    private void handleUncoverCheat(GameSession gameSession, Player currentPlayer)
             throws IOException {
         boolean isCheatActive = currentPlayer.getPlayArea().getCheat();
         if (isCheatActive) {
@@ -222,6 +222,7 @@ public class ServerMessageHandler implements IHandleMessage {
     void cleanupAfterEndTurn(GameSession gameSession, Player opponentInNewTurn) {
         handleKilledChampionsAtTurnEnd(gameSession, opponentInNewTurn);
         serverThread.dealMarketCardsToPurchaseAreaToAll();
+        opponentInNewTurn.getPlayArea().clearDrawnByCheat();
     }
 
     void correctCardPiles(GameSession gameSession, Player opponentInNewTurn) {

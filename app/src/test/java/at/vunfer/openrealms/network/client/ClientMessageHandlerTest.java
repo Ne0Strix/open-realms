@@ -24,7 +24,7 @@ class ClientMessageHandlerTest {
     }
 
     @Test
-    public void testHandleMessage() {
+    void testHandleMessage() {
         // Arrange
         Message message = mock(Message.class);
 

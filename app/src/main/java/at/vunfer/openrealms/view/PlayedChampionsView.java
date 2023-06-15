@@ -16,7 +16,7 @@ import java.util.List;
 public class PlayedChampionsView extends LinearLayout implements CardPileView {
     private final float screenDensity;
     private static final float CARD_SCALE = 0.6f;
-    private String TAG = "PlayedChampionsView";
+    private final String TAG = "PlayedChampionsView";
 
     public PlayedChampionsView(@NonNull Context context) {
         this(context, null);
