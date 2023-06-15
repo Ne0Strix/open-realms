@@ -482,6 +482,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     opponentPlayedChampionsPresenter.addCardToView(card);
                     opponentPlayedChampionsPresenter.expendChampion(card);
                 }
+                break;
+            default:
+                Log.i(TAG, "Received message of unknown type.");
         }
     }
 
@@ -525,6 +528,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     opponentPlayedChampionsPresenter.resetChampion(card);
                     opponentPlayedChampionsPresenter.removeCardFromView(card);
                 }
+                break;
+            default:
+                Log.i(TAG, "Received message of unknown type.");
         }
     }
 
