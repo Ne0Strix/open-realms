@@ -16,7 +16,7 @@ import java.net.Socket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ClientConnectorTest {
+class ClientConnectorTest {
 
     private UIUpdateListener uiUpdater;
     private Socket socket;
@@ -59,7 +59,7 @@ public class ClientConnectorTest {
     }
 
     @Test
-    public void testRunError() throws IOException {
+    void testRunError() throws IOException {
         Socket mockedSocked = mock(Socket.class);
         clientConnector.setSocket(mockedSocked);
         doThrow(new RuntimeException("Unable to create client connection."))
