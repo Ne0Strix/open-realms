@@ -23,6 +23,7 @@ public class DeckGenerator {
 
     private DeckGenerator() {}
 
+    private static final String CHAMPION_STRING = "champion";
     private static final String LOGGING_TAG = "DeckGenerator";
 
     public static Deck<Card> generatePlayerStarterDeck(Context context) {
@@ -57,13 +58,13 @@ public class DeckGenerator {
                 String name = xmlParser.getName();
                 Log.v(LOGGING_TAG, "Tag: " + name);
                 if (event == XmlPullParser.START_TAG
-                        && (name.equals("card") || name.equals("champion"))) {
+                        && (name.equals("card") || name.equals(CHAMPION_STRING))) {
                     int amount = Integer.parseInt(xmlParser.getAttributeValue(0));
                     Log.v(LOGGING_TAG, "Adding Card " + amount + " Times");
-                    Card c = parseCard(xmlParser, name.equals("champion"));
+                    Card c = parseCard(xmlParser, name.equals(CHAMPION_STRING));
                     Log.v(LOGGING_TAG, "Finished Card: " + c);
                     deck.add(c);
-                    if (name.equals("champion"))
+                    if (name.equals(CHAMPION_STRING))
                         for (int i = 1; i < amount; i++) deck.add(new Champion((Champion) c));
                     else for (int i = 1; i < amount; i++) deck.add(new Card(c));
                 }
@@ -149,7 +150,7 @@ public class DeckGenerator {
 
     private static CardType getCardTypeFromString(String nextText) {
         switch (nextText) {
-            case "champion":
+            case CHAMPION_STRING:
                 return CardType.CHAMPION;
             case "action":
                 return CardType.ACTION;

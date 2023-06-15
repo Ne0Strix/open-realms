@@ -103,10 +103,11 @@ public class CardViewTest {
         MotionEvent up = MotionEvent.obtain(10, 510, MotionEvent.ACTION_UP, 0, 0, 0);
 
         v.onClick(down);
-        assertTrue(v.isBeingHeld);
+        assertTrue(v.isBeingHeld());
+        Thread.sleep(500);
         assertEquals(View.VISIBLE, fullscreenView.getVisibility());
         v.onClick(up);
-        assertFalse(v.isBeingHeld);
+        assertFalse(v.isBeingHeld());
         assertEquals(View.INVISIBLE, fullscreenView.getVisibility());
     }
 
@@ -122,10 +123,10 @@ public class CardViewTest {
         MotionEvent up = MotionEvent.obtain(10, 20, MotionEvent.ACTION_UP, 0, 0, 0);
 
         v.onClick(down);
-        assertTrue(v.isBeingHeld);
+        assertTrue(v.isBeingHeld());
 
         v.onClick(up);
-        assertFalse(v.isBeingHeld);
+        assertFalse(v.isBeingHeld());
         verify(v).sendTouchMessage();
     }
 
@@ -144,10 +145,11 @@ public class CardViewTest {
         MotionEvent up = MotionEvent.obtain(10, 510, MotionEvent.ACTION_CANCEL, 0, 0, 0);
 
         v.onClick(down);
-        assertTrue(v.isBeingHeld);
+        assertTrue(v.isBeingHeld());
+        Thread.sleep(500);
         assertEquals(View.VISIBLE, fullscreenView.getVisibility());
         v.onClick(up);
-        assertFalse(v.isBeingHeld);
+        assertFalse(v.isBeingHeld());
         assertEquals(View.INVISIBLE, fullscreenView.getVisibility());
     }
 
@@ -162,7 +164,7 @@ public class CardViewTest {
         MotionEvent down = MotionEvent.obtain(10, 10, MotionEvent.ACTION_DOWN, 0, 0, 0);
 
         v.onClick(down);
-        assertFalse(v.isBeingHeld);
+        assertFalse(v.isBeingHeld());
     }
 
     @Test

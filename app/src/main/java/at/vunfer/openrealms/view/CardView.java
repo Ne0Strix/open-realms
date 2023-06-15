@@ -41,18 +41,20 @@ public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isFaceUp = true;
     private boolean isExpended = false;
-    public boolean isBeingHeld = false;
+    private boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
     private static final long Hold_Time = 250L;
     private static final String LOG_TAG = "CardView";
     TextView health;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable setFullscreen =
-            new Runnable() {
-                public void run() {
-                    if (isBeingHeld) {
-                        setFullscreen();
-                    }
+            () -> {
+                if (isBeingHeld) {
+                    CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
+
+                    fullScreenCard.setCard(card);
+                    fullScreenCard.setVisibility(VISIBLE);
+                    fullScreenCard.setHealthSize(35);
                 }
             };
 
@@ -94,6 +96,10 @@ public class CardView extends ConstraintLayout {
         cardBackground.setOnTouchListener((view, motionEvent) -> onClick(motionEvent));
     }
 
+    public boolean isBeingHeld() {
+        return isBeingHeld;
+    }
+
     public boolean onClick(MotionEvent motionEvent) {
         if (!isFaceUp) return false;
         switch (motionEvent.getAction()) {
@@ -126,18 +132,8 @@ public class CardView extends ConstraintLayout {
         try {
             MainActivity.sendMessage(MainActivity.buildTouchMessage(card.getId()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CardViewException("Error in CardView.java", e);
         }
-    }
-
-    /** Enables the FullscreenPreview */
-    private void setFullscreen() {
-        // Get the view for the Fullscreen_Card Object from RootView
-        CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
-
-        fullScreenCard.setCard(card);
-        fullScreenCard.setVisibility(VISIBLE);
-        fullScreenCard.setHealthSize(35);
     }
 
     /** Disables the FullscreenPreview */
@@ -398,5 +394,9 @@ public class CardView extends ConstraintLayout {
 
     public boolean isExpended() {
         return isExpended;
+    }
+
+    private class CardViewException extends RuntimeException {
+        public CardViewException(String CardViewException, IOException e) {}
     }
 }
