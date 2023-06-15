@@ -57,6 +57,10 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: ./gradlew build sonarqube --info
+      - name: List all files
+        run: echo "ls"
+      - name: List all files 2
+        run: ls > echp
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
