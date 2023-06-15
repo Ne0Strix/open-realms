@@ -9,25 +9,40 @@
         android:id="@+id/imageView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/emptycards" />
+        app:srcCompat="@drawable/card_outline" />
 
-    <FrameLayout
-        android:id="@+id/discardPileCardHolder"
+    <at.vunfer.openrealms.view.CardView
+        android:id="@+id/discardPileCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </FrameLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/discardPileAmount"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="500sp"
+        android:autoSizeMinTextSize="11sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="0"
+        android:textAlignment="gravity"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+ <TextView
+        android:id="@+id/discardPileAmountOutline"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeMaxTextSize="500sp"
@@ -41,4 +56,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

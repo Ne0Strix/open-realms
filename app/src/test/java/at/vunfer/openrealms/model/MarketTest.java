@@ -15,6 +15,7 @@ class MarketTest {
     @BeforeEach
     public void setUp() {
         market = Market.getInstance();
+        market.setMarketDeck(market.getOldTestMarketDeck());
     }
 
     @AfterEach
@@ -25,7 +26,7 @@ class MarketTest {
     @Test
     void testBuyNonexistingCard() {
         assertThrows(IllegalArgumentException.class, () -> market.purchase(null));
-        Card cardToBuy = new Card("Test", 5, List.of(new CoinEffect(5)));
+        Card cardToBuy = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
         assertThrows(IllegalArgumentException.class, () -> market.purchase(cardToBuy));
     }
 
@@ -34,5 +35,52 @@ class MarketTest {
         Card toBuy = market.getForPurchase().get(0);
         assertEquals(toBuy, market.purchase(toBuy));
         assertFalse(market.getForPurchase().contains(toBuy));
+    }
+
+    @Test
+    void testModifyForPurchase() {
+        Card newCard = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+
+        market.addCard(newCard);
+        assertTrue(market.getForPurchase().contains(newCard));
+
+        market.removeCard(newCard);
+        assertFalse(market.getForPurchase().contains(newCard));
+    }
+
+    @Test
+    void testSetAndResetForPurchase() {
+        Card c1 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c2 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c3 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+
+        Deck<Card> newForPurchase = new Deck<>();
+        newForPurchase.add(c1);
+        newForPurchase.add(c2);
+        newForPurchase.add(c3);
+        Deck<Card> oldForPurchase = (Deck<Card>) market.getForPurchase();
+
+        market.setCards(newForPurchase);
+        assertEquals(newForPurchase, market.getForPurchase());
+
+        market.clear();
+        assertTrue(market.getForPurchase().isEmpty());
+
+        market.setCards(oldForPurchase);
+    }
+
+    @Test
+    void testNewToPurchase() {
+        Card c1 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c2 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+        Card c3 = new Card("Test", 5, Faction.NONE, List.of(new CoinEffect(5)));
+
+        Deck<Card> newToPurchase = new Deck<>();
+        newToPurchase.add(c1);
+        newToPurchase.add(c2);
+        newToPurchase.add(c3);
+
+        market.setNewToPurchase(newToPurchase);
+        assertEquals(newToPurchase, market.getNewToPurchase());
     }
 }

@@ -4,8 +4,9 @@ package at.vunfer.openrealms.model;
 import java.util.List;
 
 public class GameSession {
-    private List<Player> players;
+    private final List<Player> players;
     private Player currentPlayer;
+    private final Market market;
 
     /**
      * Constructs a GameSession with a list of players and the current player.
@@ -20,6 +21,7 @@ public class GameSession {
         }
         this.players = players;
         this.currentPlayer = currentPlayer;
+        market = Market.getInstance();
     }
 
     public List<Player> getPlayers() {
@@ -28,6 +30,10 @@ public class GameSession {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public int getPlayerTurnNumber(Player player) {
+        return players.indexOf(player);
     }
 
     /**
@@ -52,14 +58,15 @@ public class GameSession {
      * opponent and heals the current player.
      */
     public void endTurn() {
-        dealDamage(
-                getOpponent(currentPlayer),
-                currentPlayer
-                        .getPlayArea()
-                        .getTurnDamage()); // deal damage to player next in line, since in this
-        // version there will only be 2 players
+        dealDamage(getOpponent(currentPlayer), currentPlayer.getPlayArea().getTurnDamage());
         healPlayer(currentPlayer.getPlayArea().getTurnHealing());
         currentPlayer.getPlayArea().resetTurnPool();
+        market.restock();
+        currentPlayer.getPlayArea().clearPlayedCards();
+        currentPlayer.getPlayArea().getPlayerCards().restockHand();
+        currentPlayer.getPlayArea().resetCardDrawnFromSpecialAbility();
+        currentPlayer.getPlayArea().resetChampions();
+        currentPlayer.getPlayArea().clearCardsThatUsedSynergyEffect();
         nextPlayer();
     }
 

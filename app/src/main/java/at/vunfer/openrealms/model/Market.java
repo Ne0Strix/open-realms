@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.effects.CoinEffect;
 import at.vunfer.openrealms.model.effects.DamageEffect;
 import at.vunfer.openrealms.model.effects.HealingEffect;
@@ -14,43 +13,18 @@ public class Market {
     private static final String TAG = "Market";
     Deck<Card> marketDeck;
     Deck<Card> forPurchase;
+    Deck<Card> newToPurchase;
 
     private Market() {
         marketDeck = new Deck<>();
         forPurchase = new Deck<>();
+        newToPurchase = new Deck<>();
+    }
 
-        // Add some test cards to the market deck
-        marketDeck.add(
-                new Card(
-                        "Testcard1",
-                        3,
-                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
-        marketDeck.add(
-                new Card(
-                        "Testcard2",
-                        3,
-                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
-        marketDeck.add(
-                new Card(
-                        "Testcard3",
-                        3,
-                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
-        marketDeck.add(
-                new Card(
-                        "Testcard4",
-                        3,
-                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
-        marketDeck.add(
-                new Card(
-                        "Testcard5",
-                        3,
-                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
-        marketDeck.add(
-                new Card(
-                        "Testcard6",
-                        3,
-                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
-
+    public void setMarketDeck(Deck<Card> marketDeck) {
+        this.marketDeck.clear();
+        this.marketDeck.addAll(marketDeck);
+        forPurchase.clear();
         restock();
     }
 
@@ -82,13 +56,14 @@ public class Market {
      */
     public int restock() {
         int restocked = 0;
-        while (forPurchase.size() < TOTAL_PURCHASABLE) {
+        newToPurchase = new Deck<>();
+        while (forPurchase.size() < TOTAL_PURCHASABLE && !marketDeck.isEmpty()) {
             Card card = marketDeck.drawRandom();
             if (card != null) {
                 forPurchase.add(card);
+                newToPurchase.add(card);
                 restocked++;
             } else {
-                Log.i(TAG, "You have no more cards to draw for the market.");
                 break;
             }
         }
@@ -110,13 +85,12 @@ public class Market {
         return card;
     }
 
-    /**
-     * Get the list of cards in the market.
-     *
-     * @return The list of cards in the market.
-     */
-    public List<Card> getCards() {
-        return forPurchase;
+    public Deck<Card> getNewToPurchase() {
+        return newToPurchase;
+    }
+
+    public void setNewToPurchase(Deck<Card> newToPurchase) {
+        this.newToPurchase = newToPurchase;
     }
 
     /**
@@ -149,5 +123,46 @@ public class Market {
     /** Clear the market of all cards. */
     public void clear() {
         forPurchase.clear();
+    }
+
+    public Deck<Card> getOldTestMarketDeck() {
+        Deck<Card> testMarketDeck = new Deck<>();
+        testMarketDeck.add(
+                new Card(
+                        "Testcard1",
+                        3,
+                        Faction.NONE,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard2",
+                        3,
+                        Faction.NONE,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard3",
+                        3,
+                        Faction.NONE,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard4",
+                        3,
+                        Faction.NONE,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard5",
+                        3,
+                        Faction.NONE,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        testMarketDeck.add(
+                new Card(
+                        "Testcard6",
+                        3,
+                        Faction.NONE,
+                        List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1))));
+        return testMarketDeck;
     }
 }

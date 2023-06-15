@@ -21,7 +21,7 @@ public class PlayAreaPresenter extends CardPilePresenter {
 
     @Override
     public void addCardToView(CardView card) {
-        listOfDisplayedCards.add(card);
+        listOfDisplayedCards.add(0, card);
         playAreaView.updateView(listOfDisplayedCards);
     }
 

@@ -3,12 +3,16 @@ package at.vunfer.openrealms.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import at.vunfer.openrealms.R;
 import at.vunfer.openrealms.view.view_interfaces.CardPileView;
 import java.util.List;
 
 public class HandView extends LinearLayout implements CardPileView {
+
+    private static final float CARD_SCALE = 0.75f;
+    private float screenDensity;
+    private boolean isOpponent;
 
     public HandView(Context context) {
         this(context, null);
@@ -24,22 +28,8 @@ public class HandView extends LinearLayout implements CardPileView {
     }
 
     public void init() {
-        // Creating the HandView layout parameters
-        /* LinearLayout.LayoutParams params =
-        new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);*/
-
-        // Center the HandView layout parameters at the bottom of the screen.
-
-        // Inflate the HandView layout with the created layout parameters.
-        // handView = (LinearLayout) LayoutInflater.from(this.context).inflate(R.layout.hand_view,
-        // this);
-        // Log.i("EQ",v.equals(getChildAt(0))+" "+v.toString()+" "+getChildAt(0));
-        /*       setOrientation(LinearLayout.HORIZONTAL);
-        setMinimumHeight(1450);
-        setLayoutParams(params);*/
-        // handView.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        screenDensity = getResources().getDisplayMetrics().density;
+        isOpponent = (getId() == R.id.opponent_hand_view);
     }
 
     /** Sets the cards in the HandView. */
@@ -50,59 +40,37 @@ public class HandView extends LinearLayout implements CardPileView {
 
         for (int i = 0; i < numCards; i++) {
             CardView card = cards.get(i);
-
+            card.setFaceUpOrDown(isOpponent);
             LinearLayout.LayoutParams params =
-                    new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
-            /*
-            params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-            params.setMargins(-20, 0, -20, 64);
-
-            if (numCards % 2 != 0) {
-                // even number of cards, center them
-                params.rightMargin = i == numCards / 2 ? 8 : 0;
-                params.leftMargin = i == numCards / 2 ? 8 : 0;
-            } else {
-                params.rightMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
-                params.leftMargin = i == numCards / 2 - 1 || i == numCards / 2 ? 8 : 0;
-            }
-            */
-            // Position the cards along an arc
-            // positionCards();
-
-            // card.setLayoutParams(new ViewGroup.LayoutParams(180, 250));
-            // card.setLayoutParams(params);
+                    new LinearLayout.LayoutParams(
+                            (int) (CARD_SCALE * screenDensity * 77),
+                            (int) (CARD_SCALE * screenDensity * 106));
+            card.setLayoutParams(params);
+            card.setHealthSize(6);
             addView(card);
         }
+        positionCards(cards);
     }
-    // TODO: Broken, leaves cards outside of View, in the center of the screen
-    /*private void positionCards(List<CardView> cards) {
+
+    private void positionCards(List<CardView> cards) {
         int numCards = cards.size();
+        float originalCardAngle = 12f * numCards;
 
         // Calculate the angle between cards
-        float cardAngle = 60.0f / (numCards - 1);
-
-        // Calculate the radius of the arc
-        float radius = (float) ((getHeight() / 2.0) / Math.sin(Math.toRadians(cardAngle / 2.0)));
-
-        // Calculate the center point of the arc
-        float centerX = getWidth() / 2.0f;
-        float centerY = getHeight();
+        float cardAngle = originalCardAngle / (numCards - 1);
 
         // Position the cards along the arc
         for (int i = 0; i < numCards; i++) {
             CardView card = cards.get(i);
 
             // Calculate the angle of the current card
-            float angle = -30.0f + (i * cardAngle);
-
-            // Calculate the position of the card
-            float x = centerX + (float) Math.sin(Math.toRadians(angle)) * radius;
-            float y = centerY - (float) Math.cos(Math.toRadians(angle)) * radius;
+            float angle = -originalCardAngle / 2 + (i * cardAngle);
+            if (numCards == 1) angle = 0;
 
             // Set the position and rotation of the card
-            card.setX(x);
-            card.setY(y);
             card.setRotation(angle);
+            LinearLayout.LayoutParams params = (LayoutParams) card.getLayoutParams();
+            params.setMargins(-20, 0, -20, (int) (2 * (originalCardAngle / 2 - Math.abs(angle))));
         }
-    }*/
+    }
 }

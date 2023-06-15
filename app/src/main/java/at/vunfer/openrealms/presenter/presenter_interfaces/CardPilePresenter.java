@@ -20,14 +20,6 @@ public abstract class CardPilePresenter {
         for (CardView card : cards) addCardToView(card);
     }
 
-    public CardView findViewByCardId(int cardID) {
-        for (CardView view : listOfDisplayedCards) {
-            // if(view.getCard().getID == cardID) TODO: implement CardID
-            return view;
-        }
-        return null;
-    }
-
     public List<CardView> getListOfDisplayedCards() {
         return listOfDisplayedCards;
     }

@@ -33,4 +33,6 @@ public interface OverlayViewInterface {
     String getTurnCoin();
 
     View getOverlayView();
+
+    void setCheatingEnabled(boolean enabled);
 }
