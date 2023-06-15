@@ -40,54 +40,47 @@ class ChampionTest {
         // Test invalid construction
         List<Effect> effects =
                 List.of(new DamageEffect(1), new HealingEffect(1), new CoinEffect(1));
+
         assertThrows(
                 IllegalArgumentException.class,
-                () ->
-                        new Champion(
-                                "",
-                                3,
-                                CardType.CHAMPION,
-                                Faction.NONE,
-                                effects,
-                                new ArrayList<>(),
-                                false,
-                                10));
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        new Champion(
-                                "Test Champion",
-                                -3,
-                                CardType.CHAMPION,
-                                Faction.NONE,
-                                effects,
-                                new ArrayList<>(),
-                                false,
-                                10));
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        new Champion(
-                                "Test Champion",
-                                3,
-                                CardType.CHAMPION,
-                                Faction.NONE,
-                                null,
-                                new ArrayList<>(),
-                                false,
-                                10));
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        new Champion(
-                                "Test Champion",
-                                3,
-                                CardType.CHAMPION,
-                                Faction.NONE,
-                                effects,
-                                new ArrayList<>(),
-                                false,
-                                -1));
+                () -> {
+                    new Champion(
+                            "",
+                            3,
+                            CardType.CHAMPION,
+                            Faction.NONE,
+                            effects,
+                            new ArrayList<>(),
+                            false,
+                            10);
+                    new Champion(
+                            "Test Champion",
+                            -3,
+                            CardType.CHAMPION,
+                            Faction.NONE,
+                            effects,
+                            new ArrayList<>(),
+                            false,
+                            10);
+                    new Champion(
+                            "Test Champion",
+                            3,
+                            CardType.CHAMPION,
+                            Faction.NONE,
+                            null,
+                            new ArrayList<>(),
+                            false,
+                            10);
+                    new Champion(
+                            "Test Champion",
+                            3,
+                            CardType.CHAMPION,
+                            Faction.NONE,
+                            effects,
+                            new ArrayList<>(),
+                            false,
+                            -1);
+                });
     }
 
     @Test
