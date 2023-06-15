@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Card implements Serializable {
     protected static int idCounter = 0;
+    protected static int numOfResets = 0;
     protected final String name;
     protected final int cost;
     protected final CardType type;
@@ -143,6 +144,12 @@ public class Card implements Serializable {
 
     public static Deck<Card> getFullCardCollection() {
         return fullCardCollection;
+    }
+
+    public static void resetIdsAndCollection() {
+        numOfResets++;
+        idCounter = numOfResets * 1000;
+        fullCardCollection.clear();
     }
 
     public static Card getCardById(int id) {

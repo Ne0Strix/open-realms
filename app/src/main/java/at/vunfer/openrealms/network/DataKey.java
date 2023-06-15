@@ -10,5 +10,6 @@ public enum DataKey {
     OPTIONS,
     CHEAT_ACTIVATE,
     YOUR_TURN, // used to specify if it is the turn of the player
-    COLLECTION // carries the collection of cards
+    COLLECTION, // carries the collection of cards
+    NAME
 }

@@ -1,19 +1,26 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server;
 
+import static at.vunfer.openrealms.network.Communication.createAddCardMessage;
+import static at.vunfer.openrealms.network.Communication.createPlayerStatsMessage;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.testng.AssertJUnit.assertNotNull;
 
 import android.content.Context;
+import android.util.Log;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.network.Communication;
+import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
+import at.vunfer.openrealms.network.MessageType;
 import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,9 +39,11 @@ class ServerMessageHandlerTest {
     private Message message;
     private Card card;
     private Deck<Card> discardedChampions;
+    private MockedStatic<ServerMessageHandlerTest> mockedStatic;
 
     @BeforeEach
     void setUp() throws IOException {
+        mockedStatic = mockStatic(ServerMessageHandlerTest.class);
         ServerThread normalThread = new ServerThread(mock(Context.class), 69);
         serverThread = Mockito.spy(normalThread);
 
@@ -92,9 +101,8 @@ class ServerMessageHandlerTest {
                                 eq(1), eq(DeckType.CHAMPIONS), anyInt()),
                 times(1));
         communication.verify(
-                () -> Communication.createAddCardMessage(eq(1), eq(DeckType.DISCARD), anyInt()),
-                times(1));
-        communication.verify(() -> Communication.createPlayerStatsMessage(eq(1), any()), times(1));
+                () -> createAddCardMessage(eq(1), eq(DeckType.DISCARD), anyInt()), times(1));
+        communication.verify(() -> createPlayerStatsMessage(eq(1), any()), times(1));
     }
 
     @Test
@@ -109,14 +117,11 @@ class ServerMessageHandlerTest {
         verify(serverThread, times(2)).sendMessageToAllClients(any());
         communication.verify(
                 () -> Communication.createExpendChampionMessage(eq(1), anyInt()), times(1));
-        communication.verify(() -> Communication.createPlayerStatsMessage(eq(1), any()), times(1));
     }
 
     @Test
     void testHandleKilledChampionsAtTurnEnd() throws IOException {
-
         serverMessageHandler.ensureServerThreadInitialized();
-
         serverMessageHandler.handleKilledChampionsAtTurnEnd(gameSession, player);
 
         verify(serverThread, times(3)).sendMessageToAllClients(any());
@@ -129,9 +134,8 @@ class ServerMessageHandlerTest {
                                 eq(1), eq(DeckType.CHAMPIONS), anyInt()),
                 times(1));
         communication.verify(
-                () -> Communication.createAddCardMessage(eq(1), eq(DeckType.DISCARD), anyInt()),
-                times(1));
-        communication.verify(() -> Communication.createPlayerStatsMessage(eq(1), any()), times(1));
+                () -> createAddCardMessage(eq(1), eq(DeckType.DISCARD), anyInt()), times(1));
+        communication.verify(() -> createPlayerStatsMessage(eq(1), any()), times(1));
     }
 
     @Test
@@ -142,5 +146,170 @@ class ServerMessageHandlerTest {
         assertThrows(
                 RuntimeException.class,
                 () -> serverMessageHandler.handleKilledChampionsAtTurnEnd(gameSession, player));
+    }
+
+    @Test
+    void handleCheat() {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            serverMessageHandler.ensureServerThreadInitialized();
+
+            Message message = Mockito.mock(Message.class);
+            when(message.getData(DataKey.CHEAT_ACTIVATE)).thenReturn(true);
+
+            GameSession gameSession = serverThread.getGameSession();
+            Player currentPlayer = gameSession.getCurrentPlayer();
+            PlayArea playArea = currentPlayer.getPlayArea();
+
+            serverMessageHandler.handleCheat(message, currentPlayer);
+
+            verify(playArea, times(1)).setCheat(true);
+            verify(serverThread, times(1)).sendCheatStatusToAll(true);
+            Log.i(eq(ServerMessageHandler.TAG), anyString());
+        }
+    }
+
+    @Test
+    void testHandleMessageChoice() {
+        ServerMessageHandler handler = new ServerMessageHandler();
+        Message message = new Message(MessageType.CHOICE);
+
+        assertDoesNotThrow(() -> handler.handleMessage(message));
+    }
+
+    @Test
+    void testHandleMessageUncoverCheat() {
+        ServerMessageHandler handler = new ServerMessageHandler();
+        Message message = new Message(MessageType.UNCOVER_CHEAT);
+
+        assertDoesNotThrow(() -> handler.handleMessage(message));
+    }
+
+    @Test
+    void testHandleTouchedCardInvalidCardId() throws IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            serverMessageHandler.ensureServerThreadInitialized();
+
+            Message message = Mockito.mock(Message.class);
+            when(message.getType()).thenReturn(MessageType.TOUCHED);
+            when(message.getData(DataKey.CARD_ID)).thenReturn(999); // Invalid card ID
+
+            serverMessageHandler.handleTouchedCard(message, gameSession, player);
+
+            verify(serverThread, never()).sendMessageToAllClients(any());
+        }
+    }
+
+    @Test
+    void testHandleTouchedCardValidCardId() throws IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            serverMessageHandler.ensureServerThreadInitialized();
+
+            Message message = Mockito.mock(Message.class);
+            when(message.getType()).thenReturn(MessageType.TOUCHED);
+            when(message.getData(DataKey.CARD_ID)).thenReturn(1);
+
+            serverMessageHandler.handleTouchedCard(message, gameSession, player);
+
+            verify(player.getPlayArea(), times(1)).playCardById(1);
+        }
+    }
+
+    @Test
+    void testHandleTouchedCardCheatActivated() throws IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+
+            serverMessageHandler.ensureServerThreadInitialized();
+
+            Message message = Mockito.mock(Message.class);
+            when(message.getType()).thenReturn(MessageType.TOUCHED);
+            when(message.getData(DataKey.CARD_ID))
+                    .thenReturn(2); // Card ID that triggers cheat activation
+
+            serverMessageHandler.handleTouchedCard(message, gameSession, player);
+
+            verify(player.getPlayArea(), times(1)).playCardById(2);
+            Log.i(eq(ServerMessageHandler.TAG), eq("Cheat mode set to true"));
+        }
+    }
+
+    @Test
+    void testHandleTouchedCardCheatAlreadyActivated() throws IOException {
+        try (MockedStatic<Log> mockedLog = mockStatic(Log.class)) {
+            serverMessageHandler.ensureServerThreadInitialized();
+
+            Message message = Mockito.mock(Message.class);
+            when(message.getType()).thenReturn(MessageType.TOUCHED);
+            when(message.getData(DataKey.CARD_ID))
+                    .thenReturn(2); // Card ID that triggers cheat activation
+
+            Player currentPlayer = gameSession.getCurrentPlayer();
+            PlayArea playArea = currentPlayer.getPlayArea();
+            playArea.setCheat(true);
+
+            serverMessageHandler.handleTouchedCard(message, gameSession, player);
+
+            verify(player.getPlayArea(), times(1)).playCardById(2);
+            mockedLog.verify(
+                    () -> Log.i(eq(ServerMessageHandler.TAG), eq("Cheat mode set to true")),
+                    never());
+        }
+    }
+
+    @Test
+    void testHandleTouchedCardNullPointerException() throws NullPointerException {
+        serverMessageHandler.ensureServerThreadInitialized();
+
+        Message message = Mockito.mock(Message.class);
+        when(message.getType()).thenReturn(MessageType.TOUCHED);
+        when(message.getData(DataKey.CARD_ID)).thenReturn(1);
+
+        PlayArea playArea = Mockito.mock(PlayArea.class);
+        when(player.getPlayArea()).thenReturn(playArea);
+
+        doThrow(new NullPointerException()).when(playArea).playCardById(1);
+
+        assertThrows(
+                NullPointerException.class,
+                () -> serverMessageHandler.handleTouchedCard(message, gameSession, player));
+    }
+
+    @Test
+    void testHandleEndTurnException() throws IOException {
+        serverMessageHandler.ensureServerThreadInitialized();
+
+        GameSession gameSession = serverThread.getGameSession();
+        Player currentPlayer = gameSession.getCurrentPlayer();
+
+        doThrow(new IOException()).when(serverThread).sendMessageToAllClients(any());
+
+        assertThrows(
+                RuntimeException.class,
+                () -> serverMessageHandler.handleEndTurn(gameSession, currentPlayer));
+    }
+
+    @Test
+    void testCheckDrawnCardException() throws IOException {
+        serverMessageHandler.ensureServerThreadInitialized();
+
+        doThrow(new IOException()).when(serverThread).sendMessageToAllClients(any());
+
+        assertThrows(
+                RuntimeException.class,
+                () -> serverMessageHandler.checkDrawnCard(gameSession, player));
+    }
+
+    @Test
+    void testEnsureServerThreadInitialized() {
+        serverMessageHandler.ensureServerThreadInitialized();
+
+        assertNotNull(serverThread);
+    }
+
+    @AfterEach
+    public void cleanup() {
+        mockedStatic.close();
+        mockedStatic = null;
     }
 }

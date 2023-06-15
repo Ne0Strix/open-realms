@@ -1,6 +1,7 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +19,10 @@ public class PlayArea {
     private Deck<Card> playedCards;
     private Deck<Card> playedChampions;
     private PlayerCards playerCards;
-    private Card cardDrawnFromSpecialAbility; // from special ability
+    private Deck<Card> cardDrawnFromSpecialAbility;
     private Deck<Card> cardsThatUsedSynergies;
     private Deck<Card> atTurnEndDiscardedChampions;
-    private Deck<Card> drawnByCheat = new Deck<Card>();
+    private Deck<Card> drawnByCheat = new Deck<>();
     private boolean cheat = false;
 
     /**
@@ -44,7 +45,7 @@ public class PlayArea {
         this.atTurnEndDiscardedChampions = new Deck<>();
         this.playerCards = playerCards;
         this.market = Market.getInstance();
-        this.cardDrawnFromSpecialAbility = null;
+        this.cardDrawnFromSpecialAbility = new Deck<>();
     }
 
     /**
@@ -185,14 +186,6 @@ public class PlayArea {
         cardsThatUsedSynergies.clear();
     }
 
-    //    public Card useCardSacrificeEffect(Card card) {
-    //        return null;
-    //    }
-    //
-    //    public Card useCardExpendEffect() {
-    //        return null;
-    //    }
-
     public boolean expendChampion(Champion champion) {
         if (champion.expend()) {
             champion.applyEffects(this);
@@ -273,10 +266,30 @@ public class PlayArea {
         turnDamage += damage;
     }
 
-    public void visitDraw() {
-        Card drawnCard = playerCards.drawRandomFromDeck();
-        playerCards.addToHand(drawnCard);
-        cardDrawnFromSpecialAbility = drawnCard;
+    public void visitDraw(int amount) {
+        for (int i = 0; i < amount; i++) {
+            /*
+            O Lord, I seek Your forgiveness for this flawed code.
+            Grant me wisdom to rectify its errors and improve its structure.
+            May I learn from this mistake, develop cleaner code, and honor You through my diligence.
+            Guide me to create efficient and maintainable systems.
+            Amen.
+             */
+            int numOfRestocked = 0;
+            if (playerCards.getRestockedFromDiscarded() != null)
+                numOfRestocked = playerCards.getRestockedFromDiscarded().size();
+            Card drawnCard = playerCards.drawRandomFromDeck();
+            int newNumOfRestocked = 0;
+            if (playerCards.getRestockedFromDiscarded() != null)
+                newNumOfRestocked = playerCards.getRestockedFromDiscarded().size();
+
+            if (newNumOfRestocked != numOfRestocked) {
+                cardDrawnFromSpecialAbility.add(
+                        new Card("PLACEHOLDER", 0, Faction.NONE, new ArrayList<>()));
+            }
+            playerCards.addToHand(drawnCard);
+            cardDrawnFromSpecialAbility.add(drawnCard);
+        }
     }
 
     public void visitHealing(int healing) {
@@ -368,16 +381,13 @@ public class PlayArea {
         return id;
     }
 
-    public void clearCardDrawnFromSpecialAbility() {
-        cardDrawnFromSpecialAbility = null;
-    }
-
-    public Card getCardDrawnFromSpecialAbility() {
+    public Deck<Card> getCardDrawnFromSpecialAbility() {
         return cardDrawnFromSpecialAbility;
     }
 
     public void resetCardDrawnFromSpecialAbility() {
-        cardDrawnFromSpecialAbility = null;
+
+        cardDrawnFromSpecialAbility.clear();
     }
 
     public void setCheat(boolean cheat) {

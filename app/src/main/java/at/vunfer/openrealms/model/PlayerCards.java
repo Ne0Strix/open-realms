@@ -102,6 +102,12 @@ public class PlayerCards {
     }
 
     public Card drawRandomFromDeck() {
+        if (deckCards.isEmpty()) {
+            deckCards.addAll(discardedCards);
+            restockedFromDiscarded = new Deck<>();
+            restockedFromDiscarded.addAll(discardedCards);
+            discardedCards.clear();
+        }
         return deckCards.drawRandom();
     }
 

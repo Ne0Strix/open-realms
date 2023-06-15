@@ -23,7 +23,7 @@ public class DrawEffect implements Effect, Serializable {
 
     @Override
     public void applyEffect(PlayArea visitor) {
-        visitor.visitDraw();
+        visitor.visitDraw(amount);
     }
 
     @Override
