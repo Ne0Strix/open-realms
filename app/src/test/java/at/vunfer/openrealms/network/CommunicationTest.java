@@ -81,7 +81,7 @@ class CommunicationTest {
         Assertions.assertEquals(5, m.getData(DataKey.TARGET_PLAYER));
         PlayerStats returnedStats = (PlayerStats) m.getData(DataKey.PLAYER_STATS);
         Assertions.assertEquals("Name", returnedStats.getPlayerName());
-        Assertions.assertEquals(30, returnedStats.getPlayerHealth());
+        Assertions.assertEquals(50, returnedStats.getPlayerHealth());
         Assertions.assertEquals(0, returnedStats.getTurnDamage());
         Assertions.assertEquals(0, returnedStats.getTurnCoin());
         Assertions.assertEquals(0, returnedStats.getTurnHealing());
