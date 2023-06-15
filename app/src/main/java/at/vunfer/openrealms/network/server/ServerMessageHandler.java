@@ -24,6 +24,7 @@ import java.util.List;
 public class ServerMessageHandler implements IHandleMessage {
     public static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
+
     public void ensureServerThreadInitialized() {
         if (serverThread == null) {
             serverThread = ServerThread.getInstance();

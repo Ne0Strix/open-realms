@@ -6,7 +6,7 @@ public class PlayerFactory {
 
     private PlayerFactory() {}
 
-    private static final int INITIAL_HEALTH = 30;
+    private static final int INITIAL_HEALTH = 60;
 
     /**
      * Creates a new Player instance with the given player name, initializes their starting health
