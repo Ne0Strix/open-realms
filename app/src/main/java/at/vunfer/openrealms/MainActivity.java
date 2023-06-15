@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     ImageView endscreenImage;
     Button endTurnButton;
-    private VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         setContentView(R.layout.video_view);
 
         // Initialize the VideoView
-        videoView = findViewById(R.id.video_view);
+        VideoView videoView = findViewById(R.id.video_view);
 
         // Set the video file path or URL
         String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.intro_video;
