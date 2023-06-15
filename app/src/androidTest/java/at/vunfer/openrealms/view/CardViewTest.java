@@ -104,7 +104,6 @@ public class CardViewTest {
 
         v.onClick(down);
         assertTrue(v.isBeingHeld);
-        Thread.sleep(500);
         assertEquals(View.VISIBLE, fullscreenView.getVisibility());
         v.onClick(up);
         assertFalse(v.isBeingHeld);
@@ -146,7 +145,6 @@ public class CardViewTest {
 
         v.onClick(down);
         assertTrue(v.isBeingHeld);
-        Thread.sleep(500);
         assertEquals(View.VISIBLE, fullscreenView.getVisibility());
         v.onClick(up);
         assertFalse(v.isBeingHeld);
