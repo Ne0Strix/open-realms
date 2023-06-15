@@ -321,14 +321,14 @@ class PlayAreaTest {
     @Test
     void testPlayCardByIdNotFound() {
         Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
-        assertEquals(playArea.playCardById(c.getId()), 0);
+        assertEquals(0, playArea.playCardById(c.getId()));
     }
 
     @Test
     void testPlayCardByIdFound() {
         Card c = new Card("Card", 0, Faction.NONE, List.of(new DamageEffect(2)));
         playerCards.getHandCards().add(c);
-        assertEquals(playArea.playCardById(c.getId()), 1);
+        assertEquals(1, playArea.playCardById(c.getId()));
     }
 
     @Test

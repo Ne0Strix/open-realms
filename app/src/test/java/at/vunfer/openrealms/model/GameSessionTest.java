@@ -112,8 +112,8 @@ class GameSessionTest {
 
     @Test
     void testGetPlayerTurnNumber() {
-        assertEquals(0, gameSession.getPlayerTurnNumber(player1));
-        assertEquals(1, gameSession.getPlayerTurnNumber(player2));
+        assertEquals(gameSession.getPlayerTurnNumber(player1), 0);
+        assertEquals(gameSession.getPlayerTurnNumber(player2), 1);
     }
 
     @AfterEach
