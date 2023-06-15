@@ -43,7 +43,7 @@ public class CardView extends ConstraintLayout {
     private boolean isExpended = false;
     private boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
-    private static final long Hold_Time = 250L;
+    private static final long HOLD_TIME = 250L;
     private static final String LOG_TAG = "CardView";
     TextView health;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -104,7 +104,7 @@ public class CardView extends ConstraintLayout {
         if (!isFaceUp) return false;
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_UP:
-                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= Hold_Time
+                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= HOLD_TIME
                         && (!isExpended)) {
                     Log.i(LOG_TAG, "Sending: " + card);
                     sendTouchMessage();
@@ -120,7 +120,7 @@ public class CardView extends ConstraintLayout {
                 break;
             case MotionEvent.ACTION_DOWN:
                 isBeingHeld = true;
-                handler.postDelayed(setFullscreen, Hold_Time);
+                handler.postDelayed(setFullscreen, HOLD_TIME);
                 break;
             default:
                 break;
@@ -397,6 +397,6 @@ public class CardView extends ConstraintLayout {
     }
 
     private class CardViewException extends RuntimeException {
-        public CardViewException(String CardViewException, IOException e) {}
+        public CardViewException(String cardViewException, IOException e) {}
     }
 }
