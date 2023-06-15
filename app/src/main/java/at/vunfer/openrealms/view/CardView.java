@@ -117,6 +117,8 @@ public class CardView extends ConstraintLayout {
                 isBeingHeld = true;
                 handler.postDelayed(setFullscreen, Hold_Time);
                 break;
+            default:
+                break;
         }
         return false;
     }
