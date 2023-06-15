@@ -63,7 +63,7 @@ jobs:
           disable-animations: true
           script: ./gradlew build sonarqube --info
       - name: Move Android Test results
-          run: mv /Users/runner/work/open-realms/open-realms/app/build/outputs/androidTest-results/connected/TEST-*.xml /Users/runner/work/open-realms/open-realms/app/build/test-results/testDebugUnitTest/TEST-androidTest.xml
+        run: mv /Users/runner/work/open-realms/open-realms/app/build/outputs/androidTest-results/connected/TEST-*.xml /Users/runner/work/open-realms/open-realms/app/build/test-results/testDebugUnitTest/TEST-androidTest.xml"
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
