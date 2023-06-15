@@ -8,7 +8,6 @@ import java.util.List;
  * for manipulating it.
  */
 public class PlayArea {
-    private static int idCounter = 0;
     private int health;
     private int turnDamage;
     private int turnHealing;
