@@ -17,6 +17,7 @@ import java.io.IOException;
 public class ServerMessageHandler implements IHandleMessage {
     public static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
+    private final String CHAMPION_STRING = "Champion ";
 
     public void ensureServerThreadInitialized() {
         if (serverThread == null) {
@@ -116,7 +117,7 @@ public class ServerMessageHandler implements IHandleMessage {
                         gameSession, currentPlayer, DeckType.HAND, DeckType.PLAYED, cardId);
                 checkDrawnCard(gameSession, currentPlayer);
             } else if (cardType == 2) {
-                Log.i(TAG, "Champion " + cardId + " played successfully.");
+                Log.i(TAG, CHAMPION_STRING + cardId + " played successfully.");
                 sendCardMovementToAllClients(
                         gameSession, currentPlayer, DeckType.HAND, DeckType.CHAMPIONS, cardId);
                 checkDrawnCard(gameSession, currentPlayer);
@@ -129,14 +130,14 @@ public class ServerMessageHandler implements IHandleMessage {
                         DeckType.DISCARD,
                         cardId);
             } else if (currentPlayer.getPlayArea().expendChampionById(cardId)) {
-                Log.i(TAG, "Champion " + cardId + " expended successfully.");
+                Log.i(TAG, CHAMPION_STRING + cardId + " expended successfully.");
                 sendChampionExpendedToAllClients(gameSession, currentPlayer, cardId);
                 checkDrawnCard(gameSession, currentPlayer);
             } else if (currentPlayer
                     .getPlayArea()
                     .attackChampionById(
                             cardId, gameSession.getOpponent(currentPlayer).getPlayArea())) {
-                Log.i(TAG, "Champion " + cardId + " attacked successfully.");
+                Log.i(TAG, CHAMPION_STRING + cardId + " attacked successfully.");
                 sendChampionKilledToAllClients(gameSession, currentPlayer, cardId);
             } else {
                 Log.i(TAG, "Card cannot be played/bought by this player.");
@@ -144,7 +145,7 @@ public class ServerMessageHandler implements IHandleMessage {
         } catch (IllegalArgumentException e) {
             Log.i(TAG, "Card ID could not be resolved");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerMessageHandlerException("Error while handling Server Message", e);
         }
     }
 
@@ -252,7 +253,7 @@ public class ServerMessageHandler implements IHandleMessage {
             Log.i(TAG, "sendTurnNotificationToAllClients called.");
             serverThread.sendCheatStatusToAll(false);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerMessageHandlerException("Error while handling Server Message", e);
         }
     }
 
@@ -263,7 +264,7 @@ public class ServerMessageHandler implements IHandleMessage {
             try {
                 sendChampionKilledToAllClients(gameSession, currentPlayer, c.getId());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerMessageHandlerException("Error while handling Server Message", e);
             }
         }
     }
@@ -283,5 +284,10 @@ public class ServerMessageHandler implements IHandleMessage {
             Log.i(TAG, "sendRestockDeckFromDiscard called.");
             restockedFromDiscarded.clear();
         }
+    }
+
+    private class ServerMessageHandlerException extends RuntimeException {
+        public ServerMessageHandlerException(
+                String errorWhileHandlingServerMessagesThread, IOException e) {}
     }
 }

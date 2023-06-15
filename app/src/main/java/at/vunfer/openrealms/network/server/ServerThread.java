@@ -276,7 +276,7 @@ public class ServerThread extends Thread {
                 sendMessageToAllClients(removeCardMsg);
                 sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerException("Error when sending messages", e);
             }
         }
     }
@@ -292,7 +292,7 @@ public class ServerThread extends Thread {
                 sendMessageToAllClients(removeCardMsg);
                 sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerException("Error when sending messages", e);
             }
         }
         for (Card card : player.getPlayArea().getPlayedCards()) {
@@ -305,7 +305,7 @@ public class ServerThread extends Thread {
                 sendMessageToAllClients(removeCardMsg);
                 sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerException("Error when sending messages", e);
             }
         }
     }
@@ -318,7 +318,7 @@ public class ServerThread extends Thread {
                 try {
                     sendMessageToAllClients(resetChampionMsg);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new ServerException("Error when sending messages", e);
                 }
             }
         }
@@ -336,7 +336,7 @@ public class ServerThread extends Thread {
                 sendMessageToAllClients(removeCardMsg);
                 sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerException("Error when sending messages", e);
             }
         }
     }
@@ -346,7 +346,7 @@ public class ServerThread extends Thread {
         try {
             sendMessageToAllClients(turnNotificationMsg);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerException("Error when sending messages", e);
         }
     }
 
@@ -369,7 +369,7 @@ public class ServerThread extends Thread {
                 sendMessageToAllClients(removeCardMsg);
                 sendMessageToAllClients(addCardMsg);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerException("Error when sending messages", e);
             }
         }
         Market.getInstance().setNewToPurchase(new Deck<>());
@@ -387,7 +387,7 @@ public class ServerThread extends Thread {
         try {
             sendMessageToAllClients(cheatStatusMsg);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerException("Error when sending messages", e);
         }
     }
 
@@ -416,5 +416,9 @@ public class ServerThread extends Thread {
                 Communication.createPlayerStatsMessage(
                         targetPlayer, gameSession.getPlayers().get(targetPlayer));
         sendMessageToAllClients(updatedName);
+    }
+
+    private class ServerException extends RuntimeException {
+        public ServerException(String errorWhileHandlingServerThread, IOException e) {}
     }
 }

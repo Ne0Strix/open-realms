@@ -40,7 +40,7 @@ public class Communication {
     }
 
     private void listenForMessages() {
-        while (isRunning) {
+        while (Boolean.TRUE.equals(isRunning)) {
             try {
                 Message msg = (Message) input.readObject();
                 Log.i(TAG, "Received: " + msg.getType());
