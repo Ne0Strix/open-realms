@@ -418,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                             if (findViewById(R.id.end_screen).getVisibility() != View.VISIBLE) {
                                 Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
                                 if (targetPlayer != null) {
-                                    Button endTurnButton = findViewById(R.id.end_turn_button);
+                                    endTurnButton = findViewById(R.id.end_turn_button);
                                     if (playerId == (Integer) targetPlayer) {
                                         endTurnButton.setVisibility(View.VISIBLE);
                                         myTurn = true;
