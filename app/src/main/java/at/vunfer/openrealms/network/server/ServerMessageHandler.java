@@ -144,7 +144,7 @@ public class ServerMessageHandler implements IHandleMessage {
         } catch (IllegalArgumentException e) {
             Log.i(TAG, "Card ID could not be resolved");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerMessageHandlerException("Error while handling Server Message", e);
         }
     }
 
@@ -252,7 +252,7 @@ public class ServerMessageHandler implements IHandleMessage {
             Log.i(TAG, "sendTurnNotificationToAllClients called.");
             serverThread.sendCheatStatusToAll(false);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerMessageHandlerException("Error while handling Server Message", e);
         }
     }
 
@@ -263,7 +263,7 @@ public class ServerMessageHandler implements IHandleMessage {
             try {
                 sendChampionKilledToAllClients(gameSession, currentPlayer, c.getId());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ServerMessageHandlerException("Error while handling Server Message", e);
             }
         }
     }
@@ -283,5 +283,10 @@ public class ServerMessageHandler implements IHandleMessage {
             Log.i(TAG, "sendRestockDeckFromDiscard called.");
             restockedFromDiscarded.clear();
         }
+    }
+
+    private class ServerMessageHandlerException extends RuntimeException {
+        public ServerMessageHandlerException(
+                String errorWhileHandlingServerMessagesThread, IOException e) {}
     }
 }
