@@ -24,8 +24,6 @@ import java.util.List;
 public class ServerMessageHandler implements IHandleMessage {
     public static final String TAG = "ServerMessageHandler";
     private ServerThread serverThread;
-    private final String CHAMPION_STRING = "Champion ";
-
     public void ensureServerThreadInitialized() {
         if (serverThread == null) {
             serverThread = ServerThread.getInstance();
@@ -130,7 +128,7 @@ public class ServerMessageHandler implements IHandleMessage {
                 }
             }
         } catch (IllegalArgumentException | IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
