@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server.card_actions;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.network.DeckType;
@@ -20,7 +19,6 @@ public class PlayCard implements CardAction {
             throws IOException {
         int cardType = currentPlayer.getPlayArea().playCardById(cardId);
         if (cardType == 1 || cardType == 2) {
-            Log.i(ServerMessageHandler.TAG, "Card " + cardId + " played successfully.");
             serverMessageHandler.sendCardMovementToAllClients(
                     gameSession,
                     currentPlayer,

@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server.card_actions;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.network.server.ServerMessageHandler;
@@ -18,7 +17,6 @@ public class ExpendChampion implements CardAction {
     public boolean handleAction(int cardId, GameSession gameSession, Player currentPlayer)
             throws IOException {
         if (currentPlayer.getPlayArea().expendChampionById(cardId)) {
-            Log.i(ServerMessageHandler.TAG, "Champion " + cardId + " expended successfully.");
             serverMessageHandler.sendChampionExpendedToAllClients(
                     gameSession, currentPlayer, cardId);
             serverMessageHandler.checkDrawnCard(gameSession, currentPlayer);

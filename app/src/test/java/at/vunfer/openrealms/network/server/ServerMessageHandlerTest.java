@@ -16,6 +16,7 @@ import at.vunfer.openrealms.model.Deck;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.PlayArea;
 import at.vunfer.openrealms.model.Player;
+import at.vunfer.openrealms.model.PlayerCards;
 import at.vunfer.openrealms.network.Communication;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
@@ -39,6 +40,7 @@ class ServerMessageHandlerTest {
     private Message message;
     private Card card;
     private Deck<Card> discardedChampions;
+    private PlayerCards playerCards;
     private MockedStatic<ServerMessageHandlerTest> mockedStatic;
 
     @BeforeEach
@@ -56,6 +58,7 @@ class ServerMessageHandlerTest {
         message = Mockito.mock(Message.class);
         card = Mockito.mock(Card.class);
         discardedChampions = new Deck<>();
+        playerCards = new PlayerCards();
         discardedChampions.add(card);
 
         when(gameSession.getCurrentPlayer()).thenReturn(player);
@@ -69,6 +72,7 @@ class ServerMessageHandlerTest {
         when(playArea.getTurnHealing()).thenReturn(3);
         when(playArea.getTurnCoins()).thenReturn(4);
         when(playArea.getAtTurnEndDiscardedChampions()).thenReturn(discardedChampions);
+        when(playArea.getPlayerCards()).thenReturn(playerCards);
 
         // Mock static getInstance() method of ServerThread
         mockedServerThread = Mockito.mockStatic(ServerThread.class);
@@ -146,6 +150,110 @@ class ServerMessageHandlerTest {
         assertThrows(
                 RuntimeException.class,
                 () -> serverMessageHandler.handleKilledChampionsAtTurnEnd(gameSession, player));
+    }
+
+    @Test
+    void testHandleTouchedCard() throws IOException {
+        serverMessageHandler.ensureServerThreadInitialized();
+        when(message.getData(DataKey.CARD_ID)).thenReturn(1);
+        when(playArea.playCardById(anyInt())).thenReturn(1, 2, 0, 0, 0, 0);
+        when(playArea.buyCardById(anyInt())).thenReturn(false, true, false, false, false);
+        when(playArea.expendChampionById(anyInt())).thenReturn(false, false, true, false);
+        when(playArea.attackChampionById(anyInt(), any())).thenReturn(false, false, false, true);
+        doNothing().when(serverMessageHandler).checkDrawnCard(any(), any());
+
+        // Test playCardById case
+        serverMessageHandler.handleTouchedCard(message, gameSession, player);
+        verify(serverThread, times(3)).sendMessageToAllClients(any());
+
+        // Test buyCardById case
+        serverMessageHandler.handleTouchedCard(message, gameSession, player);
+        verify(serverThread, times(6)).sendMessageToAllClients(any());
+
+        // Test expendChampionById case
+        serverMessageHandler.handleTouchedCard(message, gameSession, player);
+        verify(serverThread, times(6)).sendMessageToAllClients(any());
+
+        // Test attackChampionById case
+        serverMessageHandler.handleTouchedCard(message, gameSession, player);
+        verify(serverThread, times(9)).sendMessageToAllClients(any());
+    }
+
+    @Test
+    void testHandleTouchedCardException() throws IOException {
+        serverMessageHandler.ensureServerThreadInitialized();
+        when(message.getData(DataKey.CARD_ID)).thenReturn(1);
+        doThrow(new IllegalArgumentException()).when(playArea).playCardById(anyInt());
+
+        assertThrows(
+                RuntimeException.class,
+                () -> serverMessageHandler.handleTouchedCard(message, gameSession, player));
+    }
+
+    @Test
+    void testHandleEndTurn() throws IOException {
+        serverMessageHandler.ensureServerThreadInitialized();
+        when(playArea.getTurnHealing()).thenReturn(3);
+        when(playArea.getTurnCoins()).thenReturn(4);
+        doNothing().when(serverThread).discardCardsAfterTurn(anyInt(), any());
+        doNothing().when(serverThread).resetChampionsAfterTurn(anyInt(), any());
+        doNothing().when(serverThread).dealMarketCardsToPurchaseAreaToAll();
+        doNothing().when(serverThread).dealHandCardsBasedOnTurnNumber(anyInt(), any());
+        doNothing().when(serverThread).sendMessageToAllClients(any());
+        doNothing().when(serverMessageHandler).sendRestockUpdate(any(), any());
+        serverMessageHandler.handleEndTurn(gameSession, player);
+
+        // Verify correct methods are called
+        verify(serverThread, times(1)).discardCardsAfterTurn(anyInt(), any());
+        verify(serverThread, times(1)).resetChampionsAfterTurn(anyInt(), any());
+        verify(serverThread, times(1)).dealMarketCardsToPurchaseAreaToAll();
+        verify(serverThread, times(1)).dealHandCardsBasedOnTurnNumber(anyInt(), any());
+        verify(serverThread, times(7)).sendMessageToAllClients(any());
+    }
+
+    @Test
+    void testResetCardsAtTurnEnd() {
+        serverMessageHandler.ensureServerThreadInitialized();
+        serverMessageHandler.resetCardsAtTurnEnd(gameSession, player);
+
+        // Verify correct methods are called
+        verify(serverThread, times(1)).discardCardsAfterTurn(anyInt(), any());
+        verify(serverThread, times(1)).resetChampionsAfterTurn(anyInt(), any());
+    }
+
+    @Test
+    void testCleanupAfterEndTurn() {
+        serverMessageHandler.ensureServerThreadInitialized();
+        serverMessageHandler.cleanupAfterEndTurn(gameSession, player);
+
+        // Verify correct methods are called
+        verify(serverThread, times(1)).dealMarketCardsToPurchaseAreaToAll();
+        verify(serverMessageHandler, times(1)).handleKilledChampionsAtTurnEnd(gameSession, player);
+    }
+
+    @Test
+    void testCorrectCardPiles() {
+        serverMessageHandler.ensureServerThreadInitialized();
+        serverMessageHandler.correctCardPiles(gameSession, player);
+
+        // Verify correct methods are called
+        verify(serverMessageHandler, times(1)).sendRestockUpdate(gameSession, player);
+    }
+
+    @Test
+    void testDealNewHandAndUpdateStats() throws IOException {
+        serverMessageHandler.ensureServerThreadInitialized();
+        serverMessageHandler.dealNewHandAndUpdateStats(gameSession, player);
+        doNothing().when(serverThread).dealHandCardsBasedOnTurnNumber(anyInt(), any());
+        doNothing().when(serverThread).sendMessageToAllClients(any());
+        doNothing().when(serverThread).sendTurnNotificationToAllClients(anyInt());
+        doNothing().when(serverThread).sendCheatStatusToAll(false);
+
+        // Verify correct methods are called
+        verify(serverThread, times(1)).dealHandCardsBasedOnTurnNumber(anyInt(), any());
+        verify(serverThread, times(4)).sendMessageToAllClients(any());
+        verify(serverThread, times(1)).sendTurnNotificationToAllClients(anyInt());
+        verify(serverThread, times(1)).sendCheatStatusToAll(false);
     }
 
     @Test

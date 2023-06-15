@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server.card_actions;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.network.server.ServerMessageHandler;
@@ -20,7 +19,6 @@ public class AttackChampion implements CardAction {
         if (currentPlayer
                 .getPlayArea()
                 .attackChampionById(cardId, gameSession.getOpponent(currentPlayer).getPlayArea())) {
-            Log.i(ServerMessageHandler.TAG, "Champion " + cardId + " attacked successfully.");
             serverMessageHandler.sendChampionKilledToAllClients(gameSession, currentPlayer, cardId);
             return true;
         }

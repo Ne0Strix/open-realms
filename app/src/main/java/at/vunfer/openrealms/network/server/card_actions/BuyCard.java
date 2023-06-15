@@ -1,7 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.network.server.card_actions;
 
-import android.util.Log;
 import at.vunfer.openrealms.model.GameSession;
 import at.vunfer.openrealms.model.Player;
 import at.vunfer.openrealms.network.DeckType;
@@ -19,7 +18,6 @@ public class BuyCard implements CardAction {
     public boolean handleAction(int cardId, GameSession gameSession, Player currentPlayer)
             throws IOException {
         if (currentPlayer.getPlayArea().buyCardById(cardId)) {
-            Log.i(ServerMessageHandler.TAG, "Card " + cardId + " bought successfully.");
             serverMessageHandler.sendCardMovementToAllClients(
                     gameSession, currentPlayer, DeckType.FOR_PURCHASE, DeckType.DISCARD, cardId);
             return true;
