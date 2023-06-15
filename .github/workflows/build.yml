@@ -79,7 +79,7 @@ jobs:
           mv "$directory/$new_filename" /Users/runner/work/open-realms/open-realms/app/build/test-results/testDebugUnitTest/  
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         id: test-results
         if: always()
         with:
