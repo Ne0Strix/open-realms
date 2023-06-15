@@ -62,5 +62,5 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: Unit Tests            # Name of the check run which will be created
-          path: test-results/testDebugUnitTest/TEST-*.xml    # Path to test results
+          path: build/test-results/testDebugUnitTest/TEST-*.xml    # Path to test results
           reporter: java-junit        # Format of test results
