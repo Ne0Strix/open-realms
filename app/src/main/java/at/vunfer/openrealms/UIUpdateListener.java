@@ -5,4 +5,6 @@ import at.vunfer.openrealms.network.Message;
 
 public interface UIUpdateListener {
     void updateUI(Message message);
+
+    void clientCallback(boolean success);
 }

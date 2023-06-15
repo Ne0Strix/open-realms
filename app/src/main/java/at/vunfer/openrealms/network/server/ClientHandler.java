@@ -15,7 +15,6 @@ public class ClientHandler {
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
-
     private Communication comm;
 
     public ClientHandler(Socket clientSocket) {

@@ -238,16 +238,12 @@
         <card_type>action</card_type>
         <faction>imperial</faction>
         <ability>
-            <amount>1</amount>
+            <amount>2</amount>
             <type>draw</type>
         </ability>
         <synergy>
             <amount>5</amount>
             <type>heal</type>
-        </synergy>
-        <synergy>
-            <amount>1</amount>
-            <type>draw</type>
         </synergy>
     </card>
     <champion amount="1">
