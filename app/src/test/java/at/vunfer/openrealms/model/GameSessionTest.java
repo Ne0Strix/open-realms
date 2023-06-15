@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GameSessionTest {
+class GameSessionTest {
 
     private Player player1;
     private Player player2;
@@ -112,8 +112,8 @@ public class GameSessionTest {
 
     @Test
     void testGetPlayerTurnNumber() {
-        assertEquals(0, gameSession.getPlayerTurnNumber(player1));
-        assertEquals(1, gameSession.getPlayerTurnNumber(player2));
+        assertEquals(gameSession.getPlayerTurnNumber(player1), 0);
+        assertEquals(gameSession.getPlayerTurnNumber(player2), 1);
     }
 
     @AfterEach

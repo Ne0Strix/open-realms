@@ -16,6 +16,7 @@ import java.util.List;
 public class PlayedChampionsView extends LinearLayout implements CardPileView {
     private final float screenDensity;
     private static final float CARD_SCALE = 0.6f;
+    private String TAG = "PlayedChampionsView";
 
     public PlayedChampionsView(@NonNull Context context) {
         this(context, null);
@@ -44,16 +45,16 @@ public class PlayedChampionsView extends LinearLayout implements CardPileView {
             view.setHealthSize(4);
             addView(view);
         }
-        Log.v("PlayedChampionsView", "updateView");
+        Log.v(TAG, "updateView");
     }
 
     public void expendChampion(CardView card) {
         card.setIsExpended();
-        Log.v("PlayedChampionsView", "expendChampion: " + card.getCard());
+        Log.v(TAG, "expendChampion: " + card.getCard());
     }
 
     public void resetChampion(CardView card) {
         card.setIsNotExpended();
-        Log.v("PlayedChampionsView", "resetChampion: " + card.getCard());
+        Log.v(TAG, "resetChampion: " + card.getCard());
     }
 }

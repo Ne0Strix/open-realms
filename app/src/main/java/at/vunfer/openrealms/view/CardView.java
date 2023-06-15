@@ -41,18 +41,20 @@ public class CardView extends ConstraintLayout {
     private Card card;
     private boolean isFaceUp = true;
     private boolean isExpended = false;
-    public boolean isBeingHeld = false;
+    private boolean isBeingHeld = false;
     // The time in mils a click has to be held to be considered holding vs clicking
-    private static final long holdTime = 250L;
-    private static final String logTag = "CardView";
+    private static final long Hold_Time = 250L;
+    private static final String LOG_TAG = "CardView";
     TextView health;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable setFullscreen =
-            new Runnable() {
-                public void run() {
-                    if (isBeingHeld) {
-                        setFullscreen();
-                    }
+            () -> {
+                if (isBeingHeld) {
+                    CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
+
+                    fullScreenCard.setCard(card);
+                    fullScreenCard.setVisibility(VISIBLE);
+                    fullScreenCard.setHealthSize(35);
                 }
             };
 
@@ -94,14 +96,17 @@ public class CardView extends ConstraintLayout {
         cardBackground.setOnTouchListener((view, motionEvent) -> onClick(motionEvent));
     }
 
+    public boolean isBeingHeld() {
+        return isBeingHeld;
+    }
+
     public boolean onClick(MotionEvent motionEvent) {
         if (!isFaceUp) return false;
-        // Log.v(LOG_TAG, motionEvent.toString() + " " + card);
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_UP:
-                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= holdTime
+                if (motionEvent.getEventTime() - motionEvent.getDownTime() <= Hold_Time
                         && (!isExpended)) {
-                    Log.i(logTag, "Sending: " + card);
+                    Log.i(LOG_TAG, "Sending: " + card);
                     sendTouchMessage();
                 }
                 isBeingHeld = false;
@@ -115,7 +120,9 @@ public class CardView extends ConstraintLayout {
                 break;
             case MotionEvent.ACTION_DOWN:
                 isBeingHeld = true;
-                handler.postDelayed(setFullscreen, holdTime);
+                handler.postDelayed(setFullscreen, Hold_Time);
+                break;
+            default:
                 break;
         }
         return false;
@@ -125,18 +132,8 @@ public class CardView extends ConstraintLayout {
         try {
             MainActivity.sendMessage(MainActivity.buildTouchMessage(card.getId()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CardViewException("Error in CardView.java", e);
         }
-    }
-
-    /** Enables the FullscreenPreview */
-    private void setFullscreen() {
-        // Get the view for the Fullscreen_Card Object from RootView
-        CardView fullScreenCard = getRootView().findViewById(R.id.fullscreen_card);
-
-        fullScreenCard.setCard(card);
-        fullScreenCard.setVisibility(VISIBLE);
-        fullScreenCard.setHealthSize(35);
     }
 
     /** Disables the FullscreenPreview */
@@ -232,7 +229,7 @@ public class CardView extends ConstraintLayout {
         if (imageResourceId != 0) {
             cardImage.setImageResource(imageResourceId);
         } else {
-            Log.e(logTag, "Image Resource \"R.drawable." + resourceName + "\" was not found.");
+            Log.e(LOG_TAG, "Image Resource \"R.drawable." + resourceName + "\" was not found.");
             cardImage.setImageResource(R.drawable.playarea);
         }
     }
@@ -315,7 +312,7 @@ public class CardView extends ConstraintLayout {
             return;
         }
 
-        Log.v(logTag, "applyCardDetail: " + card.getName() + " is a champion");
+        Log.v(LOG_TAG, "applyCardDetail: " + card.getName() + " is a champion");
         ConstraintLayout shieldArea = findViewById(R.id.card_view_shield_area);
         shieldArea.setVisibility(VISIBLE);
         health.setText(Integer.toString(((Champion) card).getHealth()));
@@ -323,7 +320,7 @@ public class CardView extends ConstraintLayout {
         health.setVisibility(VISIBLE);
 
         if (((Champion) card).isGuard()) {
-            Log.v(logTag, "applyCardDetail: " + card.getName() + " is a guard");
+            Log.v(LOG_TAG, "applyCardDetail: " + card.getName() + " is a guard");
             blackShield.setVisibility(VISIBLE);
             whiteShield.setVisibility(INVISIBLE);
             health.setTextColor(Color.WHITE);
@@ -397,5 +394,9 @@ public class CardView extends ConstraintLayout {
 
     public boolean isExpended() {
         return isExpended;
+    }
+
+    private class CardViewException extends RuntimeException {
+        public CardViewException(String CardViewException, IOException e) {}
     }
 }

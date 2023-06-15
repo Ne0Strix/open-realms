@@ -9,13 +9,11 @@ import java.util.List;
  * for manipulating it.
  */
 public class PlayArea {
-    private static int idCounter = 0;
     private int health;
     private int turnDamage;
     private int turnHealing;
     private int turnCoins;
     private int id;
-    private static final String TAG = "PlayArea";
 
     private Market market;
     private Deck<Card> playedCards;

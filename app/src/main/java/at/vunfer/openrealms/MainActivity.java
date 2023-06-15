@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity implements UIUpdateListener {
-    private static final int connectionPort = 1337;
+    private static final int Connection_Port = 1337;
     private String connectionIP;
     private ServerThread server;
     private static ClientConnector connection;
@@ -51,21 +51,21 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private final Context context = this;
     private int playerId;
     protected String playerName = "";
-    public PlayAreaPresenter playAreaPresenter;
-    public MarketPresenter marketPresenter;
-    public HandPresenter playerHandPresenter;
-    public HandPresenter opponentHandPresenter;
-    public DiscardPilePresenter playerDiscardPilePresenter;
-    public DiscardPilePresenter opponentDiscardPilePresenter;
-    public DeckPresenter playerDeckPresenter;
-    public DeckPresenter opponentDeckPresenter;
-    public OverlayPresenter overlayViewPresenter;
-    public PlayedChampionsPresenter playerPlayedChampionsPresenter;
-    public PlayedChampionsPresenter opponentPlayedChampionsPresenter;
+
+    private PlayAreaPresenter playAreaPresenter;
+    private MarketPresenter marketPresenter;
+    private HandPresenter playerHandPresenter;
+    private HandPresenter opponentHandPresenter;
+    private DiscardPilePresenter playerDiscardPilePresenter;
+    private DiscardPilePresenter opponentDiscardPilePresenter;
+    private DeckPresenter playerDeckPresenter;
+    private DeckPresenter opponentDeckPresenter;
+    private OverlayPresenter overlayViewPresenter;
+    private PlayedChampionsPresenter playerPlayedChampionsPresenter;
+    private PlayedChampionsPresenter opponentPlayedChampionsPresenter;
 
     ImageView endscreenImage;
     Button endTurnButton;
-    private VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         setContentView(R.layout.video_view);
 
         // Initialize the VideoView
-        videoView = findViewById(R.id.video_view);
+        VideoView videoView = findViewById(R.id.video_view);
 
         // Set the video file path or URL
         String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.intro_video;
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void startServer(View view) {
         isHost = true;
-        server = new ServerThread(this, connectionPort);
+        server = new ServerThread(this, Connection_Port);
 
         TextView showIpOutline = (TextView) findViewById(R.id.ip_label_outline);
         TextView promptOutline = findViewById(R.id.server_prompt_outline);
@@ -162,6 +162,54 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         promptOutline.getPaint().setStyle(Paint.Style.STROKE);
 
         server.start();
+    }
+
+    public PlayAreaPresenter getPlayAreaPresenter() {
+        return playAreaPresenter;
+    }
+
+    public MarketPresenter getMarketPresenter() {
+        return marketPresenter;
+    }
+
+    public HandPresenter getPlayerHandPresenter() {
+        return playerHandPresenter;
+    }
+
+    public HandPresenter getOpponentHandPresenter() {
+        return opponentHandPresenter;
+    }
+
+    public DiscardPilePresenter getPlayerDiscardPilePresenter() {
+        return playerDiscardPilePresenter;
+    }
+
+    public DiscardPilePresenter getOpponentDiscardPilePresenter() {
+        return opponentDiscardPilePresenter;
+    }
+
+    public DeckPresenter getPlayerDeckPresenter() {
+        return playerDeckPresenter;
+    }
+
+    public OverlayPresenter getOverlayViewPresenter() {
+        return overlayViewPresenter;
+    }
+
+    public void setOverlayViewPresenter(OverlayPresenter overlayViewPresenter) {
+        this.overlayViewPresenter = overlayViewPresenter;
+    }
+
+    public PlayedChampionsPresenter getPlayerPlayedChampionsPresenter() {
+        return playerPlayedChampionsPresenter;
+    }
+
+    public PlayedChampionsPresenter getOpponentPlayedChampionsPresenter() {
+        return opponentPlayedChampionsPresenter;
+    }
+
+    public DeckPresenter getOpponentDeckPresenter() {
+        return opponentDeckPresenter;
     }
 
     public void showIp(View view) {
@@ -176,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     showIpOutline.setText(connectionIP);
 
                     connection = new ClientConnector(this);
-                    connection.setConnectionTarget(connectionIP, connectionPort);
+                    connection.setConnectionTarget(connectionIP, Connection_Port);
                     connection.start();
                 });
     }
@@ -190,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         Log.i(TAG, "Connecting to IP: " + connectionIP);
         connection = new ClientConnector(this);
 
-        connection.setConnectionTarget(connectionIP, connectionPort);
+        connection.setConnectionTarget(connectionIP, Connection_Port);
         connection.start();
     }
 
@@ -300,104 +348,95 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                         + " Deck: "
                         + message.getData(DataKey.DECK));
         runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        switch (message.getType()) {
-                            case ADD_CARD:
-                                addCard(message);
-                                Log.i(
-                                        TAG,
-                                        "Added card "
-                                                + (int) message.getData(DataKey.CARD_ID)
-                                                + " to deck "
-                                                + message.getData(DataKey.DECK)
-                                                + ".");
+                () -> {
+                    switch (message.getType()) {
+                        case ADD_CARD:
+                            addCard(message);
+                            Log.i(
+                                    TAG,
+                                    "Added card "
+                                            + (int) message.getData(DataKey.CARD_ID)
+                                            + " to deck "
+                                            + message.getData(DataKey.DECK)
+                                            + ".");
 
-                                break;
-                            case REMOVE_CARD:
-                                removeCard(message);
-                                Log.i(
-                                        TAG,
-                                        "Removed card "
-                                                + (int) message.getData(DataKey.CARD_ID)
-                                                + " from deck "
-                                                + message.getData(DataKey.DECK)
-                                                + ".");
+                            break;
+                        case REMOVE_CARD:
+                            removeCard(message);
+                            Log.i(
+                                    TAG,
+                                    "Removed card "
+                                            + (int) message.getData(DataKey.CARD_ID)
+                                            + " from deck "
+                                            + message.getData(DataKey.DECK)
+                                            + ".");
 
-                                break;
-                            case EXPEND_CHAMPION:
-                                expendChampion(message);
-                                Log.i(
-                                        TAG,
-                                        "Expended champion "
-                                                + (int) message.getData(DataKey.CARD_ID)
-                                                + ".");
-                                break;
-                            case RESET_CHAMPION:
-                                resetChampion(message);
-                                Log.i(TAG, "Reset champions.");
-                                break;
-                            case CHOOSE_OPTION:
-                                // TODO instructions for UI
-                            case UPDATE_PLAYER_STATS:
-                                int target = (int) message.getData(DataKey.TARGET_PLAYER);
-                                PlayerStats stats =
-                                        (PlayerStats) message.getData(DataKey.PLAYER_STATS);
-                                if (playerId == target) {
-                                    overlayViewPresenter.updatePlayerName(stats.getPlayerName());
-                                    overlayViewPresenter.updatePlayerHealth(
-                                            stats.getPlayerHealth());
-                                    if (stats.getPlayerHealth() < 1) {
-                                        endGame(false);
-                                    }
-                                } else {
-                                    overlayViewPresenter.updateOpponentName(stats.getPlayerName());
-                                    overlayViewPresenter.updateOpponentHealth(
-                                            stats.getPlayerHealth());
-                                    if (stats.getPlayerHealth() < 1) {
-                                        endGame(true);
+                            break;
+                        case EXPEND_CHAMPION:
+                            expendChampion(message);
+                            Log.i(
+                                    TAG,
+                                    "Expended champion "
+                                            + (int) message.getData(DataKey.CARD_ID)
+                                            + ".");
+                            break;
+                        case RESET_CHAMPION:
+                            resetChampion(message);
+                            Log.i(TAG, "Reset champions.");
+                            break;
+                        case UPDATE_PLAYER_STATS:
+                            int target = (int) message.getData(DataKey.TARGET_PLAYER);
+                            PlayerStats stats = (PlayerStats) message.getData(DataKey.PLAYER_STATS);
+                            if (playerId == target) {
+                                overlayViewPresenter.updatePlayerName(stats.getPlayerName());
+                                overlayViewPresenter.updatePlayerHealth(stats.getPlayerHealth());
+                                if (stats.getPlayerHealth() < 1) {
+                                    endGame(false);
+                                }
+                            } else {
+                                overlayViewPresenter.updateOpponentName(stats.getPlayerName());
+                                overlayViewPresenter.updateOpponentHealth(stats.getPlayerHealth());
+                                if (stats.getPlayerHealth() < 1) {
+                                    endGame(true);
+                                }
+                            }
+                            overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
+                            overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
+                            overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
+                            break;
+                        case FULL_CARD_DECK:
+                            Log.i(TAG, "Received full card deck.");
+                            cardViews =
+                                    CardView.getViewFromCards(
+                                            context,
+                                            (List<Card>) message.getData(DataKey.COLLECTION));
+                            findViewById(R.id.loading_screen).setVisibility(View.GONE);
+                            Log.i(TAG, "Created CardViews from Cards.");
+                            break;
+                        case TURN_NOTIFICATION:
+                            if (findViewById(R.id.end_screen).getVisibility() != View.VISIBLE) {
+                                Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
+                                if (targetPlayer != null) {
+                                    endTurnButton = findViewById(R.id.end_turn_button);
+                                    if (playerId == (Integer) targetPlayer) {
+                                        endTurnButton.setVisibility(View.VISIBLE);
+                                        myTurn = true;
+                                    } else {
+                                        endTurnButton.setVisibility(View.INVISIBLE);
+                                        myTurn = false;
                                     }
                                 }
-                                overlayViewPresenter.updateTurnDamage(stats.getTurnDamage());
-                                overlayViewPresenter.updateTurnHealing(stats.getTurnHealing());
-                                overlayViewPresenter.updateTurnCoin(stats.getTurnCoin());
-                                break;
-                            case FULL_CARD_DECK:
-                                Log.i(TAG, "Received full card deck.");
-                                cardViews =
-                                        CardView.getViewFromCards(
-                                                context,
-                                                (List<Card>) message.getData(DataKey.COLLECTION));
-                                findViewById(R.id.loading_screen).setVisibility(View.GONE);
-                                Log.i(TAG, "Created CardViews from Cards.");
-                                break;
-                            case TURN_NOTIFICATION:
-                                if (findViewById(R.id.end_screen).getVisibility() != View.VISIBLE) {
-                                    Object targetPlayer = message.getData(DataKey.TARGET_PLAYER);
-                                    if (targetPlayer != null) {
-                                        Button endTurnButton = findViewById(R.id.end_turn_button);
-                                        if (playerId == (Integer) targetPlayer) {
-                                            endTurnButton.setVisibility(View.VISIBLE);
-                                            myTurn = true;
-                                        } else {
-                                            endTurnButton.setVisibility(View.INVISIBLE);
-                                            myTurn = false;
-                                        }
-                                    }
-                                }
-                                break;
-                            case CHEAT:
-                                boolean cheatActive =
-                                        (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
-                                overlayViewPresenter.cheatingEnabled(cheatActive);
-                                break;
-                            case REMATCH:
-                                startGame(new View(context));
-                                break;
-                            default:
-                                Log.i(TAG, "Received message of unknown type.");
-                        }
+                            }
+                            break;
+                        case CHEAT:
+                            boolean cheatActive = (boolean) message.getData(DataKey.CHEAT_ACTIVATE);
+                            overlayViewPresenter.cheatingEnabled(cheatActive);
+                            break;
+                        case REMATCH:
+                            startGame(new View(context));
+                            break;
+                        default:
+                            Log.i(TAG, "Received message of unknown type.");
                     }
                 });
     }
@@ -442,6 +481,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     opponentPlayedChampionsPresenter.addCardToView(card);
                     opponentPlayedChampionsPresenter.expendChampion(card);
                 }
+                break;
+            default:
+                Log.i(TAG, "Received message of unknown type.");
         }
     }
 
@@ -485,6 +527,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                     opponentPlayedChampionsPresenter.resetChampion(card);
                     opponentPlayedChampionsPresenter.removeCardFromView(card);
                 }
+                break;
+            default:
+                Log.i(TAG, "Received message of unknown type.");
         }
     }
 

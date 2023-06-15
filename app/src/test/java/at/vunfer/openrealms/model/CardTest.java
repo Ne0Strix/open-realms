@@ -224,7 +224,7 @@ class CardTest {
     @Test
     void testEqualsEqualObject() {
         Card card1 = new Card("Name", 1, Faction.NONE, List.of(new DamageEffect(1)));
-        assertTrue(card1.equals(card1));
+        assertEquals(card1, card1);
     }
 
     @Test
