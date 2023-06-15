@@ -6,7 +6,6 @@ import at.vunfer.openrealms.network.IHandleMessage;
 import at.vunfer.openrealms.network.Message;
 
 public class ClientMessageHandler implements IHandleMessage {
-    private static final String TAG = "ClientMessageHandler";
     private final UIUpdateListener uiUpdater;
 
     public ClientMessageHandler(UIUpdateListener uiUpdater) {

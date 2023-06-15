@@ -10,7 +10,6 @@ import java.util.List;
 public class Market {
     private static Market marketInstance;
     private static final int TOTAL_PURCHASABLE = 5;
-    private static final String TAG = "Market";
     Deck<Card> marketDeck;
     Deck<Card> forPurchase;
     Deck<Card> newToPurchase;
