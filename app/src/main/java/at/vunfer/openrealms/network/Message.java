@@ -63,8 +63,6 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return "Message{" + type +
-                ", data=" + data +
-                '}';
+        return "Message{" + type + ", data=" + data + '}';
     }
 }

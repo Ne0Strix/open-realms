@@ -340,9 +340,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     @Override
     public void updateUI(Message message) {
-        Log.i(
-                TAG,
-                "Received:" + message);
+        Log.i(TAG, "Received:" + message);
         runOnUiThread(
                 () -> {
                     switch (message.getType()) {
