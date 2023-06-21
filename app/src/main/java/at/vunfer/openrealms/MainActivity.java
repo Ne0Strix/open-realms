@@ -342,12 +342,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     public void updateUI(Message message) {
         Log.i(
                 TAG,
-                "Received message of type: "
-                        + message.getType()
-                        + " Card ID: "
-                        + message.getData(DataKey.CARD_ID)
-                        + " Deck: "
-                        + message.getData(DataKey.DECK));
+                "Received:" + message);
         runOnUiThread(
                 () -> {
                     switch (message.getType()) {

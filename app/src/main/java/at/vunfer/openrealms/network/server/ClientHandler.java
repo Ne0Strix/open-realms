@@ -35,6 +35,6 @@ public class ClientHandler {
 
     public void sendMessage(Message msg) {
         comm.sendMessage(msg);
-        Log.i(TAG, "Sent message: " + msg.getType());
+        Log.i(TAG, "Sent message: " + msg);
     }
 }

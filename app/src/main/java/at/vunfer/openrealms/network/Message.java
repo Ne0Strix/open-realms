@@ -60,4 +60,11 @@ public class Message implements Serializable {
                 return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Message{" + type +
+                ", data=" + data +
+                '}';
+    }
 }
