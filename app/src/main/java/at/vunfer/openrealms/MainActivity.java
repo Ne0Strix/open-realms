@@ -340,14 +340,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     @Override
     public void updateUI(Message message) {
-        Log.i(
-                TAG,
-                "Received message of type: "
-                        + message.getType()
-                        + " Card ID: "
-                        + message.getData(DataKey.CARD_ID)
-                        + " Deck: "
-                        + message.getData(DataKey.DECK));
+        Log.i(TAG, "Received:" + message);
         runOnUiThread(
                 () -> {
                     switch (message.getType()) {
@@ -623,6 +616,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void endTurn(View view) throws IOException {
         Message endTurn = new Message(MessageType.END_TURN);
+        endTurnButton.setVisibility(View.INVISIBLE);
         connection.sendMessage(endTurn);
     }
 
