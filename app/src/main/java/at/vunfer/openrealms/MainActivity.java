@@ -618,6 +618,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void endTurn(View view) throws IOException {
         Message endTurn = new Message(MessageType.END_TURN);
+        endTurnButton.setVisibility(View.INVISIBLE);
         connection.sendMessage(endTurn);
     }
 
