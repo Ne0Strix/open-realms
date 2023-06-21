@@ -32,7 +32,6 @@ public class ServerMessageHandler implements IHandleMessage {
     }
 
     public void handleMessage(Message message) throws IOException {
-        Log.i(TAG, "Received: " + message);
         ensureServerThreadInitialized();
 
         GameSession gameSession = serverThread.getGameSession();
