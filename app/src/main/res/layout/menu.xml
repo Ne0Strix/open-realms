@@ -48,6 +48,20 @@
         app:layout_constraintTop_toBottomOf="@+id/startGamePromptOutline" />
 
     <Button
+        android:id="@+id/onlineBeta"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/button_states"
+        android:onClick="onlineMode"
+        android:text="Online Beta"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/join"
         android:layout_width="250dp"
         android:layout_height="50dp"
