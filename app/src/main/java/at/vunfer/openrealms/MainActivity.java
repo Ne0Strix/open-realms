@@ -19,11 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
@@ -34,15 +29,19 @@ import at.vunfer.openrealms.network.client.ClientConnector;
 import at.vunfer.openrealms.network.server.ServerThread;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
-import okhttp3.*;
-
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import okhttp3.*;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity implements UIUpdateListener {
-    private static final int CONNECTION_PORT = 1337;
+    private static final int CONNECTION_PORT = 25567;
     private String connectionIP;
     private ServerThread server;
     private static ClientConnector connection;
@@ -74,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     ImageView endscreenImage;
     Button endTurnButton;
     private String unknownTypeMessage = "Received message of unknown type.";
+
+    private Socket relaySocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +151,14 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         if (!menuMusicPlaying) {
             startMenuMusic(true);
             menuMusicPlaying = true;
+        }
+        if (relaySocket != null) {
+            try {
+                relaySocket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            relaySocket = null;
         }
     }
 
@@ -627,41 +636,124 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         connection.sendMessage(endTurn);
     }
 
-    public void onlineMode(View view){
+    public void onlineMode(View view) {
         setContentView(R.layout.online_mode);
     }
 
-    public void sendTestREST(View view){
+    public void connectToRelayServer(View view) {
+        TextView relayAddressView = findViewById(R.id.editRelayServerIP);
+        String relayAddress = relayAddressView.getText().toString();
+
+        SharedPreferences.Editor editor =
+                getSharedPreferences(OpenRealmsPlayer.PREF_NAME, MODE_PRIVATE).edit();
+        editor.putString("RelayIp", relayAddress);
+        editor.apply();
+
+        new Thread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    relaySocket = new Socket(relayAddress, CONNECTION_PORT);
+                                    runOnUiThread(() -> actuallySwitchToOnlineMode());
+                                } catch (IOException e) {
+                                    runOnUiThread(
+                                            () ->
+                                                    Toast.makeText(
+                                                                    context,
+                                                                    "Connection Failed",
+                                                                    Toast.LENGTH_SHORT)
+                                                            .show());
+                                }
+                            }
+                        })
+                .start();
+    }
+
+    public void actuallySwitchToOnlineMode() {
+        setContentView(R.layout.online_mode);
+    }
+
+    public void sendTestREST(View view) {
         OkHttpClient client = new OkHttpClient();
 
         String url = "https://cat-fact.herokuapp.com/facts/";
-        Request getRequest = new Request.Builder()
-                .url(url)
-                .build();
+        Request getRequest = new Request.Builder().url(url).build();
 
-        client.newCall(getRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful() && response.body() != null) {
-                    String responseData = response.body().string();
-                    try {
-                        JSONArray obj = new JSONArray(responseData);
-                        TextView txtView =  findViewById(R.id.connectingLabel);
-                        txtView.setText(obj.getJSONObject(0).getString("text"));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
+        client.newCall(getRequest)
+                .enqueue(
+                        new Callback() {
+                            @Override
+                            public void onResponse(Call call, Response response)
+                                    throws IOException {
+                                if (response.isSuccessful() && response.body() != null) {
+                                    String responseData = response.body().string();
+                                    try {
+                                        JSONArray obj = new JSONArray(responseData);
+                                        TextView txtView = findViewById(R.id.connectingLabel);
+                                        txtView.setText(obj.getJSONObject(0).getString("text"));
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            }
 
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Toast.makeText(context,"onFailure, see logcat",Toast.LENGTH_SHORT).show();
-                Log.e(TAG,e.toString());
-            }
-        });
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Toast.makeText(context, "onFailure, see logcat", Toast.LENGTH_SHORT)
+                                        .show();
+                                Log.e(TAG, e.toString());
+                            }
+                        });
     }
+
+    public void getLobbyList(View view) throws InterruptedException {
+        TextView ipTextView = findViewById(R.id.editRelayServerIP);
+        final String[] response = {"NO RESPONSE YET"};
+        Thread notUIThread =
+                new Thread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    System.out.println("starting socket making");
+
+                                    Socket soc =
+                                            new Socket(
+                                                    ipTextView.getText().toString(),
+                                                    CONNECTION_PORT);
+                                    System.out.println("Made socket");
+                                    ObjectOutputStream out =
+                                            new ObjectOutputStream(soc.getOutputStream());
+                                    System.out.println("Made outputstream");
+                                    ObjectInputStream in =
+                                            new ObjectInputStream(soc.getInputStream());
+                                    System.out.println("Made inputstream");
+
+                                    out.writeObject("LIST");
+                                    System.out.println("Sent cmd");
+                                    response[0] = (String) in.readObject();
+                                    System.out.println("got response");
+                                } catch (Exception e) {
+                                    runOnUiThread(
+                                            () -> {
+                                                Toast.makeText(
+                                                                context,
+                                                                e.getMessage(),
+                                                                Toast.LENGTH_SHORT)
+                                                        .show();
+                                            });
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+        notUIThread.start();
+        notUIThread.join();
+
+        TextView responseView = findViewById(R.id.connectingLabel);
+        responseView.setText(response[0]);
+    }
+
     @Override
     protected void onDestroy() {
         stopService(new Intent(this, OpenRealmsPlayer.class));
