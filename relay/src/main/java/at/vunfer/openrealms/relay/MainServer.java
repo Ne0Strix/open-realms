@@ -59,29 +59,45 @@ class ClientHandler extends Thread {
                     System.out.println("GOT STRING: " + msg);
 
                     if (msg.equals("LIST")) {
-                        if (MainServer.lobbies.isEmpty()) {
-                            out.writeObject("no lobbies found");
-                        } else {
-                            String output = "";
-                            for (Lobby l : MainServer.lobbies) {
-                                output += l.getName() + " " + l.getNumPlayers() + ";";
-                            }
-                            out.writeObject(output);
+                        String output = "";
+                        for (Lobby l : MainServer.lobbies) {
+                            output += l.getName() + " " + l.getNumPlayers() + ";";
                         }
+                        out.writeObject(output);
+                    } else if (msg.equals("STATUS")) {
+                        if (lobby == null)
+                            out.writeObject("");
+                        else
+                            out.writeObject(lobby.getName());
                     } else if (msg.startsWith("CREATE")) {
+                        if (msg.split(" ").length < 2) {
+                            sendError("Invalid name");
+                            continue;
+                        }
                         String lobbyName = msg.split(" ")[1];
 
-                        Lobby newLobby = new Lobby(lobbyName);
-                        MainServer.lobbies.add(newLobby);
-                        joinLobby(lobbyName);
+                        boolean duplicateName = false;
+                        for (Lobby lob : MainServer.lobbies) {
+                            if (lob.getName().equals(lobbyName)) {
+                                duplicateName = true;
+                                break;
+                            }
+                        }
+                        if (!duplicateName) {
+                            Lobby newLobby = new Lobby(lobbyName);
+                            MainServer.lobbies.add(newLobby);
+                            joinLobby(lobbyName);
+                        } else {
+                            sendError("Name already in use");
+                        }
                     } else if (msg.startsWith("JOIN")) {
                         String lobbyName = msg.split(" ")[1];
                         joinLobby(lobbyName);
                     } else if (msg.equals("LEAVE")) {
                         lobby.removeClient(this);
-                        sendMessage("STATUS");
+                        sendOk();
                     } else if (msg.equals("DISCONNECT")) {
-                        if(lobby!=null)
+                        if (lobby != null)
                             lobby.removeClient(this);
 
                         out.close();
@@ -117,10 +133,26 @@ class ClientHandler extends Thread {
             return;
         }
         lobby.addClient(this);
+        sendOk();
     }
 
     public void sendMessage(byte[] message) {
 
+    }
+
+    public void sendError(String message) {
+        System.out.println("Sending ERROR with message: " + message);
+        sendMessage("ERROR;" + message);
+    }
+
+    public void sendOk() {
+        System.out.println("Sending OK");
+        sendMessage("OK;");
+    }
+
+    public void sendOk(String message) {
+        System.out.println("Sending OK");
+        sendMessage("OK;" + message);
     }
 
     public void sendMessage(String message) {
@@ -137,19 +169,20 @@ class Lobby {
     private String name;
 
     public Lobby(String name) {
+        this.clients = new ArrayList<>();
         this.name = name;
     }
 
     public void addClient(ClientHandler client) {
         clients.add(client);
         client.lobby = this;
-        broadcastLobbyStatus();
+        // broadcastLobbyStatus();
     }
 
     public void removeClient(ClientHandler client) {
         clients.remove(client);
         client.lobby = null;
-        broadcastLobbyStatus();
+        // broadcastLobbyStatus();
 
         if (getNumPlayers() == 0) {
             MainServer.lobbies.remove(this);

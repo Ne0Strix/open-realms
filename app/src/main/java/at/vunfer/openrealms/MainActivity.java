@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -75,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private String unknownTypeMessage = "Received message of unknown type.";
 
     private Socket relaySocket;
+    private ObjectInputStream relayInput;
+    private ObjectOutputStream relayOutput;
+    private String currentLobbyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,11 +159,19 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         if (relaySocket != null) {
             try {
                 relaySocket.close();
+                relayInput.close();
+                relayOutput.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             relaySocket = null;
         }
+
+        String relayIp =
+                getSharedPreferences(OpenRealmsPlayer.PREF_NAME, MODE_PRIVATE)
+                        .getString("RelayIp", "");
+        TextView editIP = findViewById(R.id.editRelayServerIP);
+        editIP.setText(relayIp);
     }
 
     public void setupName() {
@@ -650,21 +662,56 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         editor.apply();
 
         new Thread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    relaySocket = new Socket(relayAddress, CONNECTION_PORT);
-                                    runOnUiThread(() -> actuallySwitchToOnlineMode());
-                                } catch (IOException e) {
+                        () -> {
+                            try {
+                                relaySocket = new Socket(relayAddress, CONNECTION_PORT);
+                                relayOutput = new ObjectOutputStream(relaySocket.getOutputStream());
+                                relayInput = new ObjectInputStream(relaySocket.getInputStream());
+
+                                runOnUiThread(() -> actuallySwitchToOnlineMode());
+                            } catch (IOException e) {
+                                runOnUiThread(
+                                        () ->
+                                                Toast.makeText(
+                                                                context,
+                                                                "Connection Failed",
+                                                                Toast.LENGTH_SHORT)
+                                                        .show());
+                            }
+                        })
+                .start();
+    }
+
+    public void createLobby(View view) {
+        TextView txtLobbyName = findViewById(R.id.editCreateLobbyName);
+        String lobbyName = txtLobbyName.getText().toString();
+
+        if (lobbyName.isEmpty()) {
+            Toast.makeText(context, "Invalid Lobby Name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new Thread(
+                        () -> {
+                            try {
+                                Log.d(TAG, "Sending lobby create request");
+                                relayOutput.writeObject("CREATE " + lobbyName);
+                                Log.d(TAG, "Waiting for response");
+                                String response = (String) relayInput.readObject();
+                                Log.d(TAG, "Got " + response);
+                                if (response.split(";")[0].equals("OK")) {
+                                    runOnUiThread(() -> refreshLobbyView(view));
+                                } else {
                                     runOnUiThread(
                                             () ->
                                                     Toast.makeText(
                                                                     context,
-                                                                    "Connection Failed",
+                                                                    response.split(";")[1],
                                                                     Toast.LENGTH_SHORT)
                                                             .show());
                                 }
+
+                            } catch (IOException | ClassNotFoundException e) {
+                                throw new RuntimeException(e);
                             }
                         })
                 .start();
@@ -707,51 +754,58 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
                         });
     }
 
-    public void getLobbyList(View view) throws InterruptedException {
-        TextView ipTextView = findViewById(R.id.editRelayServerIP);
-        final String[] response = {"NO RESPONSE YET"};
-        Thread notUIThread =
-                new Thread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    System.out.println("starting socket making");
+    public void refreshLobbyView(View view) {
+        new Thread(
+                        () -> {
+                            try {
+                                relayOutput.writeObject("STATUS");
+                                String response = (String) relayInput.readObject();
+                                Log.d(TAG, "got response: " + response);
+                                currentLobbyName = response;
 
-                                    Socket soc =
-                                            new Socket(
-                                                    ipTextView.getText().toString(),
-                                                    CONNECTION_PORT);
-                                    System.out.println("Made socket");
-                                    ObjectOutputStream out =
-                                            new ObjectOutputStream(soc.getOutputStream());
-                                    System.out.println("Made outputstream");
-                                    ObjectInputStream in =
-                                            new ObjectInputStream(soc.getInputStream());
-                                    System.out.println("Made inputstream");
+                                relayOutput.writeObject("LIST");
+                                Log.d(TAG, "Sent LIST");
+                                response = (String) relayInput.readObject();
+                                Log.d(TAG, "got response: " + response);
 
-                                    out.writeObject("LIST");
-                                    System.out.println("Sent cmd");
-                                    response[0] = (String) in.readObject();
-                                    System.out.println("got response");
-                                } catch (Exception e) {
+                                if (response.isEmpty()) {
                                     runOnUiThread(
                                             () -> {
-                                                Toast.makeText(
-                                                                context,
-                                                                e.getMessage(),
-                                                                Toast.LENGTH_SHORT)
-                                                        .show();
-                                            });
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-        notUIThread.start();
-        notUIThread.join();
+                                                Log.d(TAG, "Enabling no lobbies txt");
+                                                TextView responseView =
+                                                        findViewById(R.id.txtNoLobbies);
+                                                responseView.setVisibility(View.VISIBLE);
 
-        TextView responseView = findViewById(R.id.connectingLabel);
-        responseView.setText(response[0]);
+                                                LinearLayout lobbyList =
+                                                        findViewById(R.id.layoutLobbies);
+                                                lobbyList.setVisibility(View.INVISIBLE);
+                                            });
+                                } else {
+                                    runOnUiThread(
+                                            () -> {
+                                                Log.d(TAG, "Enabling lobbies");
+                                                TextView responseView =
+                                                        findViewById(R.id.txtNoLobbies);
+                                                responseView.setVisibility(View.INVISIBLE);
+
+                                                LinearLayout lobbyList =
+                                                        findViewById(R.id.layoutLobbies);
+                                                lobbyList.setVisibility(View.VISIBLE);
+                                            });
+                                }
+                            } catch (Exception e) {
+                                runOnUiThread(
+                                        () -> {
+                                            Toast.makeText(
+                                                            context,
+                                                            e.getMessage(),
+                                                            Toast.LENGTH_SHORT)
+                                                    .show();
+                                        });
+                                e.printStackTrace();
+                            }
+                        })
+                .start();
     }
 
     @Override

@@ -3,7 +3,6 @@ apply plugin: 'java'
 jar {
     archiveFileName = 'relay-server.jar' // Specify the output JAR file name
     destinationDirectory.set(file("${project.rootDir}/build")) // Output directory
-    // REMOVE THEESE TWO UPPERS TO FIX ERRORS
 
     manifest {
         attributes(

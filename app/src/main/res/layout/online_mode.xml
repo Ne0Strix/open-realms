@@ -34,16 +34,18 @@
         app:layout_constraintVertical_bias="0.25" />
 
     <Button
-        android:id="@+id/join"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:id="@+id/btnCreateLobby"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/button_states"
-        android:onClick="sendTestREST"
-        android:text="Send Request"
+        android:onClick="createLobby"
+        android:text="Create Lobby"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnGetList"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="@id/btnRefresh"
+        app:layout_constraintTop_toBottomOf="@+id/btnRefresh" />
 
     <Button
         android:id="@+id/toMainMenu"
@@ -59,89 +61,73 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnRefresh"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_states"
+        android:onClick="refreshLobbyView"
+        android:text="Refresh"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/btnCreateLobby"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
-        android:id="@+id/connectingLabel2"
+        android:id="@+id/imgCreateLobbyName"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
-        app:srcCompat="@android:drawable/screen_background_dark_transparent"
-        tools:layout_editor_absoluteY="228dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/editCreateLobbyName"
+        app:layout_constraintEnd_toEndOf="@+id/editCreateLobbyName"
+        app:layout_constraintStart_toStartOf="@+id/editCreateLobbyName"
+        app:layout_constraintTop_toTopOf="@+id/editCreateLobbyName"
+        app:srcCompat="@android:drawable/screen_background_dark_transparent" />
 
-    <Button
-        android:id="@+id/btnGetList"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:background="@drawable/button_states"
-        android:onClick="getLobbyList"
-        android:text="getLobbyList"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="50dp" />
+    <EditText
+        android:id="@+id/editCreateLobbyName"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:ems="10"
+        android:hint="Lobby Name"
+        android:inputType="none"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCreateLobby"
+        app:layout_constraintEnd_toStartOf="@+id/btnCreateLobby"
+        app:layout_constraintTop_toTopOf="@+id/btnCreateLobby" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutCreateLobby"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView3"
-        app:layout_constraintStart_toStartOf="@+id/scrollView3"
-        app:layout_constraintTop_toTopOf="@+id/scrollView3">
-
-        <Button
-            android:id="@+id/btnCreateLobby"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:background="@drawable/button_states"
-            android:onClick="sendTestREST"
-            android:text="Create Lobby"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editCreateLobbyName" />
-
-        <ImageView
-            android:id="@+id/imgCreateLobbyName"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="@id/editCreateLobbyName"
-            app:layout_constraintEnd_toEndOf="@id/editCreateLobbyName"
-            app:layout_constraintStart_toStartOf="@id/editCreateLobbyName"
-            app:layout_constraintTop_toTopOf="@id/editCreateLobbyName"
-            app:srcCompat="@android:drawable/screen_background_dark_transparent"
-            tools:layout_editor_absoluteX="318dp"
-            tools:layout_editor_absoluteY="227dp" />
-
-        <EditText
-            android:id="@+id/editCreateLobbyName"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:ems="10"
-            android:hint="Lobby Name"
-            android:inputType="none"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/txtNoLobbies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Lobbies found..."
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toBottomOf="@id/scrollView3"
+        app:layout_constraintEnd_toEndOf="@id/scrollView3"
+        app:layout_constraintStart_toStartOf="@id/scrollView3"
+        app:layout_constraintTop_toTopOf="@id/scrollView3" />
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="783dp"
-        android:layout_height="291dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnCreateLobby">
 
         <LinearLayout
             android:id="@+id/layoutLobbies"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:visibility="invisible" />
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
