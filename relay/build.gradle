@@ -1,0 +1,16 @@
+apply plugin: 'java'
+
+jar {
+    archiveFileName = 'relay-server.jar' // Specify the output JAR file name
+    destinationDirectory.set(file("${project.rootDir}/build")) // Output directory
+    // REMOVE THEESE TWO UPPERS TO FIX ERRORS
+
+    manifest {
+        attributes(
+                'Main-Class': 'at.vunfer.openrealms.relay.MainServer' // Change this to your main class
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
