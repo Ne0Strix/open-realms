@@ -15,11 +15,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import at.vunfer.openrealms.model.Card;
 import at.vunfer.openrealms.network.DataKey;
 import at.vunfer.openrealms.network.DeckType;
@@ -27,6 +28,8 @@ import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.MessageType;
 import at.vunfer.openrealms.network.PlayerStats;
 import at.vunfer.openrealms.network.client.ClientConnector;
+import at.vunfer.openrealms.network.online.Lobby;
+import at.vunfer.openrealms.network.online.LobbyAdapter;
 import at.vunfer.openrealms.network.server.ServerThread;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
@@ -34,6 +37,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -693,11 +697,11 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         new Thread(
                         () -> {
                             try {
-                                Log.d(TAG, "Sending lobby create request");
+                                // Log.d(TAG, "Sending lobby create request");
                                 relayOutput.writeObject("CREATE " + lobbyName);
-                                Log.d(TAG, "Waiting for response");
+                                // Log.d(TAG, "Waiting for response");
                                 String response = (String) relayInput.readObject();
-                                Log.d(TAG, "Got " + response);
+                                // Log.d(TAG, "Got " + response);
                                 if (response.split(";")[0].equals("OK")) {
                                     runOnUiThread(() -> refreshLobbyView(view));
                                 } else {
@@ -719,6 +723,47 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
 
     public void actuallySwitchToOnlineMode() {
         setContentView(R.layout.online_mode);
+        LobbyAdapter adapter = new LobbyAdapter(new ArrayList<>(), this::onJoinLobby);
+        RecyclerView.LayoutManager viewManager = new LinearLayoutManager(this);
+
+        RecyclerView lobbyView = findViewById(R.id.recyclerLobbyList);
+        lobbyView.setLayoutManager(viewManager);
+        lobbyView.setAdapter(adapter);
+
+        refreshLobbyView(new View(this));
+    }
+
+    public void onJoinLobby(Lobby lobby) {
+        new Thread(
+                        () -> {
+                            try {
+                                String msg = lobby.isInUse() ? "LEAVE" : "JOIN " + lobby.getName();
+                                relayOutput.writeObject(msg);
+                                String response = (String) relayInput.readObject();
+                                if (response.equals("OK;")) {
+                                    refreshLobbyView(new View(context));
+                                } else {
+                                    String errorMsg = response.split(";")[1];
+                                    runOnUiThread(
+                                            () ->
+                                                    Toast.makeText(
+                                                                    context,
+                                                                    errorMsg,
+                                                                    Toast.LENGTH_SHORT)
+                                                            .show());
+                                }
+                            } catch (Exception e) {
+                                runOnUiThread(
+                                        () ->
+                                                Toast.makeText(
+                                                                context,
+                                                                e.getMessage(),
+                                                                Toast.LENGTH_SHORT)
+                                                        .show());
+                                e.printStackTrace();
+                            }
+                        })
+                .start();
     }
 
     public void sendTestREST(View view) {
@@ -758,50 +803,57 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         new Thread(
                         () -> {
                             try {
-                                relayOutput.writeObject("STATUS");
-                                String response = (String) relayInput.readObject();
-                                Log.d(TAG, "got response: " + response);
-                                currentLobbyName = response;
-
                                 relayOutput.writeObject("LIST");
-                                Log.d(TAG, "Sent LIST");
-                                response = (String) relayInput.readObject();
-                                Log.d(TAG, "got response: " + response);
+                                // Log.d(TAG, "Sent LIST");
+                                String response = (String) relayInput.readObject();
+                                // Log.d(TAG, "got response: " + response);
 
                                 if (response.isEmpty()) {
                                     runOnUiThread(
                                             () -> {
-                                                Log.d(TAG, "Enabling no lobbies txt");
+                                                // Log.d(TAG, "Enabling no lobbies txt");
                                                 TextView responseView =
                                                         findViewById(R.id.txtNoLobbies);
                                                 responseView.setVisibility(View.VISIBLE);
 
-                                                LinearLayout lobbyList =
-                                                        findViewById(R.id.layoutLobbies);
+                                                RecyclerView lobbyList =
+                                                        findViewById(R.id.recyclerLobbyList);
                                                 lobbyList.setVisibility(View.INVISIBLE);
                                             });
                                 } else {
+                                    List<Lobby> lobbies = new ArrayList<>();
+                                    for (String lob : response.split(";")) {
+                                        String[] nameAndCount = lob.split(" ");
+                                        boolean isInLobby = nameAndCount.length > 2;
+                                        lobbies.add(
+                                                new Lobby(
+                                                        nameAndCount[0],
+                                                        Integer.parseInt(nameAndCount[1]),
+                                                        isInLobby));
+                                    }
                                     runOnUiThread(
                                             () -> {
-                                                Log.d(TAG, "Enabling lobbies");
+                                                // Log.d(TAG, "Enabling lobbies");
                                                 TextView responseView =
                                                         findViewById(R.id.txtNoLobbies);
                                                 responseView.setVisibility(View.INVISIBLE);
 
-                                                LinearLayout lobbyList =
-                                                        findViewById(R.id.layoutLobbies);
+                                                RecyclerView lobbyList =
+                                                        findViewById(R.id.recyclerLobbyList);
                                                 lobbyList.setVisibility(View.VISIBLE);
+
+                                                ((LobbyAdapter) lobbyList.getAdapter())
+                                                        .updateLobbies(lobbies);
                                             });
                                 }
                             } catch (Exception e) {
                                 runOnUiThread(
-                                        () -> {
-                                            Toast.makeText(
-                                                            context,
-                                                            e.getMessage(),
-                                                            Toast.LENGTH_SHORT)
-                                                    .show();
-                                        });
+                                        () ->
+                                                Toast.makeText(
+                                                                context,
+                                                                e.getMessage(),
+                                                                Toast.LENGTH_SHORT)
+                                                        .show());
                                 e.printStackTrace();
                             }
                         })

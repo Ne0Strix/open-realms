@@ -18,6 +18,14 @@ public class MainServer {
 
     public static void main(String[] args) {
         lobbies = new ArrayList<>();
+        lobbies.add(new Lobby("test1"));
+        lobbies.add(new Lobby("test2"));
+        lobbies.add(new Lobby("test3"));
+        lobbies.add(new Lobby("test4"));
+        lobbies.add(new Lobby("test5"));
+        lobbies.add(new Lobby("test6"));
+        lobbies.add(new Lobby("test7"));
+        lobbies.add(new Lobby("test8"));
         System.out.println("Listening on " + PORT);
         try {
             serverSocket = new ServerSocket(PORT);
@@ -36,6 +44,8 @@ public class MainServer {
 }
 
 class ClientHandler extends Thread {
+    private static int staticId;
+    private int id;
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -43,32 +53,32 @@ class ClientHandler extends Thread {
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
+        this.id = ++staticId;
     }
 
     @Override
     public void run() {
-        System.out.println("Thread started to run");
+        System.out.println("Thread " + id + ": Thread started to run");
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Thread got Streams");
+            System.out.println("Thread " + id + ": Thread got Streams");
             while (true) {
                 try {
                     String msg = (String) in.readObject();
-                    System.out.println("GOT STRING: " + msg);
+                    System.out.println("Thread " + id + ": GOT STRING: " + msg);
 
                     if (msg.equals("LIST")) {
                         String output = "";
                         for (Lobby l : MainServer.lobbies) {
-                            output += l.getName() + " " + l.getNumPlayers() + ";";
+                            output += l.getName() + " " + l.getNumPlayers();
+                            if (l.isClientInLobby(this)) {
+                                output += " IN";
+                            }
+                            output += ";";
                         }
-                        out.writeObject(output);
-                    } else if (msg.equals("STATUS")) {
-                        if (lobby == null)
-                            out.writeObject("");
-                        else
-                            out.writeObject(lobby.getName());
+                        sendMessage(output);
                     } else if (msg.startsWith("CREATE")) {
                         if (msg.split(" ").length < 2) {
                             sendError("Invalid name");
@@ -76,6 +86,10 @@ class ClientHandler extends Thread {
                         }
                         String lobbyName = msg.split(" ")[1];
 
+                        if (lobbyName.length() > 20) {
+                            sendError("Name is too long");
+                            continue;
+                        }
                         boolean duplicateName = false;
                         for (Lobby lob : MainServer.lobbies) {
                             if (lob.getName().equals(lobbyName)) {
@@ -86,6 +100,7 @@ class ClientHandler extends Thread {
                         if (!duplicateName) {
                             Lobby newLobby = new Lobby(lobbyName);
                             MainServer.lobbies.add(newLobby);
+                            System.out.println("Thread " + id + ": created lobby " + lobbyName + ", now joining");
                             joinLobby(lobbyName);
                         } else {
                             sendError("Name already in use");
@@ -94,9 +109,10 @@ class ClientHandler extends Thread {
                         String lobbyName = msg.split(" ")[1];
                         joinLobby(lobbyName);
                     } else if (msg.equals("LEAVE")) {
-                        lobby.removeClient(this);
+                        if (lobby != null)
+                            lobby.removeClient(this);
                         sendOk();
-                    } else if (msg.equals("DISCONNECT")) {
+                    } else if (msg.equals("DISCONNECT")) { //Unused, currently we just let it crash, lol
                         if (lobby != null)
                             lobby.removeClient(this);
 
@@ -110,12 +126,26 @@ class ClientHandler extends Thread {
                     //TODO: use simple InputStream to read the socket again and send it out the OutputStream
                 }
             }
+        } catch (EOFException e) {
+            System.out.println("Thread " + id + ":EOFException, assuming client disconnected, removing from lobby");
+            if (lobby != null)
+                lobby.removeClient(this);
+            try {
+                out.close();
+                in.close();
+                socket.close();
+            } catch (IOException ex) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void joinLobby(String lobbyName) {
+        if (lobby != null) {
+            sendError("You can only join one Lobby at a time...");
+        }
         Lobby lobby = null;
         for (Lobby l : MainServer.lobbies) {
             if (l.getName().equals(lobbyName)) {
@@ -125,37 +155,33 @@ class ClientHandler extends Thread {
         }
 
         if (lobby == null) {
-            sendMessage("ERROR;No lobby found with this name...");
+            sendError("No lobby found with this name...");
             return;
         }
         if (lobby.getNumPlayers() >= 2) {
-            sendMessage("ERROR;Lobby is full");
+            sendError("Lobby is full");
             return;
         }
         lobby.addClient(this);
         sendOk();
     }
 
-    public void sendMessage(byte[] message) {
-
-    }
-
     public void sendError(String message) {
         System.out.println("Sending ERROR with message: " + message);
-        sendMessage("ERROR;" + message);
+        sendObject("ERROR;" + message);
     }
 
     public void sendOk() {
-        System.out.println("Sending OK");
-        sendMessage("OK;");
+        System.out.println("Thread " + id + ": Sending OK");
+        sendObject("OK;");
     }
 
-    public void sendOk(String message) {
-        System.out.println("Sending OK");
-        sendMessage("OK;" + message);
+    public void sendMessage(Object msg) {
+        System.out.println("Thread " + id + ": Sending: " + msg);
+        sendObject(msg);
     }
 
-    public void sendMessage(String message) {
+    public void sendObject(Object message) {
         try {
             out.writeObject(message);
         } catch (IOException e) {
@@ -187,6 +213,10 @@ class Lobby {
         if (getNumPlayers() == 0) {
             MainServer.lobbies.remove(this);
         }
+    }
+
+    public boolean isClientInLobby(ClientHandler client) {
+        return clients.contains(client);
     }
 
     public String getName() {
