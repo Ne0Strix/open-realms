@@ -27,7 +27,7 @@
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerLobbyList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,7 +43,7 @@
         android:text="Create Lobby"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerLobbyList"
         app:layout_constraintEnd_toEndOf="@id/btnRefresh"
         app:layout_constraintTop_toBottomOf="@+id/btnRefresh" />
 
@@ -108,26 +108,21 @@
         android:text="No Lobbies found..."
         android:textColor="#FFFFFF"
         android:textSize="50sp"
-        app:layout_constraintBottom_toBottomOf="@id/scrollView3"
-        app:layout_constraintEnd_toEndOf="@id/scrollView3"
-        app:layout_constraintStart_toStartOf="@id/scrollView3"
-        app:layout_constraintTop_toTopOf="@id/scrollView3" />
+        app:layout_constraintBottom_toBottomOf="@id/recyclerLobbyList"
+        app:layout_constraintEnd_toEndOf="@id/recyclerLobbyList"
+        app:layout_constraintStart_toStartOf="@id/recyclerLobbyList"
+        app:layout_constraintTop_toTopOf="@id/recyclerLobbyList" />
 
-    <ScrollView
-        android:id="@+id/scrollView3"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerLobbyList"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnCreateLobby">
-
-        <LinearLayout
-            android:id="@+id/layoutLobbies"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="invisible" />
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@id/btnCreateLobby" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
