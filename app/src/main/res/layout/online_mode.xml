@@ -48,6 +48,23 @@
         app:layout_constraintTop_toBottomOf="@+id/btnRefresh" />
 
     <Button
+        android:id="@+id/btnStartGame"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_states"
+        android:enabled="false"
+        android:onClick="createLobby"
+        android:text="Start Game"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerLobbyList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toMainMenu" />
+
+    <Button
         android:id="@+id/toMainMenu"
         android:layout_width="150dp"
         android:layout_height="40dp"

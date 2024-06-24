@@ -30,13 +30,11 @@ import at.vunfer.openrealms.network.PlayerStats;
 import at.vunfer.openrealms.network.client.ClientConnector;
 import at.vunfer.openrealms.network.online.Lobby;
 import at.vunfer.openrealms.network.online.LobbyAdapter;
+import at.vunfer.openrealms.network.online.OnlineConnector;
 import at.vunfer.openrealms.network.server.ServerThread;
 import at.vunfer.openrealms.presenter.*;
 import at.vunfer.openrealms.view.*;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     private String connectionIP;
     private ServerThread server;
     private static ClientConnector connection;
+    public static OnlineConnector onlineConnector;
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
@@ -78,11 +77,6 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     ImageView endscreenImage;
     Button endTurnButton;
     private String unknownTypeMessage = "Received message of unknown type.";
-
-    private Socket relaySocket;
-    private ObjectInputStream relayInput;
-    private ObjectOutputStream relayOutput;
-    private String currentLobbyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,15 +154,9 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             startMenuMusic(true);
             menuMusicPlaying = true;
         }
-        if (relaySocket != null) {
-            try {
-                relaySocket.close();
-                relayInput.close();
-                relayOutput.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            relaySocket = null;
+        if (onlineConnector != null) {
+            onlineConnector.close();
+            onlineConnector = null;
         }
 
         String relayIp =
@@ -665,25 +653,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         editor.putString("RelayIp", relayAddress);
         editor.apply();
 
-        new Thread(
-                        () -> {
-                            try {
-                                relaySocket = new Socket(relayAddress, CONNECTION_PORT);
-                                relayOutput = new ObjectOutputStream(relaySocket.getOutputStream());
-                                relayInput = new ObjectInputStream(relaySocket.getInputStream());
-
-                                runOnUiThread(() -> actuallySwitchToOnlineMode());
-                            } catch (IOException e) {
-                                runOnUiThread(
-                                        () ->
-                                                Toast.makeText(
-                                                                context,
-                                                                "Connection Failed",
-                                                                Toast.LENGTH_SHORT)
-                                                        .show());
-                            }
-                        })
-                .start();
+        onlineConnector = new OnlineConnector(this, relayAddress, CONNECTION_PORT);
+        onlineConnector.start();
     }
 
     public void createLobby(View view) {
@@ -694,31 +665,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
             Toast.makeText(context, "Invalid Lobby Name", Toast.LENGTH_SHORT).show();
             return;
         }
-        new Thread(
-                        () -> {
-                            try {
-                                // Log.d(TAG, "Sending lobby create request");
-                                relayOutput.writeObject("CREATE " + lobbyName);
-                                // Log.d(TAG, "Waiting for response");
-                                String response = (String) relayInput.readObject();
-                                // Log.d(TAG, "Got " + response);
-                                if (response.split(";")[0].equals("OK")) {
-                                    runOnUiThread(() -> refreshLobbyView(view));
-                                } else {
-                                    runOnUiThread(
-                                            () ->
-                                                    Toast.makeText(
-                                                                    context,
-                                                                    response.split(";")[1],
-                                                                    Toast.LENGTH_SHORT)
-                                                            .show());
-                                }
-
-                            } catch (IOException | ClassNotFoundException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                .start();
+        onlineConnector.createLobby(lobbyName);
     }
 
     public void actuallySwitchToOnlineMode() {
@@ -734,36 +681,8 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void onJoinLobby(Lobby lobby) {
-        new Thread(
-                        () -> {
-                            try {
-                                String msg = lobby.isInUse() ? "LEAVE" : "JOIN " + lobby.getName();
-                                relayOutput.writeObject(msg);
-                                String response = (String) relayInput.readObject();
-                                if (response.equals("OK;")) {
-                                    refreshLobbyView(new View(context));
-                                } else {
-                                    String errorMsg = response.split(";")[1];
-                                    runOnUiThread(
-                                            () ->
-                                                    Toast.makeText(
-                                                                    context,
-                                                                    errorMsg,
-                                                                    Toast.LENGTH_SHORT)
-                                                            .show());
-                                }
-                            } catch (Exception e) {
-                                runOnUiThread(
-                                        () ->
-                                                Toast.makeText(
-                                                                context,
-                                                                e.getMessage(),
-                                                                Toast.LENGTH_SHORT)
-                                                        .show());
-                                e.printStackTrace();
-                            }
-                        })
-                .start();
+        if (lobby.isInUse()) onlineConnector.leaveLobby();
+        else onlineConnector.joinLobby(lobby);
     }
 
     public void sendTestREST(View view) {
@@ -800,64 +719,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void refreshLobbyView(View view) {
-        new Thread(
-                        () -> {
-                            try {
-                                relayOutput.writeObject("LIST");
-                                // Log.d(TAG, "Sent LIST");
-                                String response = (String) relayInput.readObject();
-                                // Log.d(TAG, "got response: " + response);
-
-                                if (response.isEmpty()) {
-                                    runOnUiThread(
-                                            () -> {
-                                                // Log.d(TAG, "Enabling no lobbies txt");
-                                                TextView responseView =
-                                                        findViewById(R.id.txtNoLobbies);
-                                                responseView.setVisibility(View.VISIBLE);
-
-                                                RecyclerView lobbyList =
-                                                        findViewById(R.id.recyclerLobbyList);
-                                                lobbyList.setVisibility(View.INVISIBLE);
-                                            });
-                                } else {
-                                    List<Lobby> lobbies = new ArrayList<>();
-                                    for (String lob : response.split(";")) {
-                                        String[] nameAndCount = lob.split(" ");
-                                        boolean isInLobby = nameAndCount.length > 2;
-                                        lobbies.add(
-                                                new Lobby(
-                                                        nameAndCount[0],
-                                                        Integer.parseInt(nameAndCount[1]),
-                                                        isInLobby));
-                                    }
-                                    runOnUiThread(
-                                            () -> {
-                                                // Log.d(TAG, "Enabling lobbies");
-                                                TextView responseView =
-                                                        findViewById(R.id.txtNoLobbies);
-                                                responseView.setVisibility(View.INVISIBLE);
-
-                                                RecyclerView lobbyList =
-                                                        findViewById(R.id.recyclerLobbyList);
-                                                lobbyList.setVisibility(View.VISIBLE);
-
-                                                ((LobbyAdapter) lobbyList.getAdapter())
-                                                        .updateLobbies(lobbies);
-                                            });
-                                }
-                            } catch (Exception e) {
-                                runOnUiThread(
-                                        () ->
-                                                Toast.makeText(
-                                                                context,
-                                                                e.getMessage(),
-                                                                Toast.LENGTH_SHORT)
-                                                        .show());
-                                e.printStackTrace();
-                            }
-                        })
-                .start();
+        onlineConnector.requestLobbyRefresh();
     }
 
     @Override
