@@ -685,6 +685,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         else onlineConnector.joinLobby(lobby);
     }
 
+    public void startOnlineGame(View view) {
+        onlineConnector.startGame();
+    }
+
     public void sendTestREST(View view) {
         OkHttpClient client = new OkHttpClient();
 

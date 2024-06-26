@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
 import java.util.List;
 
@@ -66,9 +67,22 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
         return lobbies.size();
     }
 
-    public void updateLobbies(List<Lobby> newLobbies) {
+    public void updateLobbies(List<Lobby> newLobbies, MainActivity mainActivity) {
         lobbies.clear();
         lobbies.addAll(newLobbies);
         notifyDataSetChanged();
+
+        boolean fullLobby = false;
+
+        for (Lobby lobby : newLobbies) {
+            if (lobby.isInUse() && lobby.getNumberOfPlayers() == 2) {
+                fullLobby = true;
+                break;
+            }
+        }
+
+        boolean finalFullLobby = fullLobby;
+        mainActivity.runOnUiThread(
+                () -> mainActivity.findViewById(R.id.btnStartGame).setEnabled(finalFullLobby));
     }
 }

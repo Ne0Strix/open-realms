@@ -124,10 +124,13 @@ public class OnlineConnector extends Thread {
                         RecyclerView lobbyList = mainActivity.findViewById(R.id.recyclerLobbyList);
                         lobbyList.setVisibility(View.VISIBLE);
 
-                        ((LobbyAdapter) lobbyList.getAdapter()).updateLobbies(lobbies);
+                        ((LobbyAdapter) lobbyList.getAdapter())
+                                .updateLobbies(lobbies, mainActivity);
                     });
         }
     }
+
+    public void startGame() {}
 
     public void createLobby(String lobbyName) {
         Log.v(TAG, "Sending lobby create request");
