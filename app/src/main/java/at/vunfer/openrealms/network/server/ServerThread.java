@@ -33,9 +33,12 @@ import at.vunfer.openrealms.network.DeckType;
 import at.vunfer.openrealms.network.Message;
 import at.vunfer.openrealms.network.MessageType;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +49,7 @@ public class ServerThread extends Thread {
     private final Context context;
     private final int port;
     private String ipAddr = "empty";
+    private final boolean usingRelay;
 
     @SuppressLint("StaticFieldLeak")
     private static ServerThread instance;
@@ -58,18 +62,47 @@ public class ServerThread extends Thread {
         this.context = context;
         this.port = port;
         instance = this;
+        this.usingRelay = false;
+    }
+
+    private Socket relaySocket;
+    private ObjectOutputStream relayOut;
+    private ObjectInputStream relayIn;
+
+    public ServerThread(
+            Context context, int port, ObjectInputStream in, ObjectOutputStream out, Socket soc) {
+        this.context = context;
+        this.port = port;
+        instance = this;
+        this.usingRelay = true;
+        this.relayIn = in;
+        this.relayOut = out;
+        this.relaySocket = soc;
     }
 
     @Override
     public void run() {
-        try {
-            setupServer();
-            ((MainActivity) context).showIp(new View(context));
-            acceptConnections();
-        } catch (IOException ex) {
-            Log.e(TAG, "IO Exception on Server!", ex);
-        }
-        if (!serverSocket.isClosed()) {
+        if (!usingRelay) {
+            try {
+                setupServer();
+                ((MainActivity) context).showIp(new View(context));
+                acceptConnections();
+            } catch (IOException ex) {
+                Log.e(TAG, "IO Exception on Server!", ex);
+            }
+            if (!serverSocket.isClosed()) {
+                createGame();
+                ((MainActivity) context)
+                        .runOnUiThread(() -> ((MainActivity) context).startGame(new View(context)));
+            }
+        } else {
+            try {
+                serverSocket = new ServerSocket(port);
+                connections.add(acceptClient("Local client connected!")); // localhost
+                connections.add(new ClientHandler(relaySocket, relayIn, relayOut)); // Relay
+            } catch (IOException e) {
+                Log.e(TAG, "IO Exception on Server!", e);
+            }
             createGame();
             ((MainActivity) context)
                     .runOnUiThread(() -> ((MainActivity) context).startGame(new View(context)));

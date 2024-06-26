@@ -46,13 +46,13 @@ import org.json.JSONException;
 public class MainActivity extends AppCompatActivity implements UIUpdateListener {
     private static final int CONNECTION_PORT = 25567;
     private String connectionIP;
-    private ServerThread server;
-    private static ClientConnector connection;
+    public ServerThread server;
+    public static ClientConnector connection;
     public static OnlineConnector onlineConnector;
     private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
     private static final String TAG = MainActivity.class.getSimpleName();
     private static List<CardView> cardViews;
-    private boolean isHost = false;
+    public boolean isHost = false;
 
     private boolean ingameMusicPlaying = false;
     private boolean menuMusicPlaying = false;
@@ -157,6 +157,10 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
         if (onlineConnector != null) {
             onlineConnector.close();
             onlineConnector = null;
+        }
+        if (connection != null) {
+            connection.close();
+            connection = null;
         }
 
         String relayIp =
@@ -669,6 +673,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void actuallySwitchToOnlineMode() {
+        setupName();
         setContentView(R.layout.online_mode);
         LobbyAdapter adapter = new LobbyAdapter(new ArrayList<>(), this::onJoinLobby);
         RecyclerView.LayoutManager viewManager = new LinearLayoutManager(this);
@@ -686,6 +691,7 @@ public class MainActivity extends AppCompatActivity implements UIUpdateListener 
     }
 
     public void startOnlineGame(View view) {
+        isHost = true;
         onlineConnector.startGame();
     }
 

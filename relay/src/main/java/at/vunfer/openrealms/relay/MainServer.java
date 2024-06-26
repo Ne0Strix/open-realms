@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.vunfer.openrealms.network.Message;
 public class MainServer {
     public static List<Lobby> lobbies;
     public static List<ClientHandler> clients;
@@ -47,8 +48,8 @@ class ClientHandler extends Thread {
     private static int staticId;
     private int id;
     private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
     public Lobby lobby;
 
     public ClientHandler(Socket socket) {
@@ -60,18 +61,26 @@ class ClientHandler extends Thread {
     public void run() {
         print("Thread started to run");
         try {
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectInputStream = new ObjectInputStream(socket.getInputStream());
             print("Thread got Streams");
             while (true) {
                 try {
-                    String msg = (String) in.readObject();
+                    Object obj = objectInputStream.readObject();
+                    if (obj instanceof Message) {
+                        if (lobby != null) {
+                            lobby.sendToOtherClient((Message) obj, this);
+                        }
+                        continue;
+                    }
+                    String msg = (String) obj;
+
                     print("GOT STRING: " + msg);
 
                     if (msg.equals("LIST")) {
                         sendList();
                     } else if (msg.startsWith("CREATE")) {
-                        if(lobby!=null){
+                        if (lobby != null) {
                             sendError("You cannot create a lobby while already in one");
                             continue;
                         }
@@ -115,17 +124,23 @@ class ClientHandler extends Thread {
                             lobby.removeClient(this);
                         }
 
-                        out.close();
-                        in.close();
+                        objectOutputStream.close();
+                        objectInputStream.close();
                         socket.close();
                         MainServer.clients.remove(this);
                         break;
+                    } else if (msg.equals("START")) {
+                        print("Received START command, notifying other thread to start");
+                        lobby.sendToOtherClient("START", this);
+                    } else if (msg.equals("READY")) {
+                        print("Received READY command, notifying other thread to stop waiting");
+                        lobby.sendToOtherClient("READY", this);
                     } else {
                         print("Unrecognised Command");
                     }
-                } catch (ClassNotFoundException | ClassCastException e) {
-                    print("ClassNotFound or Class not Sting, message is not for me, relaying...");
-                    //TODO: use simple InputStream to read the socket again and send it out the OutputStream
+                } catch (ClassNotFoundException e) {
+                    print("ClassNotFound or Class not Sting or Message...");
+                    e.printStackTrace();
                 }
             }
         } catch (EOFException e) {
@@ -133,8 +148,8 @@ class ClientHandler extends Thread {
             if (lobby != null)
                 lobby.removeClient(this);
             try {
-                out.close();
-                in.close();
+                objectOutputStream.close();
+                objectInputStream.close();
                 socket.close();
                 MainServer.clients.remove(this);
             } catch (IOException ex) {
@@ -142,6 +157,11 @@ class ClientHandler extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            print("IOException: " + e);
+            if (lobby != null)
+                lobby.removeClient(this);
+            MainServer.clients.remove(this);
+
         }
     }
 
@@ -199,7 +219,7 @@ class ClientHandler extends Thread {
 
     public void sendObject(Object message) {
         try {
-            out.writeObject(message);
+            objectOutputStream.writeObject(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -248,12 +268,14 @@ class Lobby {
         return clients.size();
     }
 
-    public void broadcast(byte[] message, ClientHandler sender) {
+    public void sendToOtherClient(Object message, ClientHandler sender) {
         for (ClientHandler client : clients) {
             if (client != sender) {
-                client.sendMessage(message);
+                if (message instanceof String)
+                    client.sendMessage(message);
+                else
+                    client.sendObject(message);
             }
-
         }
     }
 

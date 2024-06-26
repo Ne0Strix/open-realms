@@ -29,8 +29,18 @@ public class ClientHandler {
         }
     }
 
+    protected ClientHandler(
+            Socket socket, ObjectInputStream inStream, ObjectOutputStream outStream) {
+        this.socket = socket;
+        this.inputStream = inStream;
+        this.outputStream = outStream;
+        comm = new Communication(inputStream, outputStream, new ServerMessageHandler());
+        Log.i(TAG, "ClientHandler successfully loaded from relay.");
+    }
+
     public void disconnectClient() throws IOException {
         socket.close();
+        comm.closeCommunication();
     }
 
     public void sendMessage(Message msg) {

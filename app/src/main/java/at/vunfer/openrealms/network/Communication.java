@@ -45,9 +45,9 @@ public class Communication {
                 Message msg = (Message) input.readObject();
                 Log.i(TAG, "Received: " + msg.getType());
                 messageHandler.handleMessage(msg);
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException | ClassCastException e) {
+                Log.e(TAG, "Exception while reading Object:", e);
                 e.printStackTrace();
-                break;
             }
         }
     }

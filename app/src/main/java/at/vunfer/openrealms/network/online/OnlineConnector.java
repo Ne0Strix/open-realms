@@ -8,7 +8,10 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import at.vunfer.openrealms.MainActivity;
 import at.vunfer.openrealms.R;
+import at.vunfer.openrealms.network.client.ClientConnector;
+import at.vunfer.openrealms.network.server.ServerThread;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -25,6 +28,8 @@ public class OnlineConnector extends Thread {
     private ObjectOutputStream relayOutput;
     private List<OnlineResponseCallback> okCallbacks;
     private List<OnlineResponseCallback> errorCallbacks;
+
+    private boolean isRunning = true;
 
     public interface OnlineResponseCallback {
         void callback();
@@ -49,8 +54,7 @@ public class OnlineConnector extends Thread {
             mainActivity.runOnUiThread(mainActivity::actuallySwitchToOnlineMode);
 
             try {
-                while (true) {
-                    // READ
+                while (isRunning) {
                     String response = (String) relayInput.readObject();
                     String[] responseSplit = response.split(";");
                     switch (responseSplit[0]) {
@@ -74,10 +78,32 @@ public class OnlineConnector extends Thread {
                             if (responseSplit.length > 1) refreshLobbyView(responseSplit[1]);
                             else refreshLobbyView("");
                             break;
+                        case "START":
+                            Log.v(TAG, "Received \"START\", launching Client");
+
+                            mainActivity.isHost = false;
+                            MainActivity.connection =
+                                    new ClientConnector(
+                                            mainActivity, relaySocket, relayInput, relayOutput);
+                            MainActivity.connection.start();
+
+                            mainActivity.runOnUiThread(
+                                    () -> mainActivity.startGame(new View(mainActivity)));
+
+                            Log.v(TAG, "Sending \"READY\" to server");
+                            sendString("READY");
+                            isRunning = false;
+                            break;
+                        case "READY":
+                            Log.v(TAG, "Received \"READY\", joining locally");
+                            joinLocalhost();
+                            isRunning = false;
                         default:
                             Log.e(TAG, "Received message without code: " + response);
                     }
                 }
+            } catch (InterruptedIOException e) {
+                Log.w(TAG, "Got interrupted, nothing wrong with that...", e);
             } catch (IOException | ClassNotFoundException e) {
                 Log.e(TAG, e.getLocalizedMessage());
             }
@@ -130,7 +156,19 @@ public class OnlineConnector extends Thread {
         }
     }
 
-    public void startGame() {}
+    public void startGame() {
+        mainActivity.server =
+                new ServerThread(mainActivity, port, relayInput, relayOutput, relaySocket);
+        mainActivity.server.start();
+
+        sendString("START");
+    }
+
+    public void joinLocalhost() {
+        MainActivity.connection = new ClientConnector(mainActivity);
+        MainActivity.connection.setConnectionTarget("localhost", port);
+        MainActivity.connection.start();
+    }
 
     public void createLobby(String lobbyName) {
         Log.v(TAG, "Sending lobby create request");

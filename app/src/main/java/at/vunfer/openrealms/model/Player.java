@@ -1,8 +1,6 @@
 /* Licensed under GNU GPL v3.0 (C) 2023 */
 package at.vunfer.openrealms.model;
 
-import androidx.annotation.NonNull;
-
 public class Player {
     private String playerName;
     private PlayArea playArea;
@@ -39,7 +37,7 @@ public class Player {
      *
      * @return the player name
      */
-    @NonNull @Override
+    @Override
     public String toString() {
         return getPlayerName();
     }

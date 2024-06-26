@@ -13,3 +13,26 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+
+//Yes I know this is shit
+//No I do not want to figure out how to teach gradle to make a jar-library out of only these files
+task copyNetwork(type:Copy){
+    from("$rootDir/app/src/main/java/at/vunfer/openrealms/network/Message.java")
+    from("$rootDir/app/src/main/java/at/vunfer/openrealms/network/DataKey.java")
+    from("$rootDir/app/src/main/java/at/vunfer/openrealms/network/DeckType.java")
+    from("$rootDir/app/src/main/java/at/vunfer/openrealms/network/MessageType.java")
+    from("$rootDir/app/src/main/java/at/vunfer/openrealms/network/PlayerStats.java")
+    into("$rootDir/relay/src/main/java/at/vunfer/openrealms/network")
+
+}
+task copyModel(type:Copy){
+    from("$rootDir/app/src/main/java/at/vunfer/openrealms/model/")
+    exclude("$rootDir/app/src/main/java/at/vunfer/openrealms/model/DeckGenerator.java")
+    into("$rootDir/relay/src/main/java/at/vunfer/openrealms/model")
+}
+task removeDeckGenerator(type: Delete){ //ah yes, the consequences of my own actions...
+    delete files("$rootDir/relay/src/main/java/at/vunfer/openrealms/model/DeckGenerator.java")
+}
+removeDeckGenerator.dependsOn copyModel
+removeDeckGenerator.dependsOn copyNetwork
+compileJava.dependsOn removeDeckGenerator
